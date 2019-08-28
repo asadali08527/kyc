@@ -18,7 +18,7 @@ public class KycDetails implements Serializable {
 	@Column(name = "msisdn", unique = true, nullable = false)
 	private String msisdn;
 
-	@Column(name = "first_name")
+	@Column(name = "first_name", nullable = false)
 	private String firstName;
 
 	@Column(name = "middle_name")

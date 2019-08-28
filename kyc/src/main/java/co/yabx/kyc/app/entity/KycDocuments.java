@@ -19,8 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "kyc_documents", indexes = { @Index(name = "document_number", columnList = "document_number"),
-		@Index(name = "document_type", columnList = "document_type"),
-		@Index(name = "kyc_details_id", columnList = "kyc_details_id") })
+		@Index(name = "document_type", columnList = "document_type") })
 public class KycDocuments {
 
 	@Id

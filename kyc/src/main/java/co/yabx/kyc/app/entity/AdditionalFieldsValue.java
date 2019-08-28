@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "additional_fields_value", uniqueConstraints = {
-		@UniqueConstraint(columnNames = { "kyc_id", "additional_category_field_id" }) })
+		@UniqueConstraint(columnNames = { "kyc_details_id", "additional_category_field_id" }) })
 public class AdditionalFieldsValue {
 	private static final long serialVersionUID = 1L;
 

@@ -35,7 +35,7 @@ public class AccountStatuses implements Serializable {
 	@Column(name = "aml_cft_status")
 	private String amlCftStatus;
 
-	@Column(name = "account_status")
+	@Column(name = "account_status", nullable = false)
 	private String accountStatus;
 
 	@Column(name = "transaction_status")

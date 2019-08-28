@@ -22,13 +22,13 @@ public class AccountStatusesHistory implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "msisdn", unique = true, nullable = false)
+	@Column(name = "msisdn", nullable = false)
 	private String msisdn;
 
-	@Column(name = "from_status")
+	@Column(name = "from_status", nullable = false)
 	private String from;
 
-	@Column(name = "to_status")
+	@Column(name = "to_status", nullable = false)
 	private String to;
 
 	@Column(name = "reason")
