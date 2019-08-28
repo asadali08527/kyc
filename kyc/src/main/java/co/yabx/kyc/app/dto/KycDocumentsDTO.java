@@ -7,14 +7,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import co.yabx.kyc.app.entity.KYC;
+import co.yabx.kyc.app.entity.KycDetails;
 
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class PhotosDTO implements Serializable {
+public class KycDocumentsDTO implements Serializable {
 
 	private String id;
 
-	private KYC kyc;
+	private KycDetails kycDetails;
 
 	private String photoSide;
 
@@ -36,14 +36,6 @@ public class PhotosDTO implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public KYC getKyc() {
-		return kyc;
-	}
-
-	public void setKyc(KYC kyc) {
-		this.kyc = kyc;
 	}
 
 	public String getPhotoSide() {
@@ -102,11 +94,19 @@ public class PhotosDTO implements Serializable {
 		this.photo = photo;
 	}
 
+	public KycDetails getKycDetails() {
+		return kycDetails;
+	}
+
+	public void setKycDetails(KycDetails kycDetails) {
+		this.kycDetails = kycDetails;
+	}
+
 	@Override
 	public String toString() {
-		return "PhotosDTO [id=" + id + ", kyc=" + kyc + ", photoSide=" + photoSide + ", photoUrl=" + photoUrl
-				+ ", snapTime=" + snapTime + ", isSelfie=" + isSelfie + ", createdAt=" + createdAt + ", updatedAt="
-				+ updatedAt + ", photo=" + photo + "]";
+		return "KycDocumentsDTO [id=" + id + ", kycDetails=" + kycDetails + ", photoSide=" + photoSide + ", photoUrl="
+				+ photoUrl + ", snapTime=" + snapTime + ", isSelfie=" + isSelfie + ", createdAt=" + createdAt
+				+ ", updatedAt=" + updatedAt + ", photo=" + photo + "]";
 	}
 
 }

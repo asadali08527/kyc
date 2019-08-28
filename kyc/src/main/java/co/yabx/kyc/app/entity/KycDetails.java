@@ -5,21 +5,18 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "kyc")
-public class KYC implements Serializable {
+@Table(name = "kyc_details")
+public class KycDetails implements Serializable {
 
 	@Id
-	@Column(name = "id", unique = true, nullable = false)
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	@Column(name = "msisdn", unique = true, nullable = false)
+	private String msisdn;
 
 	@Column(name = "first_name")
 	private String firstName;
@@ -30,8 +27,8 @@ public class KYC implements Serializable {
 	@Column(name = "last_name")
 	private String lastName;
 
-	@Column(name = "address")
-	private String address;
+	@Column(name = "house_number_or_street_name")
+	private String houseNumberOrStreetName;
 
 	@Column(name = "area")
 	private String area;
@@ -42,28 +39,17 @@ public class KYC implements Serializable {
 	@Column(name = "zip_code")
 	private Integer zipCode;
 
-	@Column(name = "id_type")
-	private String idType;
-
-	@Column(name = "id_number")
-	private String idNumber;
-
-	@Column(name = "is_verified")
-	private boolean isVerified;
-
 	@Column(name = "created_at")
 	private Date createdAt;
 
 	@Column(name = "updated_at")
 	private Date updatedAt;
 
-	public Long getId() {
-		return id;
-	}
+	@Column(name = "dob")
+	private Long dob;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+	@Column(name = "gender")
+	private String gender;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -105,14 +91,6 @@ public class KYC implements Serializable {
 		this.lastName = lastName;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
 	public String getArea() {
 		return area;
 	}
@@ -137,30 +115,6 @@ public class KYC implements Serializable {
 		this.zipCode = zipCode;
 	}
 
-	public String getIdType() {
-		return idType;
-	}
-
-	public void setIdType(String idType) {
-		this.idType = idType;
-	}
-
-	public String getIdNumber() {
-		return idNumber;
-	}
-
-	public void setIdNumber(String idNumber) {
-		this.idNumber = idNumber;
-	}
-
-	public boolean isVerified() {
-		return isVerified;
-	}
-
-	public void setVerified(boolean isVerified) {
-		this.isVerified = isVerified;
-	}
-
 	@PrePersist
 	protected void insertDates() {
 		if (createdAt == null) {
@@ -176,11 +130,44 @@ public class KYC implements Serializable {
 		updatedAt = new Date();
 	}
 
+	public String getMsisdn() {
+		return msisdn;
+	}
+
+	public void setMsisdn(String msisdn) {
+		this.msisdn = msisdn;
+	}
+
+	public String getHouseNumberOrStreetName() {
+		return houseNumberOrStreetName;
+	}
+
+	public void setHouseNumberOrStreetName(String houseNumberOrStreetName) {
+		this.houseNumberOrStreetName = houseNumberOrStreetName;
+	}
+
+	public Long getDob() {
+		return dob;
+	}
+
+	public void setDob(Long dob) {
+		this.dob = dob;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
 	@Override
 	public String toString() {
-		return "KYC [id=" + id + ", firstName=" + firstName + ", middleName=" + middleName + ", lastName=" + lastName
-				+ ", address=" + address + ", area=" + area + ", city=" + city + ", zipCode=" + zipCode + ", idType="
-				+ idType + ", idNumber=" + idNumber + ", isVerified=" + isVerified + "]";
+		return "KycDetails [msisdn=" + msisdn + ", firstName=" + firstName + ", middleName=" + middleName
+				+ ", lastName=" + lastName + ", houseNumberOrStreetName=" + houseNumberOrStreetName + ", area=" + area
+				+ ", city=" + city + ", zipCode=" + zipCode + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
+				+ ", dob=" + dob + ", gender=" + gender + "]";
 	}
 
 }

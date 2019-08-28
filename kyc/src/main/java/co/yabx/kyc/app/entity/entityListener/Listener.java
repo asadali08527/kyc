@@ -15,7 +15,7 @@ public abstract class Listener {
 		return dbConfigService.getBooleanProperty("ENTITY_LISTENER_ENABLE", false);
 	}
 
-	protected void publishKycId(Long id) {
+	protected void publishKycId(String id) {
 		// TODO Auto-generated method stub
 
 	}

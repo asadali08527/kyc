@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import co.yabx.kyc.app.dto.KYCDTO;
-import co.yabx.kyc.app.dto.PhotosDTO;
-import co.yabx.kyc.app.entity.Photos;
+import co.yabx.kyc.app.dto.KycDetailsDTO;
+import co.yabx.kyc.app.dto.KycDocumentsDTO;
+import co.yabx.kyc.app.entity.KycDocuments;
 import co.yabx.kyc.app.service.KYCService;
 import co.yabx.kyc.app.service.impl.AppConfigServiceImpl;
 
@@ -35,13 +35,12 @@ import co.yabx.kyc.app.service.impl.AppConfigServiceImpl;
 public class KYCController {
 	@Autowired
 	private KYCService kycService;
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(KYCController.class);
 
-
 	@RequestMapping(value = "/create/kyc", method = RequestMethod.POST)
-	public ResponseEntity<?> createAccount(@RequestParam(name = "kyc") KYCDTO kycdto) {
-		KYCDTO customerDto = new KYCDTO();
+	public ResponseEntity<?> createAccount(@RequestParam(name = "kyc") KycDetailsDTO kycdto) {
+		KycDetailsDTO customerDto = new KycDetailsDTO();
 		customerDto.setFirstName("Asad");
 		customerDto.setLastName("Ali");
 		customerDto.setAddress("Gelhi NCR");
@@ -50,7 +49,7 @@ public class KYCController {
 		customerDto.setIdNumber("APPPA7499M");
 		customerDto.setIdType("PAN CARD");
 		customerDto.setZipCode("122001");
-		customerDto.setPhotos(preparePhotos());
+		customerDto.setKycDocuments(prepareDocuments());
 		return new ResponseEntity<>(customerDto, HttpStatus.OK);
 	}
 
@@ -65,15 +64,15 @@ public class KYCController {
 			BufferedImage image = null;
 			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 			image = ImageIO.read(convFile);
-			ImageIO.write(image, extension, new File("D://" + file.getOriginalFilename() ));
+			ImageIO.write(image, extension, new File("D://" + file.getOriginalFilename()));
 		} catch (Exception e) {
 
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	private List<PhotosDTO> preparePhotos() {
-		PhotosDTO photosDTO = new PhotosDTO();
+	private List<KycDocuments> prepareDocuments() {
+		KycDocuments kycDocuments = new KycDocuments();
 		return null;
 	}
 

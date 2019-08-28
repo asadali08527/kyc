@@ -5,13 +5,15 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import co.yabx.kyc.app.entity.KycDocuments;
+
 /**
  * 
  * @author Asad.ali
  *
  */
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class KYCDTO implements Serializable {
+public class KycDetailsDTO implements Serializable {
 
 	private String firstName;
 	private String middleName;
@@ -24,7 +26,7 @@ public class KYCDTO implements Serializable {
 	private String idType;
 	private String idNumber;
 	private String idLink;
-	private List<PhotosDTO> photos;
+	private List<KycDocuments> kycDocuments;
 
 	public String getFirstName() {
 		return firstName;
@@ -114,20 +116,20 @@ public class KYCDTO implements Serializable {
 		this.idLink = idLink;
 	}
 
-	public List<PhotosDTO> getPhotos() {
-		return photos;
+	public List<KycDocuments> getKycDocuments() {
+		return kycDocuments;
 	}
 
-	public void setPhotos(List<PhotosDTO> photos) {
-		this.photos = photos;
+	public void setKycDocuments(List<KycDocuments> kycDocuments) {
+		this.kycDocuments = kycDocuments;
 	}
 
 	@Override
 	public String toString() {
-		return "KYCDTO [firstName=" + firstName + ", middleName=" + middleName + ", lastName=" + lastName
+		return "KycDetailsDTO [firstName=" + firstName + ", middleName=" + middleName + ", lastName=" + lastName
 				+ ", isVerified=" + isVerified + ", address=" + address + ", area=" + area + ", city=" + city
 				+ ", zipCode=" + zipCode + ", idType=" + idType + ", idNumber=" + idNumber + ", idLink=" + idLink
-				+ ", photos=" + photos + "]";
+				+ ", kycDocuments=" + kycDocuments + "]";
 	}
 
 }

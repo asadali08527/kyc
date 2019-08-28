@@ -31,9 +31,9 @@ public class AdditionalFieldsValue {
 	@Column(name = "additional_category_field_id")
 	private AdditionalCategoryFields additionalCategoryFields;
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = KYC.class)
-	@JoinColumn(name = "kyc_id")
-	private KYC kyc;
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = KycDetails.class)
+	@JoinColumn(name = "kyc_details_id")
+	private KycDetails kycDetails;
 
 	@Column(name = "created_at")
 	private Date createdTime;
@@ -80,14 +80,6 @@ public class AdditionalFieldsValue {
 		this.additionalCategoryFields = additionalCategoryFields;
 	}
 
-	public KYC getKyc() {
-		return kyc;
-	}
-
-	public void setKyc(KYC kyc) {
-		this.kyc = kyc;
-	}
-
 	public Date getCreatedTime() {
 		return createdTime;
 	}
@@ -102,6 +94,21 @@ public class AdditionalFieldsValue {
 
 	public void setUpdatedTime(Date updatedTime) {
 		this.updatedTime = updatedTime;
+	}
+
+	public KycDetails getKycDetails() {
+		return kycDetails;
+	}
+
+	public void setKycDetails(KycDetails kycDetails) {
+		this.kycDetails = kycDetails;
+	}
+
+	@Override
+	public String toString() {
+		return "AdditionalFieldsValue [id=" + id + ", fieldValue=" + fieldValue + ", additionalCategoryFields="
+				+ additionalCategoryFields + ", kycDetails=" + kycDetails + ", createdTime=" + createdTime
+				+ ", updatedTime=" + updatedTime + "]";
 	}
 
 }

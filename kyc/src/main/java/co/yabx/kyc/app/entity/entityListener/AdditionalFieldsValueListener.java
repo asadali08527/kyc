@@ -4,15 +4,19 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
 import co.yabx.kyc.app.entity.AdditionalFieldsValue;
-import co.yabx.kyc.app.entity.KYC;
+import co.yabx.kyc.app.entity.KycDetails;
 
 public class AdditionalFieldsValueListener extends Listener {
 	@PrePersist
 	@PreUpdate
 	public void persist(AdditionalFieldsValue additionalFieldsValue) {
 
-		  if (checkEnableDisable()) { if (additionalFieldsValue != null) { KYC kyc =
-		  additionalFieldsValue.getKyc(); publishKycId(kyc.getId()); } }
-		 }
+		if (checkEnableDisable()) {
+			if (additionalFieldsValue != null) {
+				KycDetails kyc = additionalFieldsValue.getKycDetails();
+				publishKycId(kyc.getMsisdn());
+			}
+		}
+	}
 
 }
