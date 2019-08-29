@@ -50,6 +50,30 @@ public class KycDetails implements Serializable {
 
 	@Column(name = "gender")
 	private String gender;
+	
+	@Column(name = "created_by")
+	private String createdBy;
+	
+	@Column(name = "update_by")
+	private String updatedBy;
+	
+	
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
 
 	public Date getCreatedAt() {
 		return createdAt;

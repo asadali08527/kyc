@@ -2,14 +2,11 @@ package co.yabx.kyc.app.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -40,6 +37,28 @@ public class AccountStatuses implements Serializable {
 
 	@Column(name = "transaction_status")
 	private String transactionStatus;
+
+	@Column(name = "created_by")
+	private String createdBy;
+
+	@Column(name = "update_by")
+	private String updatedBy;
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
 
 	public Date getCreatedAt() {
 		return createdAt;

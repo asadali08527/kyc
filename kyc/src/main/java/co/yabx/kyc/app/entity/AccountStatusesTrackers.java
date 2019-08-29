@@ -13,8 +13,8 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "account_statuses_history")
-public class AccountStatusesHistory implements Serializable {
+@Table(name = "account_statuses_trackers")
+public class AccountStatusesTrackers implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,6 +36,28 @@ public class AccountStatusesHistory implements Serializable {
 
 	@Column(name = "changed_at")
 	private Date changedAt;
+
+	@Column(name = "created_by")
+	private String createdBy;
+
+	@Column(name = "update_by")
+	private String updatedBy;
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
 
 	@PrePersist
 	protected void insertDates() {
