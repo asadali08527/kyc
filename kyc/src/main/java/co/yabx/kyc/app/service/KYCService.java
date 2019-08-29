@@ -1,8 +1,7 @@
 package co.yabx.kyc.app.service;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import co.yabx.kyc.app.dto.KycDetailsDTO;
+import co.yabx.kyc.app.entity.KycDetails;
 
 /**
  * 
@@ -11,8 +10,8 @@ import co.yabx.kyc.app.dto.KycDetailsDTO;
  */
 public interface KYCService {
 
-	public void persistKYC(KycDetailsDTO kycdto);
+	public KycDetails persistKYC(KycDetailsDTO kycdto);
 
-	public void persistPhoto(MultipartFile multipartFile);
+	public KycDetailsDTO getKycDetails(String msisdn);
 
 }

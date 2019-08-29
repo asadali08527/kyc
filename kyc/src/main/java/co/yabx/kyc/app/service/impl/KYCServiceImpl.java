@@ -1,10 +1,17 @@
 package co.yabx.kyc.app.service.impl;
 
+import java.util.List;
+
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import co.yabx.kyc.app.dto.KycDetailsDTO;
+import co.yabx.kyc.app.dto.KycDocumentsDTO;
+import co.yabx.kyc.app.dto.dtoHelper.KycDtoHelper;
+import co.yabx.kyc.app.entity.KycDetails;
+import co.yabx.kyc.app.entity.KycDocuments;
 import co.yabx.kyc.app.repository.KycDetailsRepository;
 import co.yabx.kyc.app.repository.KycDocumentsRepository;
 import co.yabx.kyc.app.service.KYCService;
@@ -18,15 +25,64 @@ public class KYCServiceImpl implements KYCService {
 	private KycDocumentsRepository kycDocumentsRepository;
 
 	@Override
-	public void persistKYC(KycDetailsDTO kycdto) {
-		// TODO Auto-generated method stub
+	@Transactional
+	public KycDetails persistKYC(KycDetailsDTO kycDetailsDTO) {
+		if (kycDetailsDTO != null) {
+			boolean isNewKyc = false;
+			String msisdn = kycDetailsDTO.getMsisdn();
+			KycDetails kycDetails = kycDetailsRepository.findOne(msisdn);
+			if (kycDetails == null) {
+				kycDetails = new KycDetails();
+				kycDetails.setMsisdn(msisdn);
+				kycDetails.setCreatedBy(kycDetailsDTO.getUserId());
+				isNewKyc = true;
+			}
+			kycDetails.setArea(kycDetailsDTO.getArea());
+			kycDetails.setCity(kycDetailsDTO.getCity());
+			kycDetails.setUpdatedBy(kycDetailsDTO.getUserId());
+			kycDetails.setDob(kycDetailsDTO.getDob());
+			kycDetails.setFirstName(kycDetailsDTO.getFirstName());
+			kycDetails.setGender(kycDetailsDTO.getGender());
+			kycDetails.setHouseNumberOrStreetName(kycDetailsDTO.getHouseNumberOrStreetName());
+			kycDetails.setLastName(kycDetailsDTO.getLastName());
+			kycDetails.setMiddleName(kycDetailsDTO.getMiddleName());
+			kycDetails.setZipCode(kycDetailsDTO.getZipCode());
+			kycDetails = kycDetailsRepository.save(kycDetails);
 
+			List<KycDocuments> oldDocumentsLists = kycDocumentsRepository.findByMsisdn(msisdn);
+			if (oldDocumentsLists == null || oldDocumentsLists.isEmpty()) {
+				List<KycDocumentsDTO> newDocumentsList = kycDetailsDTO.getKycDocuments();
+				for (KycDocumentsDTO kycDocumentsDTO : newDocumentsList) {
+					KycDocuments kycDocuments = null;
+					if (isNewKyc) {
+						kycDocuments = new KycDocuments();
+					}
+					kycDocuments.setDocumentExpiryDate(kycDocumentsDTO.getDocumentExpiryDate());
+					kycDocuments.setDocumentIssueDate(kycDocumentsDTO.getDocumentIssueDate());
+					kycDocuments.setDocumentNumber(kycDocumentsDTO.getDocumentNumber());
+					kycDocuments.setDocumentSide(kycDocumentsDTO.getDocumentSide());
+					kycDocuments.setDocumentType(kycDocumentsDTO.getDocumentType());
+					kycDocuments.setDocumentUrl(kycDocumentsDTO.getDocumentUrl());
+					kycDocuments.setMsisdn(msisdn);
+					kycDocuments.setSelfie(kycDocumentsDTO.isSelfie());
+					kycDocuments.setSnapTime(kycDocumentsDTO.getSnapTime());
+					kycDocumentsRepository.save(kycDocuments);
+
+				}
+			}
+			return kycDetails;
+		}
+		return null;
 	}
 
 	@Override
-	public void persistPhoto(MultipartFile multipartFile) {
-		// TODO Auto-generated method stub
-
+	public KycDetailsDTO getKycDetails(String msisdn) {
+		KycDetails kycDetails = kycDetailsRepository.findOne(msisdn);
+		if (kycDetails != null) {
+			List<KycDocuments> oldDocumentsLists = kycDocumentsRepository.findByMsisdn(msisdn);
+			return KycDtoHelper.prepareDto(kycDetails, oldDocumentsLists);
+		}
+		return null;
 	}
 
 }

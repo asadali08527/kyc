@@ -1,32 +1,35 @@
 package co.yabx.kyc.app.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import co.yabx.kyc.app.entity.KycDocuments;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * 
  * @author Asad.ali
  *
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class KycDetailsDTO implements Serializable {
-
+	private String msisdn;
 	private String firstName;
 	private String middleName;
 	private String lastName;
-	private Boolean isVerified;
-	private String address;
+	private String houseNumberOrStreetName;
 	private String area;
 	private String city;
-	private String zipCode;
-	private String idType;
-	private String idNumber;
-	private String idLink;
-	private List<KycDocuments> kycDocuments;
+	private Integer zipCode;
+	private Long dob;
+	private String gender;
+	private String userId;
+	private String createdBy;
+	private String updatedBy;
+	private Date createdAt;
+	private Date updatedAt;
+
+	private List<KycDocumentsDTO> kycDocuments;
 
 	public String getFirstName() {
 		return firstName;
@@ -52,22 +55,6 @@ public class KycDetailsDTO implements Serializable {
 		this.lastName = lastName;
 	}
 
-	public Boolean getIsVerified() {
-		return isVerified;
-	}
-
-	public void setIsVerified(Boolean isVerified) {
-		this.isVerified = isVerified;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
 	public String getArea() {
 		return area;
 	}
@@ -84,52 +71,101 @@ public class KycDetailsDTO implements Serializable {
 		this.city = city;
 	}
 
-	public String getZipCode() {
-		return zipCode;
+	public String getMsisdn() {
+		return msisdn;
 	}
 
-	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
+	public void setMsisdn(String msisdn) {
+		this.msisdn = msisdn;
 	}
 
-	public String getIdType() {
-		return idType;
+	public String getHouseNumberOrStreetName() {
+		return houseNumberOrStreetName;
 	}
 
-	public void setIdType(String idType) {
-		this.idType = idType;
+	public void setHouseNumberOrStreetName(String houseNumberOrStreetName) {
+		this.houseNumberOrStreetName = houseNumberOrStreetName;
 	}
 
-	public String getIdNumber() {
-		return idNumber;
+	public Long getDob() {
+		return dob;
 	}
 
-	public void setIdNumber(String idNumber) {
-		this.idNumber = idNumber;
+	public void setDob(Long dob) {
+		this.dob = dob;
 	}
 
-	public String getIdLink() {
-		return idLink;
+	public String getGender() {
+		return gender;
 	}
 
-	public void setIdLink(String idLink) {
-		this.idLink = idLink;
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
-	public List<KycDocuments> getKycDocuments() {
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public List<KycDocumentsDTO> getKycDocuments() {
 		return kycDocuments;
 	}
 
-	public void setKycDocuments(List<KycDocuments> kycDocuments) {
+	public void setKycDocuments(List<KycDocumentsDTO> kycDocuments) {
 		this.kycDocuments = kycDocuments;
+	}
+
+	public Integer getZipCode() {
+		return zipCode;
+	}
+
+	public void setZipCode(Integer zipCode) {
+		this.zipCode = zipCode;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	@Override
 	public String toString() {
-		return "KycDetailsDTO [firstName=" + firstName + ", middleName=" + middleName + ", lastName=" + lastName
-				+ ", isVerified=" + isVerified + ", address=" + address + ", area=" + area + ", city=" + city
-				+ ", zipCode=" + zipCode + ", idType=" + idType + ", idNumber=" + idNumber + ", idLink=" + idLink
-				+ ", kycDocuments=" + kycDocuments + "]";
+		return "KycDetailsDTO [msisdn=" + msisdn + ", firstName=" + firstName + ", middleName=" + middleName
+				+ ", lastName=" + lastName + ", houseNumberOrStreetName=" + houseNumberOrStreetName + ", area=" + area
+				+ ", city=" + city + ", zipCode=" + zipCode + ", dob=" + dob + ", gender=" + gender + ", userId="
+				+ userId + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy + ", createdAt=" + createdAt
+				+ ", updatedAt=" + updatedAt + ", kycDocuments=" + kycDocuments + "]";
 	}
 
 }

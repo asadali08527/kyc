@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.PrePersist;
@@ -12,9 +14,9 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "account_statuses", indexes = { @Index(name = "is_kyc_verified", columnList = "is_kyc_verified"),
+@Table(name = "account_statuses", indexes = { @Index(name = "kyc_verified", columnList = "kyc_verified"),
 		@Index(name = "aml_cft_status", columnList = "aml_cft_status"),
-		@Index(name = "is_kyc_available", columnList = "is_kyc_available") })
+		@Index(name = "account_status", columnList = "account_status") })
 public class AccountStatuses implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -26,14 +28,16 @@ public class AccountStatuses implements Serializable {
 	@Column(name = "is_kyc_available")
 	private boolean isKycAvailable;
 
-	@Column(name = "is_kyc_verified")
-	private boolean isKycVerified;
+	@Column(name = "kyc_verified", nullable = false, columnDefinition = "varchar(32) default 'NO'")
+	@Enumerated(value = EnumType.STRING)
+	private KycVerified KycVerified;
 
 	@Column(name = "aml_cft_status")
 	private String amlCftStatus;
 
-	@Column(name = "account_status", nullable = false)
-	private String accountStatus;
+	@Column(name = "account_status", nullable = false, columnDefinition = "varchar(32) default 'NEW'")
+	@Enumerated(value = EnumType.STRING)
+	private AccountStatus accountStatus;
 
 	@Column(name = "transaction_status")
 	private String transactionStatus;
@@ -43,6 +47,9 @@ public class AccountStatuses implements Serializable {
 
 	@Column(name = "update_by")
 	private String updatedBy;
+
+	@Column(name = "reason")
+	private String updateReason;
 
 	public String getCreatedBy() {
 		return createdBy;
@@ -113,14 +120,6 @@ public class AccountStatuses implements Serializable {
 		this.isKycAvailable = isKycAvailable;
 	}
 
-	public boolean isKycVerified() {
-		return isKycVerified;
-	}
-
-	public void setKycVerified(boolean isKycVerified) {
-		this.isKycVerified = isKycVerified;
-	}
-
 	public String getAmlCftStatus() {
 		return amlCftStatus;
 	}
@@ -129,11 +128,11 @@ public class AccountStatuses implements Serializable {
 		this.amlCftStatus = amlCftStatus;
 	}
 
-	public String getAccountStatus() {
+	public AccountStatus getAccountStatus() {
 		return accountStatus;
 	}
 
-	public void setAccountStatus(String accountStatus) {
+	public void setAccountStatus(AccountStatus accountStatus) {
 		this.accountStatus = accountStatus;
 	}
 
@@ -145,12 +144,28 @@ public class AccountStatuses implements Serializable {
 		this.transactionStatus = transactionStatus;
 	}
 
+	public KycVerified getKycVerified() {
+		return KycVerified;
+	}
+
+	public void setKycVerified(KycVerified kycVerified) {
+		KycVerified = kycVerified;
+	}
+
+	public String getUpdateReason() {
+		return updateReason;
+	}
+
+	public void setUpdateReason(String updateReason) {
+		this.updateReason = updateReason;
+	}
+
 	@Override
 	public String toString() {
-		return "AccountStatuses [msisdn=" + msisdn + ", isKycAvailable=" + isKycAvailable + ", isKycVerified="
-				+ isKycVerified + ", amlCftStatus=" + amlCftStatus + ", accountStatus=" + accountStatus
-				+ ", transactionStatus=" + transactionStatus + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
-				+ "]";
+		return "AccountStatuses [msisdn=" + msisdn + ", isKycAvailable=" + isKycAvailable + ", KycVerified="
+				+ KycVerified + ", amlCftStatus=" + amlCftStatus + ", accountStatus=" + accountStatus
+				+ ", transactionStatus=" + transactionStatus + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
+				+ ", updateReason=" + updateReason + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
 
 }

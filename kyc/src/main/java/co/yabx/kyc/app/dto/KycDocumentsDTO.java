@@ -3,22 +3,18 @@ package co.yabx.kyc.app.dto;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.springframework.web.multipart.MultipartFile;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import co.yabx.kyc.app.entity.KycDetails;
-
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class KycDocumentsDTO implements Serializable {
 
-	private String id;
+	private Long id;
 
-	private KycDetails kycDetails;
+	private String msisdn;
 
-	private String photoSide;
+	private String documentSide;
 
-	private String photoUrl;
+	private String documentUrl;
 
 	private Date snapTime;
 
@@ -28,30 +24,20 @@ public class KycDocumentsDTO implements Serializable {
 
 	private Date updatedAt;
 
-	private MultipartFile photo;
+	private String documentNumber;
 
-	public String getId() {
+	private String documentType;
+
+	private Long documentIssueDate;
+
+	private Long documentExpiryDate;
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getPhotoSide() {
-		return photoSide;
-	}
-
-	public void setPhotoSide(String photoSide) {
-		this.photoSide = photoSide;
-	}
-
-	public String getPhotoUrl() {
-		return photoUrl;
-	}
-
-	public void setPhotoUrl(String photoUrl) {
-		this.photoUrl = photoUrl;
 	}
 
 	public Date getSnapTime() {
@@ -86,27 +72,68 @@ public class KycDocumentsDTO implements Serializable {
 		this.updatedAt = updatedAt;
 	}
 
-	public MultipartFile getPhoto() {
-		return photo;
+	public String getDocumentSide() {
+		return documentSide;
 	}
 
-	public void setPhoto(MultipartFile photo) {
-		this.photo = photo;
+	public void setDocumentSide(String documentSide) {
+		this.documentSide = documentSide;
 	}
 
-	public KycDetails getKycDetails() {
-		return kycDetails;
+	public String getDocumentUrl() {
+		return documentUrl;
 	}
 
-	public void setKycDetails(KycDetails kycDetails) {
-		this.kycDetails = kycDetails;
+	public void setDocumentUrl(String documentUrl) {
+		this.documentUrl = documentUrl;
+	}
+
+	public String getDocumentNumber() {
+		return documentNumber;
+	}
+
+	public void setDocumentNumber(String documentNumber) {
+		this.documentNumber = documentNumber;
+	}
+
+	public String getDocumentType() {
+		return documentType;
+	}
+
+	public void setDocumentType(String documentType) {
+		this.documentType = documentType;
+	}
+
+	public Long getDocumentIssueDate() {
+		return documentIssueDate;
+	}
+
+	public void setDocumentIssueDate(Long documentIssueDate) {
+		this.documentIssueDate = documentIssueDate;
+	}
+
+	public Long getDocumentExpiryDate() {
+		return documentExpiryDate;
+	}
+
+	public void setDocumentExpiryDate(Long documentExpiryDate) {
+		this.documentExpiryDate = documentExpiryDate;
+	}
+
+	public String getMsisdn() {
+		return msisdn;
+	}
+
+	public void setMsisdn(String msisdn) {
+		this.msisdn = msisdn;
 	}
 
 	@Override
 	public String toString() {
-		return "KycDocumentsDTO [id=" + id + ", kycDetails=" + kycDetails + ", photoSide=" + photoSide + ", photoUrl="
-				+ photoUrl + ", snapTime=" + snapTime + ", isSelfie=" + isSelfie + ", createdAt=" + createdAt
-				+ ", updatedAt=" + updatedAt + ", photo=" + photo + "]";
+		return "KycDocumentsDTO [id=" + id + ", msisdn=" + msisdn + ", documentSide=" + documentSide + ", documentUrl="
+				+ documentUrl + ", snapTime=" + snapTime + ", isSelfie=" + isSelfie + ", createdAt=" + createdAt
+				+ ", updatedAt=" + updatedAt + ", documentNumber=" + documentNumber + ", documentType=" + documentType
+				+ ", documentIssueDate=" + documentIssueDate + ", documentExpiryDate=" + documentExpiryDate + "]";
 	}
 
 }

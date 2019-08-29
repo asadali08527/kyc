@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -25,11 +27,13 @@ public class AccountStatusesTrackers implements Serializable {
 	@Column(name = "msisdn", nullable = false)
 	private String msisdn;
 
-	@Column(name = "from_status", nullable = false)
-	private String from;
+	@Column(name = "from_status", columnDefinition = "varchar(32) default 'NEW'")
+	@Enumerated(value = EnumType.STRING)
+	private AccountStatus from;
 
-	@Column(name = "to_status", nullable = false)
-	private String to;
+	@Column(name = "to_status", columnDefinition = "varchar(32) default 'NEW'")
+	@Enumerated(value = EnumType.STRING)
+	private AccountStatus to;
 
 	@Column(name = "reason")
 	private String reason;
@@ -88,24 +92,24 @@ public class AccountStatusesTrackers implements Serializable {
 		this.id = id;
 	}
 
-	public String getFrom() {
+	public String getReason() {
+		return reason;
+	}
+
+	public AccountStatus getFrom() {
 		return from;
 	}
 
-	public void setFrom(String from) {
+	public void setFrom(AccountStatus from) {
 		this.from = from;
 	}
 
-	public String getTo() {
+	public AccountStatus getTo() {
 		return to;
 	}
 
-	public void setTo(String to) {
+	public void setTo(AccountStatus to) {
 		this.to = to;
-	}
-
-	public String getReason() {
-		return reason;
 	}
 
 	public void setReason(String reason) {

@@ -18,7 +18,8 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "kyc_documents", indexes = { @Index(name = "document_number", columnList = "document_number"),
+@Table(name = "kyc_documents", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
+		@Index(name = "document_number", columnList = "document_number"),
 		@Index(name = "document_type", columnList = "document_type") })
 public class KycDocuments {
 
@@ -26,8 +27,8 @@ public class KycDocuments {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "kyc_details_id")
-	private KycDetails kycDetails;
+	@Column(name = "msisdn")
+	private String msisdn;
 
 	@Column(name = "document_side")
 	private String documentSide;
@@ -114,14 +115,6 @@ public class KycDocuments {
 		updatedAt = new Date();
 	}
 
-	public KycDetails getKycDetails() {
-		return kycDetails;
-	}
-
-	public void setKycDetails(KycDetails kycDetails) {
-		this.kycDetails = kycDetails;
-	}
-
 	public String getDocumentSide() {
 		return documentSide;
 	}
@@ -168,6 +161,22 @@ public class KycDocuments {
 
 	public void setDocumentExpiryDate(Long documentExpiryDate) {
 		this.documentExpiryDate = documentExpiryDate;
+	}
+
+	public String getMsisdn() {
+		return msisdn;
+	}
+
+	public void setMsisdn(String msisdn) {
+		this.msisdn = msisdn;
+	}
+
+	@Override
+	public String toString() {
+		return "KycDocuments [id=" + id + ", msisdn=" + msisdn + ", documentSide=" + documentSide + ", documentUrl="
+				+ documentUrl + ", snapTime=" + snapTime + ", isSelfie=" + isSelfie + ", createdAt=" + createdAt
+				+ ", updatedAt=" + updatedAt + ", documentNumber=" + documentNumber + ", documentType=" + documentType
+				+ ", documentIssueDate=" + documentIssueDate + ", documentExpiryDate=" + documentExpiryDate + "]";
 	}
 
 }
