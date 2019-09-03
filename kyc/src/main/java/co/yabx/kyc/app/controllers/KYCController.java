@@ -51,15 +51,17 @@ public class KYCController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KYCController.class);
 
 	@RequestMapping(value = "/kyc/create", method = RequestMethod.POST)
-	public ResponseEntity<?> createAccount(@RequestBody KycDetailsDTO kycDetailsDTO) {
+	public ResponseEntity<?> createAccount(@RequestBody List<KycDetailsDTO> kycDetailsDTO) {
 		if (kycDetailsDTO != null) {
-			KycDetails kycDetails = kycService.persistKYC(kycDetailsDTO);
-			if (kycDetails != null) {
-				AccountStatuses accountStatuses = accountStatusService.createAccountStatus(kycDetails);
-				if (accountStatuses != null) {
-					AccountStatusesTrackers accountStatusesTrackers = accountStatusTrackerService
-							.createAccountTracker(accountStatuses);
-					return new ResponseEntity<>(kycDetails, HttpStatus.OK);
+			List<KycDetails> kycDetailsList = kycService.persistKYC(kycDetailsDTO);
+			if (kycDetailsList != null && !kycDetailsList.isEmpty()) {
+				for (KycDetails kycDetails : kycDetailsList) {
+					AccountStatuses accountStatuses = accountStatusService.createAccountStatus(kycDetails);
+					if (accountStatuses != null) {
+						AccountStatusesTrackers accountStatusesTrackers = accountStatusTrackerService
+								.createAccountTracker(accountStatuses);
+					}
+					return new ResponseEntity<>(HttpStatus.OK);
 
 				}
 			}
@@ -81,7 +83,7 @@ public class KYCController {
 	}
 
 	@RequestMapping(value = "/kyc/details", method = RequestMethod.GET)
-	public ResponseEntity<?> createAccount(@RequestParam(name = "msisdn") String msisdn) {
+	public ResponseEntity<?> getKycdetails(@RequestParam(name = "msisdn") String msisdn) {
 		if (msisdn != null) {
 			KycDetailsDTO kycDetailsDTO = kycService.getKycDetails(msisdn);
 			if (kycDetailsDTO != null)

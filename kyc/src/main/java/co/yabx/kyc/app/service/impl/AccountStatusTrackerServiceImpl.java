@@ -1,24 +1,17 @@
 package co.yabx.kyc.app.service.impl;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.yabx.kyc.app.KYCApplication;
-import co.yabx.kyc.app.dto.AccountStatusDTO;
 import co.yabx.kyc.app.entity.AccountStatus;
 import co.yabx.kyc.app.entity.AccountStatuses;
 import co.yabx.kyc.app.entity.AccountStatusesTrackers;
-import co.yabx.kyc.app.entity.KycDetails;
-import co.yabx.kyc.app.entity.KycVerified;
 import co.yabx.kyc.app.repository.AccountStatusesRepository;
 import co.yabx.kyc.app.repository.AccountStatusesTrackersRepository;
 import co.yabx.kyc.app.repository.KycDetailsRepository;
 import co.yabx.kyc.app.repository.KycDocumentsRepository;
-import co.yabx.kyc.app.service.AccountStatusService;
 import co.yabx.kyc.app.service.AccountStatusTrackerService;
 import co.yabx.kyc.app.service.AppConfigService;
 

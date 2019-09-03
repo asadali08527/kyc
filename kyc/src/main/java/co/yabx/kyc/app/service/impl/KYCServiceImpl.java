@@ -1,5 +1,6 @@
 package co.yabx.kyc.app.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -26,53 +27,56 @@ public class KYCServiceImpl implements KYCService {
 
 	@Override
 	@Transactional
-	public KycDetails persistKYC(KycDetailsDTO kycDetailsDTO) {
-		if (kycDetailsDTO != null) {
-			boolean isNewKyc = false;
-			String msisdn = kycDetailsDTO.getMsisdn();
-			KycDetails kycDetails = kycDetailsRepository.findOne(msisdn);
-			if (kycDetails == null) {
-				kycDetails = new KycDetails();
-				kycDetails.setMsisdn(msisdn);
-				kycDetails.setCreatedBy(kycDetailsDTO.getUserId());
-				isNewKyc = true;
-			}
-			kycDetails.setArea(kycDetailsDTO.getArea());
-			kycDetails.setCity(kycDetailsDTO.getCity());
-			kycDetails.setUpdatedBy(kycDetailsDTO.getUserId());
-			kycDetails.setDob(kycDetailsDTO.getDob());
-			kycDetails.setFirstName(kycDetailsDTO.getFirstName());
-			kycDetails.setGender(kycDetailsDTO.getGender());
-			kycDetails.setHouseNumberOrStreetName(kycDetailsDTO.getHouseNumberOrStreetName());
-			kycDetails.setLastName(kycDetailsDTO.getLastName());
-			kycDetails.setMiddleName(kycDetailsDTO.getMiddleName());
-			kycDetails.setZipCode(kycDetailsDTO.getZipCode());
-			kycDetails = kycDetailsRepository.save(kycDetails);
-
-			List<KycDocuments> oldDocumentsLists = kycDocumentsRepository.findByMsisdn(msisdn);
-			if (oldDocumentsLists == null || oldDocumentsLists.isEmpty()) {
-				List<KycDocumentsDTO> newDocumentsList = kycDetailsDTO.getKycDocuments();
-				for (KycDocumentsDTO kycDocumentsDTO : newDocumentsList) {
-					KycDocuments kycDocuments = null;
-					if (isNewKyc) {
-						kycDocuments = new KycDocuments();
-					}
-					kycDocuments.setDocumentExpiryDate(kycDocumentsDTO.getDocumentExpiryDate());
-					kycDocuments.setDocumentIssueDate(kycDocumentsDTO.getDocumentIssueDate());
-					kycDocuments.setDocumentNumber(kycDocumentsDTO.getDocumentNumber());
-					kycDocuments.setDocumentSide(kycDocumentsDTO.getDocumentSide());
-					kycDocuments.setDocumentType(kycDocumentsDTO.getDocumentType());
-					kycDocuments.setDocumentUrl(kycDocumentsDTO.getDocumentUrl());
-					kycDocuments.setMsisdn(msisdn);
-					kycDocuments.setSelfie(kycDocumentsDTO.isSelfie());
-					kycDocuments.setSnapTime(kycDocumentsDTO.getSnapTime());
-					kycDocumentsRepository.save(kycDocuments);
-
+	public List<KycDetails> persistKYC(List<KycDetailsDTO> kycDetailsDTOs) {
+		List<KycDetails> KycDetailsList = new ArrayList<KycDetails>();
+		for (KycDetailsDTO kycDetailsDTO : kycDetailsDTOs) {
+			if (kycDetailsDTO != null) {
+				boolean isNewKyc = false;
+				String msisdn = kycDetailsDTO.getMsisdn();
+				KycDetails kycDetails = kycDetailsRepository.findOne(msisdn);
+				if (kycDetails == null) {
+					kycDetails = new KycDetails();
+					kycDetails.setMsisdn(msisdn);
+					kycDetails.setCreatedBy(kycDetailsDTO.getUserId());
+					isNewKyc = true;
 				}
+				kycDetails.setArea(kycDetailsDTO.getArea());
+				kycDetails.setCity(kycDetailsDTO.getCity());
+				kycDetails.setUpdatedBy(kycDetailsDTO.getUserId());
+				kycDetails.setDob(kycDetailsDTO.getDob());
+				kycDetails.setFirstName(kycDetailsDTO.getFirstName());
+				kycDetails.setGender(kycDetailsDTO.getGender());
+				kycDetails.setHouseNumberOrStreetName(kycDetailsDTO.getHouseNumberOrStreetName());
+				kycDetails.setLastName(kycDetailsDTO.getLastName());
+				kycDetails.setMiddleName(kycDetailsDTO.getMiddleName());
+				kycDetails.setZipCode(kycDetailsDTO.getZipCode());
+				kycDetails = kycDetailsRepository.save(kycDetails);
+
+				List<KycDocuments> oldDocumentsLists = kycDocumentsRepository.findByMsisdn(msisdn);
+				if (oldDocumentsLists == null || oldDocumentsLists.isEmpty()) {
+					List<KycDocumentsDTO> newDocumentsList = kycDetailsDTO.getKycDocuments();
+					for (KycDocumentsDTO kycDocumentsDTO : newDocumentsList) {
+						KycDocuments kycDocuments = null;
+						if (isNewKyc) {
+							kycDocuments = new KycDocuments();
+						}
+						kycDocuments.setDocumentExpiryDate(kycDocumentsDTO.getDocumentExpiryDate());
+						kycDocuments.setDocumentIssueDate(kycDocumentsDTO.getDocumentIssueDate());
+						kycDocuments.setDocumentNumber(kycDocumentsDTO.getDocumentNumber());
+						kycDocuments.setDocumentSide(kycDocumentsDTO.getDocumentSide());
+						kycDocuments.setDocumentType(kycDocumentsDTO.getDocumentType());
+						kycDocuments.setDocumentUrl(kycDocumentsDTO.getDocumentUrl());
+						kycDocuments.setMsisdn(msisdn);
+						kycDocuments.setSelfie(kycDocumentsDTO.isSelfie());
+						kycDocuments.setSnapTime(kycDocumentsDTO.getSnapTime());
+						kycDocumentsRepository.save(kycDocuments);
+
+					}
+				}
+				KycDetailsList.add(kycDetails);
 			}
-			return kycDetails;
 		}
-		return null;
+		return KycDetailsList;
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package co.yabx.kyc.app.service;
 
+import java.util.List;
+
 import co.yabx.kyc.app.dto.KycDetailsDTO;
 import co.yabx.kyc.app.entity.KycDetails;
 
@@ -10,7 +12,7 @@ import co.yabx.kyc.app.entity.KycDetails;
  */
 public interface KYCService {
 
-	public KycDetails persistKYC(KycDetailsDTO kycdto);
+	public List<KycDetails> persistKYC(List<KycDetailsDTO> kycDetailsDTO);
 
 	public KycDetailsDTO getKycDetails(String msisdn);
 

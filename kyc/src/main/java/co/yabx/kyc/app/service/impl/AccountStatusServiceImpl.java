@@ -46,7 +46,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	@Override
 	@Transactional
 	public void updateAccountStatus(List<AccountStatusDTO> accountStatusDTOList) {
-		if (accountStatusDTOList != null && accountStatusDTOList.isEmpty()) {
+		if (accountStatusDTOList != null && !accountStatusDTOList.isEmpty()) {
 			for (AccountStatusDTO accountStatusDTO : accountStatusDTOList) {
 				AccountStatuses accountStatuses = accountStatusesRepository.findOne(accountStatusDTO.getMsisdn());
 				AccountStatus oldStatus = accountStatuses.getAccountStatus();
@@ -87,9 +87,9 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 			if (appConfigService.getBooleanProperty("IS_TO_PREPRE_ACCOUNT_STATUS_TRACKER_DTO_AS_WELL", true)) {
 				List<AccountStatusesTrackers> accountStatusesTrackers = accountStatusesTrackersRepository
 						.findByMsisdn(msisdn);
-				AccountStatusesDtoHelper.prepareDto(accountStatuses, accountStatusesTrackers);
+				return AccountStatusesDtoHelper.prepareDto(accountStatuses, accountStatusesTrackers);
 			} else {
-				AccountStatusesDtoHelper.prepareDto(accountStatuses, null);
+				return AccountStatusesDtoHelper.prepareDto(accountStatuses, null);
 			}
 		}
 		return null;
