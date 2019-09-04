@@ -56,21 +56,19 @@ public class KYCServiceImpl implements KYCService {
 				if (oldDocumentsLists == null || oldDocumentsLists.isEmpty()) {
 					List<KycDocumentsDTO> newDocumentsList = kycDetailsDTO.getKycDocuments();
 					for (KycDocumentsDTO kycDocumentsDTO : newDocumentsList) {
-						KycDocuments kycDocuments = null;
 						if (isNewKyc) {
-							kycDocuments = new KycDocuments();
+							KycDocuments kycDocuments = new KycDocuments();
+							kycDocuments.setDocumentExpiryDate(kycDocumentsDTO.getDocumentExpiryDate());
+							kycDocuments.setDocumentIssueDate(kycDocumentsDTO.getDocumentIssueDate());
+							kycDocuments.setDocumentNumber(kycDocumentsDTO.getDocumentNumber());
+							kycDocuments.setDocumentSide(kycDocumentsDTO.getDocumentSide());
+							kycDocuments.setDocumentType(kycDocumentsDTO.getDocumentType());
+							kycDocuments.setDocumentUrl(kycDocumentsDTO.getDocumentUrl());
+							kycDocuments.setMsisdn(msisdn);
+							kycDocuments.setSelfie(kycDocumentsDTO.isSelfie());
+							kycDocuments.setSnapTime(kycDocumentsDTO.getSnapTime());
+							kycDocumentsRepository.save(kycDocuments);
 						}
-						kycDocuments.setDocumentExpiryDate(kycDocumentsDTO.getDocumentExpiryDate());
-						kycDocuments.setDocumentIssueDate(kycDocumentsDTO.getDocumentIssueDate());
-						kycDocuments.setDocumentNumber(kycDocumentsDTO.getDocumentNumber());
-						kycDocuments.setDocumentSide(kycDocumentsDTO.getDocumentSide());
-						kycDocuments.setDocumentType(kycDocumentsDTO.getDocumentType());
-						kycDocuments.setDocumentUrl(kycDocumentsDTO.getDocumentUrl());
-						kycDocuments.setMsisdn(msisdn);
-						kycDocuments.setSelfie(kycDocumentsDTO.isSelfie());
-						kycDocuments.setSnapTime(kycDocumentsDTO.getSnapTime());
-						kycDocumentsRepository.save(kycDocuments);
-
 					}
 				}
 				KycDetailsList.add(kycDetails);

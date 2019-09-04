@@ -58,12 +58,10 @@ public class KYCController {
 				for (KycDetails kycDetails : kycDetailsList) {
 					AccountStatuses accountStatuses = accountStatusService.createAccountStatus(kycDetails);
 					if (accountStatuses != null) {
-						AccountStatusesTrackers accountStatusesTrackers = accountStatusTrackerService
-								.createAccountTracker(accountStatuses);
+						accountStatusTrackerService.createAccountTracker(accountStatuses);
 					}
-					return new ResponseEntity<>(HttpStatus.OK);
-
 				}
+				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		}
 		KycDetailsDTO customerDto = new KycDetailsDTO();

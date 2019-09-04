@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,20 +45,31 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	@Autowired
 	private AppConfigService appConfigService;
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AccountStatusServiceImpl.class);
+
 	@Override
 	@Transactional
 	public void updateAccountStatus(List<AccountStatusDTO> accountStatusDTOList) {
 		if (accountStatusDTOList != null && !accountStatusDTOList.isEmpty()) {
 			for (AccountStatusDTO accountStatusDTO : accountStatusDTOList) {
-				AccountStatuses accountStatuses = accountStatusesRepository.findOne(accountStatusDTO.getMsisdn());
-				AccountStatus oldStatus = accountStatuses.getAccountStatus();
-				accountStatuses.setAccountStatus(AccountStatus.valueOf(accountStatusDTO.getAccountStatus().name()));
-				accountStatuses.setAmlCftStatus(accountStatusDTO.getAmlCftStatus());
-				accountStatuses.setKycVerified(accountStatusDTO.getKycVerified());
-				accountStatuses.setUpdatedBy(accountStatusDTO.getUpdatedBy());
-				accountStatuses.setUpdateReason(accountStatusDTO.getUpdateReason());
-				accountStatuses = accountStatusesRepository.save(accountStatuses);
-				accountStatusTrackerService.updateAccountTracker(accountStatuses, oldStatus);
+				try {
+					AccountStatuses accountStatuses = accountStatusesRepository.findOne(accountStatusDTO.getMsisdn());
+					if (accountStatuses != null) {
+						AccountStatus oldStatus = accountStatuses.getAccountStatus();
+						accountStatuses
+								.setAccountStatus(AccountStatus.valueOf(accountStatusDTO.getAccountStatus().name()));
+						accountStatuses.setAmlCftStatus(accountStatusDTO.getAmlCftStatus());
+						accountStatuses.setKycVerified(accountStatusDTO.getKycVerified());
+						accountStatuses.setUpdatedBy(accountStatusDTO.getUpdatedBy());
+						accountStatuses.setUpdateReason(accountStatusDTO.getUpdateReason());
+						accountStatuses = accountStatusesRepository.save(accountStatuses);
+						accountStatusTrackerService.updateAccountTracker(accountStatuses, oldStatus);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					LOGGER.error("Exception raised while updating account status for msisdn={}, error={}",
+							accountStatusDTO.getMsisdn(), e.getMessage());
+				}
 			}
 		}
 	}
@@ -65,17 +78,26 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	@Transactional
 	public AccountStatuses createAccountStatus(KycDetails kycDetails) {
 		if (kycDetails != null) {
-			AccountStatuses accountStatuses = new AccountStatuses();
-			accountStatuses.setAccountStatus(AccountStatus.NEW);
-			accountStatuses.setAmlCftStatus(null);
-			accountStatuses.setCreatedBy(kycDetails.getCreatedBy());
-			accountStatuses.setKycAvailable(true);
-			accountStatuses.setKycVerified(KycVerified.NO);
-			accountStatuses.setMsisdn(kycDetails.getMsisdn());
-			accountStatuses.setUpdateReason(
-					appConfigService.getProperty("NEW_KYC_ACCOUNT_STATUS_REASON", "NEW KYC ACCOUNT CREATED"));
-			accountStatuses = accountStatusesRepository.save(accountStatuses);
-			return accountStatuses;
+			try {
+				AccountStatuses accountStatuses = accountStatusesRepository.findOne(kycDetails.getMsisdn());
+				if (accountStatuses == null) {
+					accountStatuses = new AccountStatuses();
+					accountStatuses.setAccountStatus(AccountStatus.NEW);
+					accountStatuses.setAmlCftStatus(null);
+					accountStatuses.setCreatedBy(kycDetails.getCreatedBy());
+					accountStatuses.setKycAvailable(true);
+					accountStatuses.setKycVerified(KycVerified.NO);
+					accountStatuses.setMsisdn(kycDetails.getMsisdn());
+					accountStatuses.setUpdateReason(
+							appConfigService.getProperty("NEW_KYC_ACCOUNT_STATUS_REASON", "NEW KYC ACCOUNT CREATED"));
+					accountStatuses = accountStatusesRepository.save(accountStatuses);
+					return accountStatuses;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOGGER.error("Exception raised while updating account status for msisdn={}, error={}",
+						kycDetails.getMsisdn(), e.getMessage());
+			}
 		}
 		return null;
 	}
@@ -84,15 +106,21 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	public AccountStatusDTO fetchAccountStatus(String msisdn) {
 		AccountStatuses accountStatuses = accountStatusesRepository.findOne(msisdn);
 		if (accountStatuses != null) {
-			if (appConfigService.getBooleanProperty("IS_TO_PREPRE_ACCOUNT_STATUS_TRACKER_DTO_AS_WELL", true)) {
-				List<AccountStatusesTrackers> accountStatusesTrackers = accountStatusesTrackersRepository
-						.findByMsisdn(msisdn);
-				return AccountStatusesDtoHelper.prepareDto(accountStatuses, accountStatusesTrackers);
-			} else {
-				return AccountStatusesDtoHelper.prepareDto(accountStatuses, null);
+			try {
+				if (appConfigService.getBooleanProperty("IS_TO_PREPRE_ACCOUNT_STATUS_TRACKER_DTO_AS_WELL", true)) {
+					List<AccountStatusesTrackers> accountStatusesTrackers = accountStatusesTrackersRepository
+							.findByMsisdn(msisdn);
+					return AccountStatusesDtoHelper.prepareDto(accountStatuses, accountStatusesTrackers);
+				} else {
+					return AccountStatusesDtoHelper.prepareDto(accountStatuses, null);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOGGER.error("Exception raised while updating account status for msisdn={}, error={}", msisdn,
+						e.getMessage());
 			}
 		}
-		return null;
+		return new AccountStatusDTO();
 	}
 
 }
