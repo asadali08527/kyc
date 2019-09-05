@@ -20,8 +20,10 @@ public class KycDetailsDTO implements Serializable {
 	private String houseNumberOrStreetName;
 	private String area;
 	private String city;
+	private String region;
 	private Integer zipCode;
 	private Long dob;
+	private String pob;
 	private String gender;
 	private String userId;
 	private String createdBy;
@@ -159,13 +161,29 @@ public class KycDetailsDTO implements Serializable {
 		this.updatedAt = updatedAt;
 	}
 
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public String getPob() {
+		return pob;
+	}
+
+	public void setPob(String pob) {
+		this.pob = pob;
+	}
+
 	@Override
 	public String toString() {
 		return "KycDetailsDTO [msisdn=" + msisdn + ", firstName=" + firstName + ", middleName=" + middleName
 				+ ", lastName=" + lastName + ", houseNumberOrStreetName=" + houseNumberOrStreetName + ", area=" + area
-				+ ", city=" + city + ", zipCode=" + zipCode + ", dob=" + dob + ", gender=" + gender + ", userId="
-				+ userId + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy + ", createdAt=" + createdAt
-				+ ", updatedAt=" + updatedAt + ", kycDocuments=" + kycDocuments + "]";
+				+ ", city=" + city + ", region=" + region + ", zipCode=" + zipCode + ", dob=" + dob + ", pob=" + pob
+				+ ", gender=" + gender + ", userId=" + userId + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", kycDocuments=" + kycDocuments + "]";
 	}
 
 }

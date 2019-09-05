@@ -1,5 +1,6 @@
 package co.yabx.kyc.app.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -21,7 +22,7 @@ import javax.persistence.Table;
 @Table(name = "kyc_documents", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
 		@Index(name = "document_number", columnList = "document_number"),
 		@Index(name = "document_type", columnList = "document_type") })
-public class KycDocuments {
+public class KycDocuments implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -56,6 +57,9 @@ public class KycDocuments {
 
 	@Column(name = "document_issue_date")
 	private Long documentIssueDate;
+
+	@Column(name = "issued_at_place")
+	private String placeOfIssue;
 
 	@Column(name = "document_expiry_date")
 	private Long documentExpiryDate;
@@ -171,12 +175,21 @@ public class KycDocuments {
 		this.msisdn = msisdn;
 	}
 
+	public String getPlaceOfIssue() {
+		return placeOfIssue;
+	}
+
+	public void setPlaceOfIssue(String placeOfIssue) {
+		this.placeOfIssue = placeOfIssue;
+	}
+
 	@Override
 	public String toString() {
 		return "KycDocuments [id=" + id + ", msisdn=" + msisdn + ", documentSide=" + documentSide + ", documentUrl="
 				+ documentUrl + ", snapTime=" + snapTime + ", isSelfie=" + isSelfie + ", createdAt=" + createdAt
 				+ ", updatedAt=" + updatedAt + ", documentNumber=" + documentNumber + ", documentType=" + documentType
-				+ ", documentIssueDate=" + documentIssueDate + ", documentExpiryDate=" + documentExpiryDate + "]";
+				+ ", documentIssueDate=" + documentIssueDate + ", placeOfIssue=" + placeOfIssue
+				+ ", documentExpiryDate=" + documentExpiryDate + "]";
 	}
 
 }

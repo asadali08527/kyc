@@ -1,5 +1,6 @@
 package co.yabx.kyc.app.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -18,7 +19,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(name = "additional_fields_value", uniqueConstraints = {
 		@UniqueConstraint(columnNames = { "kyc_details_id", "additional_category_field_id" }) })
-public class AdditionalFieldsValue {
+public class AdditionalFieldsValue implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id

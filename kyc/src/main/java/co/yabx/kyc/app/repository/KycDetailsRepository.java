@@ -8,4 +8,6 @@ import co.yabx.kyc.app.entity.KycDetails;
 @Repository("kycDetailsRepository")
 public interface KycDetailsRepository extends CrudRepository<KycDetails, String> {
 
+	KycDetails findByMsisdn(String encrytedMsisdn);
+
 }

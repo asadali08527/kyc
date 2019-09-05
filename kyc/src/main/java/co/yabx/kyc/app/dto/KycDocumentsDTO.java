@@ -31,6 +31,9 @@ public class KycDocumentsDTO implements Serializable {
 	private Long documentIssueDate;
 
 	private Long documentExpiryDate;
+	
+	private String placeOfIssue;
+
 
 	public Long getId() {
 		return id;
@@ -134,6 +137,14 @@ public class KycDocumentsDTO implements Serializable {
 				+ documentUrl + ", snapTime=" + snapTime + ", isSelfie=" + isSelfie + ", createdAt=" + createdAt
 				+ ", updatedAt=" + updatedAt + ", documentNumber=" + documentNumber + ", documentType=" + documentType
 				+ ", documentIssueDate=" + documentIssueDate + ", documentExpiryDate=" + documentExpiryDate + "]";
+	}
+
+	public String getPlaceOfIssue() {
+		return placeOfIssue;
+	}
+
+	public void setPlaceOfIssue(String placeOfIssue) {
+		this.placeOfIssue = placeOfIssue;
 	}
 
 }

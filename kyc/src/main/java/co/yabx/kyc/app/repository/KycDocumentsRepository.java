@@ -12,4 +12,6 @@ public interface KycDocumentsRepository extends CrudRepository<KycDocuments, Lon
 
 	List<KycDocuments> findByMsisdn(String msisdn);
 
+	List<KycDocuments> findByMsisdnAndDocumentType(String encrytedMsisdn, String documentType);
+
 }

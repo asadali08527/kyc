@@ -19,7 +19,8 @@ public class KycDtoHelper implements Serializable {
 	public static KycDetailsDTO prepareDto(KycDetails kycDetails, List<KycDocuments> oldDocumentsLists) {
 		if (kycDetails != null) {
 			KycDetailsDTO kycDetailsDTO = new KycDetailsDTO();
-			kycDetailsDTO.setMsisdn(kycDetails.getMsisdn());
+			kycDetailsDTO.setMsisdn(
+					MaskUtil.showDataInXXXFormat(EncoderDecoderUtil.base64Decode(kycDetails.getMsisdn()), "msisdn"));
 			kycDetailsDTO.setFirstName(MaskUtil
 					.showDataInXXXFormat(EncoderDecoderUtil.base64Decode(kycDetails.getFirstName()), "firstName"));
 			kycDetailsDTO.setMiddleName(MaskUtil
@@ -32,8 +33,12 @@ public class KycDtoHelper implements Serializable {
 					MaskUtil.showDataInXXXFormat(EncoderDecoderUtil.base64Decode(kycDetails.getArea()), "area"));
 			kycDetailsDTO.setCity(
 					MaskUtil.showDataInXXXFormat(EncoderDecoderUtil.base64Decode(kycDetails.getCity()), "city"));
+			kycDetailsDTO.setRegion(
+					MaskUtil.showDataInXXXFormat(EncoderDecoderUtil.base64Decode(kycDetails.getRegion()), "region"));
 			kycDetailsDTO.setZipCode(kycDetails.getZipCode());
 			kycDetailsDTO.setDob(kycDetails.getDob());
+			kycDetailsDTO
+					.setPob(MaskUtil.showDataInXXXFormat(EncoderDecoderUtil.base64Decode(kycDetails.getPob()), "pob"));
 			kycDetailsDTO.setGender(kycDetails.getGender());
 			kycDetailsDTO.setCreatedBy(kycDetails.getCreatedBy());
 			kycDetailsDTO.setUpdatedBy(kycDetails.getUpdatedBy());
@@ -56,6 +61,8 @@ public class KycDtoHelper implements Serializable {
 						EncoderDecoderUtil.base64Decode(kycDocuments.getDocumentNumber()), "documentNumber"));
 				kycDocumentsDto.setDocumentSide(kycDocuments.getDocumentSide());
 				kycDocumentsDto.setDocumentType(kycDocuments.getDocumentType());
+				kycDocumentsDto.setPlaceOfIssue(MaskUtil
+						.showDataInXXXFormat(EncoderDecoderUtil.base64Decode(kycDocuments.getPlaceOfIssue()), "poi"));
 				kycDocumentsDto.setDocumentUrl(EncoderDecoderUtil.base64Decode(kycDocuments.getDocumentUrl()));
 				kycDocumentsDto.setSelfie(kycDocuments.isSelfie());
 				kycDocumentsDto.setSnapTime(kycDocuments.getSnapTime());

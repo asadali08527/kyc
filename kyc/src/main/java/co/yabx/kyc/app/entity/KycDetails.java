@@ -5,16 +5,24 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "kyc_details")
+@Table(name = "kyc_details", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
+		@Index(name = "created_at", columnList = "created_at"),
+		@Index(name = "created_by", columnList = "created_by") })
 public class KycDetails implements Serializable {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+
 	@Column(name = "msisdn", unique = true, nullable = false)
 	private String msisdn;
 
@@ -36,6 +44,9 @@ public class KycDetails implements Serializable {
 	@Column(name = "city")
 	private String city;
 
+	@Column(name = "region")
+	private String region;
+
 	@Column(name = "zip_code")
 	private Integer zipCode;
 
@@ -44,20 +55,25 @@ public class KycDetails implements Serializable {
 
 	@Column(name = "updated_at")
 	private Date updatedAt;
-
+	/**
+	 * Date of birth
+	 */
 	@Column(name = "dob")
 	private Long dob;
+	/**
+	 * Place of birth
+	 */
+	@Column(name = "pob")
+	private String pob;
 
 	@Column(name = "gender")
 	private String gender;
-	
+
 	@Column(name = "created_by")
 	private String createdBy;
-	
+
 	@Column(name = "update_by")
 	private String updatedBy;
-	
-	
 
 	public String getCreatedBy() {
 		return createdBy;
@@ -186,12 +202,37 @@ public class KycDetails implements Serializable {
 		this.gender = gender;
 	}
 
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public String getPob() {
+		return pob;
+	}
+
+	public void setPob(String pob) {
+		this.pob = pob;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
-		return "KycDetails [msisdn=" + msisdn + ", firstName=" + firstName + ", middleName=" + middleName
+		return "KycDetails [id=" + id + ", msisdn=" + msisdn + ", firstName=" + firstName + ", middleName=" + middleName
 				+ ", lastName=" + lastName + ", houseNumberOrStreetName=" + houseNumberOrStreetName + ", area=" + area
-				+ ", city=" + city + ", zipCode=" + zipCode + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
-				+ ", dob=" + dob + ", gender=" + gender + "]";
+				+ ", city=" + city + ", region=" + region + ", zipCode=" + zipCode + ", createdAt=" + createdAt
+				+ ", updatedAt=" + updatedAt + ", dob=" + dob + ", pob=" + pob + ", gender=" + gender + ", createdBy="
+				+ createdBy + ", updatedBy=" + updatedBy + "]";
 	}
 
 }
