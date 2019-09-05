@@ -16,6 +16,7 @@ import co.yabx.kyc.app.entity.KycDocuments;
 import co.yabx.kyc.app.repository.KycDetailsRepository;
 import co.yabx.kyc.app.repository.KycDocumentsRepository;
 import co.yabx.kyc.app.service.KYCService;
+import co.yabx.kyc.app.util.EncoderDecoderUtil;
 
 @Service
 public class KYCServiceImpl implements KYCService {
@@ -40,15 +41,16 @@ public class KYCServiceImpl implements KYCService {
 					kycDetails.setCreatedBy(kycDetailsDTO.getUserId());
 					isNewKyc = true;
 				}
-				kycDetails.setArea(kycDetailsDTO.getArea());
-				kycDetails.setCity(kycDetailsDTO.getCity());
+				kycDetails.setArea(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getArea()));
+				kycDetails.setCity(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getCity()));
 				kycDetails.setUpdatedBy(kycDetailsDTO.getUserId());
 				kycDetails.setDob(kycDetailsDTO.getDob());
-				kycDetails.setFirstName(kycDetailsDTO.getFirstName());
+				kycDetails.setFirstName(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getFirstName()));
 				kycDetails.setGender(kycDetailsDTO.getGender());
-				kycDetails.setHouseNumberOrStreetName(kycDetailsDTO.getHouseNumberOrStreetName());
-				kycDetails.setLastName(kycDetailsDTO.getLastName());
-				kycDetails.setMiddleName(kycDetailsDTO.getMiddleName());
+				kycDetails.setHouseNumberOrStreetName(
+						EncoderDecoderUtil.base64Encode(kycDetailsDTO.getHouseNumberOrStreetName()));
+				kycDetails.setLastName(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getLastName()));
+				kycDetails.setMiddleName(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getMiddleName()));
 				kycDetails.setZipCode(kycDetailsDTO.getZipCode());
 				kycDetails = kycDetailsRepository.save(kycDetails);
 
@@ -60,10 +62,12 @@ public class KYCServiceImpl implements KYCService {
 							KycDocuments kycDocuments = new KycDocuments();
 							kycDocuments.setDocumentExpiryDate(kycDocumentsDTO.getDocumentExpiryDate());
 							kycDocuments.setDocumentIssueDate(kycDocumentsDTO.getDocumentIssueDate());
-							kycDocuments.setDocumentNumber(kycDocumentsDTO.getDocumentNumber());
+							kycDocuments.setDocumentNumber(
+									EncoderDecoderUtil.base64Encode(kycDocumentsDTO.getDocumentNumber()));
 							kycDocuments.setDocumentSide(kycDocumentsDTO.getDocumentSide());
 							kycDocuments.setDocumentType(kycDocumentsDTO.getDocumentType());
-							kycDocuments.setDocumentUrl(kycDocumentsDTO.getDocumentUrl());
+							kycDocuments
+									.setDocumentUrl(EncoderDecoderUtil.base64Encode(kycDocumentsDTO.getDocumentUrl()));
 							kycDocuments.setMsisdn(msisdn);
 							kycDocuments.setSelfie(kycDocumentsDTO.isSelfie());
 							kycDocuments.setSnapTime(kycDocumentsDTO.getSnapTime());

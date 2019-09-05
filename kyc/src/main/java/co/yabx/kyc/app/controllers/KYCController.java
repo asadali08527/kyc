@@ -64,20 +64,8 @@ public class KYCController {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		}
-		KycDetailsDTO customerDto = new KycDetailsDTO();
-		customerDto.setMsisdn("7066908372");
-		customerDto.setFirstName("Ali");
-		customerDto.setMiddleName("Asad");
-		customerDto.setLastName("Ali");
-		customerDto.setHouseNumberOrStreetName("K40, Mayfirled Garden");
-		customerDto.setArea("Sector 51");
-		customerDto.setCity("Gurgaon");
-		customerDto.setZipCode(122001);
-		customerDto.setDob(1567065991297L);
-		customerDto.setGender("Male");
-		customerDto.setUserId("876543");
-		customerDto.setKycDocuments(prepareDocuments());
-		return new ResponseEntity<>(customerDto, HttpStatus.OK);
+
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "/kyc/details", method = RequestMethod.GET)
@@ -87,20 +75,8 @@ public class KYCController {
 			if (kycDetailsDTO != null)
 				return new ResponseEntity<>(kycDetailsDTO, HttpStatus.OK);
 		}
-		KycDetailsDTO customerDto = new KycDetailsDTO();
-		customerDto.setMsisdn("7066908372");
-		customerDto.setFirstName("Ali");
-		customerDto.setMiddleName("Asad");
-		customerDto.setLastName("Ali");
-		customerDto.setHouseNumberOrStreetName("K40, Mayfirled Garden");
-		customerDto.setArea("Sector 51");
-		customerDto.setCity("Gurgaon");
-		customerDto.setZipCode(122001);
-		customerDto.setDob(1567065991297L);
-		customerDto.setGender("Male");
-		customerDto.setUserId("876543");
-		customerDto.setKycDocuments(prepareDocuments());
-		return new ResponseEntity<>(customerDto, HttpStatus.OK);
+
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
 	@RequestMapping(value = "/upload/photo", method = RequestMethod.POST)

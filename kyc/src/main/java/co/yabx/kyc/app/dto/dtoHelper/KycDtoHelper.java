@@ -4,10 +4,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import co.yabx.kyc.app.dto.KycDetailsDTO;
 import co.yabx.kyc.app.dto.KycDocumentsDTO;
 import co.yabx.kyc.app.entity.KycDetails;
 import co.yabx.kyc.app.entity.KycDocuments;
+import co.yabx.kyc.app.util.EncoderDecoderUtil;
+import co.yabx.kyc.app.util.MaskUtil;
+import co.yabx.kyc.app.util.SpringUtil;
 
 public class KycDtoHelper implements Serializable {
 
@@ -15,12 +20,18 @@ public class KycDtoHelper implements Serializable {
 		if (kycDetails != null) {
 			KycDetailsDTO kycDetailsDTO = new KycDetailsDTO();
 			kycDetailsDTO.setMsisdn(kycDetails.getMsisdn());
-			kycDetailsDTO.setFirstName(kycDetails.getFirstName());
-			kycDetailsDTO.setMiddleName(kycDetails.getMiddleName());
-			kycDetailsDTO.setLastName(kycDetails.getLastName());
-			kycDetailsDTO.setHouseNumberOrStreetName(kycDetails.getHouseNumberOrStreetName());
-			kycDetailsDTO.setArea(kycDetails.getArea());
-			kycDetailsDTO.setCity(kycDetails.getCity());
+			kycDetailsDTO.setFirstName(MaskUtil
+					.showDataInXXXFormat(EncoderDecoderUtil.base64Decode(kycDetails.getFirstName()), "firstName"));
+			kycDetailsDTO.setMiddleName(MaskUtil
+					.showDataInXXXFormat(EncoderDecoderUtil.base64Decode(kycDetails.getMiddleName()), "middleName"));
+			kycDetailsDTO.setLastName(MaskUtil
+					.showDataInXXXFormat(EncoderDecoderUtil.base64Decode(kycDetails.getLastName()), "lastName"));
+			kycDetailsDTO.setHouseNumberOrStreetName(MaskUtil.showDataInXXXFormat(
+					EncoderDecoderUtil.base64Decode(kycDetails.getHouseNumberOrStreetName()), "streetOrHouse"));
+			kycDetailsDTO.setArea(
+					MaskUtil.showDataInXXXFormat(EncoderDecoderUtil.base64Decode(kycDetails.getArea()), "area"));
+			kycDetailsDTO.setCity(
+					MaskUtil.showDataInXXXFormat(EncoderDecoderUtil.base64Decode(kycDetails.getCity()), "city"));
 			kycDetailsDTO.setZipCode(kycDetails.getZipCode());
 			kycDetailsDTO.setDob(kycDetails.getDob());
 			kycDetailsDTO.setGender(kycDetails.getGender());
@@ -41,10 +52,11 @@ public class KycDtoHelper implements Serializable {
 				KycDocumentsDTO kycDocumentsDto = new KycDocumentsDTO();
 				kycDocumentsDto.setDocumentExpiryDate(kycDocuments.getDocumentExpiryDate());
 				kycDocumentsDto.setDocumentIssueDate(kycDocuments.getDocumentIssueDate());
-				kycDocumentsDto.setDocumentNumber(kycDocuments.getDocumentNumber());
+				kycDocumentsDto.setDocumentNumber(MaskUtil.showDataInXXXFormat(
+						EncoderDecoderUtil.base64Decode(kycDocuments.getDocumentNumber()), "documentNumber"));
 				kycDocumentsDto.setDocumentSide(kycDocuments.getDocumentSide());
 				kycDocumentsDto.setDocumentType(kycDocuments.getDocumentType());
-				kycDocumentsDto.setDocumentUrl(kycDocuments.getDocumentUrl());
+				kycDocumentsDto.setDocumentUrl(EncoderDecoderUtil.base64Decode(kycDocuments.getDocumentUrl()));
 				kycDocumentsDto.setSelfie(kycDocuments.isSelfie());
 				kycDocumentsDto.setSnapTime(kycDocuments.getSnapTime());
 				kycDocumentsDto.setCreatedAt(kycDocuments.getCreatedAt());
