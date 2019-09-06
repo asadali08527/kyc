@@ -30,6 +30,7 @@ public class KycDetailsDTO implements Serializable {
 	private String updatedBy;
 	private Date createdAt;
 	private Date updatedAt;
+	private String email;
 
 	private List<KycDocumentsDTO> kycDocuments;
 
@@ -177,13 +178,22 @@ public class KycDetailsDTO implements Serializable {
 		this.pob = pob;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	@Override
 	public String toString() {
 		return "KycDetailsDTO [msisdn=" + msisdn + ", firstName=" + firstName + ", middleName=" + middleName
 				+ ", lastName=" + lastName + ", houseNumberOrStreetName=" + houseNumberOrStreetName + ", area=" + area
 				+ ", city=" + city + ", region=" + region + ", zipCode=" + zipCode + ", dob=" + dob + ", pob=" + pob
 				+ ", gender=" + gender + ", userId=" + userId + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
-				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", kycDocuments=" + kycDocuments + "]";
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", email=" + email + ", kycDocuments="
+				+ kycDocuments + "]";
 	}
 
 }

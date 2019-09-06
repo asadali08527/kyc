@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.yabx.kyc.app.controllers.KYCController;
 import co.yabx.kyc.app.entity.AccountStatus;
 import co.yabx.kyc.app.entity.AccountStatuses;
 import co.yabx.kyc.app.entity.AccountStatusesTrackers;

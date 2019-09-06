@@ -55,27 +55,34 @@ public class KYCServiceImpl implements KYCService {
 				kycDetails.setLastName(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getLastName()));
 				kycDetails.setMiddleName(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getMiddleName()));
 				kycDetails.setZipCode(kycDetailsDTO.getZipCode());
+				kycDetails.setEmail(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getEmail()));
 				kycDetails = kycDetailsRepository.save(kycDetails);
 				List<KycDocumentsDTO> newDocumentsList = kycDetailsDTO.getKycDocuments();
 				List<KycDocuments> oldDocumentsLists = kycDocumentsRepository.findByMsisdn(encrytedMsisdn);
 				if (oldDocumentsLists == null || oldDocumentsLists.isEmpty()) {
-					for (KycDocumentsDTO kycDocumentsDTO : newDocumentsList) {
-						if (isNewKyc) {
-							KycDocuments kycDocuments = new KycDocuments();
-							persistKycDocuments(kycDocuments, kycDocumentsDTO, encrytedMsisdn);
-						}
-					}
+					// New KYC Documents , received at very first time
+					persistNewDocuments(newDocumentsList, encrytedMsisdn);
 				} else {
+					/**
+					 * Update KYC documents or add some more new one
+					 */
 					for (KycDocumentsDTO kycDocumentsDTO : newDocumentsList) {
 						oldDocumentsLists = kycDocumentsRepository.findByMsisdnAndDocumentType(encrytedMsisdn,
 								kycDocumentsDTO.getDocumentType());
-						oldDocumentsLists.forEach(f -> {
-							if (f.getDocumentSide() != null
-									&& f.getDocumentSide().equalsIgnoreCase(kycDocumentsDTO.getDocumentSide())) {
-								persistKycDocuments(f, kycDocumentsDTO, encrytedMsisdn);
+						if (oldDocumentsLists == null || oldDocumentsLists.isEmpty()) {
+							persistKycDocuments(null, kycDocumentsDTO, encrytedMsisdn);
+						} else {
+							/*
+							 * update old documents
+							 */
+							for (KycDocuments oldDocuments : oldDocumentsLists) {
+								if (oldDocuments.getDocumentSide() != null && oldDocuments.getDocumentSide()
+										.equalsIgnoreCase(kycDocumentsDTO.getDocumentSide())) {
+									persistKycDocuments(oldDocuments, kycDocumentsDTO, encrytedMsisdn);
 
+								}
 							}
-						});
+						}
 					}
 				}
 				KycDetailsList.add(kycDetails);
@@ -84,9 +91,18 @@ public class KYCServiceImpl implements KYCService {
 		return KycDetailsList;
 	}
 
+	private void persistNewDocuments(List<KycDocumentsDTO> newDocumentsList, String encrytedMsisdn) {
+		for (KycDocumentsDTO kycDocumentsDTO : newDocumentsList) {
+			persistKycDocuments(null, kycDocumentsDTO, encrytedMsisdn);
+
+		}
+	}
+
 	@Transactional
 	private void persistKycDocuments(KycDocuments kycDocuments, KycDocumentsDTO kycDocumentsDTO,
 			String encrytedMsisdn) {
+		if (kycDocuments == null)
+			kycDocuments = new KycDocuments();
 		kycDocuments.setDocumentExpiryDate(kycDocumentsDTO.getDocumentExpiryDate());
 		kycDocuments.setDocumentIssueDate(kycDocumentsDTO.getDocumentIssueDate());
 		kycDocuments.setDocumentNumber(EncoderDecoderUtil.base64Encode(kycDocumentsDTO.getDocumentNumber()));

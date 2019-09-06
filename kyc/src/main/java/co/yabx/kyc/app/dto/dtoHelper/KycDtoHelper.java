@@ -42,6 +42,8 @@ public class KycDtoHelper implements Serializable {
 			kycDetailsDTO.setUpdatedBy(kycDetails.getUpdatedBy());
 			kycDetailsDTO.setCreatedAt(kycDetails.getCreatedAt());
 			kycDetailsDTO.setUpdatedAt(kycDetails.getUpdatedAt());
+			kycDetailsDTO.setEmail(MaskUtil.showDataInXXXFormat(EncoderDecoderUtil.base64Decode(kycDetails.getEmail()),
+					"email", masked));
 			kycDetailsDTO.setKycDocuments(prepareDocumentsDto(oldDocumentsLists, masked));
 			return kycDetailsDTO;
 		}

@@ -75,6 +75,9 @@ public class KycDetails implements Serializable {
 	@Column(name = "update_by")
 	private String updatedBy;
 
+	@Column(name = "email")
+	private String email;
+
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -226,13 +229,21 @@ public class KycDetails implements Serializable {
 		this.id = id;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	@Override
 	public String toString() {
 		return "KycDetails [id=" + id + ", msisdn=" + msisdn + ", firstName=" + firstName + ", middleName=" + middleName
 				+ ", lastName=" + lastName + ", houseNumberOrStreetName=" + houseNumberOrStreetName + ", area=" + area
 				+ ", city=" + city + ", region=" + region + ", zipCode=" + zipCode + ", createdAt=" + createdAt
 				+ ", updatedAt=" + updatedAt + ", dob=" + dob + ", pob=" + pob + ", gender=" + gender + ", createdBy="
-				+ createdBy + ", updatedBy=" + updatedBy + "]";
+				+ createdBy + ", updatedBy=" + updatedBy + ", email=" + email + "]";
 	}
 
 }
