@@ -29,6 +29,7 @@ import co.yabx.kyc.app.entity.AccountStatusesTrackers;
 import co.yabx.kyc.app.entity.KycDetails;
 import co.yabx.kyc.app.service.AccountStatusService;
 import co.yabx.kyc.app.service.AccountStatusTrackerService;
+import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.KYCService;
 
 /**
@@ -48,10 +49,15 @@ public class KYCController {
 	@Autowired
 	private AccountStatusTrackerService accountStatusTrackerService;
 
+	@Autowired
+	private AppConfigService appConfigService;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(KYCController.class);
 
 	@RequestMapping(value = "/kyc/create", method = RequestMethod.POST)
 	public ResponseEntity<?> createAccount(@RequestBody List<KycDetailsDTO> kycDetailsDTO) {
+		if (appConfigService.getBooleanProperty("IS_TO_DISPLAY_LOGS", true))
+			LOGGER.info("/v1/kyc/create request recieved with parameters={}", kycDetailsDTO);
 		if (kycDetailsDTO != null) {
 			List<KycDetails> kycDetailsList = kycService.persistKYC(kycDetailsDTO);
 			if (kycDetailsList != null && !kycDetailsList.isEmpty()) {

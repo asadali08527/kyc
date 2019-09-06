@@ -46,7 +46,7 @@ public class MaskUtil {
 
 			}
 
-			return maskedData;
+			return data;
 		}
 		return data;
 	}

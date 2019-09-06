@@ -5,9 +5,12 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import co.yabx.kyc.app.controllers.KYCController;
 import co.yabx.kyc.app.dto.KycDetailsDTO;
 import co.yabx.kyc.app.dto.KycDocumentsDTO;
 import co.yabx.kyc.app.dto.dtoHelper.KycDtoHelper;
@@ -15,6 +18,7 @@ import co.yabx.kyc.app.entity.KycDetails;
 import co.yabx.kyc.app.entity.KycDocuments;
 import co.yabx.kyc.app.repository.KycDetailsRepository;
 import co.yabx.kyc.app.repository.KycDocumentsRepository;
+import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.KYCService;
 import co.yabx.kyc.app.util.EncoderDecoderUtil;
 
@@ -26,13 +30,19 @@ public class KYCServiceImpl implements KYCService {
 	@Autowired
 	private KycDocumentsRepository kycDocumentsRepository;
 
+	@Autowired
+	private AppConfigService appConfigService;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(KYCServiceImpl.class);
+
 	@Override
 	@Transactional
 	public List<KycDetails> persistKYC(List<KycDetailsDTO> kycDetailsDTOs) {
 		List<KycDetails> KycDetailsList = new ArrayList<KycDetails>();
 		for (KycDetailsDTO kycDetailsDTO : kycDetailsDTOs) {
 			if (kycDetailsDTO != null) {
-				boolean isNewKyc = false;
+				if (appConfigService.getBooleanProperty("IS_TO_DISPLAY_LOGS", true))
+					LOGGER.info("persisting/updating kyc={}", kycDetailsDTO);
 				String msisdn = kycDetailsDTO.getMsisdn();
 				String encrytedMsisdn = EncoderDecoderUtil.base64Encode(msisdn);
 				KycDetails kycDetails = kycDetailsRepository.findByMsisdn(encrytedMsisdn);
@@ -40,7 +50,6 @@ public class KYCServiceImpl implements KYCService {
 					kycDetails = new KycDetails();
 					kycDetails.setMsisdn(encrytedMsisdn);
 					kycDetails.setCreatedBy(kycDetailsDTO.getUserId());
-					isNewKyc = true;
 				}
 				kycDetails.setArea(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getArea()));
 				kycDetails.setCity(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getCity()));
@@ -57,6 +66,8 @@ public class KYCServiceImpl implements KYCService {
 				kycDetails.setZipCode(kycDetailsDTO.getZipCode());
 				kycDetails.setEmail(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getEmail()));
 				kycDetails = kycDetailsRepository.save(kycDetails);
+				if (appConfigService.getBooleanProperty("IS_TO_DISPLAY_LOGS", true))
+					LOGGER.info("persisted/updated kycDetails={}", kycDetails);
 				List<KycDocumentsDTO> newDocumentsList = kycDetailsDTO.getKycDocuments();
 				List<KycDocuments> oldDocumentsLists = kycDocumentsRepository.findByMsisdn(encrytedMsisdn);
 				if (oldDocumentsLists == null || oldDocumentsLists.isEmpty()) {
@@ -113,7 +124,10 @@ public class KYCServiceImpl implements KYCService {
 		kycDocuments.setMsisdn(encrytedMsisdn);
 		kycDocuments.setSelfie(kycDocumentsDTO.isSelfie());
 		kycDocuments.setSnapTime(kycDocumentsDTO.getSnapTime());
-		kycDocumentsRepository.save(kycDocuments);
+		kycDocuments = kycDocumentsRepository.save(kycDocuments);
+		if (appConfigService.getBooleanProperty("IS_TO_DISPLAY_LOGS", true))
+			LOGGER.info("persisted/updated kycDocuments={}", kycDocuments);
+
 	}
 
 	@Override
