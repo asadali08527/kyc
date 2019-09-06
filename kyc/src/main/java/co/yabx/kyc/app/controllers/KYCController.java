@@ -69,9 +69,10 @@ public class KYCController {
 	}
 
 	@RequestMapping(value = "/kyc/details", method = RequestMethod.GET)
-	public ResponseEntity<?> getKycdetails(@RequestParam(name = "msisdn") String msisdn) {
+	public ResponseEntity<?> getKycdetails(@RequestParam(name = "msisdn") String msisdn,
+			@RequestParam(name = "masked", required = false) boolean masked) {
 		if (msisdn != null) {
-			KycDetailsDTO kycDetailsDTO = kycService.getKycDetails(msisdn);
+			KycDetailsDTO kycDetailsDTO = kycService.getKycDetails(msisdn, masked);
 			if (kycDetailsDTO != null)
 				return new ResponseEntity<>(kycDetailsDTO, HttpStatus.OK);
 		}
