@@ -56,7 +56,7 @@ public class KYCController {
 
 	@RequestMapping(value = "/kyc/create", method = RequestMethod.POST)
 	public ResponseEntity<?> createAccount(@RequestBody List<KycDetailsDTO> kycDetailsDTO) {
-		if (appConfigService.getBooleanProperty("IS_TO_DISPLAY_LOGS", true))
+		if (appConfigService.getBooleanProperty("IS_TO_DISPLAY_POST_API_LOGS", true))
 			LOGGER.info("/v1/kyc/create request recieved with parameters={}", kycDetailsDTO);
 		if (kycDetailsDTO != null) {
 			List<KycDetails> kycDetailsList = kycService.persistKYC(kycDetailsDTO);
@@ -77,12 +77,13 @@ public class KYCController {
 	@RequestMapping(value = "/kyc/details", method = RequestMethod.GET)
 	public ResponseEntity<?> getKycdetails(@RequestParam(name = "msisdn") String msisdn,
 			@RequestParam(name = "masked", required = false) boolean masked) {
+		if (appConfigService.getBooleanProperty("IS_TO_DISPLAY_GET_API_LOGS", true))
+			LOGGER.info("/v1/kyc/details request recieved for msisdn={}", msisdn);
 		if (msisdn != null) {
 			KycDetailsDTO kycDetailsDTO = kycService.getKycDetails(msisdn, masked);
 			if (kycDetailsDTO != null)
 				return new ResponseEntity<>(kycDetailsDTO, HttpStatus.OK);
 		}
-
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
