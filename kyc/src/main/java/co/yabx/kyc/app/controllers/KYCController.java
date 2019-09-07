@@ -3,8 +3,6 @@ package co.yabx.kyc.app.controllers;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -16,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import co.yabx.kyc.app.dto.KycDetailsDTO;
-import co.yabx.kyc.app.dto.KycDocumentsDTO;
 import co.yabx.kyc.app.entity.AccountStatuses;
 import co.yabx.kyc.app.entity.KycDetails;
 import co.yabx.kyc.app.service.AccountStatusService;
@@ -37,6 +35,7 @@ import co.yabx.kyc.app.service.KYCService;
  *
  */
 @Controller
+@CrossOrigin
 @RequestMapping(value = "/v1")
 public class KYCController {
 	@Autowired
