@@ -53,7 +53,8 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 					if (accountStatuses != null) {
 						AccountStatus oldStatus = accountStatuses.getAccountStatus();
 						accountStatuses.setAmlCftStatus(accountStatusDTO.getAmlCftStatus());
-						accountStatuses.setKycVerified(accountStatusDTO.getKycVerified());
+						accountStatuses.setKycVerified(accountStatusDTO.getKycVerified() == null ? KycVerified.NO
+								: accountStatusDTO.getKycVerified());
 						if ("NO".equalsIgnoreCase(accountStatuses.getAmlCftStatus())) {
 							if (accountStatuses.isKycAvailable()
 									&& (KycVerified.YES.equals(accountStatuses.getKycVerified())
@@ -253,7 +254,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 
 	@Override
 	public AccountStatuses createAccountStatus(String msisdn, String createdBy) {
-		AccountStatuses accountStatuses = accountStatusesRepository.findOne(EncoderDecoderUtil.base64Decode(msisdn));
+		AccountStatuses accountStatuses = accountStatusesRepository.findOne(msisdn);
 		return createAccount(accountStatuses, msisdn, createdBy, false);
 	}
 
