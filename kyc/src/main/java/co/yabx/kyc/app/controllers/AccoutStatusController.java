@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import co.yabx.kyc.app.dto.AccountStatusDTO;
 import co.yabx.kyc.app.entity.AccountStatuses;
 import co.yabx.kyc.app.service.AccountStatusService;
-import co.yabx.kyc.app.service.AppConfigService;
+import co.yabx.kyc.app.service.AccountStatusTrackerService;
 
 /**
  * 
@@ -25,7 +25,7 @@ import co.yabx.kyc.app.service.AppConfigService;
 @RequestMapping(value = "/v1")
 public class AccoutStatusController {
 	@Autowired
-	private AppConfigService appConfigService;
+	private AccountStatusTrackerService accountStatusTrackerService;
 
 	@Autowired
 	private AccountStatusService accountStatusService;
@@ -56,6 +56,20 @@ public class AccoutStatusController {
 	public ResponseEntity<?> getAccountStatus(@RequestParam("msisdn") String msisdn) {
 		AccountStatusDTO accountStatusDTO = accountStatusService.fetchAccountStatus(msisdn);
 		return new ResponseEntity<>(accountStatusDTO, HttpStatus.OK);
+
+	}
+
+	@RequestMapping(value = "/status/account/create", method = RequestMethod.POST)
+	public ResponseEntity<?> craeteAccountStatus(@RequestParam("msisdn") String msisdn,
+			@RequestParam("createdBy") String createdBy) {
+		if (msisdn != null && !msisdn.isEmpty() && createdBy != null && !createdBy.isEmpty()) {
+			AccountStatuses accountStatuses = accountStatusService.createAccountStatus(msisdn, createdBy);
+			if (accountStatuses != null) {
+				accountStatusTrackerService.createAccountTracker(accountStatuses);
+				return new ResponseEntity<>(accountStatusService.fetchAccountStatus(msisdn), HttpStatus.OK);
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 	}
 

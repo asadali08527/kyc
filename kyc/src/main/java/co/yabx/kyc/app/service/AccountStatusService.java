@@ -26,4 +26,6 @@ public interface AccountStatusService {
 
 	public Map<String, String> reActivate();
 
+	public AccountStatuses createAccountStatus(String msisdn, String createdBy);
+
 }

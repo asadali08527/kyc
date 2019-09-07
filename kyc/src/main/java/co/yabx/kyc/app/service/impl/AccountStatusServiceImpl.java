@@ -21,8 +21,6 @@ import co.yabx.kyc.app.entity.KycDetails;
 import co.yabx.kyc.app.entity.KycVerified;
 import co.yabx.kyc.app.repository.AccountStatusesRepository;
 import co.yabx.kyc.app.repository.AccountStatusesTrackersRepository;
-import co.yabx.kyc.app.repository.KycDetailsRepository;
-import co.yabx.kyc.app.repository.KycDocumentsRepository;
 import co.yabx.kyc.app.service.AccountStatusService;
 import co.yabx.kyc.app.service.AccountStatusTrackerService;
 import co.yabx.kyc.app.service.AppConfigService;
@@ -30,11 +28,6 @@ import co.yabx.kyc.app.util.EncoderDecoderUtil;
 
 @Service
 public class AccountStatusServiceImpl implements AccountStatusService {
-	@Autowired
-	private KycDetailsRepository kycDetailsRepository;
-
-	@Autowired
-	private KycDocumentsRepository kycDocumentsRepository;
 
 	@Autowired
 	private AccountStatusesRepository accountStatusesRepository;
@@ -59,10 +52,29 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 					AccountStatuses accountStatuses = accountStatusesRepository.findOne(accountStatusDTO.getMsisdn());
 					if (accountStatuses != null) {
 						AccountStatus oldStatus = accountStatuses.getAccountStatus();
-						accountStatuses
-								.setAccountStatus(AccountStatus.valueOf(accountStatusDTO.getAccountStatus().name()));
 						accountStatuses.setAmlCftStatus(accountStatusDTO.getAmlCftStatus());
 						accountStatuses.setKycVerified(accountStatusDTO.getKycVerified());
+						if ("NO".equalsIgnoreCase(accountStatuses.getAmlCftStatus())) {
+							if (accountStatuses.isKycAvailable()
+									&& (KycVerified.YES.equals(accountStatuses.getKycVerified())
+											|| KycVerified.NO.equals(accountStatuses.getKycVerified()))) {
+								accountStatuses.setAccountStatus(AccountStatus.ACTIVE);
+							} else if (accountStatuses.isKycAvailable()
+									&& KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
+								accountStatuses.setAccountStatus(AccountStatus.BLOCKED);
+							}
+						} else if ("YES".equalsIgnoreCase(accountStatuses.getAmlCftStatus())) {
+							accountStatuses.setAccountStatus(AccountStatus.BLOCKED);
+						} else {
+							try {
+								accountStatuses.setAccountStatus(
+										AccountStatus.valueOf(accountStatusDTO.getAccountStatus().name()));
+							} catch (Exception e) {
+								e.printStackTrace();
+								LOGGER.error("Exception raised while setting status={},error={}",
+										accountStatusDTO.getAccountStatus(), e.getMessage());
+							}
+						}
 						accountStatuses.setUpdatedBy(accountStatusDTO.getUpdatedBy());
 						accountStatuses.setUpdateReason(accountStatusDTO.getUpdateReason());
 						accountStatuses = accountStatusesRepository.save(accountStatuses);
@@ -84,24 +96,31 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 			try {
 				AccountStatuses accountStatuses = accountStatusesRepository
 						.findOne(EncoderDecoderUtil.base64Decode(kycDetails.getMsisdn()));
-				if (accountStatuses == null) {
-					accountStatuses = new AccountStatuses();
-					accountStatuses.setAccountStatus(AccountStatus.NEW);
-					accountStatuses.setAmlCftStatus(null);
-					accountStatuses.setCreatedBy(kycDetails.getCreatedBy());
-					accountStatuses.setKycAvailable(true);
-					accountStatuses.setKycVerified(KycVerified.NO);
-					accountStatuses.setMsisdn(EncoderDecoderUtil.base64Decode(kycDetails.getMsisdn()));
-					accountStatuses.setUpdateReason(
-							appConfigService.getProperty("NEW_KYC_ACCOUNT_STATUS_REASON", "NEW KYC ACCOUNT CREATED"));
-					accountStatuses = accountStatusesRepository.save(accountStatuses);
-					return accountStatuses;
-				}
+				return createAccount(accountStatuses, EncoderDecoderUtil.base64Decode(kycDetails.getMsisdn()),
+						kycDetails.getCreatedBy(), true);
 			} catch (Exception e) {
 				e.printStackTrace();
 				LOGGER.error("Exception raised while updating account status for msisdn={}, error={}",
 						kycDetails.getMsisdn(), e.getMessage());
 			}
+		}
+		return null;
+	}
+
+	private AccountStatuses createAccount(AccountStatuses accountStatuses, String msisdn, String createdBy,
+			boolean isKycAvailable) {
+		if (accountStatuses == null) {
+			accountStatuses = new AccountStatuses();
+			accountStatuses.setAccountStatus(AccountStatus.NEW);
+			accountStatuses.setAmlCftStatus(null);
+			accountStatuses.setCreatedBy(createdBy);
+			accountStatuses.setKycAvailable(isKycAvailable);
+			accountStatuses.setKycVerified(KycVerified.NO);
+			accountStatuses.setMsisdn(msisdn);
+			accountStatuses.setUpdateReason(
+					appConfigService.getProperty("NEW_KYC_ACCOUNT_STATUS_REASON", "NEW KYC ACCOUNT CREATED"));
+			accountStatuses = accountStatusesRepository.save(accountStatuses);
+			return accountStatuses;
 		}
 		return null;
 	}
@@ -124,7 +143,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 						e.getMessage());
 			}
 		}
-		return new AccountStatusDTO();
+		return null;
 	}
 
 	@Override
@@ -161,40 +180,45 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 		List<AccountStatuses> accountStatusesList = accountStatusesRepository.findByAccountStatus(AccountStatus.NEW);
 		LOGGER.info("Total={} new account found whose status to be updated", accountStatusesList.size());
 		for (AccountStatuses accountStatuses : accountStatusesList) {
-			if ("YES".equalsIgnoreCase(accountStatuses.getAmlCftStatus())) {
-				updateAccountStatus(accountStatuses, AccountStatus.BLOCKED.toString(),
-						appConfigService.getProperty("REASON_IF_AML_CFT_STATUS_IS_YES", "DUE TO AML/CFT"),
-						"SYSTEM CRON JOB");
+			updateAccount(accountStatuses, statusTrackers);
+		}
+		LOGGER.info("Total={} new account status updated to either blocked or active", statusTrackers.size());
+		return statusTrackers;
+	}
+
+	private void updateAccount(AccountStatuses accountStatuses, Map<String, String> statusTrackers) {
+		if ("YES".equalsIgnoreCase(accountStatuses.getAmlCftStatus())) {
+			updateAccountStatus(accountStatuses, AccountStatus.BLOCKED.toString(),
+					appConfigService.getProperty("REASON_IF_AML_CFT_STATUS_IS_YES", "DUE TO AML/CFT"),
+					"SYSTEM CRON JOB");
+			if (statusTrackers != null)
 				statusTrackers.put(accountStatuses.getMsisdn(),
 						AccountStatus.NEW + "_TO_" + AccountStatus.BLOCKED + ",REASON:-"
 								+ appConfigService.getProperty("REASON_IF_AML_CFT_STATUS_IS_YES", "DUE TO AML/CFT")
 								+ ",Date:-" + new Date());
-				LOGGER.info("Account={} status has been updated from new to blocked", accountStatuses.getMsisdn());
-			} else if (accountStatuses.isKycAvailable()
-					&& KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
-				updateAccountStatus(accountStatuses, AccountStatus.BLOCKED.toString(),
-						appConfigService.getProperty("REASON_IF_KYC_IS_REJECTED", "KYC REJECTED"), "SYSTEM CRON JOB");
+			LOGGER.info("Account={} status has been updated from new to blocked", accountStatuses.getMsisdn());
+		} else if (accountStatuses.isKycAvailable() && KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
+			updateAccountStatus(accountStatuses, AccountStatus.BLOCKED.toString(),
+					appConfigService.getProperty("REASON_IF_KYC_IS_REJECTED", "KYC REJECTED"), "SYSTEM CRON JOB");
+			if (statusTrackers != null)
 				statusTrackers.put(accountStatuses.getMsisdn(),
 						AccountStatus.NEW + "_TO_" + AccountStatus.BLOCKED + ",REASON:-"
 								+ appConfigService.getProperty("REASON_IF_KYC_IS_REJECTED", "KYC REJECTED") + ",Date:-"
 								+ new Date());
-				LOGGER.info("Account={} status has been updated from new to blocked", accountStatuses.getMsisdn());
-			} else if (accountStatuses.isKycAvailable()
-					&& !KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
-				updateAccountStatus(accountStatuses, AccountStatus.ACTIVE.toString(),
-						appConfigService.getProperty("REASON_IF_KYC_IS_AVAILABLE_BUT_NOT_VERIFIED",
-								"KYC IS AVAILABLE, BUT NEITHER VERIFIED NOR REJECTED"),
-						"SYSTEM CRON JOB");
+			LOGGER.info("Account={} status has been updated from new to blocked", accountStatuses.getMsisdn());
+		} else if (accountStatuses.isKycAvailable() && !KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
+			updateAccountStatus(accountStatuses, AccountStatus.ACTIVE.toString(),
+					appConfigService.getProperty("REASON_IF_KYC_IS_AVAILABLE_BUT_NOT_VERIFIED",
+							"KYC IS AVAILABLE, BUT NEITHER VERIFIED NOR REJECTED"),
+					"SYSTEM CRON JOB");
+			if (statusTrackers != null)
 				statusTrackers.put(accountStatuses.getMsisdn(),
 						AccountStatus.NEW + "_TO_" + AccountStatus.ACTIVE + ",REASON:-"
 								+ appConfigService.getProperty("REASON_IF_KYC_IS_AVAILABLE_BUT_NOT_VERIFIED",
 										"KYC IS AVAILABLE, BUT NEITHER VERIFIED NOR REJECTED")
 								+ ",Date:-" + new Date());
-				LOGGER.info("Account={} status has been updated from new to active", accountStatuses.getMsisdn());
-			}
+			LOGGER.info("Account={} status has been updated from new to active", accountStatuses.getMsisdn());
 		}
-		LOGGER.info("Total={} new account status updated to either blocked or active", statusTrackers.size());
-		return statusTrackers;
 	}
 
 	@Override
@@ -221,6 +245,11 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 		}
 		LOGGER.info("Total={} suspended account status updated to active", statusTrackers.size());
 		return statusTrackers;
+	}
+
+	@Override
+	public AccountStatuses createAccountStatus(String msisdn, String createdBy) {
+		return createAccount(null, msisdn, createdBy, false);
 	}
 
 }
