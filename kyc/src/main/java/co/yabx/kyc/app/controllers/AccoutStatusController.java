@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import co.yabx.kyc.app.dto.AccountStatusDTO;
+import co.yabx.kyc.app.entity.AccountStatuses;
 import co.yabx.kyc.app.service.AccountStatusService;
 import co.yabx.kyc.app.service.AppConfigService;
 
@@ -30,11 +31,24 @@ public class AccoutStatusController {
 	private AccountStatusService accountStatusService;
 
 	@RequestMapping(value = "/status/account/update", method = RequestMethod.POST)
-	public ResponseEntity<?> updateAccountStatus(@RequestBody List<AccountStatusDTO> accountStatusDTO) {
+	public ResponseEntity<?> updateAccountStatuses(@RequestBody List<AccountStatusDTO> accountStatusDTO) {
 		if (accountStatusDTO != null && !accountStatusDTO.isEmpty()) {
 			accountStatusService.updateAccountStatus(accountStatusDTO);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
+
+	}
+
+	@RequestMapping(value = "/update/account/status", method = RequestMethod.POST)
+	public ResponseEntity<AccountStatuses> updateAccountStatus(@RequestParam("msisdn") String msisdn,
+			@RequestParam("status") String status, @RequestParam("reason") String reason,
+			@RequestParam("updatedBy") String updatedBy) {
+		if (msisdn != null && !msisdn.isEmpty() && !updatedBy.isEmpty() && !reason.isEmpty() && !status.isEmpty()) {
+			AccountStatuses accountStatuses = accountStatusService.updateAccountStatus(msisdn, status, reason,
+					updatedBy);
+			return new ResponseEntity<>(accountStatuses, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 	}
 

@@ -1,6 +1,9 @@
 package co.yabx.kyc.app.service.impl;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -9,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.yabx.kyc.app.KYCApplication;
 import co.yabx.kyc.app.dto.AccountStatusDTO;
 import co.yabx.kyc.app.dto.dtoHelper.AccountStatusesDtoHelper;
 import co.yabx.kyc.app.entity.AccountStatus;
@@ -121,6 +123,102 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 			}
 		}
 		return new AccountStatusDTO();
+	}
+
+	@Override
+	public AccountStatuses updateAccountStatus(String msisdn, String status, String reason, String updatedBy) {
+		AccountStatuses accountStatuses = accountStatusesRepository.findOne(msisdn);
+		return updateAccountStatus(accountStatuses, status, reason, updatedBy);
+	}
+
+	@Transactional
+	private AccountStatuses updateAccountStatus(AccountStatuses accountStatuses, String status, String reason,
+			String updatedBy) {
+		if (accountStatuses != null && status != null && !status.isEmpty() && reason != null && !reason.isEmpty()) {
+			AccountStatus oldStatus = accountStatuses.getAccountStatus();
+			AccountStatus accountStatus = null;
+			try {
+				accountStatus = AccountStatus.valueOf(status.toUpperCase());
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOGGER.error("exception raised while fetch status={}, error={}", status, e.getMessage());
+				return null;
+			}
+			accountStatuses.setAccountStatus(accountStatus);
+			accountStatuses.setUpdateReason(reason);
+			accountStatuses.setUpdatedBy(updatedBy);
+			accountStatuses = accountStatusesRepository.save(accountStatuses);
+			accountStatusTrackerService.updateAccountTracker(accountStatuses, oldStatus);
+		}
+		return accountStatuses;
+	}
+
+	@Override
+	public Map<String, String> updateAllAccountStatus() {
+		Map<String, String> statusTrackers = new HashMap<String, String>();
+		List<AccountStatuses> accountStatusesList = accountStatusesRepository.findByAccountStatus(AccountStatus.NEW);
+		LOGGER.info("Total={} new account found whose status to be updated", accountStatusesList.size());
+		for (AccountStatuses accountStatuses : accountStatusesList) {
+			if ("YES".equalsIgnoreCase(accountStatuses.getAmlCftStatus())) {
+				updateAccountStatus(accountStatuses, AccountStatus.BLOCKED.toString(),
+						appConfigService.getProperty("REASON_IF_AML_CFT_STATUS_IS_YES", "DUE TO AML/CFT"),
+						"SYSTEM CRON JOB");
+				statusTrackers.put(accountStatuses.getMsisdn(),
+						AccountStatus.NEW + "_TO_" + AccountStatus.BLOCKED + ",REASON:-"
+								+ appConfigService.getProperty("REASON_IF_AML_CFT_STATUS_IS_YES", "DUE TO AML/CFT")
+								+ ",Date:-" + new Date());
+				LOGGER.info("Account={} status has been updated from new to blocked", accountStatuses.getMsisdn());
+			} else if (accountStatuses.isKycAvailable()
+					&& KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
+				updateAccountStatus(accountStatuses, AccountStatus.BLOCKED.toString(),
+						appConfigService.getProperty("REASON_IF_KYC_IS_REJECTED", "KYC REJECTED"), "SYSTEM CRON JOB");
+				statusTrackers.put(accountStatuses.getMsisdn(),
+						AccountStatus.NEW + "_TO_" + AccountStatus.BLOCKED + ",REASON:-"
+								+ appConfigService.getProperty("REASON_IF_KYC_IS_REJECTED", "KYC REJECTED") + ",Date:-"
+								+ new Date());
+				LOGGER.info("Account={} status has been updated from new to blocked", accountStatuses.getMsisdn());
+			} else if (accountStatuses.isKycAvailable()
+					&& !KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
+				updateAccountStatus(accountStatuses, AccountStatus.ACTIVE.toString(),
+						appConfigService.getProperty("REASON_IF_KYC_IS_AVAILABLE_BUT_NOT_VERIFIED",
+								"KYC IS AVAILABLE, BUT NEITHER VERIFIED NOR REJECTED"),
+						"SYSTEM CRON JOB");
+				statusTrackers.put(accountStatuses.getMsisdn(),
+						AccountStatus.NEW + "_TO_" + AccountStatus.ACTIVE + ",REASON:-"
+								+ appConfigService.getProperty("REASON_IF_KYC_IS_AVAILABLE_BUT_NOT_VERIFIED",
+										"KYC IS AVAILABLE, BUT NEITHER VERIFIED NOR REJECTED")
+								+ ",Date:-" + new Date());
+				LOGGER.info("Account={} status has been updated from new to active", accountStatuses.getMsisdn());
+			}
+		}
+		LOGGER.info("Total={} new account status updated to either blocked or active", statusTrackers.size());
+		return statusTrackers;
+	}
+
+	@Override
+	public Map<String, String> reActivate() {
+		Map<String, String> statusTrackers = new HashMap<String, String>();
+		List<AccountStatuses> suspendedAccounts = accountStatusesRepository
+				.findByAccountStatus(AccountStatus.SUSPENDED);
+		LOGGER.info("Total={} suspende account found whose status to be updated", suspendedAccounts.size());
+		for (AccountStatuses accountStatuses : suspendedAccounts) {
+			Date now = new Date();
+			Date updatedAt = accountStatuses.getUpdatedAt();
+			long hours = now.getTime() - updatedAt.getTime() / (60 * 60 * 1000);
+			if (hours >= appConfigService.getLongProperty("THRESHOLD_TIME_TO_REACTIVATE_SUSPENDED_ACCOUNT", 24l)) {
+				updateAccountStatus(accountStatuses, AccountStatus.ACTIVE.toString(), appConfigService
+						.getProperty("REASON_SUSPENDED_THRESHOLD_TIME_CROSSED", "SUSPENDED THRESHOLD TIME CROSSED"),
+						"SYSTEM CRON JOB");
+				statusTrackers.put(accountStatuses.getMsisdn(),
+						AccountStatus.SUSPENDED + "_TO_" + AccountStatus.ACTIVE + ",REASON:-"
+								+ appConfigService.getProperty("REASON_SUSPENDED_THRESHOLD_TIME_CROSSED",
+										"SUSPENDED THRESHOLD TIME CROSSED")
+								+ ",Date:-" + new Date());
+				LOGGER.info("Account={} status has been updated from suspended to active", accountStatuses.getMsisdn());
+			}
+		}
+		LOGGER.info("Total={} suspended account status updated to active", statusTrackers.size());
+		return statusTrackers;
 	}
 
 }

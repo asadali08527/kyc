@@ -1,6 +1,7 @@
 package co.yabx.kyc.app.service;
 
 import java.util.List;
+import java.util.Map;
 
 import co.yabx.kyc.app.dto.AccountStatusDTO;
 import co.yabx.kyc.app.entity.AccountStatuses;
@@ -18,5 +19,11 @@ public interface AccountStatusService {
 	public AccountStatuses createAccountStatus(KycDetails kycDetails);
 
 	public AccountStatusDTO fetchAccountStatus(String msisdn);
+
+	public AccountStatuses updateAccountStatus(String msisdn, String status, String reason, String updatedBy);
+
+	public Map<String, String> updateAllAccountStatus();
+
+	public Map<String, String> reActivate();
 
 }
