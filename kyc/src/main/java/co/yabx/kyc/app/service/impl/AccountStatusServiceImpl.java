@@ -17,6 +17,7 @@ import co.yabx.kyc.app.dto.dtoHelper.AccountStatusesDtoHelper;
 import co.yabx.kyc.app.entity.AccountStatus;
 import co.yabx.kyc.app.entity.AccountStatuses;
 import co.yabx.kyc.app.entity.AccountStatusesTrackers;
+import co.yabx.kyc.app.entity.AmlCftStatus;
 import co.yabx.kyc.app.entity.KycDetails;
 import co.yabx.kyc.app.entity.KycVerified;
 import co.yabx.kyc.app.repository.AccountStatusesRepository;
@@ -55,7 +56,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 						accountStatuses.setAmlCftStatus(accountStatusDTO.getAmlCftStatus());
 						accountStatuses.setKycVerified(accountStatusDTO.getKycVerified() == null ? KycVerified.NO
 								: accountStatusDTO.getKycVerified());
-						if ("NO".equalsIgnoreCase(accountStatuses.getAmlCftStatus())) {
+						if (AmlCftStatus.NO.equals(accountStatuses.getAmlCftStatus())) {
 							if (accountStatuses.isKycAvailable()
 									&& (KycVerified.YES.equals(accountStatuses.getKycVerified())
 											|| KycVerified.NO.equals(accountStatuses.getKycVerified()))) {
@@ -64,7 +65,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 									&& KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
 								accountStatuses.setAccountStatus(AccountStatus.BLOCKED);
 							}
-						} else if ("YES".equalsIgnoreCase(accountStatuses.getAmlCftStatus())) {
+						} else if (AmlCftStatus.YES.equals(accountStatuses.getAmlCftStatus())) {
 							accountStatuses.setAccountStatus(AccountStatus.BLOCKED);
 						} else {
 							try {
@@ -123,7 +124,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 			accountStatuses.setKycAvailable(isKycAvailable);
 		}
 		accountStatuses.setAccountStatus(AccountStatus.NEW);
-		accountStatuses.setAmlCftStatus(null);
+		accountStatuses.setAmlCftStatus(AmlCftStatus.NO);
 		accountStatuses.setKycVerified(KycVerified.NO);
 		accountStatuses.setCreatedBy(createdBy);
 		accountStatuses = accountStatusesRepository.save(accountStatuses);
@@ -192,7 +193,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	}
 
 	private void updateAccount(AccountStatuses accountStatuses, Map<String, String> statusTrackers) {
-		if ("YES".equalsIgnoreCase(accountStatuses.getAmlCftStatus())) {
+		if (AmlCftStatus.YES.equals(accountStatuses.getAmlCftStatus())) {
 			updateAccountStatus(accountStatuses, AccountStatus.BLOCKED.toString(),
 					appConfigService.getProperty("REASON_IF_AML_CFT_STATUS_IS_YES", "DUE TO AML/CFT"),
 					"SYSTEM CRON JOB");

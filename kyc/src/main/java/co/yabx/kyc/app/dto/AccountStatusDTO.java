@@ -7,6 +7,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import co.yabx.kyc.app.entity.AccountStatus;
+import co.yabx.kyc.app.entity.AmlCftStatus;
 import co.yabx.kyc.app.entity.KycVerified;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -18,7 +19,7 @@ public class AccountStatusDTO implements Serializable {
 
 	private KycVerified kycVerified;
 
-	private String amlCftStatus;
+	private AmlCftStatus amlCftStatus;
 
 	private AccountStatus accountStatus;
 
@@ -52,11 +53,11 @@ public class AccountStatusDTO implements Serializable {
 		this.isKycAvailable = isKycAvailable;
 	}
 
-	public String getAmlCftStatus() {
+	public AmlCftStatus getAmlCftStatus() {
 		return amlCftStatus;
 	}
 
-	public void setAmlCftStatus(String amlCftStatus) {
+	public void setAmlCftStatus(AmlCftStatus amlCftStatus) {
 		this.amlCftStatus = amlCftStatus;
 	}
 

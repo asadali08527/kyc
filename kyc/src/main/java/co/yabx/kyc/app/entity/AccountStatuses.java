@@ -32,8 +32,9 @@ public class AccountStatuses implements Serializable {
 	@Enumerated(value = EnumType.STRING)
 	private KycVerified KycVerified;
 
-	@Column(name = "aml_cft_status")
-	private String amlCftStatus;
+	@Column(name = "aml_cft_status", nullable = false, columnDefinition = "varchar(32) default 'NO'")
+	@Enumerated(value = EnumType.STRING)
+	private AmlCftStatus amlCftStatus;
 
 	@Column(name = "account_status", nullable = false, columnDefinition = "varchar(32) default 'NEW'")
 	@Enumerated(value = EnumType.STRING)
@@ -120,14 +121,6 @@ public class AccountStatuses implements Serializable {
 		this.isKycAvailable = isKycAvailable;
 	}
 
-	public String getAmlCftStatus() {
-		return amlCftStatus;
-	}
-
-	public void setAmlCftStatus(String amlCftStatus) {
-		this.amlCftStatus = amlCftStatus;
-	}
-
 	public AccountStatus getAccountStatus() {
 		return accountStatus;
 	}
@@ -158,6 +151,14 @@ public class AccountStatuses implements Serializable {
 
 	public void setUpdateReason(String updateReason) {
 		this.updateReason = updateReason;
+	}
+
+	public AmlCftStatus getAmlCftStatus() {
+		return amlCftStatus;
+	}
+
+	public void setAmlCftStatus(AmlCftStatus amlCftStatus) {
+		this.amlCftStatus = amlCftStatus;
 	}
 
 	@Override
