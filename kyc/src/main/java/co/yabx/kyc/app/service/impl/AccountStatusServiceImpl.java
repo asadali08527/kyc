@@ -67,8 +67,9 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 							accountStatuses.setAccountStatus(AccountStatus.BLOCKED);
 						} else {
 							try {
-								accountStatuses.setAccountStatus(
-										AccountStatus.valueOf(accountStatusDTO.getAccountStatus().name()));
+								if (accountStatusDTO.getAccountStatus() != null)
+									accountStatuses.setAccountStatus(
+											AccountStatus.valueOf(accountStatusDTO.getAccountStatus().name()));
 							} catch (Exception e) {
 								e.printStackTrace();
 								LOGGER.error("Exception raised while setting status={},error={}",
@@ -111,18 +112,21 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 			boolean isKycAvailable) {
 		if (accountStatuses == null) {
 			accountStatuses = new AccountStatuses();
-			accountStatuses.setAccountStatus(AccountStatus.NEW);
-			accountStatuses.setAmlCftStatus(null);
-			accountStatuses.setCreatedBy(createdBy);
 			accountStatuses.setKycAvailable(isKycAvailable);
-			accountStatuses.setKycVerified(KycVerified.NO);
 			accountStatuses.setMsisdn(msisdn);
-			accountStatuses.setUpdateReason(
-					appConfigService.getProperty("NEW_KYC_ACCOUNT_STATUS_REASON", "NEW KYC ACCOUNT CREATED"));
-			accountStatuses = accountStatusesRepository.save(accountStatuses);
-			return accountStatuses;
+			accountStatuses
+					.setUpdateReason(appConfigService.getProperty("NEW_ACCOUNT_CREATED_REASON", "NEW ACCOUNT CREATED"));
+		} else if (isKycAvailable) {
+			accountStatuses
+					.setUpdateReason(appConfigService.getProperty("NEW_KYC_ACCOUNT_STATUS_REASON", "KYC RECEIVED"));
+			accountStatuses.setKycAvailable(isKycAvailable);
 		}
-		return null;
+		accountStatuses.setAccountStatus(AccountStatus.NEW);
+		accountStatuses.setAmlCftStatus(null);
+		accountStatuses.setKycVerified(KycVerified.NO);
+		accountStatuses.setCreatedBy(createdBy);
+		accountStatuses = accountStatusesRepository.save(accountStatuses);
+		return accountStatuses;
 	}
 
 	@Override
@@ -249,7 +253,8 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 
 	@Override
 	public AccountStatuses createAccountStatus(String msisdn, String createdBy) {
-		return createAccount(null, msisdn, createdBy, false);
+		AccountStatuses accountStatuses = accountStatusesRepository.findOne(EncoderDecoderUtil.base64Decode(msisdn));
+		return createAccount(accountStatuses, msisdn, createdBy, false);
 	}
 
 }
