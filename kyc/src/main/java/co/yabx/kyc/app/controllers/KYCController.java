@@ -81,7 +81,7 @@ public class KYCController {
 			if (kycDetailsDTO != null) {
 				return new ResponseEntity<>(kycDetailsDTO, HttpStatus.OK);
 			}
-			return new ResponseEntity<>("user=" + msisdn + " kyc not found", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>("Customer KYC is not available", HttpStatus.NOT_FOUND);
 
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
