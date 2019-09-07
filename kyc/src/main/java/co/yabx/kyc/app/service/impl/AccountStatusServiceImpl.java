@@ -26,6 +26,7 @@ import co.yabx.kyc.app.repository.KycDocumentsRepository;
 import co.yabx.kyc.app.service.AccountStatusService;
 import co.yabx.kyc.app.service.AccountStatusTrackerService;
 import co.yabx.kyc.app.service.AppConfigService;
+import co.yabx.kyc.app.util.EncoderDecoderUtil;
 
 @Service
 public class AccountStatusServiceImpl implements AccountStatusService {
@@ -81,7 +82,8 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	public AccountStatuses createAccountStatus(KycDetails kycDetails) {
 		if (kycDetails != null) {
 			try {
-				AccountStatuses accountStatuses = accountStatusesRepository.findOne(kycDetails.getMsisdn());
+				AccountStatuses accountStatuses = accountStatusesRepository
+						.findOne(EncoderDecoderUtil.base64Decode(kycDetails.getMsisdn()));
 				if (accountStatuses == null) {
 					accountStatuses = new AccountStatuses();
 					accountStatuses.setAccountStatus(AccountStatus.NEW);
@@ -89,7 +91,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 					accountStatuses.setCreatedBy(kycDetails.getCreatedBy());
 					accountStatuses.setKycAvailable(true);
 					accountStatuses.setKycVerified(KycVerified.NO);
-					accountStatuses.setMsisdn(kycDetails.getMsisdn());
+					accountStatuses.setMsisdn(EncoderDecoderUtil.base64Decode(kycDetails.getMsisdn()));
 					accountStatuses.setUpdateReason(
 							appConfigService.getProperty("NEW_KYC_ACCOUNT_STATUS_REASON", "NEW KYC ACCOUNT CREATED"));
 					accountStatuses = accountStatusesRepository.save(accountStatuses);
@@ -204,8 +206,8 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 		for (AccountStatuses accountStatuses : suspendedAccounts) {
 			Date now = new Date();
 			Date updatedAt = accountStatuses.getUpdatedAt();
-			long hours = now.getTime() - updatedAt.getTime() / (60 * 60 * 1000);
-			if (hours >= appConfigService.getLongProperty("THRESHOLD_TIME_TO_REACTIVATE_SUSPENDED_ACCOUNT", 24l)) {
+			long hours = (now.getTime() - updatedAt.getTime()) / (60 * 60 * 1000);
+			if (hours >= appConfigService.getLongProperty("THRESHOLD_TIME_TO_REACTIVATE_SUSPENDED_ACCOUNT", 1l)) {
 				updateAccountStatus(accountStatuses, AccountStatus.ACTIVE.toString(), appConfigService
 						.getProperty("REASON_SUSPENDED_THRESHOLD_TIME_CROSSED", "SUSPENDED THRESHOLD TIME CROSSED"),
 						"SYSTEM CRON JOB");

@@ -41,8 +41,7 @@ public class AccountStatusScheduler {
 	public ResponseEntity<?> reactivate(@RequestParam("magicKey") String magicKey) {
 		if (appConfigService.getProperty("SECRET_KEY_FOR_UPDATING_ACCOUNT_STATUSES", "yabx@kyc")
 				.equalsIgnoreCase(magicKey)) {
-			accountStatusService.reActivate();
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>(accountStatusService.reActivate(), HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 

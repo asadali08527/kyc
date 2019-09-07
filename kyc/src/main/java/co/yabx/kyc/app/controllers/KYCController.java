@@ -25,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import co.yabx.kyc.app.dto.KycDetailsDTO;
 import co.yabx.kyc.app.dto.KycDocumentsDTO;
 import co.yabx.kyc.app.entity.AccountStatuses;
-import co.yabx.kyc.app.entity.AccountStatusesTrackers;
 import co.yabx.kyc.app.entity.KycDetails;
 import co.yabx.kyc.app.service.AccountStatusService;
 import co.yabx.kyc.app.service.AccountStatusTrackerService;
@@ -103,32 +102,6 @@ public class KYCController {
 
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	private List<KycDocumentsDTO> prepareDocuments() {
-		List<KycDocumentsDTO> kycDocumentList = new ArrayList<KycDocumentsDTO>();
-		KycDocumentsDTO kycDocuments = new KycDocumentsDTO();
-		kycDocuments.setDocumentExpiryDate(1567065991297L);
-		kycDocuments.setDocumentIssueDate(1567065991297L);
-		kycDocuments.setDocumentNumber("APPPA1234M");
-		kycDocuments.setDocumentSide("back");
-		kycDocuments.setDocumentType("Driving Licence");
-		kycDocuments.setDocumentUrl("http://s3.sa-east-1.amazonaws.com/bucket/kyc/abc.png");
-		kycDocuments.setSelfie(false);
-		kycDocuments.setSnapTime(null);
-		kycDocumentList.add(kycDocuments);
-		KycDocumentsDTO kycDocumentsBack = new KycDocumentsDTO();
-		kycDocumentsBack.setDocumentExpiryDate(1567065991297L);
-		kycDocumentsBack.setDocumentIssueDate(1567065991297L);
-		kycDocumentsBack.setDocumentNumber("APPPA1234M");
-		kycDocumentsBack.setDocumentSide("front");
-		kycDocumentsBack.setDocumentType("Driving Licence");
-		kycDocumentsBack.setDocumentUrl("http://s3.sa-east-1.amazonaws.com/bucket/kyc/pqr.png");
-		kycDocumentsBack.setSelfie(false);
-		kycDocumentsBack.setSnapTime(new Date());
-		kycDocumentList.add(kycDocumentsBack);
-
-		return kycDocumentList;
 	}
 
 }
