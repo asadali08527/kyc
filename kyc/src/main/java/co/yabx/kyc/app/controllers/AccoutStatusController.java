@@ -36,8 +36,9 @@ public class AccoutStatusController {
 	public ResponseEntity<?> updateAccountStatuses(@RequestBody List<AccountStatusDTO> accountStatusDTO) {
 		if (accountStatusDTO != null && !accountStatusDTO.isEmpty()) {
 			accountStatusService.updateAccountStatus(accountStatusDTO);
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 	}
 
@@ -56,8 +57,16 @@ public class AccoutStatusController {
 
 	@RequestMapping(value = "/status/account", method = RequestMethod.GET)
 	public ResponseEntity<?> getAccountStatus(@RequestParam("msisdn") String msisdn) {
-		AccountStatusDTO accountStatusDTO = accountStatusService.fetchAccountStatus(msisdn);
-		return new ResponseEntity<>(accountStatusDTO, HttpStatus.OK);
+		if (msisdn != null && !msisdn.isEmpty()) {
+			AccountStatusDTO accountStatusDTO = accountStatusService.fetchAccountStatus(msisdn);
+			if (accountStatusDTO != null) {
+				return new ResponseEntity<>(accountStatusDTO, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>("user=" + msisdn + " account not found", HttpStatus.NOT_FOUND);
+
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 	}
 

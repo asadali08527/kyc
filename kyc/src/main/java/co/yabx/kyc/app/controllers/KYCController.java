@@ -68,7 +68,6 @@ public class KYCController {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 		}
-
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
@@ -77,10 +76,13 @@ public class KYCController {
 			@RequestParam(name = "masked", required = false) boolean masked) {
 		if (appConfigService.getBooleanProperty("IS_TO_DISPLAY_GET_API_LOGS", true))
 			LOGGER.info("/v1/kyc/details request recieved for msisdn={}", msisdn);
-		if (msisdn != null) {
+		if (msisdn != null && !msisdn.isEmpty()) {
 			KycDetailsDTO kycDetailsDTO = kycService.getKycDetails(msisdn, masked);
-			if (kycDetailsDTO != null)
+			if (kycDetailsDTO != null) {
 				return new ResponseEntity<>(kycDetailsDTO, HttpStatus.OK);
+			}
+			return new ResponseEntity<>("user=" + msisdn + " kyc not found", HttpStatus.NOT_FOUND);
+
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
