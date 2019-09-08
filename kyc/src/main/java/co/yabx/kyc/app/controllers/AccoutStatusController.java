@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import co.yabx.kyc.app.dto.AccountStatusDTO;
 import co.yabx.kyc.app.entity.AccountStatuses;
+import co.yabx.kyc.app.repository.AccountStatusesRepository;
 import co.yabx.kyc.app.service.AccountStatusService;
 import co.yabx.kyc.app.service.AccountStatusTrackerService;
+import co.yabx.kyc.app.service.AppConfigService;
 
 /**
  * 
@@ -31,6 +33,12 @@ public class AccoutStatusController {
 
 	@Autowired
 	private AccountStatusService accountStatusService;
+
+	@Autowired
+	private AccountStatusesRepository accountStatusesRepository;
+
+	@Autowired
+	private AppConfigService appConfigService;
 
 	@RequestMapping(value = "/status/account/update", method = RequestMethod.POST)
 	public ResponseEntity<?> updateAccountStatuses(@RequestBody List<AccountStatusDTO> accountStatusDTO) {
@@ -56,14 +64,21 @@ public class AccoutStatusController {
 	}
 
 	@RequestMapping(value = "/status/account", method = RequestMethod.GET)
-	public ResponseEntity<?> getAccountStatus(@RequestParam("msisdn") String msisdn) {
+	public ResponseEntity<?> getAccountStatus(@RequestParam("msisdn") String msisdn,
+			@RequestParam(name = "channel", required = false) String channel) {
+		if (channel != null && !channel.isEmpty() && msisdn != null && !msisdn.isEmpty()) {
+			if (channel.equalsIgnoreCase(appConfigService.getProperty("USSD_JOURNEY_CHANNEL", "ussd")))
+				return new ResponseEntity<>(accountStatusesRepository.findByMsisdn(msisdn), HttpStatus.OK);
+			else {
+				return new ResponseEntity<>("Invalid channel", HttpStatus.NO_CONTENT);
+			}
+		}
 		if (msisdn != null && !msisdn.isEmpty()) {
 			AccountStatusDTO accountStatusDTO = accountStatusService.fetchAccountStatus(msisdn);
 			if (accountStatusDTO != null) {
 				return new ResponseEntity<>(accountStatusDTO, HttpStatus.OK);
 			} else {
 				return new ResponseEntity<>("user=" + msisdn + " account not found", HttpStatus.NOT_FOUND);
-
 			}
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
