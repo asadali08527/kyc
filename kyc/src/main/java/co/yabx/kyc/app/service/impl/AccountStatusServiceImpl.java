@@ -53,7 +53,9 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 					AccountStatuses accountStatuses = accountStatusesRepository.findOne(accountStatusDTO.getMsisdn());
 					if (accountStatuses != null) {
 						AccountStatus oldStatus = accountStatuses.getAccountStatus();
-						accountStatuses.setAmlCftStatus(accountStatusDTO.getAmlCftStatus());
+						accountStatuses.setAmlCftStatus(
+								accountStatusDTO.getAmlCftStatus() != null ? accountStatusDTO.getAmlCftStatus()
+										: AmlCftStatus.NO);
 						accountStatuses.setKycVerified(accountStatusDTO.getKycVerified() == null ? KycVerified.NO
 								: accountStatusDTO.getKycVerified());
 						if (AmlCftStatus.NO.equals(accountStatuses.getAmlCftStatus())) {
@@ -69,7 +71,14 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 							accountStatuses.setAccountStatus(AccountStatus.BLOCKED);
 						} else {
 							try {
-								if (accountStatusDTO.getAccountStatus() != null)
+								if (accountStatuses.isKycAvailable()
+										&& (KycVerified.YES.equals(accountStatuses.getKycVerified())
+												|| KycVerified.NO.equals(accountStatuses.getKycVerified()))) {
+									accountStatuses.setAccountStatus(AccountStatus.ACTIVE);
+								} else if (accountStatuses.isKycAvailable()
+										&& KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
+									accountStatuses.setAccountStatus(AccountStatus.BLOCKED);
+								} else if (accountStatusDTO.getAccountStatus() != null)
 									accountStatuses.setAccountStatus(
 											AccountStatus.valueOf(accountStatusDTO.getAccountStatus().name()));
 							} catch (Exception e) {
