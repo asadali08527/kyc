@@ -2,9 +2,11 @@ package co.yabx.kyc.app.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import co.yabx.kyc.app.entity.KycDocuments;
 
@@ -15,7 +17,9 @@ public interface KycDocumentsRepository extends CrudRepository<KycDocuments, Lon
 
 	List<KycDocuments> findByMsisdnAndDocumentType(String encrytedMsisdn, String documentType);
 
+	@Transactional
+	@Modifying
 	@Query("delete from KycDocuments kd where kd.msisdn=?1")
-	void delete(String encrytedMsisdn);
+	void deleteByMsisdn(String encrytedMsisdn);
 
 }

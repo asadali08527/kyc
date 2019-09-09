@@ -60,7 +60,7 @@ public class KYCServiceImpl implements KYCService {
 
 	@Transactional
 	private void deleteOldDocuments(String encrytedMsisdn) {
-		kycDocumentsRepository.delete(encrytedMsisdn);
+		kycDocumentsRepository.deleteByMsisdn(encrytedMsisdn);
 	}
 
 	@Transactional
