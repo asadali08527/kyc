@@ -14,6 +14,6 @@ public interface KYCService {
 
 	public List<KycDetails> persistKYC(List<KycDetailsDTO> kycDetailsDTO);
 
-	public KycDetailsDTO getKycDetails(String msisdn, boolean masked);
+	public KycDetailsDTO getKycDetails(String msisdn, boolean masked, boolean scrumbled);
 
 }

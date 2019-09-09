@@ -131,12 +131,12 @@ public class KYCServiceImpl implements KYCService {
 	}
 
 	@Override
-	public KycDetailsDTO getKycDetails(String msisdn, boolean masked) {
+	public KycDetailsDTO getKycDetails(String msisdn, boolean masked, boolean scrumbled) {
 		String encrytedMsisdn = EncoderDecoderUtil.base64Encode(msisdn);
 		KycDetails kycDetails = kycDetailsRepository.findByMsisdn(encrytedMsisdn);
 		if (kycDetails != null) {
 			List<KycDocuments> oldDocumentsLists = kycDocumentsRepository.findByMsisdn(encrytedMsisdn);
-			return KycDtoHelper.prepareDto(kycDetails, oldDocumentsLists, masked);
+			return KycDtoHelper.prepareDto(kycDetails, oldDocumentsLists, masked, scrumbled);
 		}
 		return null;
 	}

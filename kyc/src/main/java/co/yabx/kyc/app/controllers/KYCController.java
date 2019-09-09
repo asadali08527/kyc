@@ -73,11 +73,12 @@ public class KYCController {
 
 	@RequestMapping(value = "/kyc/details", method = RequestMethod.GET)
 	public ResponseEntity<?> getKycdetails(@RequestParam(name = "msisdn") String msisdn,
-			@RequestParam(name = "masked", required = false) boolean masked) {
+			@RequestParam(name = "masked", required = false) boolean masked,
+			@RequestParam(name = "scrumbled", required = false) boolean scrumbled) {
 		if (appConfigService.getBooleanProperty("IS_TO_DISPLAY_GET_API_LOGS", true))
 			LOGGER.info("/v1/kyc/details request recieved for msisdn={}", msisdn);
 		if (msisdn != null && !msisdn.isEmpty()) {
-			KycDetailsDTO kycDetailsDTO = kycService.getKycDetails(msisdn, masked);
+			KycDetailsDTO kycDetailsDTO = kycService.getKycDetails(msisdn, masked, scrumbled);
 			if (kycDetailsDTO != null) {
 				return new ResponseEntity<>(kycDetailsDTO, HttpStatus.OK);
 			}

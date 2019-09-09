@@ -4,8 +4,11 @@ import co.yabx.kyc.app.service.AppConfigService;
 
 public class MaskUtil {
 
-	public static String showDataInXXXFormat(String data, String field, boolean masked) {
-		if (masked) {
+	public static String showDataInXXXFormat(String data, String field, boolean masked, boolean scrumbled) {
+		if (masked && SpringUtil.bean(AppConfigService.class)
+				.getProperty("FILED_WHOSE_CHARACTERS_TO_BE_MASKED",
+						"email,msisdn,firstName,middleName,lastName,streetOrHouse,documentNumber,city,area,region,pob")
+				.contains(field)) {
 			String maskedData = "";
 			if (neitherBlankNorNull(data)) {
 				int dataLength = data.length();
@@ -47,6 +50,12 @@ public class MaskUtil {
 			}
 
 			return data;
+		} else if (scrumbled) {
+			if (SpringUtil.bean(AppConfigService.class).getProperty("FILED_WHOSE_CHARACTERS_TO_BE_SCRUMBLED",
+					"email,msisdn,firstName,middleName,lastName,streetOrHouse,documentNumber").contains(field))
+				return ScrambleUtil.shuffleWord(data);
+			else
+				return data;
 		}
 		return data;
 	}
