@@ -246,7 +246,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 			Date now = new Date();
 			Date updatedAt = accountStatuses.getUpdatedAt();
 			long hours = (now.getTime() - updatedAt.getTime()) / (60 * 60 * 1000);
-			if (hours >= appConfigService.getLongProperty("THRESHOLD_TIME_TO_REACTIVATE_SUSPENDED_ACCOUNT", 1l)) {
+			if (hours >= appConfigService.getLongProperty("THRESHOLD_TIME_TO_REACTIVATE_SUSPENDED_ACCOUNT", 24l)) {
 				updateAccountStatus(accountStatuses, AccountStatus.ACTIVE.toString(), appConfigService
 						.getProperty("REASON_SUSPENDED_THRESHOLD_TIME_CROSSED", "SUSPENDED THRESHOLD TIME CROSSED"),
 						"SYSTEM CRON JOB");

@@ -51,7 +51,7 @@ public class AccountStatusTrackerServiceImpl implements AccountStatusTrackerServ
 					accountStatusesTrackers.setTo(AccountStatus.NEW);
 					accountStatusesTrackers.setMsisdn(accountStatuses.getMsisdn());
 					accountStatusesTrackers.setReason(
-							appConfigService.getProperty("NEW_KYC_ACCOUNT_TRACKER_REASON", "NEW KYC RECIEVED"));
+							appConfigService.getProperty("NEW_KYC_ACCOUNT_TRACKER_REASON", "NEW CREATE REQUEST RECIEVED"));
 					accountStatusesTrackers = accountStatusesTrackersRepository.save(accountStatusesTrackers);
 					return accountStatusesTrackers;
 				}

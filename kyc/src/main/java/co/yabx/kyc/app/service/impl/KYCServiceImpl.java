@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.yabx.kyc.app.controllers.KYCController;
 import co.yabx.kyc.app.dto.KycDetailsDTO;
 import co.yabx.kyc.app.dto.KycDocumentsDTO;
 import co.yabx.kyc.app.dto.dtoHelper.KycDtoHelper;
@@ -36,70 +35,57 @@ public class KYCServiceImpl implements KYCService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KYCServiceImpl.class);
 
 	@Override
-	@Transactional
 	public List<KycDetails> persistKYC(List<KycDetailsDTO> kycDetailsDTOs) {
 		List<KycDetails> KycDetailsList = new ArrayList<KycDetails>();
 		for (KycDetailsDTO kycDetailsDTO : kycDetailsDTOs) {
 			if (kycDetailsDTO != null) {
 				if (appConfigService.getBooleanProperty("IS_TO_DISPLAY_LOGS", true))
 					LOGGER.info("persisting/updating kyc={}", kycDetailsDTO);
-				String msisdn = kycDetailsDTO.getMsisdn();
+				String msisdn = kycDetailsDTO.getMsisdn().trim();
 				String encrytedMsisdn = EncoderDecoderUtil.base64Encode(msisdn);
 				KycDetails kycDetails = kycDetailsRepository.findByMsisdn(encrytedMsisdn);
-				if (kycDetails == null) {
-					kycDetails = new KycDetails();
-					kycDetails.setMsisdn(encrytedMsisdn);
-					kycDetails.setCreatedBy(kycDetailsDTO.getUserId());
-				}
-				kycDetails.setArea(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getArea()));
-				kycDetails.setCity(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getCity()));
-				kycDetails.setRegion(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getRegion()));
-				kycDetails.setUpdatedBy(kycDetailsDTO.getUserId());
-				kycDetails.setDob(kycDetailsDTO.getDob());
-				kycDetails.setPob(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getPob()));
-				kycDetails.setFirstName(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getFirstName()));
-				kycDetails.setGender(kycDetailsDTO.getGender());
-				kycDetails.setHouseNumberOrStreetName(
-						EncoderDecoderUtil.base64Encode(kycDetailsDTO.getHouseNumberOrStreetName()));
-				kycDetails.setLastName(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getLastName()));
-				kycDetails.setMiddleName(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getMiddleName()));
-				kycDetails.setZipCode(kycDetailsDTO.getZipCode());
-				kycDetails.setEmail(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getEmail()));
-				kycDetails = kycDetailsRepository.save(kycDetails);
+				kycDetails = persistKycDetails(encrytedMsisdn, kycDetailsDTO, kycDetails);
 				if (appConfigService.getBooleanProperty("IS_TO_DISPLAY_LOGS", true))
 					LOGGER.info("persisted/updated kycDetails={}", kycDetails);
 				List<KycDocumentsDTO> newDocumentsList = kycDetailsDTO.getKycDocuments();
-				List<KycDocuments> oldDocumentsLists = kycDocumentsRepository.findByMsisdn(encrytedMsisdn);
-				if (oldDocumentsLists == null || oldDocumentsLists.isEmpty()) {
-					// New KYC Documents , received at very first time
-					persistNewDocuments(newDocumentsList, encrytedMsisdn);
-				} else {
-					/**
-					 * Update KYC documents or add some more new one
-					 */
-					for (KycDocumentsDTO kycDocumentsDTO : newDocumentsList) {
-						oldDocumentsLists = kycDocumentsRepository.findByMsisdnAndDocumentType(encrytedMsisdn,
-								kycDocumentsDTO.getDocumentType());
-						if (oldDocumentsLists == null || oldDocumentsLists.isEmpty()) {
-							persistKycDocuments(null, kycDocumentsDTO, encrytedMsisdn);
-						} else {
-							/*
-							 * update old documents
-							 */
-							for (KycDocuments oldDocuments : oldDocumentsLists) {
-								if (oldDocuments.getDocumentSide() != null && oldDocuments.getDocumentSide()
-										.equalsIgnoreCase(kycDocumentsDTO.getDocumentSide())) {
-									persistKycDocuments(oldDocuments, kycDocumentsDTO, encrytedMsisdn);
-
-								}
-							}
-						}
-					}
-				}
+				deleteOldDocuments(encrytedMsisdn);
+				// New KYC Documents , received at very first time
+				persistNewDocuments(newDocumentsList, encrytedMsisdn);
 				KycDetailsList.add(kycDetails);
 			}
 		}
 		return KycDetailsList;
+
+	}
+
+	@Transactional
+	private void deleteOldDocuments(String encrytedMsisdn) {
+		kycDocumentsRepository.delete(encrytedMsisdn);
+	}
+
+	@Transactional
+	private KycDetails persistKycDetails(String encrytedMsisdn, KycDetailsDTO kycDetailsDTO, KycDetails kycDetails) {
+		if (kycDetails == null) {
+			kycDetails = new KycDetails();
+			kycDetails.setMsisdn(encrytedMsisdn);
+			kycDetails.setCreatedBy(kycDetailsDTO.getUserId());
+		}
+		kycDetails.setArea(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getArea()));
+		kycDetails.setCity(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getCity()));
+		kycDetails.setRegion(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getRegion()));
+		kycDetails.setUpdatedBy(kycDetailsDTO.getUserId());
+		kycDetails.setDob(kycDetailsDTO.getDob());
+		kycDetails.setPob(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getPob()));
+		kycDetails.setFirstName(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getFirstName()));
+		kycDetails.setGender(kycDetailsDTO.getGender());
+		kycDetails.setHouseNumberOrStreetName(
+				EncoderDecoderUtil.base64Encode(kycDetailsDTO.getHouseNumberOrStreetName()));
+		kycDetails.setLastName(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getLastName()));
+		kycDetails.setMiddleName(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getMiddleName()));
+		kycDetails.setZipCode(kycDetailsDTO.getZipCode());
+		kycDetails.setEmail(EncoderDecoderUtil.base64Encode(kycDetailsDTO.getEmail()));
+		kycDetails = kycDetailsRepository.save(kycDetails);
+		return kycDetails;
 	}
 
 	private void persistNewDocuments(List<KycDocumentsDTO> newDocumentsList, String encrytedMsisdn) {
