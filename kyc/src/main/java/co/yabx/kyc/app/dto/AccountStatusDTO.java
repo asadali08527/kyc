@@ -35,6 +35,8 @@ public class AccountStatusDTO implements Serializable {
 
 	private Date updatedAt;
 
+	private Date suspensionThresholdTime;
+
 	private List<AccountStatusTrackerDTO> accountStatusTrackerDTO;
 
 	public String getMsisdn() {
@@ -129,12 +131,22 @@ public class AccountStatusDTO implements Serializable {
 		this.updatedAt = updatedAt;
 	}
 
+	public Date getSuspensionThresholdTime() {
+		return suspensionThresholdTime;
+	}
+
+	public void setSuspensionThresholdTime(Date suspensionThresholdTime) {
+		this.suspensionThresholdTime = suspensionThresholdTime;
+	}
+
 	@Override
 	public String toString() {
 		return "AccountStatusDTO [msisdn=" + msisdn + ", isKycAvailable=" + isKycAvailable + ", kycVerified="
 				+ kycVerified + ", amlCftStatus=" + amlCftStatus + ", accountStatus=" + accountStatus
 				+ ", transactionStatus=" + transactionStatus + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
-				+ ", accountStatusTrackerDTO=" + accountStatusTrackerDTO + "]";
+				+ ", updateReason=" + updateReason + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
+				+ ", suspensionThresholdTime=" + suspensionThresholdTime + ", accountStatusTrackerDTO="
+				+ accountStatusTrackerDTO + "]";
 	}
 
 }

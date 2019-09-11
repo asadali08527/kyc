@@ -2,12 +2,17 @@ package co.yabx.kyc.app.dto.dtoHelper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import co.yabx.kyc.app.dto.AccountStatusDTO;
 import co.yabx.kyc.app.dto.AccountStatusTrackerDTO;
+import co.yabx.kyc.app.entity.AccountStatus;
 import co.yabx.kyc.app.entity.AccountStatuses;
 import co.yabx.kyc.app.entity.AccountStatusesTrackers;
+import co.yabx.kyc.app.service.AppConfigService;
+import co.yabx.kyc.app.util.SpringUtil;
 
 public class AccountStatusesDtoHelper implements Serializable {
 
@@ -20,7 +25,13 @@ public class AccountStatusesDtoHelper implements Serializable {
 			accountStatusDTO.setUpdatedBy(accountStatuses.getUpdatedBy());
 			accountStatusDTO.setCreatedAt(accountStatuses.getCreatedAt());
 			accountStatusDTO.setUpdatedAt(accountStatuses.getUpdatedAt());
-			accountStatusDTO.setAccountStatus(accountStatuses.getAccountStatus());
+			AccountStatus accountStatus = accountStatuses.getAccountStatus();
+			if (AccountStatus.SUSPENDED.equals(accountStatus)) {
+				accountStatusDTO.setSuspensionThresholdTime(
+						addHoursToJavaUtilDate(accountStatuses.getUpdatedAt(), SpringUtil.bean(AppConfigService.class)
+								.getIntProperty("THRESHOLD_TIME_TO_REACTIVATE_SUSPENDED_ACCOUNT", 24)));
+			}
+			accountStatusDTO.setAccountStatus(accountStatus);
 			accountStatusDTO.setAmlCftStatus(accountStatuses.getAmlCftStatus());
 			accountStatusDTO.setKycAvailable(accountStatuses.isKycAvailable());
 			accountStatusDTO.setKycVerified(accountStatuses.getKycVerified());
@@ -55,4 +66,10 @@ public class AccountStatusesDtoHelper implements Serializable {
 		return null;
 	}
 
+	public static Date addHoursToJavaUtilDate(Date date, Integer hours) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.HOUR_OF_DAY, hours);
+		return calendar.getTime();
+	}
 }
