@@ -27,7 +27,7 @@ import co.yabx.kyc.app.service.AppConfigService;
 @Controller
 @CrossOrigin
 @RequestMapping(value = "/v1")
-public class AccoutStatusController {
+public class AccountStatusController {
 	@Autowired
 	private AccountStatusTrackerService accountStatusTrackerService;
 

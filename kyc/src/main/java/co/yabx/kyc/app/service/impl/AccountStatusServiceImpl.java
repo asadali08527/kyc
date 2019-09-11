@@ -109,7 +109,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 				AccountStatuses accountStatuses = accountStatusesRepository
 						.findOne(EncoderDecoderUtil.base64Decode(kycDetails.getMsisdn()));
 				return createAccount(accountStatuses, EncoderDecoderUtil.base64Decode(kycDetails.getMsisdn()),
-						kycDetails.getCreatedBy(), true);
+						kycDetails.getCreatedBy(), true, AccountStatus.NEW);
 			} catch (Exception e) {
 				e.printStackTrace();
 				LOGGER.error("Exception raised while updating account status for msisdn={}, error={}",
@@ -120,7 +120,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	}
 
 	private AccountStatuses createAccount(AccountStatuses accountStatuses, String msisdn, String createdBy,
-			boolean isKycAvailable) {
+			boolean isKycAvailable, AccountStatus accountStatus) {
 		if (accountStatuses == null) {
 			accountStatuses = new AccountStatuses();
 			accountStatuses.setKycAvailable(isKycAvailable);
@@ -132,7 +132,10 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 					.setUpdateReason(appConfigService.getProperty("NEW_KYC_ACCOUNT_STATUS_REASON", "KYC RECEIVED"));
 			accountStatuses.setKycAvailable(isKycAvailable);
 		}
-		accountStatuses.setAccountStatus(AccountStatus.NEW);
+		if (accountStatus != null)
+			accountStatuses.setAccountStatus(accountStatus);
+		else
+			accountStatuses.setAccountStatus(AccountStatus.NEW);
 		accountStatuses.setAmlCftStatus(AmlCftStatus.NO);
 		accountStatuses.setKycVerified(KycVerified.NO);
 		accountStatuses.setCreatedBy(createdBy);
@@ -164,22 +167,34 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	@Override
 	public AccountStatuses updateAccountStatus(String msisdn, String status, String reason, String updatedBy) {
 		AccountStatuses accountStatuses = accountStatusesRepository.findOne(msisdn);
-		return updateAccountStatus(accountStatuses, status, reason, updatedBy);
+		if (accountStatuses != null)
+			return updateAccountStatus(accountStatuses, getAccountStatus(status), reason, updatedBy);
+		else {
+			accountStatuses = createAccount(accountStatuses, msisdn, updatedBy, false, getAccountStatus(status));
+			if (accountStatuses != null) {
+				accountStatusTrackerService.createAccountTracker(accountStatuses);
+			}
+		}
+		return accountStatuses;
+	}
+
+	private AccountStatus getAccountStatus(String status) {
+		AccountStatus accountStatus = null;
+		try {
+			accountStatus = AccountStatus.valueOf(status.toUpperCase());
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error("exception raised while fetch status={}, error={}", status, e.getMessage());
+			return null;
+		}
+		return accountStatus;
 	}
 
 	@Transactional
-	private AccountStatuses updateAccountStatus(AccountStatuses accountStatuses, String status, String reason,
-			String updatedBy) {
-		if (accountStatuses != null && status != null && !status.isEmpty() && reason != null && !reason.isEmpty()) {
+	private AccountStatuses updateAccountStatus(AccountStatuses accountStatuses, AccountStatus accountStatus,
+			String reason, String updatedBy) {
+		if (accountStatuses != null && accountStatus != null && reason != null && !reason.isEmpty()) {
 			AccountStatus oldStatus = accountStatuses.getAccountStatus();
-			AccountStatus accountStatus = null;
-			try {
-				accountStatus = AccountStatus.valueOf(status.toUpperCase());
-			} catch (Exception e) {
-				e.printStackTrace();
-				LOGGER.error("exception raised while fetch status={}, error={}", status, e.getMessage());
-				return null;
-			}
 			accountStatuses.setAccountStatus(accountStatus);
 			accountStatuses.setUpdateReason(reason);
 			accountStatuses.setUpdatedBy(updatedBy);
@@ -203,7 +218,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 
 	private void updateAccount(AccountStatuses accountStatuses, Map<String, String> statusTrackers) {
 		if (AmlCftStatus.YES.equals(accountStatuses.getAmlCftStatus())) {
-			updateAccountStatus(accountStatuses, AccountStatus.BLOCKED.toString(),
+			updateAccountStatus(accountStatuses, AccountStatus.BLOCKED,
 					appConfigService.getProperty("REASON_IF_AML_CFT_STATUS_IS_YES", "DUE TO AML/CFT"),
 					"SYSTEM CRON JOB");
 			if (statusTrackers != null)
@@ -213,7 +228,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 								+ ",Date:-" + new Date());
 			LOGGER.info("Account={} status has been updated from new to blocked", accountStatuses.getMsisdn());
 		} else if (accountStatuses.isKycAvailable() && KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
-			updateAccountStatus(accountStatuses, AccountStatus.BLOCKED.toString(),
+			updateAccountStatus(accountStatuses, AccountStatus.BLOCKED,
 					appConfigService.getProperty("REASON_IF_KYC_IS_REJECTED", "KYC REJECTED"), "SYSTEM CRON JOB");
 			if (statusTrackers != null)
 				statusTrackers.put(accountStatuses.getMsisdn(),
@@ -222,7 +237,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 								+ new Date());
 			LOGGER.info("Account={} status has been updated from new to blocked", accountStatuses.getMsisdn());
 		} else if (accountStatuses.isKycAvailable() && !KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
-			updateAccountStatus(accountStatuses, AccountStatus.ACTIVE.toString(),
+			updateAccountStatus(accountStatuses, AccountStatus.ACTIVE,
 					appConfigService.getProperty("REASON_IF_KYC_IS_AVAILABLE_BUT_NOT_VERIFIED",
 							"KYC IS AVAILABLE, BUT NEITHER VERIFIED NOR REJECTED"),
 					"SYSTEM CRON JOB");
@@ -245,9 +260,9 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 		for (AccountStatuses accountStatuses : suspendedAccounts) {
 			Date now = new Date();
 			Date updatedAt = accountStatuses.getUpdatedAt();
-			long hours = (now.getTime() - updatedAt.getTime()) / (60 * 60 * 1000);
-			if (hours >= appConfigService.getLongProperty("THRESHOLD_TIME_TO_REACTIVATE_SUSPENDED_ACCOUNT", 24l)) {
-				updateAccountStatus(accountStatuses, AccountStatus.ACTIVE.toString(), appConfigService
+			long seconds = (now.getTime() - updatedAt.getTime()) / (60 * 1000);
+			if (seconds >= appConfigService.getLongProperty("THRESHOLD_TIME_TO_REACTIVATE_SUSPENDED_ACCOUNT", 600l)) {
+				updateAccountStatus(accountStatuses, AccountStatus.ACTIVE, appConfigService
 						.getProperty("REASON_SUSPENDED_THRESHOLD_TIME_CROSSED", "SUSPENDED THRESHOLD TIME CROSSED"),
 						"SYSTEM CRON JOB");
 				statusTrackers.put(accountStatuses.getMsisdn(),
@@ -265,7 +280,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	@Override
 	public AccountStatuses createAccountStatus(String msisdn, String createdBy) {
 		AccountStatuses accountStatuses = accountStatusesRepository.findOne(msisdn);
-		return createAccount(accountStatuses, msisdn, createdBy, false);
+		return createAccount(accountStatuses, msisdn, createdBy, false, AccountStatus.NEW);
 	}
 
 }
