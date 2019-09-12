@@ -46,19 +46,37 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 
 	@Override
 	@Transactional
-	public void updateAccountStatus(List<AccountStatusDTO> accountStatusDTOList) {
+	public void updateAccountStatus(List<AccountStatusDTO> accountStatusDTOList, boolean forcefully) {
 		if (accountStatusDTOList != null && !accountStatusDTOList.isEmpty()) {
 			for (AccountStatusDTO accountStatusDTO : accountStatusDTOList) {
 				try {
 					AccountStatuses accountStatuses = accountStatusesRepository.findOne(accountStatusDTO.getMsisdn());
 					if (accountStatuses != null) {
 						AccountStatus oldStatus = accountStatuses.getAccountStatus();
-						accountStatuses.setAmlCftStatus(
-								accountStatusDTO.getAmlCftStatus() != null ? accountStatusDTO.getAmlCftStatus()
-										: AmlCftStatus.NO);
-						accountStatuses.setKycVerified(accountStatusDTO.getKycVerified() == null ? KycVerified.NO
-								: accountStatusDTO.getKycVerified());
-						if (AmlCftStatus.NO.equals(accountStatuses.getAmlCftStatus())) {
+						if (forcefully) {
+							accountStatuses.setAmlCftStatus(
+									accountStatuses.getAmlCftStatus() != null ? accountStatusDTO.getAmlCftStatus()
+											: accountStatuses.getAmlCftStatus() != null
+													? accountStatuses.getAmlCftStatus()
+													: AmlCftStatus.NO);
+						} else {
+							accountStatuses.setAmlCftStatus(
+									accountStatusDTO.getAmlCftStatus() != null ? accountStatusDTO.getAmlCftStatus()
+											: AmlCftStatus.NO);
+						}
+						if (forcefully) {
+							accountStatuses.setKycVerified(
+									accountStatusDTO.getKycVerified() != null ? accountStatusDTO.getKycVerified()
+											: accountStatuses.getKycVerified() != null
+													? accountStatuses.getKycVerified()
+													: KycVerified.NO);
+						} else {
+							accountStatuses.setKycVerified(accountStatusDTO.getKycVerified() == null ? KycVerified.NO
+									: accountStatusDTO.getKycVerified());
+						}
+						if (forcefully) {
+							accountStatuses.setAccountStatus(accountStatusDTO.getAccountStatus());
+						} else if (AmlCftStatus.NO.equals(accountStatuses.getAmlCftStatus())) {
 							if (accountStatuses.isKycAvailable()
 									&& (KycVerified.YES.equals(accountStatuses.getKycVerified())
 											|| KycVerified.NO.equals(accountStatuses.getKycVerified()))) {
@@ -92,6 +110,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 						accountStatuses = accountStatusesRepository.save(accountStatuses);
 						accountStatusTrackerService.updateAccountTracker(accountStatuses, oldStatus);
 					}
+
 				} catch (Exception e) {
 					e.printStackTrace();
 					LOGGER.error("Exception raised while updating account status for msisdn={}, error={}",

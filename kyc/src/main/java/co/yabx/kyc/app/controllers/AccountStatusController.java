@@ -41,9 +41,10 @@ public class AccountStatusController {
 	private AppConfigService appConfigService;
 
 	@RequestMapping(value = "/status/account/update", method = RequestMethod.POST)
-	public ResponseEntity<?> updateAccountStatuses(@RequestBody List<AccountStatusDTO> accountStatusDTO) {
+	public ResponseEntity<?> updateAccountStatuses(@RequestBody List<AccountStatusDTO> accountStatusDTO,
+			@RequestParam(name = "byForce", required = false) boolean force) {
 		if (accountStatusDTO != null && !accountStatusDTO.isEmpty()) {
-			accountStatusService.updateAccountStatus(accountStatusDTO);
+			accountStatusService.updateAccountStatus(accountStatusDTO,force);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

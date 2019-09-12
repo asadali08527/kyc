@@ -14,7 +14,7 @@ import co.yabx.kyc.app.entity.KycDetails;
  */
 public interface AccountStatusService {
 
-	void updateAccountStatus(List<AccountStatusDTO> accountStatusDTO);
+	void updateAccountStatus(List<AccountStatusDTO> accountStatusDTO, boolean force);
 
 	public AccountStatuses createAccountStatus(KycDetails kycDetails);
 
