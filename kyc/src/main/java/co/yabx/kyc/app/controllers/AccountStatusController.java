@@ -2,6 +2,8 @@ package co.yabx.kyc.app.controllers;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,11 +42,14 @@ public class AccountStatusController {
 	@Autowired
 	private AppConfigService appConfigService;
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AccountStatusController.class);
+
 	@RequestMapping(value = "/status/account/update", method = RequestMethod.POST)
 	public ResponseEntity<?> updateAccountStatuses(@RequestBody List<AccountStatusDTO> accountStatusDTO,
 			@RequestParam(name = "byForce", required = false) boolean force) {
+		LOGGER.info("/status/account/update request received with body={}", accountStatusDTO);
 		if (accountStatusDTO != null && !accountStatusDTO.isEmpty()) {
-			accountStatusService.updateAccountStatus(accountStatusDTO,force);
+			accountStatusService.updateAccountStatus(accountStatusDTO, force);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
