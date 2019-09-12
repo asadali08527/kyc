@@ -55,10 +55,8 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 						AccountStatus oldStatus = accountStatuses.getAccountStatus();
 						if (forcefully) {
 							accountStatuses.setAmlCftStatus(
-									accountStatusDTO.getAmlCftStatus() != null ? accountStatusDTO.getAmlCftStatus()
-											: accountStatuses.getAmlCftStatus() != null
-													? accountStatuses.getAmlCftStatus()
-													: AmlCftStatus.NO);
+									accountStatuses.getAmlCftStatus() != null ? accountStatuses.getAmlCftStatus()
+											: AmlCftStatus.NO);
 						} else {
 							accountStatuses.setAmlCftStatus(
 									accountStatusDTO.getAmlCftStatus() != null ? accountStatusDTO.getAmlCftStatus()
@@ -66,10 +64,8 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 						}
 						if (forcefully) {
 							accountStatuses.setKycVerified(
-									accountStatusDTO.getKycVerified() != null ? accountStatusDTO.getKycVerified()
-											: accountStatuses.getKycVerified() != null
-													? accountStatuses.getKycVerified()
-													: KycVerified.NO);
+									accountStatuses.getKycVerified() != null ? accountStatuses.getKycVerified()
+											: KycVerified.NO);
 						} else {
 							accountStatuses.setKycVerified(accountStatusDTO.getKycVerified() == null ? KycVerified.NO
 									: accountStatusDTO.getKycVerified());

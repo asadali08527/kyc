@@ -47,7 +47,8 @@ public class AccountStatusController {
 	@RequestMapping(value = "/status/account/update", method = RequestMethod.POST)
 	public ResponseEntity<?> updateAccountStatuses(@RequestBody List<AccountStatusDTO> accountStatusDTO,
 			@RequestParam(name = "byForce", required = false) boolean force) {
-		LOGGER.info("/status/account/update request received with body={}", accountStatusDTO);
+		LOGGER.info("/status/account/update request received with body={}, and param byForce={}", accountStatusDTO,
+				force);
 		if (accountStatusDTO != null && !accountStatusDTO.isEmpty()) {
 			accountStatusService.updateAccountStatus(accountStatusDTO, force);
 			return new ResponseEntity<>(HttpStatus.OK);
