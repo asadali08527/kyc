@@ -55,7 +55,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 						AccountStatus oldStatus = accountStatuses.getAccountStatus();
 						if (forcefully) {
 							accountStatuses.setAmlCftStatus(
-									accountStatuses.getAmlCftStatus() != null ? accountStatusDTO.getAmlCftStatus()
+									accountStatusDTO.getAmlCftStatus() != null ? accountStatusDTO.getAmlCftStatus()
 											: accountStatuses.getAmlCftStatus() != null
 													? accountStatuses.getAmlCftStatus()
 													: AmlCftStatus.NO);
