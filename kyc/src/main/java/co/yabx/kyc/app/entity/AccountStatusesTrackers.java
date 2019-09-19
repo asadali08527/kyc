@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @Table(name = "account_statuses_trackers")
 public class AccountStatusesTrackers implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6441043639437893962L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -122,12 +122,6 @@ public class AccountStatusesTrackers implements Serializable {
 
 	public void setChangedAt(Date changedAt) {
 		this.changedAt = changedAt;
-	}
-
-	@Override
-	public String toString() {
-		return "AccountStatusesHistory [id=" + id + ", msisdn=" + msisdn + ", from=" + from + ", to=" + to + ", reason="
-				+ reason + ", changedAt=" + changedAt + "]";
 	}
 
 }

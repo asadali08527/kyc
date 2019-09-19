@@ -21,14 +21,6 @@ import co.yabx.kyc.app.service.AppConfigService;
 
 @Service
 public class AccountStatusTrackerServiceImpl implements AccountStatusTrackerService {
-	@Autowired
-	private KycDetailsRepository kycDetailsRepository;
-
-	@Autowired
-	private KycDocumentsRepository kycDocumentsRepository;
-
-	@Autowired
-	private AccountStatusesRepository accountStatusesRepository;
 
 	@Autowired
 	private AccountStatusesTrackersRepository accountStatusesTrackersRepository;
@@ -50,8 +42,8 @@ public class AccountStatusTrackerServiceImpl implements AccountStatusTrackerServ
 					accountStatusesTrackers.setCreatedBy(accountStatuses.getCreatedBy());
 					accountStatusesTrackers.setTo(AccountStatus.NEW);
 					accountStatusesTrackers.setMsisdn(accountStatuses.getMsisdn());
-					accountStatusesTrackers.setReason(
-							appConfigService.getProperty("NEW_KYC_ACCOUNT_TRACKER_REASON", "NEW CREATE REQUEST RECIEVED"));
+					accountStatusesTrackers.setReason(appConfigService.getProperty("NEW_KYC_ACCOUNT_TRACKER_REASON",
+							"NEW CREATE REQUEST RECIEVED"));
 					accountStatusesTrackers = accountStatusesTrackersRepository.save(accountStatusesTrackers);
 					return accountStatusesTrackers;
 				}
@@ -87,6 +79,11 @@ public class AccountStatusTrackerServiceImpl implements AccountStatusTrackerServ
 		}
 		return null;
 
+	}
+
+	@Override
+	public List<AccountStatusesTrackers> findByMsisdn(String msisdn) {
+		return accountStatusesTrackersRepository.findByMsisdn(msisdn);
 	}
 
 }

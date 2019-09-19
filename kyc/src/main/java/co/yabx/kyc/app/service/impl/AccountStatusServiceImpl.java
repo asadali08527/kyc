@@ -52,7 +52,6 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 				try {
 					AccountStatuses accountStatuses = accountStatusesRepository.findOne(accountStatusDTO.getMsisdn());
 					if (accountStatuses != null) {
-						AccountStatus oldStatus = accountStatuses.getAccountStatus();
 						if (forcefully) {
 							accountStatuses.setAmlCftStatus(
 									accountStatuses.getAmlCftStatus() != null ? accountStatuses.getAmlCftStatus()
@@ -104,7 +103,6 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 						accountStatuses.setUpdatedBy(accountStatusDTO.getUpdatedBy());
 						accountStatuses.setUpdateReason(accountStatusDTO.getUpdateReason());
 						accountStatuses = accountStatusesRepository.save(accountStatuses);
-						accountStatusTrackerService.updateAccountTracker(accountStatuses, oldStatus);
 					}
 
 				} catch (Exception e) {
@@ -186,9 +184,6 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 			return updateAccountStatus(accountStatuses, getAccountStatus(status), reason, updatedBy);
 		else {
 			accountStatuses = createAccount(accountStatuses, msisdn, updatedBy, false, getAccountStatus(status));
-			if (accountStatuses != null) {
-				accountStatusTrackerService.createAccountTracker(accountStatuses);
-			}
 		}
 		return accountStatuses;
 	}
@@ -209,12 +204,10 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	private AccountStatuses updateAccountStatus(AccountStatuses accountStatuses, AccountStatus accountStatus,
 			String reason, String updatedBy) {
 		if (accountStatuses != null && accountStatus != null && reason != null && !reason.isEmpty()) {
-			AccountStatus oldStatus = accountStatuses.getAccountStatus();
 			accountStatuses.setAccountStatus(accountStatus);
 			accountStatuses.setUpdateReason(reason);
 			accountStatuses.setUpdatedBy(updatedBy);
 			accountStatuses = accountStatusesRepository.save(accountStatuses);
-			accountStatusTrackerService.updateAccountTracker(accountStatuses, oldStatus);
 		}
 		return accountStatuses;
 	}

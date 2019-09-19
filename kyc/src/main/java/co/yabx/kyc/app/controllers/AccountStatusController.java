@@ -99,8 +99,9 @@ public class AccountStatusController {
 		if (msisdn != null && !msisdn.isEmpty() && createdBy != null && !createdBy.isEmpty()) {
 			AccountStatuses accountStatuses = accountStatusService.createAccountStatus(msisdn, createdBy);
 			if (accountStatuses != null) {
-				accountStatusTrackerService.createAccountTracker(accountStatuses);
 				return new ResponseEntity<>(accountStatusService.fetchAccountStatus(msisdn), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

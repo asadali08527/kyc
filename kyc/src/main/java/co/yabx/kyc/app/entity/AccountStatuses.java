@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
@@ -13,7 +14,10 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import co.yabx.kyc.app.entity.entityListener.AccountStatusesTrackerListener;
+
 @Entity
+@EntityListeners({ AccountStatusesTrackerListener.class })
 @Table(name = "account_statuses", indexes = { @Index(name = "kyc_verified", columnList = "kyc_verified"),
 		@Index(name = "aml_cft_status", columnList = "aml_cft_status"),
 		@Index(name = "account_status", columnList = "account_status") })
