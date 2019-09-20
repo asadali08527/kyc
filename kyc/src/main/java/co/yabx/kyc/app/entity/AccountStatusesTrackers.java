@@ -124,4 +124,65 @@ public class AccountStatusesTrackers implements Serializable {
 		this.changedAt = changedAt;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((changedAt == null) ? 0 : changedAt.hashCode());
+		result = prime * result + ((createdBy == null) ? 0 : createdBy.hashCode());
+		result = prime * result + ((from == null) ? 0 : from.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((msisdn == null) ? 0 : msisdn.hashCode());
+		result = prime * result + ((reason == null) ? 0 : reason.hashCode());
+		result = prime * result + ((to == null) ? 0 : to.hashCode());
+		result = prime * result + ((updatedBy == null) ? 0 : updatedBy.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AccountStatusesTrackers other = (AccountStatusesTrackers) obj;
+		if (changedAt == null) {
+			if (other.changedAt != null)
+				return false;
+		} else if (!changedAt.equals(other.changedAt))
+			return false;
+		if (createdBy == null) {
+			if (other.createdBy != null)
+				return false;
+		} else if (!createdBy.equals(other.createdBy))
+			return false;
+		if (from != other.from)
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (msisdn == null) {
+			if (other.msisdn != null)
+				return false;
+		} else if (!msisdn.equals(other.msisdn))
+			return false;
+		if (reason == null) {
+			if (other.reason != null)
+				return false;
+		} else if (!reason.equals(other.reason))
+			return false;
+		if (to != other.to)
+			return false;
+		if (updatedBy == null) {
+			if (other.updatedBy != null)
+				return false;
+		} else if (!updatedBy.equals(other.updatedBy))
+			return false;
+		return true;
+	}
+
 }

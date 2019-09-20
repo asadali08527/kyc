@@ -1,6 +1,9 @@
 package co.yabx.kyc.app.entity.entityListener;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,12 +12,13 @@ import co.yabx.kyc.app.entity.AccountStatuses;
 import co.yabx.kyc.app.entity.AccountStatusesTrackers;
 import co.yabx.kyc.app.service.AccountStatusTrackerService;
 import co.yabx.kyc.app.service.AppConfigService;
-import co.yabx.kyc.app.service.impl.AccountStatusTrackerServiceImpl;
 import co.yabx.kyc.app.service.impl.AppConfigServiceImpl;
 import co.yabx.kyc.app.util.SpringUtil;
 
 public abstract class Listener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Listener.class);
+
+	private ScheduledExecutorService executor = Executors.newScheduledThreadPool(100);
 
 	protected boolean checkEnableDisable() {
 		AppConfigService dbConfigService = SpringUtil.bean(AppConfigServiceImpl.class);
@@ -32,23 +36,30 @@ public abstract class Listener {
 	}
 
 	protected void publishAccountStatusesTrackers(AccountStatuses accountStatuses) {
-		String msisdn = accountStatuses.getMsisdn();
-		AccountStatusTrackerService accountStatusTrackerService = SpringUtil
-				.bean(AccountStatusTrackerServiceImpl.class);
-		try {
-			List<AccountStatusesTrackers> accountStatusesTrackers = accountStatusTrackerService.findByMsisdn(msisdn);
-			if (accountStatusesTrackers != null && !accountStatusesTrackers.isEmpty()) {
-				accountStatusesTrackers.sort((o1, o2) -> o1.getChangedAt().compareTo(o2.getChangedAt()));
-				accountStatusTrackerService.updateAccountTracker(accountStatuses,
-						accountStatusesTrackers.get(0).getTo());
-			} else {
-				accountStatusTrackerService.createAccountTracker(accountStatuses);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			LOGGER.error("Exception raised while updating account status tracker for msisdn={}, error={}",
-					accountStatuses.getMsisdn(), e.getMessage());
-		}
+		executor.schedule(getRunnable(accountStatuses), 100, TimeUnit.MICROSECONDS);
 	}
+
+	private Runnable getRunnable(AccountStatuses accountStatuses) {
+		return () -> {
+			try {
+				AccountStatusTrackerService accountStatusTrackerService = SpringUtil
+						.bean(AccountStatusTrackerService.class);
+				List<AccountStatusesTrackers> accountStatusesTrackers = accountStatusTrackerService
+						.findByMsisdn(accountStatuses.getMsisdn());
+				if (accountStatusesTrackers != null && !accountStatusesTrackers.isEmpty()) {
+					accountStatusesTrackers.sort((o1, o2) -> o1.getChangedAt().compareTo(o2.getChangedAt()));
+					accountStatusTrackerService.updateAccountTracker(accountStatuses,
+							accountStatusesTrackers.get(accountStatusesTrackers.size() - 1).getTo());
+				} else {
+					accountStatusTrackerService.persistAccountStatusTracker(accountStatuses);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOGGER.error("Exception raised while updating account status tracker for msisdn={}, error={}",
+						accountStatuses.getMsisdn(), e.getMessage());
+			}
+		};
+	}
+
 }

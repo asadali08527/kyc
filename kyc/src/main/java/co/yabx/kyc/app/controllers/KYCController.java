@@ -61,9 +61,10 @@ public class KYCController {
 			if (kycDetailsList != null && !kycDetailsList.isEmpty()) {
 				for (KycDetails kycDetails : kycDetailsList) {
 					AccountStatuses accountStatuses = accountStatusService.createAccountStatus(kycDetails);
-					if (accountStatuses != null) {
-						accountStatusTrackerService.createAccountTracker(accountStatuses);
-					}
+					/*
+					 * if (accountStatuses != null) {
+					 * accountStatusTrackerService.createAccountTracker(accountStatuses); }
+					 */
 				}
 				return new ResponseEntity<>(HttpStatus.OK);
 			}

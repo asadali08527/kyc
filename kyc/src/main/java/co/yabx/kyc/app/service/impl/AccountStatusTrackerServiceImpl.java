@@ -1,21 +1,22 @@
 package co.yabx.kyc.app.service.impl;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import co.yabx.kyc.app.entity.AccountStatus;
 import co.yabx.kyc.app.entity.AccountStatuses;
 import co.yabx.kyc.app.entity.AccountStatusesTrackers;
-import co.yabx.kyc.app.repository.AccountStatusesRepository;
 import co.yabx.kyc.app.repository.AccountStatusesTrackersRepository;
-import co.yabx.kyc.app.repository.KycDetailsRepository;
-import co.yabx.kyc.app.repository.KycDocumentsRepository;
 import co.yabx.kyc.app.service.AccountStatusTrackerService;
 import co.yabx.kyc.app.service.AppConfigService;
 
@@ -30,6 +31,8 @@ public class AccountStatusTrackerServiceImpl implements AccountStatusTrackerServ
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AccountStatusTrackerServiceImpl.class);
 
+	private ScheduledExecutorService executor = Executors.newScheduledThreadPool(100);
+
 	@Override
 	@Transactional
 	public AccountStatusesTrackers createAccountTracker(AccountStatuses accountStatuses) {
@@ -38,14 +41,7 @@ public class AccountStatusTrackerServiceImpl implements AccountStatusTrackerServ
 				List<AccountStatusesTrackers> accountStatusesTrackersList = accountStatusesTrackersRepository
 						.findByMsisdn(accountStatuses.getMsisdn());
 				if (accountStatusesTrackersList == null || accountStatusesTrackersList.isEmpty()) {
-					AccountStatusesTrackers accountStatusesTrackers = new AccountStatusesTrackers();
-					accountStatusesTrackers.setCreatedBy(accountStatuses.getCreatedBy());
-					accountStatusesTrackers.setTo(AccountStatus.NEW);
-					accountStatusesTrackers.setMsisdn(accountStatuses.getMsisdn());
-					accountStatusesTrackers.setReason(appConfigService.getProperty("NEW_KYC_ACCOUNT_TRACKER_REASON",
-							"NEW CREATE REQUEST RECIEVED"));
-					accountStatusesTrackers = accountStatusesTrackersRepository.save(accountStatusesTrackers);
-					return accountStatusesTrackers;
+					persistAccountStatusTracker(accountStatuses);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -54,6 +50,21 @@ public class AccountStatusTrackerServiceImpl implements AccountStatusTrackerServ
 			}
 		}
 		return null;
+
+	}
+
+	@Override
+	@Transactional
+	public AccountStatusesTrackers persistAccountStatusTracker(AccountStatuses accountStatuses) {
+
+		AccountStatusesTrackers accountStatusesTrackers = new AccountStatusesTrackers();
+		accountStatusesTrackers.setCreatedBy(accountStatuses.getCreatedBy());
+		accountStatusesTrackers.setTo(AccountStatus.NEW);
+		accountStatusesTrackers.setMsisdn(accountStatuses.getMsisdn());
+		accountStatusesTrackers.setReason(
+				appConfigService.getProperty("NEW_KYC_ACCOUNT_TRACKER_REASON", "NEW CREATE REQUEST RECIEVED"));
+		accountStatusesTrackers = accountStatusesTrackersRepository.saveAndFlush(accountStatusesTrackers);
+		return accountStatusesTrackers;
 
 	}
 
@@ -82,8 +93,35 @@ public class AccountStatusTrackerServiceImpl implements AccountStatusTrackerServ
 	}
 
 	@Override
+	@Transactional
 	public List<AccountStatusesTrackers> findByMsisdn(String msisdn) {
 		return accountStatusesTrackersRepository.findByMsisdn(msisdn);
+	}
+
+	@Override
+	@Async
+	public void pushTracker(AccountStatuses accountStatuses) {
+		executor.schedule(getRunnable(accountStatuses), 100, TimeUnit.MICROSECONDS);
+
+	}
+
+	private Runnable getRunnable(AccountStatuses accountStatuses) {
+		return () -> {
+			try {
+				List<AccountStatusesTrackers> accountStatusesTrackers = findByMsisdn(accountStatuses.getMsisdn());
+				if (accountStatusesTrackers != null && !accountStatusesTrackers.isEmpty()) {
+					accountStatusesTrackers.sort((o1, o2) -> o1.getChangedAt().compareTo(o2.getChangedAt()));
+					updateAccountTracker(accountStatuses, accountStatusesTrackers.get(0).getTo());
+				} else {
+					persistAccountStatusTracker(accountStatuses);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOGGER.error("Exception raised while updating account status tracker for msisdn={}, error={}",
+						accountStatuses.getMsisdn(), e.getMessage());
+			}
+		};
 	}
 
 }

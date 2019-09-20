@@ -19,4 +19,8 @@ public interface AccountStatusTrackerService {
 
 	List<AccountStatusesTrackers> findByMsisdn(String msisdn);
 
+	void pushTracker(AccountStatuses accountStatuses);
+
+	AccountStatusesTrackers persistAccountStatusTracker(AccountStatuses accountStatuses);
+
 }

@@ -6,8 +6,8 @@ import javax.persistence.PreUpdate;
 import co.yabx.kyc.app.entity.AccountStatuses;
 
 public class AccountStatusesTrackerListener extends Listener {
-	@PrePersist
 	@PreUpdate
+	@PrePersist
 	public void persist(AccountStatuses accountStatuses) {
 		if (checkAccountStatusTrackerEnableDisable()) {
 			if (accountStatuses != null) {
