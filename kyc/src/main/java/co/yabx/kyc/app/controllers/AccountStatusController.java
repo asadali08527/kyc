@@ -44,6 +44,12 @@ public class AccountStatusController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AccountStatusController.class);
 
+	/**
+	 * 
+	 * @param accountStatusDTO
+	 * @param force
+	 * @return
+	 */
 	@RequestMapping(value = "/status/account/update", method = RequestMethod.POST)
 	public ResponseEntity<?> updateAccountStatuses(@RequestBody List<AccountStatusDTO> accountStatusDTO,
 			@RequestParam(name = "byForce", required = false) boolean force) {
@@ -58,6 +64,14 @@ public class AccountStatusController {
 
 	}
 
+	/**
+	 * 
+	 * @param msisdn
+	 * @param status
+	 * @param reason
+	 * @param updatedBy
+	 * @return
+	 */
 	@RequestMapping(value = "/update/account/status", method = RequestMethod.POST)
 	public ResponseEntity<AccountStatuses> updateAccountStatus(@RequestParam("msisdn") String msisdn,
 			@RequestParam("status") String status, @RequestParam("reason") String reason,
@@ -71,6 +85,12 @@ public class AccountStatusController {
 
 	}
 
+	/**
+	 * 
+	 * @param msisdn
+	 * @param channel
+	 * @return
+	 */
 	@RequestMapping(value = "/status/account", method = RequestMethod.GET)
 	public ResponseEntity<?> getAccountStatus(@RequestParam("msisdn") String msisdn,
 			@RequestParam(name = "channel", required = false) String channel) {
@@ -93,6 +113,12 @@ public class AccountStatusController {
 
 	}
 
+	/**
+	 * 
+	 * @param msisdn
+	 * @param createdBy
+	 * @return
+	 */
 	@RequestMapping(value = "/status/account/create", method = RequestMethod.POST)
 	public ResponseEntity<?> craeteAccountStatus(@RequestParam("msisdn") String msisdn,
 			@RequestParam("createdBy") String createdBy) {

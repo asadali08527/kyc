@@ -15,6 +15,11 @@ import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.impl.AppConfigServiceImpl;
 import co.yabx.kyc.app.util.SpringUtil;
 
+/**
+ * 
+ * @author Asad.ali
+ *
+ */
 public abstract class Listener {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Listener.class);
 

@@ -27,6 +27,16 @@ public class AccountStatusScheduler {
 	@Autowired
 	private AccountStatusService accountStatusService;
 
+	/**
+	 * 
+	 * @param magicKey
+	 * @return
+	 * 
+	 * 
+	 * 
+	 *         Responsible for updating account status to active or blocked based on
+	 *         kyc details and aml/cft status
+	 */
 	@RequestMapping(value = "/update/status", method = RequestMethod.POST)
 	public ResponseEntity<?> update(@RequestParam("magicKey") String magicKey) {
 		if (appConfigService.getProperty("SECRET_KEY_FOR_UPDATING_ACCOUNT_STATUSES", "yabx@kyc")
@@ -37,6 +47,15 @@ public class AccountStatusScheduler {
 
 	}
 
+	/**
+	 * 
+	 * @param magicKey
+	 * @return
+	 * 
+	 * 
+	 *         API is responsible for re activating all those accounts which are
+	 *         suspended within some time threshold and other conditions.
+	 */
 	@RequestMapping(value = "/status/reactivate", method = RequestMethod.POST)
 	public ResponseEntity<?> reactivate(@RequestParam("magicKey") String magicKey) {
 		if (appConfigService.getProperty("SECRET_KEY_FOR_UPDATING_ACCOUNT_STATUSES", "yabx@kyc")

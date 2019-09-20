@@ -52,6 +52,11 @@ public class KYCController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(KYCController.class);
 
+	/**
+	 * 
+	 * @param kycDetailsDTO
+	 * @return
+	 */
 	@RequestMapping(value = "/kyc/create", method = RequestMethod.POST)
 	public ResponseEntity<?> createAccount(@RequestBody List<KycDetailsDTO> kycDetailsDTO) {
 		if (appConfigService.getBooleanProperty("IS_TO_DISPLAY_POST_API_LOGS", true))
@@ -72,6 +77,13 @@ public class KYCController {
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * 
+	 * @param msisdn
+	 * @param masked
+	 * @param scrumbled
+	 * @return
+	 */
 	@RequestMapping(value = "/kyc/details", method = RequestMethod.GET)
 	public ResponseEntity<?> getKycdetails(@RequestParam(name = "msisdn") String msisdn,
 			@RequestParam(name = "masked", required = false) boolean masked,
@@ -89,6 +101,11 @@ public class KYCController {
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 */
 	@RequestMapping(value = "/upload/photo", method = RequestMethod.POST)
 	public ResponseEntity<?> createAccount(@RequestParam(name = "file") MultipartFile file) {
 		File convFile = new File(file.getOriginalFilename());

@@ -23,10 +23,14 @@ import co.yabx.kyc.app.entity.KycVerified;
 import co.yabx.kyc.app.repository.AccountStatusesRepository;
 import co.yabx.kyc.app.repository.AccountStatusesTrackersRepository;
 import co.yabx.kyc.app.service.AccountStatusService;
-import co.yabx.kyc.app.service.AccountStatusTrackerService;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.util.EncoderDecoderUtil;
 
+/**
+ * 
+ * @author Asad.ali
+ *
+ */
 @Service
 public class AccountStatusServiceImpl implements AccountStatusService {
 
@@ -35,9 +39,6 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 
 	@Autowired
 	private AccountStatusesTrackersRepository accountStatusesTrackersRepository;
-
-	@Autowired
-	private AccountStatusTrackerService accountStatusTrackerService;
 
 	@Autowired
 	private AppConfigService appConfigService;

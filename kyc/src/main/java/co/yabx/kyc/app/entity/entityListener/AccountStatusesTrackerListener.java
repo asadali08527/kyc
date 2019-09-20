@@ -5,6 +5,11 @@ import javax.persistence.PreUpdate;
 
 import co.yabx.kyc.app.entity.AccountStatuses;
 
+/**
+ * 
+ * @author Asad.ali
+ *
+ */
 public class AccountStatusesTrackerListener extends Listener {
 	@PreUpdate
 	@PrePersist
