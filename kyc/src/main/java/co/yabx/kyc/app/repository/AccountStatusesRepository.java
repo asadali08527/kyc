@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import co.yabx.kyc.app.entity.AccountStatus;
 import co.yabx.kyc.app.entity.AccountStatuses;
+import co.yabx.kyc.app.enums.AccountStatus;
 
 @Repository("accountStatusesRepository")
 public interface AccountStatusesRepository extends CrudRepository<AccountStatuses, String> {

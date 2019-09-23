@@ -8,9 +8,9 @@ import java.util.List;
 
 import co.yabx.kyc.app.dto.AccountStatusDTO;
 import co.yabx.kyc.app.dto.AccountStatusTrackerDTO;
-import co.yabx.kyc.app.entity.AccountStatus;
 import co.yabx.kyc.app.entity.AccountStatuses;
 import co.yabx.kyc.app.entity.AccountStatusesTrackers;
+import co.yabx.kyc.app.enums.AccountStatus;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.util.SpringUtil;
 

@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 
 import co.yabx.kyc.app.dto.AccountStatusDTO;
 import co.yabx.kyc.app.dto.dtoHelper.AccountStatusesDtoHelper;
-import co.yabx.kyc.app.entity.AccountStatus;
 import co.yabx.kyc.app.entity.AccountStatuses;
 import co.yabx.kyc.app.entity.AccountStatusesTrackers;
-import co.yabx.kyc.app.entity.AmlCftStatus;
 import co.yabx.kyc.app.entity.KycDetails;
-import co.yabx.kyc.app.entity.KycVerified;
+import co.yabx.kyc.app.enums.AccountStatus;
+import co.yabx.kyc.app.enums.AmlCftStatus;
+import co.yabx.kyc.app.enums.KycVerified;
 import co.yabx.kyc.app.repository.AccountStatusesRepository;
 import co.yabx.kyc.app.repository.AccountStatusesTrackersRepository;
 import co.yabx.kyc.app.service.AccountStatusService;

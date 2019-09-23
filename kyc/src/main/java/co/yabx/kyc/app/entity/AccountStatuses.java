@@ -15,6 +15,9 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import co.yabx.kyc.app.entity.entityListener.AccountStatusesTrackerListener;
+import co.yabx.kyc.app.enums.AccountStatus;
+import co.yabx.kyc.app.enums.AmlCftStatus;
+import co.yabx.kyc.app.enums.KycVerified;
 
 @Entity
 @EntityListeners({ AccountStatusesTrackerListener.class })

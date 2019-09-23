@@ -6,9 +6,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import co.yabx.kyc.app.entity.AccountStatus;
-import co.yabx.kyc.app.entity.AmlCftStatus;
-import co.yabx.kyc.app.entity.KycVerified;
+import co.yabx.kyc.app.enums.AccountStatus;
+import co.yabx.kyc.app.enums.AmlCftStatus;
+import co.yabx.kyc.app.enums.KycVerified;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountStatusDTO implements Serializable {

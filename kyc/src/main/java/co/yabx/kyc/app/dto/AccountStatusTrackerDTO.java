@@ -5,7 +5,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import co.yabx.kyc.app.entity.AccountStatus;
+import co.yabx.kyc.app.enums.AccountStatus;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountStatusTrackerDTO implements Serializable {
