@@ -16,31 +16,28 @@ import javax.persistence.Table;
 import co.yabx.kyc.app.enums.AddressType;
 
 @Entity
-@Table(name = "address_details", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
+@Table(name = "work_education_details", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
 		@Index(name = "address_type", columnList = "address_type") })
-public class AddressDetails implements Serializable {
+public class WorkEducationDetails implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "msisdn", nullable = false)
+	@Column(name = "msisdn")
 	private String msisdn;
 
-	@Column(name = "house_number_or_street_name")
-	private String houseNumberOrStreetName;
+	@Column(name = "occupation")
+	private String occupation;
 
-	@Column(name = "area")
-	private String area;
+	@Column(name = "designation")
+	private String designation;
 
-	@Column(name = "city")
-	private String city;
+	@Column(name = "employer")
+	private String employer;
 
-	@Column(name = "region")
-	private String region;
-
-	@Column(name = "zip_code")
-	private Integer zipCode;
+	@Column(name = "qualification")
+	private String educationalQualification;
 
 	@Column(name = "created_at")
 	private Date createdAt;
@@ -53,9 +50,6 @@ public class AddressDetails implements Serializable {
 
 	@Column(name = "update_by")
 	private String updatedBy;
-
-	@Column(name = "address_type")
-	private AddressType addressType;
 
 	public Long getId() {
 		return id;
@@ -71,46 +65,6 @@ public class AddressDetails implements Serializable {
 
 	public void setMsisdn(String msisdn) {
 		this.msisdn = msisdn;
-	}
-
-	public String getHouseNumberOrStreetName() {
-		return houseNumberOrStreetName;
-	}
-
-	public void setHouseNumberOrStreetName(String houseNumberOrStreetName) {
-		this.houseNumberOrStreetName = houseNumberOrStreetName;
-	}
-
-	public String getArea() {
-		return area;
-	}
-
-	public void setArea(String area) {
-		this.area = area;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getRegion() {
-		return region;
-	}
-
-	public void setRegion(String region) {
-		this.region = region;
-	}
-
-	public Integer getZipCode() {
-		return zipCode;
-	}
-
-	public void setZipCode(Integer zipCode) {
-		this.zipCode = zipCode;
 	}
 
 	public Date getCreatedAt() {
@@ -145,14 +99,6 @@ public class AddressDetails implements Serializable {
 		this.updatedBy = updatedBy;
 	}
 
-	public AddressType getAddressType() {
-		return addressType;
-	}
-
-	public void setAddressType(AddressType addressType) {
-		this.addressType = addressType;
-	}
-
 	@PrePersist
 	private void prePersist() {
 		if (createdAt == null) {
@@ -167,12 +113,44 @@ public class AddressDetails implements Serializable {
 
 	}
 
+	public String getOccupation() {
+		return occupation;
+	}
+
+	public void setOccupation(String occupation) {
+		this.occupation = occupation;
+	}
+
+	public String getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+
+	public String getEmployer() {
+		return employer;
+	}
+
+	public void setEmployer(String employer) {
+		this.employer = employer;
+	}
+
+	public String getEducationalQualification() {
+		return educationalQualification;
+	}
+
+	public void setEducationalQualification(String educationalQualification) {
+		this.educationalQualification = educationalQualification;
+	}
+
 	@Override
 	public String toString() {
-		return "AddressDetails [id=" + id + ", msisdn=" + msisdn + ", houseNumberOrStreetName="
-				+ houseNumberOrStreetName + ", area=" + area + ", city=" + city + ", region=" + region + ", zipCode="
-				+ zipCode + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy
-				+ ", updatedBy=" + updatedBy + ", addressType=" + addressType + "]";
+		return "WorkEducationDetails [id=" + id + ", msisdn=" + msisdn + ", occupation=" + occupation + ", designation="
+				+ designation + ", employer=" + employer + ", educationalQualification=" + educationalQualification
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", updatedBy="
+				+ updatedBy + "]";
 	}
 
 }

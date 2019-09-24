@@ -1,5 +1,5 @@
 package co.yabx.kyc.app.enums;
 
 public enum AddressType {
-	PRESENT, PERMANNET
+	PRESENT, PERMANNET, BUSINESS_ADDRESS
 }
