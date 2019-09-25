@@ -51,7 +51,8 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 		if (accountStatusDTOList != null && !accountStatusDTOList.isEmpty()) {
 			for (AccountStatusDTO accountStatusDTO : accountStatusDTOList) {
 				try {
-					AccountStatuses accountStatuses = accountStatusesRepository.findOne(accountStatusDTO.getMsisdn());
+					AccountStatuses accountStatuses = accountStatusesRepository
+							.findByMsisdn(accountStatusDTO.getMsisdn());
 					if (accountStatuses != null) {
 						if (forcefully) {
 							accountStatuses.setAmlCftStatus(
@@ -121,7 +122,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 		if (kycDetails != null) {
 			try {
 				AccountStatuses accountStatuses = accountStatusesRepository
-						.findOne(EncoderDecoderUtil.base64Decode(kycDetails.getMsisdn()));
+						.findByMsisdn(EncoderDecoderUtil.base64Decode(kycDetails.getMsisdn()));
 				return createAccount(accountStatuses, EncoderDecoderUtil.base64Decode(kycDetails.getMsisdn()),
 						kycDetails.getCreatedBy(), true, AccountStatus.NEW);
 			} catch (Exception e) {
@@ -159,7 +160,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 
 	@Override
 	public AccountStatusDTO fetchAccountStatus(String msisdn) {
-		AccountStatuses accountStatuses = accountStatusesRepository.findOne(msisdn);
+		AccountStatuses accountStatuses = accountStatusesRepository.findByMsisdn(msisdn);
 		if (accountStatuses != null) {
 			try {
 				if (appConfigService.getBooleanProperty("IS_TO_PREPRE_ACCOUNT_STATUS_TRACKER_DTO_AS_WELL", true)) {
@@ -180,7 +181,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 
 	@Override
 	public AccountStatuses updateAccountStatus(String msisdn, String status, String reason, String updatedBy) {
-		AccountStatuses accountStatuses = accountStatusesRepository.findOne(msisdn);
+		AccountStatuses accountStatuses = accountStatusesRepository.findByMsisdn(msisdn);
 		if (accountStatuses != null)
 			return updateAccountStatus(accountStatuses, getAccountStatus(status), reason, updatedBy);
 		else {
@@ -288,7 +289,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 
 	@Override
 	public AccountStatuses createAccountStatus(String msisdn, String createdBy) {
-		AccountStatuses accountStatuses = accountStatusesRepository.findOne(msisdn);
+		AccountStatuses accountStatuses = accountStatusesRepository.findByMsisdn(msisdn);
 		return createAccount(accountStatuses, msisdn, createdBy, false, AccountStatus.NEW);
 	}
 

@@ -95,9 +95,11 @@ public class AccountStatusController {
 	public ResponseEntity<?> getAccountStatus(@RequestParam("msisdn") String msisdn,
 			@RequestParam(name = "channel", required = false) String channel) {
 		if (channel != null && !channel.isEmpty() && msisdn != null && !msisdn.isEmpty()) {
-			if (channel.equalsIgnoreCase(appConfigService.getProperty("USSD_JOURNEY_CHANNEL", "ussd")))
-				return new ResponseEntity<>(accountStatusesRepository.findByMsisdn(msisdn), HttpStatus.OK);
-			else {
+			if (channel.equalsIgnoreCase(appConfigService.getProperty("USSD_JOURNEY_CHANNEL", "ussd"))) {
+				AccountStatuses accountStatuses = accountStatusesRepository.findByMsisdn(msisdn);
+				return new ResponseEntity<>(accountStatuses != null ? accountStatuses.getAccountStatus() : null,
+						HttpStatus.OK);
+			} else {
 				return new ResponseEntity<>("Invalid channel", HttpStatus.NO_CONTENT);
 			}
 		}

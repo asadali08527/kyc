@@ -14,7 +14,7 @@ public interface AccountStatusesRepository extends CrudRepository<AccountStatuse
 
 	List<AccountStatuses> findByAccountStatus(AccountStatus accountStatus);
 
-	@Query("select a.accountStatus from AccountStatuses a where a.msisdn=?1")
-	AccountStatus findByMsisdn(String msisdn);
+	@Query("select a from AccountStatuses a where a.msisdn=?1")
+	AccountStatuses findByMsisdn(String msisdn);
 
 }
