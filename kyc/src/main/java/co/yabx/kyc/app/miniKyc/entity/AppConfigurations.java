@@ -1,4 +1,4 @@
-package co.yabx.kyc.app.entity;
+package co.yabx.kyc.app.miniKyc.entity;
 
 import java.io.Serializable;
 import java.util.Date;

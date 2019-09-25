@@ -1,4 +1,4 @@
-package co.yabx.kyc.app.entity;
+package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -124,11 +124,17 @@ public class User implements Serializable {
 	@Column(name = "income_details")
 	private IncomeDetails incomeDetails;
 
+	@Column(name = "introducer_details")
+	private IntroducerDetails introducerDetails;
+
 	@Column(name = "work_education")
 	private WorkEducationDetails workEducationDetails;
 
 	@Column(name = "liabilities")
 	private LiabilitiesDetails liabilitiesDetails;
+
+	@Column(name = "business_details")
+	private BusinessDetails businessDetails;
 
 	@Column(name = "minor")
 	private String minor;

@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import co.yabx.kyc.app.entity.AccountStatusesTrackers;
+import co.yabx.kyc.app.miniKyc.entity.AccountStatusesTrackers;
 
 @Repository("accountStatusesTrackersRepository")
 public interface AccountStatusesTrackersRepository extends JpaRepository<AccountStatusesTrackers, Long> {

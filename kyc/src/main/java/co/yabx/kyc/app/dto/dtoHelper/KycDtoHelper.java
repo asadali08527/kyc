@@ -6,8 +6,8 @@ import java.util.List;
 
 import co.yabx.kyc.app.dto.KycDetailsDTO;
 import co.yabx.kyc.app.dto.KycDocumentsDTO;
-import co.yabx.kyc.app.entity.KycDetails;
-import co.yabx.kyc.app.entity.KycDocuments;
+import co.yabx.kyc.app.miniKyc.entity.KycDetails;
+import co.yabx.kyc.app.miniKyc.entity.KycDocuments;
 import co.yabx.kyc.app.util.EncoderDecoderUtil;
 import co.yabx.kyc.app.util.MaskUtil;
 

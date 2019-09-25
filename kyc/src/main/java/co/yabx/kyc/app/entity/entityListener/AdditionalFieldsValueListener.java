@@ -3,8 +3,8 @@ package co.yabx.kyc.app.entity.entityListener;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
-import co.yabx.kyc.app.entity.AdditionalFieldsValue;
-import co.yabx.kyc.app.entity.KycDetails;
+import co.yabx.kyc.app.miniKyc.entity.AdditionalFieldsValue;
+import co.yabx.kyc.app.miniKyc.entity.KycDetails;
 
 public class AdditionalFieldsValueListener extends Listener {
 	@PrePersist

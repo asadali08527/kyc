@@ -3,7 +3,7 @@ package co.yabx.kyc.app.service;
 import java.util.List;
 
 import co.yabx.kyc.app.dto.KycDetailsDTO;
-import co.yabx.kyc.app.entity.KycDetails;
+import co.yabx.kyc.app.miniKyc.entity.KycDetails;
 
 /**
  * 

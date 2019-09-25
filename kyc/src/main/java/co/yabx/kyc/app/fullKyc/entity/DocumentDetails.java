@@ -1,4 +1,4 @@
-package co.yabx.kyc.app.entity;
+package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -19,10 +19,10 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "kyc_documents", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
-		@Index(name = "document_number", columnList = "document_number"),
+@Table(name = "documents", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
+		@Index(name = "user", columnList = "user"), @Index(name = "document_number", columnList = "document_number"),
 		@Index(name = "document_type", columnList = "document_type") })
-public class KycDocuments implements Serializable {
+public class DocumentDetails implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,6 +30,9 @@ public class KycDocuments implements Serializable {
 
 	@Column(name = "msisdn")
 	private String msisdn;
+
+	@Column(name = "user")
+	private User user;
 
 	@Column(name = "document_side")
 	private String documentSide;

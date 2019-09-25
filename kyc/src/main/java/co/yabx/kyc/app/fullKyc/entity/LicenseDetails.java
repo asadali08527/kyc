@@ -1,4 +1,4 @@
-package co.yabx.kyc.app.entity;
+package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,13 +13,11 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-import co.yabx.kyc.app.enums.BankAccountType;
-import co.yabx.kyc.app.enums.Relationship;
+import co.yabx.kyc.app.enums.LicenseType;
 
 @Entity
-@Table(name = "bank_account_details", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
-		@Index(name = "account_number", columnList = "account_number") })
-public class BankAccountDetails implements Serializable {
+@Table(name = "income_details", indexes = { @Index(name = "msisdn", columnList = "msisdn") })
+public class LicenseDetails implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,17 +26,20 @@ public class BankAccountDetails implements Serializable {
 	@Column(name = "msisdn")
 	private String msisdn;
 
-	@Column(name = "bank_name")
-	private String bankName;
+	@Column(name = "license_number")
+	private String licenseNumber;
 
-	@Column(name = "account_number")
-	private Long accountNumber;
+	@Column(name = "license_expiry_date")
+	private Long licenseExpiryDate;
 
-	@Column(name = "branch")
-	private String branch;
+	@Column(name = "license_issuing_authority")
+	private String licenseIssuingAuthority;
 
-	@Column(name = "account_type")
-	private BankAccountType bankAccountType;
+	@Column(name = "license_type")
+	private LicenseType licenseType;
+
+	@Column(name = "business_details")
+	private BusinessDetails businessDetails;
 
 	@Column(name = "created_at")
 	private Date createdAt;

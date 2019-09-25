@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import co.yabx.kyc.app.dto.AccountStatusDTO;
-import co.yabx.kyc.app.entity.AccountStatuses;
-import co.yabx.kyc.app.entity.KycDetails;
+import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
+import co.yabx.kyc.app.miniKyc.entity.KycDetails;
 
 /**
  * 

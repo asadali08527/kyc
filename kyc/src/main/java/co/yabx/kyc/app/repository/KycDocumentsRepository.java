@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import co.yabx.kyc.app.entity.KycDocuments;
+import co.yabx.kyc.app.miniKyc.entity.KycDocuments;
 
 @Repository("kycDocumentsRepository")
 public interface KycDocumentsRepository extends CrudRepository<KycDocuments, Long> {

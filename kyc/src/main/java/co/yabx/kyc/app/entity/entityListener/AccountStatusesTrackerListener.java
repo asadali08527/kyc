@@ -3,7 +3,7 @@ package co.yabx.kyc.app.entity.entityListener;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 
-import co.yabx.kyc.app.entity.AccountStatuses;
+import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
 
 /**
  * 

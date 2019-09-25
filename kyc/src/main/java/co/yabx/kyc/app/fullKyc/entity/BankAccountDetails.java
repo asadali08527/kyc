@@ -1,4 +1,4 @@
-package co.yabx.kyc.app.entity;
+package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,10 +13,13 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import co.yabx.kyc.app.enums.BankAccountType;
+import co.yabx.kyc.app.enums.Relationship;
+
 @Entity
-@Table(name = "liabilities_details", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
-		@Index(name = "bank_nbfi_name", columnList = "bank_nbfi_name") })
-public class LiabilitiesDetails implements Serializable {
+@Table(name = "bank_account_details", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
+		@Index(name = "account_number", columnList = "account_number") })
+public class BankAccountDetails implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,11 +28,17 @@ public class LiabilitiesDetails implements Serializable {
 	@Column(name = "msisdn")
 	private String msisdn;
 
-	@Column(name = "loan_amount")
-	private double loanAmount;
+	@Column(name = "bank_name")
+	private String bankName;
 
-	@Column(name = "bank_nbfi_name")
-	private String bankOrNbfiName;
+	@Column(name = "account_number")
+	private Long accountNumber;
+
+	@Column(name = "branch")
+	private String branch;
+
+	@Column(name = "account_type")
+	private BankAccountType bankAccountType;
 
 	@Column(name = "created_at")
 	private Date createdAt;

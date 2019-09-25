@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import co.yabx.kyc.app.entity.AccountStatuses;
-import co.yabx.kyc.app.entity.AccountStatusesTrackers;
 import co.yabx.kyc.app.enums.AccountStatus;
+import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
+import co.yabx.kyc.app.miniKyc.entity.AccountStatusesTrackers;
 import co.yabx.kyc.app.repository.AccountStatusesTrackersRepository;
 import co.yabx.kyc.app.service.AccountStatusTrackerService;
 import co.yabx.kyc.app.service.AppConfigService;

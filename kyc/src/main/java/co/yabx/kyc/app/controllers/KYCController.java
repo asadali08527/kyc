@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import co.yabx.kyc.app.dto.KycDetailsDTO;
-import co.yabx.kyc.app.entity.AccountStatuses;
-import co.yabx.kyc.app.entity.KycDetails;
+import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
+import co.yabx.kyc.app.miniKyc.entity.KycDetails;
 import co.yabx.kyc.app.service.AccountStatusService;
 import co.yabx.kyc.app.service.AccountStatusTrackerService;
 import co.yabx.kyc.app.service.AppConfigService;

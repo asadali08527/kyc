@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import co.yabx.kyc.app.dto.AccountStatusDTO;
-import co.yabx.kyc.app.entity.AccountStatuses;
+import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
 import co.yabx.kyc.app.repository.AccountStatusesRepository;
 import co.yabx.kyc.app.service.AccountStatusService;
 import co.yabx.kyc.app.service.AccountStatusTrackerService;

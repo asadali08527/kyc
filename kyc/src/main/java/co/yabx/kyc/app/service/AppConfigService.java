@@ -2,7 +2,7 @@ package co.yabx.kyc.app.service;
 
 import java.util.List;
 
-import co.yabx.kyc.app.entity.AppConfigurations;
+import co.yabx.kyc.app.miniKyc.entity.AppConfigurations;
 
 public interface AppConfigService {
 

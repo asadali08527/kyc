@@ -1,4 +1,4 @@
-package co.yabx.kyc.app.entity;
+package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,11 +13,10 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-import co.yabx.kyc.app.enums.Relationship;
-
 @Entity
-@Table(name = "introducer_details", indexes = { @Index(name = "msisdn", columnList = "msisdn") })
-public class IntroducerDetails implements Serializable {
+@Table(name = "liabilities_details", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
+		@Index(name = "bank_nbfi_name", columnList = "bank_nbfi_name") })
+public class LiabilitiesDetails implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,20 +25,11 @@ public class IntroducerDetails implements Serializable {
 	@Column(name = "msisdn")
 	private String msisdn;
 
-	@Column(name = "name")
-	private String name;
+	@Column(name = "loan_amount")
+	private double loanAmount;
 
-	@Column(name = "account_number")
-	private Long accountNumber;
-
-	@Column(name = "relationship")
-	private Relationship relationship;
-
-	@Column(name = "signature_verified")
-	private boolean isSignatureVerified;
-
-	@Column(name = "signature")
-	private DocumentDetails signature;
+	@Column(name = "bank_nbfi_name")
+	private String bankOrNbfiName;
 
 	@Column(name = "created_at")
 	private Date createdAt;

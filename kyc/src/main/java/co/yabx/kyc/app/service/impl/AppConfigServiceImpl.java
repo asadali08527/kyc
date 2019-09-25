@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.yabx.kyc.app.entity.AppConfigurations;
+import co.yabx.kyc.app.miniKyc.entity.AppConfigurations;
 import co.yabx.kyc.app.repository.AppConfigurationRepository;
 import co.yabx.kyc.app.service.AppConfigService;
 

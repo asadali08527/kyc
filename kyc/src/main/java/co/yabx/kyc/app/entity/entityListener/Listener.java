@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import co.yabx.kyc.app.entity.AccountStatuses;
-import co.yabx.kyc.app.entity.AccountStatusesTrackers;
+import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
+import co.yabx.kyc.app.miniKyc.entity.AccountStatusesTrackers;
 import co.yabx.kyc.app.service.AccountStatusTrackerService;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.impl.AppConfigServiceImpl;
