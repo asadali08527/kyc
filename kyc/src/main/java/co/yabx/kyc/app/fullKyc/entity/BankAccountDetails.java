@@ -115,6 +115,54 @@ public class BankAccountDetails implements Serializable {
 		}
 	}
 
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+
+	public Long getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(Long accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public String getBranch() {
+		return branch;
+	}
+
+	public void setBranch(String branch) {
+		this.branch = branch;
+	}
+
+	public BankAccountType getBankAccountType() {
+		return bankAccountType;
+	}
+
+	public void setBankAccountType(BankAccountType bankAccountType) {
+		this.bankAccountType = bankAccountType;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public BusinessDetails getBusinessDetails() {
+		return businessDetails;
+	}
+
+	public void setBusinessDetails(BusinessDetails businessDetails) {
+		this.businessDetails = businessDetails;
+	}
+
 	@PreUpdate
 	private void preUpdate() {
 		updatedAt = new Date();

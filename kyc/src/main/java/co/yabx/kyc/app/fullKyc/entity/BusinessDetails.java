@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
@@ -20,16 +21,17 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "business_details", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
-		@Index(name = "account_number", columnList = "account_number") })
+@Table(name = "business_details", indexes = { @Index(name = "business_type", columnList = "business_type"),
+		@Index(name = "business_name", columnList = "business_name"),
+		@Index(name = "license_details", columnList = "license_details") })
 public class BusinessDetails implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "msisdn")
-	private String msisdn;
+	@Column(name = "business_phone_number")
+	private String businessPhone;
 
 	@Column(name = "business_name")
 	private String businessName;
@@ -125,6 +127,9 @@ public class BusinessDetails implements Serializable {
 	@OneToMany(mappedBy = "businessDetails", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<BankAccountDetails> bankAccountDetails;
 
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+	User user;
+
 	@Column(name = "created_at")
 	private Date createdAt;
 
@@ -141,16 +146,256 @@ public class BusinessDetails implements Serializable {
 		return id;
 	}
 
+	public String getBusinessName() {
+		return businessName;
+	}
+
+	public void setBusinessName(String businessName) {
+		this.businessName = businessName;
+	}
+
+	public String getDirectorOrPartnerName() {
+		return directorOrPartnerName;
+	}
+
+	public void setDirectorOrPartnerName(String directorOrPartnerName) {
+		this.directorOrPartnerName = directorOrPartnerName;
+	}
+
+	public String getFacilityDetails() {
+		return facilityDetails;
+	}
+
+	public void setFacilityDetails(String facilityDetails) {
+		this.facilityDetails = facilityDetails;
+	}
+
+	public String getFacilityType() {
+		return facilityType;
+	}
+
+	public void setFacilityType(String facilityType) {
+		this.facilityType = facilityType;
+	}
+
+	public String getFixedAssetPurchase() {
+		return fixedAssetPurchase;
+	}
+
+	public void setFixedAssetPurchase(String fixedAssetPurchase) {
+		this.fixedAssetPurchase = fixedAssetPurchase;
+	}
+
+	public String getFixedAssetName() {
+		return fixedAssetName;
+	}
+
+	public void setFixedAssetName(String fixedAssetName) {
+		this.fixedAssetName = fixedAssetName;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public String getOrigin() {
+		return origin;
+	}
+
+	public void setOrigin(String origin) {
+		this.origin = origin;
+	}
+
+	public String getProposedCollateral() {
+		return proposedCollateral;
+	}
+
+	public void setProposedCollateral(String proposedCollateral) {
+		this.proposedCollateral = proposedCollateral;
+	}
+
+	public String getBusinessType() {
+		return businessType;
+	}
+
+	public void setBusinessType(String businessType) {
+		this.businessType = businessType;
+	}
+
+	public String getSector() {
+		return sector;
+	}
+
+	public void setSector(String sector) {
+		this.sector = sector;
+	}
+
+	public String getDetailOfBusness() {
+		return detailOfBusness;
+	}
+
+	public void setDetailOfBusness(String detailOfBusness) {
+		this.detailOfBusness = detailOfBusness;
+	}
+
+	public double getInitialCapital() {
+		return initialCapital;
+	}
+
+	public void setInitialCapital(double initialCapital) {
+		this.initialCapital = initialCapital;
+	}
+
+	public String getFundSource() {
+		return fundSource;
+	}
+
+	public void setFundSource(String fundSource) {
+		this.fundSource = fundSource;
+	}
+
+	public String getVatRegistrationNumber() {
+		return vatRegistrationNumber;
+	}
+
+	public void setVatRegistrationNumber(String vatRegistrationNumber) {
+		this.vatRegistrationNumber = vatRegistrationNumber;
+	}
+
+	public Long getBusinessStartDate() {
+		return businessStartDate;
+	}
+
+	public void setBusinessStartDate(Long businessStartDate) {
+		this.businessStartDate = businessStartDate;
+	}
+
+	public String getBusinessTin() {
+		return businessTin;
+	}
+
+	public void setBusinessTin(String businessTin) {
+		this.businessTin = businessTin;
+	}
+
+	public double getAnnualSales() {
+		return annualSales;
+	}
+
+	public void setAnnualSales(double annualSales) {
+		this.annualSales = annualSales;
+	}
+
+	public double getAnnualGrossProfit() {
+		return annualGrossProfit;
+	}
+
+	public void setAnnualGrossProfit(double annualGrossProfit) {
+		this.annualGrossProfit = annualGrossProfit;
+	}
+
+	public double getAnnualExpenses() {
+		return annualExpenses;
+	}
+
+	public void setAnnualExpenses(double annualExpenses) {
+		this.annualExpenses = annualExpenses;
+	}
+
+	public double getValueOfFixedAssets() {
+		return valueOfFixedAssets;
+	}
+
+	public void setValueOfFixedAssets(double valueOfFixedAssets) {
+		this.valueOfFixedAssets = valueOfFixedAssets;
+	}
+
+	public short getNumberOfEmployees() {
+		return numberOfEmployees;
+	}
+
+	public void setNumberOfEmployees(short numberOfEmployees) {
+		this.numberOfEmployees = numberOfEmployees;
+	}
+
+	public double getStockValue() {
+		return stockValue;
+	}
+
+	public void setStockValue(double stockValue) {
+		this.stockValue = stockValue;
+	}
+
+	public double getMonthlyTurnOver() {
+		return monthlyTurnOver;
+	}
+
+	public void setMonthlyTurnOver(double monthlyTurnOver) {
+		this.monthlyTurnOver = monthlyTurnOver;
+	}
+
+	public double getDeposits() {
+		return deposits;
+	}
+
+	public void setDeposits(double deposits) {
+		this.deposits = deposits;
+	}
+
+	public double getWithdrawls() {
+		return withdrawls;
+	}
+
+	public void setWithdrawls(double withdrawls) {
+		this.withdrawls = withdrawls;
+	}
+
+	public double getInitialDeposit() {
+		return initialDeposit;
+	}
+
+	public void setInitialDeposit(double initialDeposit) {
+		this.initialDeposit = initialDeposit;
+	}
+
+	public LicenseDetails getLicenseDetails() {
+		return licenseDetails;
+	}
+
+	public void setLicenseDetails(LicenseDetails licenseDetails) {
+		this.licenseDetails = licenseDetails;
+	}
+
+	public Set<AddressDetails> getAddressDetails() {
+		return addressDetails;
+	}
+
+	public void setAddressDetails(Set<AddressDetails> addressDetails) {
+		this.addressDetails = addressDetails;
+	}
+
+	public Set<BankAccountDetails> getBankAccountDetails() {
+		return bankAccountDetails;
+	}
+
+	public void setBankAccountDetails(Set<BankAccountDetails> bankAccountDetails) {
+		this.bankAccountDetails = bankAccountDetails;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getMsisdn() {
-		return msisdn;
-	}
-
-	public void setMsisdn(String msisdn) {
-		this.msisdn = msisdn;
 	}
 
 	public Date getCreatedAt() {
@@ -191,6 +436,14 @@ public class BusinessDetails implements Serializable {
 			createdAt = new Date();
 			updatedAt = new Date();
 		}
+	}
+
+	public String getBusinessPhone() {
+		return businessPhone;
+	}
+
+	public void setBusinessPhone(String businessPhone) {
+		this.businessPhone = businessPhone;
 	}
 
 	@PreUpdate

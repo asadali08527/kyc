@@ -45,9 +45,6 @@ public class KYCController {
 	private AccountStatusService accountStatusService;
 
 	@Autowired
-	private AccountStatusTrackerService accountStatusTrackerService;
-
-	@Autowired
 	private AppConfigService appConfigService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(KYCController.class);

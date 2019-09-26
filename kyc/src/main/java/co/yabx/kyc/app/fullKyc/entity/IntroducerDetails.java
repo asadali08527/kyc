@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
@@ -20,7 +21,8 @@ import javax.persistence.Table;
 import co.yabx.kyc.app.enums.Relationship;
 
 @Entity
-@Table(name = "introducer_details", indexes = { @Index(name = "msisdn", columnList = "msisdn") })
+@Table(name = "introducer_details", indexes = { @Index(name = "relationship", columnList = "relationship"),
+		@Index(name = "msisdn", columnList = "msisdn") })
 public class IntroducerDetails implements Serializable {
 
 	@Id
@@ -42,10 +44,9 @@ public class IntroducerDetails implements Serializable {
 	@Column(name = "signature_verified", nullable = false, columnDefinition = "boolean default false")
 	private boolean isSignatureVerified;
 
-	@Column(name = "signature")
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "document_details", referencedColumnName = "id")
-	private DocumentDetails signature;
+	@JoinColumn(name = "attachment_details", referencedColumnName = "id")
+	private AttachmentDetails signature;
 
 	@Column(name = "created_at")
 	private Date createdAt;
@@ -58,6 +59,9 @@ public class IntroducerDetails implements Serializable {
 
 	@Column(name = "update_by")
 	private String updatedBy;
+
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+	User user;
 
 	public Long getId() {
 		return id;
@@ -73,6 +77,46 @@ public class IntroducerDetails implements Serializable {
 
 	public void setMsisdn(String msisdn) {
 		this.msisdn = msisdn;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Long getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(Long accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public Relationship getRelationship() {
+		return relationship;
+	}
+
+	public void setRelationship(Relationship relationship) {
+		this.relationship = relationship;
+	}
+
+	public boolean isSignatureVerified() {
+		return isSignatureVerified;
+	}
+
+	public void setSignatureVerified(boolean isSignatureVerified) {
+		this.isSignatureVerified = isSignatureVerified;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public Date getCreatedAt() {
@@ -119,6 +163,14 @@ public class IntroducerDetails implements Serializable {
 	private void preUpdate() {
 		updatedAt = new Date();
 
+	}
+
+	public AttachmentDetails getSignature() {
+		return signature;
+	}
+
+	public void setSignature(AttachmentDetails signature) {
+		this.signature = signature;
 	}
 
 }

@@ -5,25 +5,23 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "liabilities_details", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
-		@Index(name = "bank_nbfi_name", columnList = "bank_nbfi_name") })
+@Table(name = "liabilities_details", indexes = { @Index(name = "bank_nbfi_name", columnList = "bank_nbfi_name") })
 public class LiabilitiesDetails implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-
-	@Column(name = "msisdn")
-	private String msisdn;
 
 	@Column(name = "loan_amount")
 	private double loanAmount;
@@ -43,20 +41,39 @@ public class LiabilitiesDetails implements Serializable {
 	@Column(name = "update_by")
 	private String updatedBy;
 
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+	User user;
+
+	public double getLoanAmount() {
+		return loanAmount;
+	}
+
+	public void setLoanAmount(double loanAmount) {
+		this.loanAmount = loanAmount;
+	}
+
+	public String getBankOrNbfiName() {
+		return bankOrNbfiName;
+	}
+
+	public void setBankOrNbfiName(String bankOrNbfiName) {
+		this.bankOrNbfiName = bankOrNbfiName;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getMsisdn() {
-		return msisdn;
-	}
-
-	public void setMsisdn(String msisdn) {
-		this.msisdn = msisdn;
 	}
 
 	public Date getCreatedAt() {

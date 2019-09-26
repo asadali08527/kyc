@@ -2,16 +2,22 @@ package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+
+import co.yabx.kyc.app.enums.DocumentType;
 
 /**
  * 
@@ -19,23 +25,13 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "documents", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
-		@Index(name = "user", columnList = "user"), @Index(name = "document_number", columnList = "document_number"),
+@Table(name = "attachment_details", indexes = { @Index(name = "document_number", columnList = "document_number"),
 		@Index(name = "document_type", columnList = "document_type") })
-public class DocumentDetails implements Serializable {
+public class AttachmentDetails implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-
-	@Column(name = "msisdn")
-	private String msisdn;
-
-	@Column(name = "user")
-	private User user;
-
-	@Column(name = "document_side")
-	private String documentSide;
 
 	@Column(name = "document_url")
 	private String documentUrl;
@@ -56,7 +52,7 @@ public class DocumentDetails implements Serializable {
 	private String documentNumber;
 
 	@Column(name = "document_type")
-	private String documentType;
+	private DocumentType documentType;
 
 	@Column(name = "document_issue_date")
 	private Long documentIssueDate;
@@ -66,6 +62,9 @@ public class DocumentDetails implements Serializable {
 
 	@Column(name = "document_expiry_date")
 	private Long documentExpiryDate;
+
+	@OneToMany(mappedBy = "attachmentDetails", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<Attachments> attachmenets;
 
 	public Date getSnapTime() {
 		return snapTime;
@@ -122,14 +121,6 @@ public class DocumentDetails implements Serializable {
 		updatedAt = new Date();
 	}
 
-	public String getDocumentSide() {
-		return documentSide;
-	}
-
-	public void setDocumentSide(String documentSide) {
-		this.documentSide = documentSide;
-	}
-
 	public String getDocumentUrl() {
 		return documentUrl;
 	}
@@ -144,14 +135,6 @@ public class DocumentDetails implements Serializable {
 
 	public void setDocumentNumber(String documentNumber) {
 		this.documentNumber = documentNumber;
-	}
-
-	public String getDocumentType() {
-		return documentType;
-	}
-
-	public void setDocumentType(String documentType) {
-		this.documentType = documentType;
 	}
 
 	public Long getDocumentIssueDate() {
@@ -170,14 +153,6 @@ public class DocumentDetails implements Serializable {
 		this.documentExpiryDate = documentExpiryDate;
 	}
 
-	public String getMsisdn() {
-		return msisdn;
-	}
-
-	public void setMsisdn(String msisdn) {
-		this.msisdn = msisdn;
-	}
-
 	public String getPlaceOfIssue() {
 		return placeOfIssue;
 	}
@@ -186,13 +161,20 @@ public class DocumentDetails implements Serializable {
 		this.placeOfIssue = placeOfIssue;
 	}
 
-	@Override
-	public String toString() {
-		return "KycDocuments [id=" + id + ", msisdn=" + msisdn + ", documentSide=" + documentSide + ", documentUrl="
-				+ documentUrl + ", snapTime=" + snapTime + ", isSelfie=" + isSelfie + ", createdAt=" + createdAt
-				+ ", updatedAt=" + updatedAt + ", documentNumber=" + documentNumber + ", documentType=" + documentType
-				+ ", documentIssueDate=" + documentIssueDate + ", placeOfIssue=" + placeOfIssue
-				+ ", documentExpiryDate=" + documentExpiryDate + "]";
+	public DocumentType getDocumentType() {
+		return documentType;
+	}
+
+	public void setDocumentType(DocumentType documentType) {
+		this.documentType = documentType;
+	}
+
+	public Set<Attachments> getAttachmenets() {
+		return attachmenets;
+	}
+
+	public void setAttachmenets(Set<Attachments> attachmenets) {
+		this.attachmenets = attachmenets;
 	}
 
 }

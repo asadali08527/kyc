@@ -18,7 +18,7 @@ import javax.persistence.Table;
 import co.yabx.kyc.app.enums.AddressType;
 
 @Entity
-@Table(name = "address_details", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
+@Table(name = "address_details", indexes = { @Index(name = "city", columnList = "city"),
 		@Index(name = "address_type", columnList = "address_type") })
 public class AddressDetails implements Serializable {
 
@@ -64,6 +64,22 @@ public class AddressDetails implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = BusinessDetails.class)
 	BusinessDetails businessDetails;
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public BusinessDetails getBusinessDetails() {
+		return businessDetails;
+	}
+
+	public void setBusinessDetails(BusinessDetails businessDetails) {
+		this.businessDetails = businessDetails;
+	}
 
 	public Long getId() {
 		return id;

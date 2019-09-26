@@ -10,13 +10,13 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -33,6 +33,9 @@ import co.yabx.kyc.app.enums.ResidentStatus;
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 public class User implements Serializable {
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+
 	@Column(name = "msisdn")
 	private String msisdn;
 
@@ -88,9 +91,6 @@ public class User implements Serializable {
 	@Column(name = "dependents")
 	private short numberOfDependents;
 
-	@Column(name = "monthly_income_from_other_source")
-	private double monthlyIncomeFromOtherSource;
-
 	@Column(name = "sister_concerned_or_allied")
 	private String sisterConcernedOrAllied;
 
@@ -127,30 +127,20 @@ public class User implements Serializable {
 	@Column(name = "business_address")
 	private String businessAddress;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "income_details", referencedColumnName = "id")
-	@Column(name = "income_details")
-	private IncomeDetails incomeDetails;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<IncomeDetails> incomeDetails;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "introducer_details", referencedColumnName = "id")
-	@Column(name = "introducer_details")
-	private IntroducerDetails introducerDetails;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<IntroducerDetails> introducerDetails;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "work_education", referencedColumnName = "id")
-	@Column(name = "work_education")
-	private WorkEducationDetails workEducationDetails;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<WorkEducationDetails> workEducationDetails;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "liabilities", referencedColumnName = "id")
-	@Column(name = "liabilities")
-	private LiabilitiesDetails liabilitiesDetails;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<LiabilitiesDetails> liabilitiesDetails;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "business_details", referencedColumnName = "id")
-	@Column(name = "business_details")
-	private BusinessDetails businessDetails;
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<BusinessDetails> businessDetails;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<AddressDetails> addressDetails;
@@ -160,6 +150,62 @@ public class User implements Serializable {
 
 	@Column(name = "minor")
 	private String minor;
+
+	public Set<IncomeDetails> getIncomeDetails() {
+		return incomeDetails;
+	}
+
+	public void setIncomeDetails(Set<IncomeDetails> incomeDetails) {
+		this.incomeDetails = incomeDetails;
+	}
+
+	public Set<IntroducerDetails> getIntroducerDetails() {
+		return introducerDetails;
+	}
+
+	public void setIntroducerDetails(Set<IntroducerDetails> introducerDetails) {
+		this.introducerDetails = introducerDetails;
+	}
+
+	public Set<WorkEducationDetails> getWorkEducationDetails() {
+		return workEducationDetails;
+	}
+
+	public void setWorkEducationDetails(Set<WorkEducationDetails> workEducationDetails) {
+		this.workEducationDetails = workEducationDetails;
+	}
+
+	public Set<LiabilitiesDetails> getLiabilitiesDetails() {
+		return liabilitiesDetails;
+	}
+
+	public void setLiabilitiesDetails(Set<LiabilitiesDetails> liabilitiesDetails) {
+		this.liabilitiesDetails = liabilitiesDetails;
+	}
+
+	public Set<BusinessDetails> getBusinessDetails() {
+		return businessDetails;
+	}
+
+	public void setBusinessDetails(Set<BusinessDetails> businessDetails) {
+		this.businessDetails = businessDetails;
+	}
+
+	public Set<AddressDetails> getAddressDetails() {
+		return addressDetails;
+	}
+
+	public void setAddressDetails(Set<AddressDetails> addressDetails) {
+		this.addressDetails = addressDetails;
+	}
+
+	public Set<BankAccountDetails> getBankAccountDetails() {
+		return bankAccountDetails;
+	}
+
+	public void setBankAccountDetails(Set<BankAccountDetails> bankAccountDetails) {
+		this.bankAccountDetails = bankAccountDetails;
+	}
 
 	public String getMsisdn() {
 		return msisdn;
@@ -297,14 +343,6 @@ public class User implements Serializable {
 		this.numberOfDependents = numberOfDependents;
 	}
 
-	public double getMonthlyIncomeFromOtherSource() {
-		return monthlyIncomeFromOtherSource;
-	}
-
-	public void setMonthlyIncomeFromOtherSource(double monthlyIncomeFromOtherSource) {
-		this.monthlyIncomeFromOtherSource = monthlyIncomeFromOtherSource;
-	}
-
 	public String getSisterConcernedOrAllied() {
 		return sisterConcernedOrAllied;
 	}
@@ -401,14 +439,6 @@ public class User implements Serializable {
 		this.businessAddress = businessAddress;
 	}
 
-	public IncomeDetails getIncomeDetails() {
-		return incomeDetails;
-	}
-
-	public void setIncomeDetails(IncomeDetails incomeDetails) {
-		this.incomeDetails = incomeDetails;
-	}
-
 	public String getMinor() {
 		return minor;
 	}
@@ -429,14 +459,6 @@ public class User implements Serializable {
 	private void preUpdate() {
 		updatedAt = new Date();
 
-	}
-
-	public WorkEducationDetails getWorkEducationDetails() {
-		return workEducationDetails;
-	}
-
-	public void setWorkEducationDetails(WorkEducationDetails workEducationDetails) {
-		this.workEducationDetails = workEducationDetails;
 	}
 
 }

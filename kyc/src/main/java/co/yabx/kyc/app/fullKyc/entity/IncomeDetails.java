@@ -5,27 +5,30 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "income_details", indexes = { @Index(name = "msisdn", columnList = "msisdn") })
+@Table(name = "income_details", indexes = { @Index(name = "total_assets", columnList = "total_assets"),
+		@Index(name = "monthly_income", columnList = "monthly_income") })
 public class IncomeDetails implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "msisdn")
-	private String msisdn;
-
 	@Column(name = "monthly_income")
 	private double monthlyIncome;
+
+	@Column(name = "monthly_income_from_other_source")
+	private double monthlyIncomeFromOtherSource;
 
 	@Column(name = "monthly_expenditure")
 	private double monthlyExpenditure;
@@ -54,6 +57,9 @@ public class IncomeDetails implements Serializable {
 	@Column(name = "update_by")
 	private String updatedBy;
 
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+	User user;
+
 	public Long getId() {
 		return id;
 	}
@@ -62,12 +68,12 @@ public class IncomeDetails implements Serializable {
 		this.id = id;
 	}
 
-	public String getMsisdn() {
-		return msisdn;
+	public User getUser() {
+		return user;
 	}
 
-	public void setMsisdn(String msisdn) {
-		this.msisdn = msisdn;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public double getMonthlyIncome() {
@@ -162,15 +168,6 @@ public class IncomeDetails implements Serializable {
 	private void preUpdate() {
 		updatedAt = new Date();
 
-	}
-
-	@Override
-	public String toString() {
-		return "IncomeDetails [id=" + id + ", msisdn=" + msisdn + ", monthlyIncome=" + monthlyIncome
-				+ ", monthlyExpenditure=" + monthlyExpenditure + ", monthlySurplus=" + monthlySurplus
-				+ ", guarantorNetAssets=" + guarantorNetAssets + ", totalAssets=" + totalAssets + ", totalLiabilities="
-				+ totalLiabilities + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy="
-				+ createdBy + ", updatedBy=" + updatedBy + "]";
 	}
 
 }

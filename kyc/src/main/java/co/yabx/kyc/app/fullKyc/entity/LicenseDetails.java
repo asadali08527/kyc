@@ -16,15 +16,13 @@ import javax.persistence.Table;
 import co.yabx.kyc.app.enums.LicenseType;
 
 @Entity
-@Table(name = "income_details", indexes = { @Index(name = "msisdn", columnList = "msisdn") })
+@Table(name = "license_details", indexes = { @Index(name = "license_type", columnList = "license_type"),
+		@Index(name = "license_number", columnList = "license_number") })
 public class LicenseDetails implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-
-	@Column(name = "msisdn")
-	private String msisdn;
 
 	@Column(name = "license_number")
 	private String licenseNumber;
@@ -37,9 +35,6 @@ public class LicenseDetails implements Serializable {
 
 	@Column(name = "license_type")
 	private LicenseType licenseType;
-
-	@Column(name = "business_details")
-	private BusinessDetails businessDetails;
 
 	@Column(name = "created_at")
 	private Date createdAt;
@@ -59,14 +54,6 @@ public class LicenseDetails implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getMsisdn() {
-		return msisdn;
-	}
-
-	public void setMsisdn(String msisdn) {
-		this.msisdn = msisdn;
 	}
 
 	public Date getCreatedAt() {
