@@ -2,19 +2,22 @@ package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-
-import co.yabx.kyc.app.enums.BankAccountType;
-import co.yabx.kyc.app.enums.Relationship;
 
 @Entity
 @Table(name = "business_details", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
@@ -111,6 +114,16 @@ public class BusinessDetails implements Serializable {
 
 	@Column(name = "initial_deposits")
 	private double initialDeposit;
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "license_details", referencedColumnName = "id")
+	private LicenseDetails licenseDetails;
+
+	@OneToMany(mappedBy = "businessDetails", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<AddressDetails> addressDetails;
+
+	@OneToMany(mappedBy = "businessDetails", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<BankAccountDetails> bankAccountDetails;
 
 	@Column(name = "created_at")
 	private Date createdAt;

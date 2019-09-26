@@ -3,12 +3,16 @@ package co.yabx.kyc.app.fullKyc.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -35,10 +39,12 @@ public class IntroducerDetails implements Serializable {
 	@Column(name = "relationship")
 	private Relationship relationship;
 
-	@Column(name = "signature_verified")
+	@Column(name = "signature_verified", nullable = false, columnDefinition = "boolean default false")
 	private boolean isSignatureVerified;
 
 	@Column(name = "signature")
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "document_details", referencedColumnName = "id")
 	private DocumentDetails signature;
 
 	@Column(name = "created_at")

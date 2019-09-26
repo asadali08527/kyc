@@ -43,7 +43,7 @@ public class DocumentDetails implements Serializable {
 	@Column(name = "snap_time")
 	private Date snapTime;
 
-	@Column(name = "is_Selfie")
+	@Column(name = "is_Selfie", nullable = false, columnDefinition = "boolean default false")
 	private boolean isSelfie;
 
 	@Column(name = "created_at")

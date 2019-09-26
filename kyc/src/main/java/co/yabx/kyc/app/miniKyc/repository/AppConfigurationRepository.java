@@ -1,4 +1,4 @@
-package co.yabx.kyc.app.repository;
+package co.yabx.kyc.app.miniKyc.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

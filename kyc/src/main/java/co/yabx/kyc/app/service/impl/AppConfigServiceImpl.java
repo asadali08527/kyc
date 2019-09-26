@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.yabx.kyc.app.miniKyc.entity.AppConfigurations;
-import co.yabx.kyc.app.repository.AppConfigurationRepository;
+import co.yabx.kyc.app.miniKyc.repository.AppConfigurationRepository;
 import co.yabx.kyc.app.service.AppConfigService;
 
 @Service

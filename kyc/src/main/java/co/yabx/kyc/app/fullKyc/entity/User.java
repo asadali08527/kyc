@@ -2,15 +2,21 @@ package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -121,20 +127,36 @@ public class User implements Serializable {
 	@Column(name = "business_address")
 	private String businessAddress;
 
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "income_details", referencedColumnName = "id")
 	@Column(name = "income_details")
 	private IncomeDetails incomeDetails;
 
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "introducer_details", referencedColumnName = "id")
 	@Column(name = "introducer_details")
 	private IntroducerDetails introducerDetails;
 
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "work_education", referencedColumnName = "id")
 	@Column(name = "work_education")
 	private WorkEducationDetails workEducationDetails;
 
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "liabilities", referencedColumnName = "id")
 	@Column(name = "liabilities")
 	private LiabilitiesDetails liabilitiesDetails;
 
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "business_details", referencedColumnName = "id")
 	@Column(name = "business_details")
 	private BusinessDetails businessDetails;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<AddressDetails> addressDetails;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<BankAccountDetails> bankAccountDetails;
 
 	@Column(name = "minor")
 	private String minor;
