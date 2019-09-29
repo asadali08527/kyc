@@ -1,214 +1,97 @@
-package co.yabx.kyc.app.fullKyc.entity;
+package co.yabx.kyc.app.fullKyc.dto;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-
 import co.yabx.kyc.app.enums.MaritalStatuses;
 import co.yabx.kyc.app.enums.Nationality;
 import co.yabx.kyc.app.enums.ResidentStatus;
+import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 
-@Entity
-@Table(name = "users", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
-		@Index(name = "created_at", columnList = "created_at"),
-		@Index(name = "created_by", columnList = "created_by") })
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Least normalisation strategy
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
-public class User implements Serializable {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+public class UserDTO implements Serializable {
+
 	private Long id;
 
-	@Column(name = "msisdn")
 	private String msisdn;
 
-	@Column(name = "first_name")
 	private String firstName;
 
-	@Column(name = "middle_name")
 	private String middleName;
 
-	@Column(name = "last_name")
 	private String lastName;
 
-	@Column(name = "created_at")
 	private Date createdAt;
 
-	@Column(name = "updated_at")
 	private Date updatedAt;
 	/**
 	 * Date of birth
 	 */
-	@Column(name = "dob")
 	private Long dob;
 	/**
 	 * Place of birth
 	 */
-	@Column(name = "pob")
 	private String pob;
 
-	@Column(name = "gender")
 	private String gender;
 
-	@Column(name = "created_by")
 	private String createdBy;
 
-	@Column(name = "update_by")
 	private String updatedBy;
 
-	@Column(name = "email")
 	private String email;
 
-	@Column(name = "fathers_name")
 	private String fathersName;
 
-	@Column(name = "mothers_name")
 	private String mothersName;
 
-	@Column(name = "spouse_name")
 	private String spouseName;
 
-	@Column(name = "marital_status")
 	private MaritalStatuses maritalStatus;
 
-	@Column(name = "dependents")
 	private short numberOfDependents;
 
-	@Column(name = "sister_concerned_or_allied")
 	private String sisterConcernedOrAllied;
 
-	@Column(name = "nationality")
 	private Nationality nationality;
 
-	@Column(name = "resident_status")
 	private ResidentStatus residentialStatus;
 
-	@Column(name = "tax_identification_number")
 	private String taxIdentificationNumber;
 
-	@Column(name = "natonal_id_number")
 	private String nationalIdNumber;
 
-	@Column(name = "birth_registration_number")
 	private String birthRegistrationNumber;
 
-	@Column(name = "passport_number")
 	private String passportNumber;
 
-	@Column(name = "driving_license_number")
 	private String drivingLicenseNumber;
 
-	@Column(name = "passport_expiry_date")
 	private Long passportExpiryDate;
 
-	@Column(name = "business_name")
 	private String businessName;
 
-	@Column(name = "experience")
 	private String experience;
 
-	@Column(name = "business_address")
 	private String businessAddress;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<IncomeDetails> incomeDetails;
+	private Set<IncomeDetailsDTO> incomeDetails;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<IntroducerDetails> introducerDetails;
+	private Set<IntroducerDetailsDTO> introducerDetails;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<WorkEducationDetails> workEducationDetails;
+	private Set<WorkEducationDetailsDTO> workEducationDetails;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<LiabilitiesDetails> liabilitiesDetails;
+	private Set<LiabilitiesDetailsDTO> liabilitiesDetails;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<BusinessDetails> businessDetails;
+	private Set<BusinessDetailsDTO> businessDetails;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<AddressDetails> addressDetails;
+	private Set<AddressDetailsDTO> addressDetails;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<BankAccountDetails> bankAccountDetails;
+	private Set<BankAccountDetailsDTO> bankAccountDetails;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<AttachmentDetails> attachmentDetails;
 
-	@Column(name = "minor")
 	private String minor;
-
-	public Set<IncomeDetails> getIncomeDetails() {
-		return incomeDetails;
-	}
-
-	public void setIncomeDetails(Set<IncomeDetails> incomeDetails) {
-		this.incomeDetails = incomeDetails;
-	}
-
-	public Set<IntroducerDetails> getIntroducerDetails() {
-		return introducerDetails;
-	}
-
-	public void setIntroducerDetails(Set<IntroducerDetails> introducerDetails) {
-		this.introducerDetails = introducerDetails;
-	}
-
-	public Set<WorkEducationDetails> getWorkEducationDetails() {
-		return workEducationDetails;
-	}
-
-	public void setWorkEducationDetails(Set<WorkEducationDetails> workEducationDetails) {
-		this.workEducationDetails = workEducationDetails;
-	}
-
-	public Set<LiabilitiesDetails> getLiabilitiesDetails() {
-		return liabilitiesDetails;
-	}
-
-	public void setLiabilitiesDetails(Set<LiabilitiesDetails> liabilitiesDetails) {
-		this.liabilitiesDetails = liabilitiesDetails;
-	}
-
-	public Set<BusinessDetails> getBusinessDetails() {
-		return businessDetails;
-	}
-
-	public void setBusinessDetails(Set<BusinessDetails> businessDetails) {
-		this.businessDetails = businessDetails;
-	}
-
-	public Set<AddressDetails> getAddressDetails() {
-		return addressDetails;
-	}
-
-	public void setAddressDetails(Set<AddressDetails> addressDetails) {
-		this.addressDetails = addressDetails;
-	}
-
-	public Set<BankAccountDetails> getBankAccountDetails() {
-		return bankAccountDetails;
-	}
-
-	public void setBankAccountDetails(Set<BankAccountDetails> bankAccountDetails) {
-		this.bankAccountDetails = bankAccountDetails;
-	}
 
 	public String getMsisdn() {
 		return msisdn;
@@ -458,26 +341,68 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
+	public Set<IncomeDetailsDTO> getIncomeDetails() {
+		return incomeDetails;
+	}
+
+	public void setIncomeDetails(Set<IncomeDetailsDTO> incomeDetails) {
+		this.incomeDetails = incomeDetails;
+	}
+
+	public Set<IntroducerDetailsDTO> getIntroducerDetails() {
+		return introducerDetails;
+	}
+
+	public void setIntroducerDetails(Set<IntroducerDetailsDTO> introducerDetails) {
+		this.introducerDetails = introducerDetails;
+	}
+
+	public Set<WorkEducationDetailsDTO> getWorkEducationDetails() {
+		return workEducationDetails;
+	}
+
+	public void setWorkEducationDetails(Set<WorkEducationDetailsDTO> workEducationDetails) {
+		this.workEducationDetails = workEducationDetails;
+	}
+
+	public Set<LiabilitiesDetailsDTO> getLiabilitiesDetails() {
+		return liabilitiesDetails;
+	}
+
+	public void setLiabilitiesDetails(Set<LiabilitiesDetailsDTO> liabilitiesDetails) {
+		this.liabilitiesDetails = liabilitiesDetails;
+	}
+
+	public Set<BusinessDetailsDTO> getBusinessDetails() {
+		return businessDetails;
+	}
+
+	public void setBusinessDetails(Set<BusinessDetailsDTO> businessDetails) {
+		this.businessDetails = businessDetails;
+	}
+
+	public Set<AddressDetailsDTO> getAddressDetails() {
+		return addressDetails;
+	}
+
+	public void setAddressDetails(Set<AddressDetailsDTO> addressDetails) {
+		this.addressDetails = addressDetails;
+	}
+
+	public Set<BankAccountDetailsDTO> getBankAccountDetails() {
+		return bankAccountDetails;
+	}
+
+	public void setBankAccountDetails(Set<BankAccountDetailsDTO> bankAccountDetails) {
+		this.bankAccountDetails = bankAccountDetails;
+	}
+
 	public Set<AttachmentDetails> getAttachmentDetails() {
 		return attachmentDetails;
 	}
 
 	public void setAttachmentDetails(Set<AttachmentDetails> attachmentDetails) {
 		this.attachmentDetails = attachmentDetails;
-	}
-
-	@PrePersist
-	private void prePersist() {
-		if (createdAt == null) {
-			createdAt = new Date();
-			updatedAt = new Date();
-		}
-	}
-
-	@PreUpdate
-	private void preUpdate() {
-		updatedAt = new Date();
-
 	}
 
 }
