@@ -16,6 +16,11 @@ import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.OtpService;
 import co.yabx.kyc.app.util.UtilHelper;
 
+/**
+ * 
+ * @author Asad.ali
+ *
+ */
 @Service
 public class OtpServiceImpl implements OtpService {
 

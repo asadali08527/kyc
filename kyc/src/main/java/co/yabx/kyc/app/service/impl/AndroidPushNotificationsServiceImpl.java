@@ -21,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import co.yabx.kyc.app.entities.Device;
 import co.yabx.kyc.app.interceptor.HeaderRequestInterceptor;
 import co.yabx.kyc.app.repositories.DeviceRepository;
+import co.yabx.kyc.app.service.AndroidPushNotificationsService;
 import co.yabx.kyc.app.service.AppConfigService;
 
 /**
@@ -29,7 +30,7 @@ import co.yabx.kyc.app.service.AppConfigService;
  *
  */
 @Service
-public class AndroidPushNotificationsService {
+public class AndroidPushNotificationsServiceImpl implements AndroidPushNotificationsService {
 
 	@Autowired
 	private DeviceRepository deviceRepository;
@@ -53,6 +54,7 @@ public class AndroidPushNotificationsService {
 		return CompletableFuture.completedFuture(firebaseResponse);
 	}
 
+	@Override
 	public ResponseEntity<String> sendNotificationToDevice(String deviceId, String title, String message,
 			String dataToSend) {
 		try {
