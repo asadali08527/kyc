@@ -70,7 +70,6 @@ public class RetailersDtoHelper implements Serializable {
 		userDto.setSpouseName("LMN");
 		userDto.setNumberOfDependents(0);
 		userDto.setRetailerPhoto("");
-		userDto.setPermanentAddress("BEST WESTERN La Vinchi Building,54 Kwaran Bazar, Dhaka City, 1215");
 		// Bank account details
 		List<BankAccountDetailsDTO> accountDetails = new ArrayList<BankAccountDetailsDTO>();
 		BankAccountDetailsDTO bankAccountDetails = new BankAccountDetailsDTO();
@@ -181,14 +180,14 @@ public class RetailersDtoHelper implements Serializable {
 		List<AddressDetailsDTO> addressDetailsList = new ArrayList<AddressDetailsDTO>();
 		AddressDetailsDTO addressDetailsDTOs = new AddressDetailsDTO();
 		addressDetailsDTOs.setAddressType(AddressType.PRESENT);
-		addressDetailsDTO.setAddress("BEST WESTERN La Vinchi Building,54 Kwaran Bazar, Dhaka City, 1215");
+		addressDetailsDTOs.setAddress("BEST WESTERN La Vinchi Building,54 Kwaran Bazar, Dhaka City, 1215");
 		addressDetailsList.add(addressDetailsDTOs);
 		AddressDetailsDTO addressDetailsDTOss = new AddressDetailsDTO();
 		addressDetailsDTOss.setAddress("BEST WESTERN La Vinchi Building,54 Kwaran Bazar, Dhaka City, 1215");
 		addressDetailsDTOss.setAddressType(AddressType.PERMANNET);
 		addressDetailsList.add(addressDetailsDTOss);
 		userDto.setAddressDetails(addressDetailsList);
-		//User Bank Accoount details
+		// User Bank Accoount details
 		userDto.setBankAccountDetails(businessAccountDetails);
 		loginDTO.setRetailerInfo(userDto);
 		return loginDTO;

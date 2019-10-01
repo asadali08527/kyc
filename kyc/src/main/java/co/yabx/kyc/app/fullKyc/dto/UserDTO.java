@@ -101,24 +101,20 @@ public class UserDTO implements Serializable {
 
 	private String retailerPhoto;
 
-	private String permanentAddress;
-
-	private String presentAddress;
-
-	public String getPermanentAddress() {
-		return permanentAddress;
+	public Long getId() {
+		return id;
 	}
 
-	public void setPermanentAddress(String permanentAddress) {
-		this.permanentAddress = permanentAddress;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
-	public String getPresentAddress() {
-		return presentAddress;
+	public String getRetailerId() {
+		return retailerId;
 	}
 
-	public void setPresentAddress(String presentAddress) {
-		this.presentAddress = presentAddress;
+	public void setRetailerId(String retailerId) {
+		this.retailerId = retailerId;
 	}
 
 	public String getMsisdn() {
@@ -129,12 +125,28 @@ public class UserDTO implements Serializable {
 		this.msisdn = msisdn;
 	}
 
+	public String getAlternateMobileNumber() {
+		return alternateMobileNumber;
+	}
+
+	public void setAlternateMobileNumber(String alternateMobileNumber) {
+		this.alternateMobileNumber = alternateMobileNumber;
+	}
+
 	public String getFirstName() {
 		return firstName;
 	}
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getMiddleName() {
@@ -353,22 +365,6 @@ public class UserDTO implements Serializable {
 		this.businessAddress = businessAddress;
 	}
 
-	public String getRetailerPhoto() {
-		return retailerPhoto;
-	}
-
-	public void setRetailerPhoto(String minor) {
-		this.retailerPhoto = minor;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public List<IncomeDetailsDTO> getIncomeDetails() {
 		return incomeDetails;
 	}
@@ -433,28 +429,12 @@ public class UserDTO implements Serializable {
 		this.attachmentDetails = attachmentDetails;
 	}
 
-	public String getAlternateMobileNumber() {
-		return alternateMobileNumber;
+	public String getRetailerPhoto() {
+		return retailerPhoto;
 	}
 
-	public void setAlternateMobileNumber(String alternateMobileNumber) {
-		this.alternateMobileNumber = alternateMobileNumber;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getRetailerId() {
-		return retailerId;
-	}
-
-	public void setRetailerId(String retailerId) {
-		this.retailerId = retailerId;
+	public void setRetailerPhoto(String retailerPhoto) {
+		this.retailerPhoto = retailerPhoto;
 	}
 
 }

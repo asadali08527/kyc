@@ -94,6 +94,18 @@ public class BusinessDetailsDTO implements Serializable {
 		return id;
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getBusinessPhone() {
+		return businessPhone;
+	}
+
+	public void setBusinessPhone(String businessPhone) {
+		this.businessPhone = businessPhone;
+	}
+
 	public String getBusinessName() {
 		return businessName;
 	}
@@ -342,10 +354,6 @@ public class BusinessDetailsDTO implements Serializable {
 		this.user = user;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -376,33 +384,6 @@ public class BusinessDetailsDTO implements Serializable {
 
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
-	}
-
-	public String getBusinessPhone() {
-		return businessPhone;
-	}
-
-	public void setBusinessPhone(String businessPhone) {
-		this.businessPhone = businessPhone;
-	}
-
-	@Override
-	public String toString() {
-		return "BusinessDetailsDTO [id=" + id + ", businessPhone=" + businessPhone + ", businessName=" + businessName
-				+ ", directorOrPartnerName=" + directorOrPartnerName + ", facilityDetails=" + facilityDetails
-				+ ", facilityType=" + facilityType + ", fixedAssetPurchase=" + fixedAssetPurchase + ", fixedAssetName="
-				+ fixedAssetName + ", price=" + price + ", origin=" + origin + ", proposedCollateral="
-				+ proposedCollateral + ", businessType=" + businessType + ", sector=" + sector + ", detailOfBusness="
-				+ detailOfBusness + ", initialCapital=" + initialCapital + ", fundSource=" + fundSource
-				+ ", vatRegistrationNumber=" + vatRegistrationNumber + ", businessStartDate=" + businessStartDate
-				+ ", businessTin=" + businessTin + ", annualSales=" + annualSales + ", annualGrossProfit="
-				+ annualGrossProfit + ", annualExpenses=" + annualExpenses + ", valueOfFixedAssets="
-				+ valueOfFixedAssets + ", numberOfEmployees=" + numberOfEmployees + ", stockValue=" + stockValue
-				+ ", monthlyTurnOver=" + monthlyTurnOver + ", deposits=" + deposits + ", withdrawls=" + withdrawls
-				+ ", initialDeposit=" + initialDeposit + ", licenseDetails=" + licenseDetails + ", addressDetails="
-				+ addressDetails + ", bankAccountDetails=" + bankAccountDetails + ", user=" + user + ", createdAt="
-				+ createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
-				+ "]";
 	}
 
 }
