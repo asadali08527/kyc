@@ -49,9 +49,9 @@ public class RetailerController {
 
 	}
 
-	@RequestMapping(value = "/retailer/details/{{dsrMsisdn}}/{{merchantId}}", method = RequestMethod.GET)
+	@RequestMapping(value = "/retailer/details/{dsrMsisdn}/{merchantId}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<?> fetchRetailerDetails(@PathVariable String dsrMsisdn, @PathVariable String merchantId) {
+	public ResponseEntity<ResponseDTO> fetchRetailerDetails(@PathVariable String dsrMsisdn, @PathVariable String merchantId) {
 		ResponseDTO loginDTO = retailerService.retailerDetails(dsrMsisdn, merchantId);
 		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 

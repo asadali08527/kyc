@@ -3,9 +3,12 @@ package co.yabx.kyc.app.fullKyc.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.fullKyc.entity.User;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AddressDetailsDTO implements Serializable {
 
 	private Long id;

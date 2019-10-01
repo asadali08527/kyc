@@ -452,4 +452,8 @@ public class BusinessDetails implements Serializable {
 
 	}
 
+	public void setNumberOfEmployees(int numberOfEmployees) {
+		this.numberOfEmployees = numberOfEmployees;
+	}
+
 }

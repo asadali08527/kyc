@@ -56,4 +56,10 @@ public class ResponseDTO implements Serializable {
 		this.retailerInfo = retailerInfo;
 	}
 
+	@Override
+	public String toString() {
+		return "ResponseDTO [message=" + message + ", statusCode=" + statusCode + ", dsrProfileStatus="
+				+ dsrProfileStatus + ", retailers=" + retailers + ", retailerInfo=" + retailerInfo + "]";
+	}
+
 }

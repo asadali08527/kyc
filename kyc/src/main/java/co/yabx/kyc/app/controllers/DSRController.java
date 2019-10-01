@@ -38,7 +38,7 @@ public class DSRController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DSRController.class);
 
-	@RequestMapping(value = "/dsr/login/{{msisdn}}", method = RequestMethod.GET)
+	@RequestMapping(value = "/dsr/login/{msisdn}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<?> login(@PathVariable(value = "msisdn", required = true) String msisdn) {
 		ResponseDTO loginDTO = dsrService.login(msisdn);
@@ -54,7 +54,7 @@ public class DSRController {
 
 	}
 
-	@RequestMapping(value = "/dsr/otp/verify", method = RequestMethod.POST)
+	@RequestMapping(value = "/dsr/profile", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> submitDSRProfile(@RequestBody DsrProfileDTO dsrProfileDTO) {
 		ResponseDTO loginDTO = dsrService.submitDsrProfile(dsrProfileDTO);

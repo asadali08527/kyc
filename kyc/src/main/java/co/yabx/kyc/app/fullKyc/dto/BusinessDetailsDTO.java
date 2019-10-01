@@ -5,9 +5,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.User;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BusinessDetailsDTO implements Serializable {
 
 	private Long id;
@@ -381,6 +384,25 @@ public class BusinessDetailsDTO implements Serializable {
 
 	public void setBusinessPhone(String businessPhone) {
 		this.businessPhone = businessPhone;
+	}
+
+	@Override
+	public String toString() {
+		return "BusinessDetailsDTO [id=" + id + ", businessPhone=" + businessPhone + ", businessName=" + businessName
+				+ ", directorOrPartnerName=" + directorOrPartnerName + ", facilityDetails=" + facilityDetails
+				+ ", facilityType=" + facilityType + ", fixedAssetPurchase=" + fixedAssetPurchase + ", fixedAssetName="
+				+ fixedAssetName + ", price=" + price + ", origin=" + origin + ", proposedCollateral="
+				+ proposedCollateral + ", businessType=" + businessType + ", sector=" + sector + ", detailOfBusness="
+				+ detailOfBusness + ", initialCapital=" + initialCapital + ", fundSource=" + fundSource
+				+ ", vatRegistrationNumber=" + vatRegistrationNumber + ", businessStartDate=" + businessStartDate
+				+ ", businessTin=" + businessTin + ", annualSales=" + annualSales + ", annualGrossProfit="
+				+ annualGrossProfit + ", annualExpenses=" + annualExpenses + ", valueOfFixedAssets="
+				+ valueOfFixedAssets + ", numberOfEmployees=" + numberOfEmployees + ", stockValue=" + stockValue
+				+ ", monthlyTurnOver=" + monthlyTurnOver + ", deposits=" + deposits + ", withdrawls=" + withdrawls
+				+ ", initialDeposit=" + initialDeposit + ", licenseDetails=" + licenseDetails + ", addressDetails="
+				+ addressDetails + ", bankAccountDetails=" + bankAccountDetails + ", user=" + user + ", createdAt="
+				+ createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
+				+ "]";
 	}
 
 }

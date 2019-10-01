@@ -100,4 +100,12 @@ public class LicenseDetailsDTO implements Serializable {
 		this.licenseType = licenseType;
 	}
 
+	@Override
+	public String toString() {
+		return "LicenseDetailsDTO [id=" + id + ", licenseNumber=" + licenseNumber + ", licenseExpiryDate="
+				+ licenseExpiryDate + ", licenseIssuingAuthority=" + licenseIssuingAuthority + ", licenseType="
+				+ licenseType + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy
+				+ ", updatedBy=" + updatedBy + "]";
+	}
+
 }

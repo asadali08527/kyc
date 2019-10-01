@@ -3,6 +3,8 @@ package co.yabx.kyc.app.fullKyc.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import co.yabx.kyc.app.enums.DocumentSide;
 
 /**
@@ -10,7 +12,7 @@ import co.yabx.kyc.app.enums.DocumentSide;
  * @author Asad Ali
  *
  */
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AttachmentsDTO implements Serializable {
 
 	private Long id;
@@ -71,6 +73,13 @@ public class AttachmentsDTO implements Serializable {
 
 	public void setAttachmentDetails(AttachmentDetailsDTO attachmentDetails) {
 		this.attachmentDetails = attachmentDetails;
+	}
+
+	@Override
+	public String toString() {
+		return "AttachmentsDTO [id=" + id + ", documentSide=" + documentSide + ", documentUrl=" + documentUrl
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", attachmentDetails=" + attachmentDetails
+				+ "]";
 	}
 
 }

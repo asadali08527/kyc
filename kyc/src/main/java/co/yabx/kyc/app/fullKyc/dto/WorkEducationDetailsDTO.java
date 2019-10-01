@@ -3,6 +3,9 @@ package co.yabx.kyc.app.fullKyc.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class WorkEducationDetailsDTO implements Serializable {
 
 	private Long id;
@@ -103,6 +106,14 @@ public class WorkEducationDetailsDTO implements Serializable {
 
 	public void setEducationalQualification(String educationalQualification) {
 		this.educationalQualification = educationalQualification;
+	}
+
+	@Override
+	public String toString() {
+		return "WorkEducationDetailsDTO [id=" + id + ", occupation=" + occupation + ", designation=" + designation
+				+ ", employer=" + employer + ", educationalQualification=" + educationalQualification + ", createdAt="
+				+ createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
+				+ ", user=" + user + "]";
 	}
 
 }

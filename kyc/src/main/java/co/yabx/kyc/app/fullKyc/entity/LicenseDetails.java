@@ -102,4 +102,36 @@ public class LicenseDetails implements Serializable {
 
 	}
 
+	public String getLicenseNumber() {
+		return licenseNumber;
+	}
+
+	public void setLicenseNumber(String licenseNumber) {
+		this.licenseNumber = licenseNumber;
+	}
+
+	public Long getLicenseExpiryDate() {
+		return licenseExpiryDate;
+	}
+
+	public void setLicenseExpiryDate(Long licenseExpiryDate) {
+		this.licenseExpiryDate = licenseExpiryDate;
+	}
+
+	public String getLicenseIssuingAuthority() {
+		return licenseIssuingAuthority;
+	}
+
+	public void setLicenseIssuingAuthority(String licenseIssuingAuthority) {
+		this.licenseIssuingAuthority = licenseIssuingAuthority;
+	}
+
+	public LicenseType getLicenseType() {
+		return licenseType;
+	}
+
+	public void setLicenseType(LicenseType licenseType) {
+		this.licenseType = licenseType;
+	}
+
 }

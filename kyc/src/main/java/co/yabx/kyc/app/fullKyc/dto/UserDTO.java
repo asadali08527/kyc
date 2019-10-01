@@ -3,14 +3,12 @@ package co.yabx.kyc.app.fullKyc.dto;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import co.yabx.kyc.app.enums.MaritalStatuses;
 import co.yabx.kyc.app.enums.Nationality;
 import co.yabx.kyc.app.enums.ResidentStatus;
-import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO implements Serializable {
@@ -99,7 +97,7 @@ public class UserDTO implements Serializable {
 
 	private List<BankAccountDetailsDTO> bankAccountDetails;
 
-	private List<AttachmentDetails> attachmentDetails;
+	private List<AttachmentDetailsDTO> attachmentDetails;
 
 	private String retailerPhoto;
 
@@ -427,11 +425,11 @@ public class UserDTO implements Serializable {
 		this.bankAccountDetails = bankAccountDetails;
 	}
 
-	public List<AttachmentDetails> getAttachmentDetails() {
+	public List<AttachmentDetailsDTO> getAttachmentDetails() {
 		return attachmentDetails;
 	}
 
-	public void setAttachmentDetails(List<AttachmentDetails> attachmentDetails) {
+	public void setAttachmentDetails(List<AttachmentDetailsDTO> attachmentDetails) {
 		this.attachmentDetails = attachmentDetails;
 	}
 

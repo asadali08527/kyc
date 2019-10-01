@@ -3,9 +3,12 @@ package co.yabx.kyc.app.fullKyc.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import co.yabx.kyc.app.enums.BankAccountIdentifier;
 import co.yabx.kyc.app.enums.BankAccountType;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BankAccountDetailsDTO implements Serializable {
 
 	private Long id;
@@ -136,6 +139,15 @@ public class BankAccountDetailsDTO implements Serializable {
 
 	public void setBankAccountIdentifier(BankAccountIdentifier bankAccountIdentifier) {
 		this.bankAccountIdentifier = bankAccountIdentifier;
+	}
+
+	@Override
+	public String toString() {
+		return "BankAccountDetailsDTO [id=" + id + ", msisdn=" + msisdn + ", bankName=" + bankName + ", accountNumber="
+				+ accountNumber + ", branch=" + branch + ", bankAccountType=" + bankAccountType + ", user=" + user
+				+ ", businessDetails=" + businessDetails + ", bankAccountIdentifier=" + bankAccountIdentifier
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", updatedBy="
+				+ updatedBy + "]";
 	}
 
 }

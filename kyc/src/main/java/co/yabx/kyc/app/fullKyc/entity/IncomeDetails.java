@@ -170,4 +170,12 @@ public class IncomeDetails implements Serializable {
 
 	}
 
+	public double getMonthlyIncomeFromOtherSource() {
+		return monthlyIncomeFromOtherSource;
+	}
+
+	public void setMonthlyIncomeFromOtherSource(double monthlyIncomeFromOtherSource) {
+		this.monthlyIncomeFromOtherSource = monthlyIncomeFromOtherSource;
+	}
+
 }

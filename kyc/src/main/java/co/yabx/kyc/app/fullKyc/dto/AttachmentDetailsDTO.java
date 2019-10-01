@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import co.yabx.kyc.app.enums.DocumentType;
 
 /**
@@ -11,7 +13,7 @@ import co.yabx.kyc.app.enums.DocumentType;
  * @author Asad Ali
  *
  */
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AttachmentDetailsDTO implements Serializable {
 
 	private Long id;
@@ -36,7 +38,7 @@ public class AttachmentDetailsDTO implements Serializable {
 
 	private Long documentExpiryDate;
 
-	private Set<AttachmentsDTO> attachmenets;
+	private Set<AttachmentsDTO> attachments;
 
 	private UserDTO user;
 
@@ -128,20 +130,29 @@ public class AttachmentDetailsDTO implements Serializable {
 		this.documentType = documentType;
 	}
 
-	public Set<AttachmentsDTO> getAttachmenets() {
-		return attachmenets;
-	}
-
-	public void setAttachmenets(Set<AttachmentsDTO> attachmenets) {
-		this.attachmenets = attachmenets;
-	}
-
 	public UserDTO getUser() {
 		return user;
 	}
 
 	public void setUser(UserDTO user) {
 		this.user = user;
+	}
+
+	public Set<AttachmentsDTO> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(Set<AttachmentsDTO> attachments) {
+		this.attachments = attachments;
+	}
+
+	@Override
+	public String toString() {
+		return "AttachmentDetailsDTO [id=" + id + ", documentUrl=" + documentUrl + ", snapTime=" + snapTime
+				+ ", isSelfie=" + isSelfie + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
+				+ ", documentNumber=" + documentNumber + ", documentType=" + documentType + ", documentIssueDate="
+				+ documentIssueDate + ", placeOfIssue=" + placeOfIssue + ", documentExpiryDate=" + documentExpiryDate
+				+ ", attachments=" + attachments + ", user=" + user + "]";
 	}
 
 }

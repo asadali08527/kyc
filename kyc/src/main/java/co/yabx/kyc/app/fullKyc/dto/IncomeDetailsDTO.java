@@ -3,8 +3,11 @@ package co.yabx.kyc.app.fullKyc.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import co.yabx.kyc.app.fullKyc.entity.User;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class IncomeDetailsDTO implements Serializable {
 
 	private Long id;
@@ -135,6 +138,15 @@ public class IncomeDetailsDTO implements Serializable {
 
 	public void setMonthlyIncomeFromOtherSource(double monthlyIncomeFromOtherSource) {
 		this.monthlyIncomeFromOtherSource = monthlyIncomeFromOtherSource;
+	}
+
+	@Override
+	public String toString() {
+		return "IncomeDetailsDTO [id=" + id + ", monthlyIncome=" + monthlyIncome + ", monthlyIncomeFromOtherSource="
+				+ monthlyIncomeFromOtherSource + ", monthlyExpenditure=" + monthlyExpenditure + ", monthlySurplus="
+				+ monthlySurplus + ", guarantorNetAssets=" + guarantorNetAssets + ", totalAssets=" + totalAssets
+				+ ", totalLiabilities=" + totalLiabilities + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
+				+ ", createdBy=" + createdBy + ", updatedBy=" + updatedBy + ", user=" + user + "]";
 	}
 
 }

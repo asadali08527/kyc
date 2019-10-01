@@ -3,8 +3,11 @@ package co.yabx.kyc.app.fullKyc.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import co.yabx.kyc.app.enums.Relationship;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class IntroducerDetailsDTO implements Serializable {
 
 	private Long id;
@@ -125,6 +128,14 @@ public class IntroducerDetailsDTO implements Serializable {
 
 	public void setSignature(AttachmentDetailsDTO signature) {
 		this.signature = signature;
+	}
+
+	@Override
+	public String toString() {
+		return "IntroducerDetailsDTO [id=" + id + ", msisdn=" + msisdn + ", name=" + name + ", accountNumber="
+				+ accountNumber + ", relationship=" + relationship + ", isSignatureVerified=" + isSignatureVerified
+				+ ", signature=" + signature + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy="
+				+ createdBy + ", updatedBy=" + updatedBy + ", user=" + user + "]";
 	}
 
 }
