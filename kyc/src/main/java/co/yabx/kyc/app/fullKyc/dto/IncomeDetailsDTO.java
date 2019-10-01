@@ -129,4 +129,12 @@ public class IncomeDetailsDTO implements Serializable {
 		this.updatedBy = updatedBy;
 	}
 
+	public double getMonthlyIncomeFromOtherSource() {
+		return monthlyIncomeFromOtherSource;
+	}
+
+	public void setMonthlyIncomeFromOtherSource(double monthlyIncomeFromOtherSource) {
+		this.monthlyIncomeFromOtherSource = monthlyIncomeFromOtherSource;
+	}
+
 }

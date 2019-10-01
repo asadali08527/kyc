@@ -2,6 +2,7 @@ package co.yabx.kyc.app.fullKyc.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
@@ -58,7 +59,7 @@ public class BusinessDetailsDTO implements Serializable {
 
 	private double valueOfFixedAssets;
 
-	private short numberOfEmployees;
+	private int numberOfEmployees;
 
 	private double stockValue;
 
@@ -72,9 +73,9 @@ public class BusinessDetailsDTO implements Serializable {
 
 	private LicenseDetailsDTO licenseDetails;
 
-	private Set<AddressDetailsDTO> addressDetails;
+	private List<AddressDetailsDTO> addressDetails;
 
-	private Set<BankAccountDetailsDTO> bankAccountDetails;
+	private List<BankAccountDetailsDTO> bankAccountDetails;
 
 	private UserDTO user;
 
@@ -258,11 +259,11 @@ public class BusinessDetailsDTO implements Serializable {
 		this.valueOfFixedAssets = valueOfFixedAssets;
 	}
 
-	public short getNumberOfEmployees() {
+	public int getNumberOfEmployees() {
 		return numberOfEmployees;
 	}
 
-	public void setNumberOfEmployees(short numberOfEmployees) {
+	public void setNumberOfEmployees(int numberOfEmployees) {
 		this.numberOfEmployees = numberOfEmployees;
 	}
 
@@ -314,19 +315,19 @@ public class BusinessDetailsDTO implements Serializable {
 		this.licenseDetails = licenseDetails;
 	}
 
-	public Set<AddressDetailsDTO> getAddressDetails() {
+	public List<AddressDetailsDTO> getAddressDetails() {
 		return addressDetails;
 	}
 
-	public void setAddressDetails(Set<AddressDetailsDTO> addressDetails) {
+	public void setAddressDetails(List<AddressDetailsDTO> addressDetails) {
 		this.addressDetails = addressDetails;
 	}
 
-	public Set<BankAccountDetailsDTO> getBankAccountDetails() {
+	public List<BankAccountDetailsDTO> getBankAccountDetails() {
 		return bankAccountDetails;
 	}
 
-	public void setBankAccountDetails(Set<BankAccountDetailsDTO> bankAccountDetails) {
+	public void setBankAccountDetails(List<BankAccountDetailsDTO> bankAccountDetails) {
 		this.bankAccountDetails = bankAccountDetails;
 	}
 

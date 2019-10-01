@@ -3,8 +3,11 @@ package co.yabx.kyc.app.fullKyc.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import co.yabx.kyc.app.enums.LicenseType;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class LicenseDetailsDTO implements Serializable {
 
 	private Long id;

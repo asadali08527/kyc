@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import co.yabx.kyc.app.enums.AccountStatus;
 import co.yabx.kyc.app.enums.AmlCftStatus;
-import co.yabx.kyc.app.enums.KycVerified;
+import co.yabx.kyc.app.enums.KycStatus;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountStatusDTO implements Serializable {
@@ -17,7 +17,7 @@ public class AccountStatusDTO implements Serializable {
 
 	private boolean isKycAvailable;
 
-	private KycVerified kycVerified;
+	private KycStatus kycVerified;
 
 	private AmlCftStatus amlCftStatus;
 
@@ -99,11 +99,11 @@ public class AccountStatusDTO implements Serializable {
 		this.accountStatusTrackerDTO = accountStatusTrackerDTO;
 	}
 
-	public KycVerified getKycVerified() {
+	public KycStatus getKycVerified() {
 		return kycVerified;
 	}
 
-	public void setKycVerified(KycVerified kycVerified) {
+	public void setKycVerified(KycStatus kycVerified) {
 		this.kycVerified = kycVerified;
 	}
 

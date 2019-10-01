@@ -2,20 +2,30 @@ package co.yabx.kyc.app.fullKyc.dto;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import co.yabx.kyc.app.enums.MaritalStatuses;
 import co.yabx.kyc.app.enums.Nationality;
 import co.yabx.kyc.app.enums.ResidentStatus;
 import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO implements Serializable {
 
 	private Long id;
 
+	private String retailerId;
+
 	private String msisdn;
 
+	private String alternateMobileNumber;
+
 	private String firstName;
+
+	private String name;
 
 	private String middleName;
 
@@ -27,7 +37,7 @@ public class UserDTO implements Serializable {
 	/**
 	 * Date of birth
 	 */
-	private Long dob;
+	private String dob;
 	/**
 	 * Place of birth
 	 */
@@ -49,7 +59,7 @@ public class UserDTO implements Serializable {
 
 	private MaritalStatuses maritalStatus;
 
-	private short numberOfDependents;
+	private int numberOfDependents;
 
 	private String sisterConcernedOrAllied;
 
@@ -67,7 +77,7 @@ public class UserDTO implements Serializable {
 
 	private String drivingLicenseNumber;
 
-	private Long passportExpiryDate;
+	private String passportExpiryDate;
 
 	private String businessName;
 
@@ -75,23 +85,43 @@ public class UserDTO implements Serializable {
 
 	private String businessAddress;
 
-	private Set<IncomeDetailsDTO> incomeDetails;
+	private List<IncomeDetailsDTO> incomeDetails;
 
-	private Set<IntroducerDetailsDTO> introducerDetails;
+	private List<IntroducerDetailsDTO> introducerDetails;
 
-	private Set<WorkEducationDetailsDTO> workEducationDetails;
+	private List<WorkEducationDetailsDTO> workEducationDetails;
 
-	private Set<LiabilitiesDetailsDTO> liabilitiesDetails;
+	private List<LiabilitiesDetailsDTO> liabilitiesDetails;
 
-	private Set<BusinessDetailsDTO> businessDetails;
+	private List<BusinessDetailsDTO> businessDetails;
 
-	private Set<AddressDetailsDTO> addressDetails;
+	private List<AddressDetailsDTO> addressDetails;
 
-	private Set<BankAccountDetailsDTO> bankAccountDetails;
+	private List<BankAccountDetailsDTO> bankAccountDetails;
 
-	private Set<AttachmentDetails> attachmentDetails;
+	private List<AttachmentDetails> attachmentDetails;
 
-	private String minor;
+	private String retailerPhoto;
+
+	private String permanentAddress;
+
+	private String presentAddress;
+
+	public String getPermanentAddress() {
+		return permanentAddress;
+	}
+
+	public void setPermanentAddress(String permanentAddress) {
+		this.permanentAddress = permanentAddress;
+	}
+
+	public String getPresentAddress() {
+		return presentAddress;
+	}
+
+	public void setPresentAddress(String presentAddress) {
+		this.presentAddress = presentAddress;
+	}
 
 	public String getMsisdn() {
 		return msisdn;
@@ -141,11 +171,11 @@ public class UserDTO implements Serializable {
 		this.updatedAt = updatedAt;
 	}
 
-	public Long getDob() {
+	public String getDob() {
 		return dob;
 	}
 
-	public void setDob(Long dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 
@@ -221,11 +251,11 @@ public class UserDTO implements Serializable {
 		this.maritalStatus = maritalStatus;
 	}
 
-	public short getNumberOfDependents() {
+	public int getNumberOfDependents() {
 		return numberOfDependents;
 	}
 
-	public void setNumberOfDependents(short numberOfDependents) {
+	public void setNumberOfDependents(int numberOfDependents) {
 		this.numberOfDependents = numberOfDependents;
 	}
 
@@ -293,11 +323,11 @@ public class UserDTO implements Serializable {
 		this.drivingLicenseNumber = drivingLicenseNumber;
 	}
 
-	public Long getPassportExpiryDate() {
+	public String getPassportExpiryDate() {
 		return passportExpiryDate;
 	}
 
-	public void setPassportExpiryDate(Long passportExpiryDate) {
+	public void setPassportExpiryDate(String passportExpiryDate) {
 		this.passportExpiryDate = passportExpiryDate;
 	}
 
@@ -325,12 +355,12 @@ public class UserDTO implements Serializable {
 		this.businessAddress = businessAddress;
 	}
 
-	public String getMinor() {
-		return minor;
+	public String getRetailerPhoto() {
+		return retailerPhoto;
 	}
 
-	public void setMinor(String minor) {
-		this.minor = minor;
+	public void setRetailerPhoto(String minor) {
+		this.retailerPhoto = minor;
 	}
 
 	public Long getId() {
@@ -341,68 +371,92 @@ public class UserDTO implements Serializable {
 		this.id = id;
 	}
 
-	public Set<IncomeDetailsDTO> getIncomeDetails() {
+	public List<IncomeDetailsDTO> getIncomeDetails() {
 		return incomeDetails;
 	}
 
-	public void setIncomeDetails(Set<IncomeDetailsDTO> incomeDetails) {
+	public void setIncomeDetails(List<IncomeDetailsDTO> incomeDetails) {
 		this.incomeDetails = incomeDetails;
 	}
 
-	public Set<IntroducerDetailsDTO> getIntroducerDetails() {
+	public List<IntroducerDetailsDTO> getIntroducerDetails() {
 		return introducerDetails;
 	}
 
-	public void setIntroducerDetails(Set<IntroducerDetailsDTO> introducerDetails) {
+	public void setIntroducerDetails(List<IntroducerDetailsDTO> introducerDetails) {
 		this.introducerDetails = introducerDetails;
 	}
 
-	public Set<WorkEducationDetailsDTO> getWorkEducationDetails() {
+	public List<WorkEducationDetailsDTO> getWorkEducationDetails() {
 		return workEducationDetails;
 	}
 
-	public void setWorkEducationDetails(Set<WorkEducationDetailsDTO> workEducationDetails) {
+	public void setWorkEducationDetails(List<WorkEducationDetailsDTO> workEducationDetails) {
 		this.workEducationDetails = workEducationDetails;
 	}
 
-	public Set<LiabilitiesDetailsDTO> getLiabilitiesDetails() {
+	public List<LiabilitiesDetailsDTO> getLiabilitiesDetails() {
 		return liabilitiesDetails;
 	}
 
-	public void setLiabilitiesDetails(Set<LiabilitiesDetailsDTO> liabilitiesDetails) {
+	public void setLiabilitiesDetails(List<LiabilitiesDetailsDTO> liabilitiesDetails) {
 		this.liabilitiesDetails = liabilitiesDetails;
 	}
 
-	public Set<BusinessDetailsDTO> getBusinessDetails() {
+	public List<BusinessDetailsDTO> getBusinessDetails() {
 		return businessDetails;
 	}
 
-	public void setBusinessDetails(Set<BusinessDetailsDTO> businessDetails) {
+	public void setBusinessDetails(List<BusinessDetailsDTO> businessDetails) {
 		this.businessDetails = businessDetails;
 	}
 
-	public Set<AddressDetailsDTO> getAddressDetails() {
+	public List<AddressDetailsDTO> getAddressDetails() {
 		return addressDetails;
 	}
 
-	public void setAddressDetails(Set<AddressDetailsDTO> addressDetails) {
+	public void setAddressDetails(List<AddressDetailsDTO> addressDetails) {
 		this.addressDetails = addressDetails;
 	}
 
-	public Set<BankAccountDetailsDTO> getBankAccountDetails() {
+	public List<BankAccountDetailsDTO> getBankAccountDetails() {
 		return bankAccountDetails;
 	}
 
-	public void setBankAccountDetails(Set<BankAccountDetailsDTO> bankAccountDetails) {
+	public void setBankAccountDetails(List<BankAccountDetailsDTO> bankAccountDetails) {
 		this.bankAccountDetails = bankAccountDetails;
 	}
 
-	public Set<AttachmentDetails> getAttachmentDetails() {
+	public List<AttachmentDetails> getAttachmentDetails() {
 		return attachmentDetails;
 	}
 
-	public void setAttachmentDetails(Set<AttachmentDetails> attachmentDetails) {
+	public void setAttachmentDetails(List<AttachmentDetails> attachmentDetails) {
 		this.attachmentDetails = attachmentDetails;
+	}
+
+	public String getAlternateMobileNumber() {
+		return alternateMobileNumber;
+	}
+
+	public void setAlternateMobileNumber(String alternateMobileNumber) {
+		this.alternateMobileNumber = alternateMobileNumber;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getRetailerId() {
+		return retailerId;
+	}
+
+	public void setRetailerId(String retailerId) {
+		this.retailerId = retailerId;
 	}
 
 }

@@ -17,7 +17,7 @@ import javax.persistence.Table;
 import co.yabx.kyc.app.entity.entityListener.AccountStatusesTrackerListener;
 import co.yabx.kyc.app.enums.AccountStatus;
 import co.yabx.kyc.app.enums.AmlCftStatus;
-import co.yabx.kyc.app.enums.KycVerified;
+import co.yabx.kyc.app.enums.KycStatus;
 
 @Entity
 @EntityListeners({ AccountStatusesTrackerListener.class })
@@ -37,7 +37,7 @@ public class AccountStatuses implements Serializable {
 
 	@Column(name = "kyc_verified", nullable = false, columnDefinition = "varchar(32) default 'NO'")
 	@Enumerated(value = EnumType.STRING)
-	private KycVerified KycVerified;
+	private KycStatus KycVerified;
 
 	@Column(name = "aml_cft_status", nullable = false, columnDefinition = "varchar(32) default 'NO'")
 	@Enumerated(value = EnumType.STRING)
@@ -144,11 +144,11 @@ public class AccountStatuses implements Serializable {
 		this.transactionStatus = transactionStatus;
 	}
 
-	public KycVerified getKycVerified() {
+	public KycStatus getKycVerified() {
 		return KycVerified;
 	}
 
-	public void setKycVerified(KycVerified kycVerified) {
+	public void setKycVerified(KycStatus kycVerified) {
 		KycVerified = kycVerified;
 	}
 

@@ -100,7 +100,7 @@ public class BusinessDetails implements Serializable {
 	private double valueOfFixedAssets;
 
 	@Column(name = "employees")
-	private short numberOfEmployees;
+	private int numberOfEmployees;
 
 	@Column(name = "stock_value")
 	private double stockValue;
@@ -314,7 +314,7 @@ public class BusinessDetails implements Serializable {
 		this.valueOfFixedAssets = valueOfFixedAssets;
 	}
 
-	public short getNumberOfEmployees() {
+	public int getNumberOfEmployees() {
 		return numberOfEmployees;
 	}
 

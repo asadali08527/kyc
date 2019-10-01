@@ -15,6 +15,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import co.yabx.kyc.app.enums.BankAccountIdentifier;
 import co.yabx.kyc.app.enums.BankAccountType;
 
 @Entity
@@ -41,6 +42,9 @@ public class BankAccountDetails implements Serializable {
 	@Column(name = "account_type")
 	private BankAccountType bankAccountType;
 
+	@Column(name = "account_identifier")
+	private BankAccountIdentifier bankAccountIdentifier;
+
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
 	User user;
 
@@ -61,6 +65,14 @@ public class BankAccountDetails implements Serializable {
 
 	public Long getId() {
 		return id;
+	}
+
+	public BankAccountIdentifier getBankAccountIdentifier() {
+		return bankAccountIdentifier;
+	}
+
+	public void setBankAccountIdentifier(BankAccountIdentifier bankAccountIdentifier) {
+		this.bankAccountIdentifier = bankAccountIdentifier;
 	}
 
 	public void setId(Long id) {

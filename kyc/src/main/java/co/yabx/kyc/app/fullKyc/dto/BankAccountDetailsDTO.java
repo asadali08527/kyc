@@ -3,6 +3,7 @@ package co.yabx.kyc.app.fullKyc.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import co.yabx.kyc.app.enums.BankAccountIdentifier;
 import co.yabx.kyc.app.enums.BankAccountType;
 
 public class BankAccountDetailsDTO implements Serializable {
@@ -22,6 +23,8 @@ public class BankAccountDetailsDTO implements Serializable {
 	private UserDTO user;
 
 	private BusinessDetailsDTO businessDetails;
+
+	private BankAccountIdentifier bankAccountIdentifier;
 
 	private Date createdAt;
 
@@ -125,6 +128,14 @@ public class BankAccountDetailsDTO implements Serializable {
 
 	public void setBusinessDetails(BusinessDetailsDTO businessDetails) {
 		this.businessDetails = businessDetails;
+	}
+
+	public BankAccountIdentifier getBankAccountIdentifier() {
+		return bankAccountIdentifier;
+	}
+
+	public void setBankAccountIdentifier(BankAccountIdentifier bankAccountIdentifier) {
+		this.bankAccountIdentifier = bankAccountIdentifier;
 	}
 
 }

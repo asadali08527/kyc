@@ -16,7 +16,7 @@ import co.yabx.kyc.app.dto.AccountStatusDTO;
 import co.yabx.kyc.app.dto.dtoHelper.AccountStatusesDtoHelper;
 import co.yabx.kyc.app.enums.AccountStatus;
 import co.yabx.kyc.app.enums.AmlCftStatus;
-import co.yabx.kyc.app.enums.KycVerified;
+import co.yabx.kyc.app.enums.KycStatus;
 import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
 import co.yabx.kyc.app.miniKyc.entity.AccountStatusesTrackers;
 import co.yabx.kyc.app.miniKyc.entity.KycDetails;
@@ -66,20 +66,20 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 						if (forcefully) {
 							accountStatuses.setKycVerified(
 									accountStatuses.getKycVerified() != null ? accountStatuses.getKycVerified()
-											: KycVerified.NO);
+											: KycStatus.NO);
 						} else {
-							accountStatuses.setKycVerified(accountStatusDTO.getKycVerified() == null ? KycVerified.NO
+							accountStatuses.setKycVerified(accountStatusDTO.getKycVerified() == null ? KycStatus.NO
 									: accountStatusDTO.getKycVerified());
 						}
 						if (forcefully) {
 							accountStatuses.setAccountStatus(accountStatusDTO.getAccountStatus());
 						} else if (AmlCftStatus.NO.equals(accountStatuses.getAmlCftStatus())) {
 							if (accountStatuses.isKycAvailable()
-									&& (KycVerified.YES.equals(accountStatuses.getKycVerified())
-											|| KycVerified.NO.equals(accountStatuses.getKycVerified()))) {
+									&& (KycStatus.YES.equals(accountStatuses.getKycVerified())
+											|| KycStatus.NO.equals(accountStatuses.getKycVerified()))) {
 								accountStatuses.setAccountStatus(AccountStatus.ACTIVE);
 							} else if (accountStatuses.isKycAvailable()
-									&& KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
+									&& KycStatus.REJECTED.equals(accountStatuses.getKycVerified())) {
 								accountStatuses.setAccountStatus(AccountStatus.BLOCKED);
 							}
 						} else if (AmlCftStatus.YES.equals(accountStatuses.getAmlCftStatus())) {
@@ -87,11 +87,11 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 						} else {
 							try {
 								if (accountStatuses.isKycAvailable()
-										&& (KycVerified.YES.equals(accountStatuses.getKycVerified())
-												|| KycVerified.NO.equals(accountStatuses.getKycVerified()))) {
+										&& (KycStatus.YES.equals(accountStatuses.getKycVerified())
+												|| KycStatus.NO.equals(accountStatuses.getKycVerified()))) {
 									accountStatuses.setAccountStatus(AccountStatus.ACTIVE);
 								} else if (accountStatuses.isKycAvailable()
-										&& KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
+										&& KycStatus.REJECTED.equals(accountStatuses.getKycVerified())) {
 									accountStatuses.setAccountStatus(AccountStatus.BLOCKED);
 								} else if (accountStatusDTO.getAccountStatus() != null)
 									accountStatuses.setAccountStatus(
@@ -152,7 +152,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 		else
 			accountStatuses.setAccountStatus(AccountStatus.NEW);
 		accountStatuses.setAmlCftStatus(AmlCftStatus.NO);
-		accountStatuses.setKycVerified(KycVerified.NO);
+		accountStatuses.setKycVerified(KycStatus.NO);
 		accountStatuses.setCreatedBy(createdBy);
 		accountStatuses = accountStatusesRepository.save(accountStatuses);
 		return accountStatuses;
@@ -237,7 +237,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 								+ appConfigService.getProperty("REASON_IF_AML_CFT_STATUS_IS_YES", "DUE TO AML/CFT")
 								+ ",Date:-" + new Date());
 			LOGGER.info("Account={} status has been updated from new to blocked", accountStatuses.getMsisdn());
-		} else if (accountStatuses.isKycAvailable() && KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
+		} else if (accountStatuses.isKycAvailable() && KycStatus.REJECTED.equals(accountStatuses.getKycVerified())) {
 			updateAccountStatus(accountStatuses, AccountStatus.BLOCKED,
 					appConfigService.getProperty("REASON_IF_KYC_IS_REJECTED", "KYC REJECTED"), "SYSTEM CRON JOB");
 			if (statusTrackers != null)
@@ -246,7 +246,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 								+ appConfigService.getProperty("REASON_IF_KYC_IS_REJECTED", "KYC REJECTED") + ",Date:-"
 								+ new Date());
 			LOGGER.info("Account={} status has been updated from new to blocked", accountStatuses.getMsisdn());
-		} else if (accountStatuses.isKycAvailable() && !KycVerified.REJECTED.equals(accountStatuses.getKycVerified())) {
+		} else if (accountStatuses.isKycAvailable() && !KycStatus.REJECTED.equals(accountStatuses.getKycVerified())) {
 			updateAccountStatus(accountStatuses, AccountStatus.ACTIVE,
 					appConfigService.getProperty("REASON_IF_KYC_IS_AVAILABLE_BUT_NOT_VERIFIED",
 							"KYC IS AVAILABLE, BUT NEITHER VERIFIED NOR REJECTED"),

@@ -39,6 +39,9 @@ public class User implements Serializable {
 	@Column(name = "msisdn")
 	private String msisdn;
 
+	@Column(name = "alternate_msisdn")
+	private String alternateMobileNumber;
+
 	@Column(name = "first_name")
 	private String firstName;
 
@@ -57,7 +60,7 @@ public class User implements Serializable {
 	 * Date of birth
 	 */
 	@Column(name = "dob")
-	private Long dob;
+	private String dob;
 	/**
 	 * Place of birth
 	 */
@@ -89,7 +92,7 @@ public class User implements Serializable {
 	private MaritalStatuses maritalStatus;
 
 	@Column(name = "dependents")
-	private short numberOfDependents;
+	private int numberOfDependents;
 
 	@Column(name = "sister_concerned_or_allied")
 	private String sisterConcernedOrAllied;
@@ -116,7 +119,7 @@ public class User implements Serializable {
 	private String drivingLicenseNumber;
 
 	@Column(name = "passport_expiry_date")
-	private Long passportExpiryDate;
+	private String passportExpiryDate;
 
 	@Column(name = "business_name")
 	private String businessName;
@@ -258,14 +261,6 @@ public class User implements Serializable {
 		this.updatedAt = updatedAt;
 	}
 
-	public Long getDob() {
-		return dob;
-	}
-
-	public void setDob(Long dob) {
-		this.dob = dob;
-	}
-
 	public String getPob() {
 		return pob;
 	}
@@ -338,11 +333,11 @@ public class User implements Serializable {
 		this.maritalStatus = maritalStatus;
 	}
 
-	public short getNumberOfDependents() {
+	public int getNumberOfDependents() {
 		return numberOfDependents;
 	}
 
-	public void setNumberOfDependents(short numberOfDependents) {
+	public void setNumberOfDependents(int numberOfDependents) {
 		this.numberOfDependents = numberOfDependents;
 	}
 
@@ -368,6 +363,22 @@ public class User implements Serializable {
 
 	public void setResidentialStatus(ResidentStatus residentialStatus) {
 		this.residentialStatus = residentialStatus;
+	}
+
+	public String getAlternateMobileNumber() {
+		return alternateMobileNumber;
+	}
+
+	public void setAlternateMobileNumber(String alternateMobileNumber) {
+		this.alternateMobileNumber = alternateMobileNumber;
+	}
+
+	public String getDob() {
+		return dob;
+	}
+
+	public void setDob(String dob) {
+		this.dob = dob;
 	}
 
 	public String getTaxIdentificationNumber() {
@@ -410,11 +421,11 @@ public class User implements Serializable {
 		this.drivingLicenseNumber = drivingLicenseNumber;
 	}
 
-	public Long getPassportExpiryDate() {
+	public String getPassportExpiryDate() {
 		return passportExpiryDate;
 	}
 
-	public void setPassportExpiryDate(Long passportExpiryDate) {
+	public void setPassportExpiryDate(String passportExpiryDate) {
 		this.passportExpiryDate = passportExpiryDate;
 	}
 
