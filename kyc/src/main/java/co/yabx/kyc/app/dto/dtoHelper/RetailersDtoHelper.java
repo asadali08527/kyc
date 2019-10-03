@@ -33,6 +33,7 @@ import co.yabx.kyc.app.fullKyc.dto.LicenseDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
+import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.miniKyc.entity.KycDetails;
 import co.yabx.kyc.app.miniKyc.entity.KycDocuments;
 import co.yabx.kyc.app.util.EncoderDecoderUtil;
@@ -49,7 +50,7 @@ public class RetailersDtoHelper implements Serializable {
 		return loginDTO;
 	}
 
-	public static ResponseDTO getSummary() {
+	public static ResponseDTO getSummary(List<Retailers> retailers2) {
 		ResponseDTO loginDTO = getResponseDTO(null, "SUCCESS", "200", null);
 		List<RetailersDTO> retailers = new ArrayList<RetailersDTO>();
 		RetailersDTO retailersDTO = new RetailersDTO();

@@ -2,6 +2,7 @@ package co.yabx.kyc.app.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -26,8 +27,10 @@ import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
+import co.yabx.kyc.app.fullKyc.entity.DsrRetailersRelationships;
 import co.yabx.kyc.app.fullKyc.entity.Nominees;
 import co.yabx.kyc.app.fullKyc.entity.Retailers;
+import co.yabx.kyc.app.fullKyc.repository.DsrRetailersRelationshipsRepository;
 import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.repositories.OtpRepository;
@@ -54,12 +57,25 @@ public class RetailerServiceImpl implements RetailerService {
 	@Autowired
 	private RetailersRepository retailersRepository;
 
+	@Autowired
+	private DsrRetailersRelationshipsRepository dsrRetailersRelationshipsRepository;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetailerServiceImpl.class);
 
 	@Override
 	public ResponseDTO getSummaries(RetailerRequestDTO retailerRequestDTO) {
-		// TODO Auto-generated method stub
-		return RetailersDtoHelper.getSummary();
+		if (retailerRequestDTO != null && retailerRequestDTO.getDsrMSISDN() != null
+				&& !retailerRequestDTO.getDsrMSISDN().isEmpty()) {
+			List<DsrRetailersRelationships> dsrRetailersRelationships = dsrRetailersRelationshipsRepository
+					.findAllByDsrMsisdn(retailerRequestDTO.getDsrMSISDN());
+			if (dsrRetailersRelationships != null && !dsrRetailersRelationships.isEmpty()) {
+				List<Retailers> retailers = dsrRetailersRelationships.stream().map(f -> f.getRetailers())
+						.collect(Collectors.toList());
+				return RetailersDtoHelper.getSummary(retailers);
+			}
+			return RetailersDtoHelper.getResponseDTO(null, "No Retailers Found for the DSR", "404", null);
+		}
+		return RetailersDtoHelper.getResponseDTO(null, "Either DSR msisdn is missing or no data passed", "403", null);
 	}
 
 	@Override
@@ -154,8 +170,18 @@ public class RetailerServiceImpl implements RetailerService {
 
 	@Override
 	public ResponseDTO searchRetailerByDsr(String dsrMsisdn, String retailerId) {
-		// TODO Auto-generated method stub
-		return RetailersDtoHelper.getSummary();
+		if (dsrMsisdn != null && retailerId != null && !dsrMsisdn.isEmpty() && !retailerId.isEmpty()) {
+			List<DsrRetailersRelationships> dsrRetailersRelationships = dsrRetailersRelationshipsRepository
+					.findAllByDsrMsisdn(dsrMsisdn);
+			if (dsrRetailersRelationships != null && !dsrRetailersRelationships.isEmpty()) {
+				List<Retailers> retailers = dsrRetailersRelationships.stream()
+						.filter(f -> f.getRetailers().getRetailerId().equalsIgnoreCase(retailerId))
+						.map(f -> f.getRetailers()).collect(Collectors.toList());
+				return RetailersDtoHelper.getSummary(retailers);
+			}
+			return RetailersDtoHelper.getResponseDTO(null, "No Retailers Found for the DSR", "404", null);
+		}
+		return RetailersDtoHelper.getResponseDTO(null, "Either DSR msisdn or retailers id is missing", "403", null);
 	}
 
 }

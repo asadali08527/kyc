@@ -12,8 +12,8 @@ import co.yabx.kyc.app.fullKyc.entity.User;
 @Repository("dsrUserRepository")
 public interface DSRUserRepository extends BaseUserRepository<DSRUser>, CrudRepository<DSRUser, Long> {
 
-	User findByYabxToken(String yabxToken);
+	DSRUser findByYabxToken(String yabxToken);
 
-	User findBymsisdn(String msisdn);
+	DSRUser findBymsisdn(String msisdn);
 
 }

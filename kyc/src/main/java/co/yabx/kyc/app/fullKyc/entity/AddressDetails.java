@@ -26,7 +26,7 @@ public class AddressDetails implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "msisdn", nullable = false)
+	@Column(name = "msisdn")
 	private String msisdn;
 
 	@Column(name = "house_number_or_street_name")
