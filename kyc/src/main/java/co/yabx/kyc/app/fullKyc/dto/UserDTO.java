@@ -6,9 +6,12 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import co.yabx.kyc.app.enums.Gender;
 import co.yabx.kyc.app.enums.MaritalStatuses;
 import co.yabx.kyc.app.enums.Nationality;
+import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.ResidentStatus;
+import co.yabx.kyc.app.fullKyc.entity.Nominees;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO implements Serializable {
@@ -32,6 +35,8 @@ public class UserDTO implements Serializable {
 	private Date createdAt;
 
 	private Date updatedAt;
+	
+	private Integer age;
 	/**
 	 * Date of birth
 	 */
@@ -41,7 +46,7 @@ public class UserDTO implements Serializable {
 	 */
 	private String pob;
 
-	private String gender;
+	private Gender gender;
 
 	private String createdBy;
 
@@ -77,8 +82,6 @@ public class UserDTO implements Serializable {
 
 	private String passportExpiryDate;
 
-	private String businessName;
-
 	private String experience;
 
 	private String businessAddress;
@@ -99,7 +102,11 @@ public class UserDTO implements Serializable {
 
 	private List<AttachmentDetailsDTO> attachmentDetails;
 
+	private List<UserDTO> nomineesDetails;
+
 	private String retailerPhoto;
+	
+	private Relationship relationship;
 
 	public Long getId() {
 		return id;
@@ -197,11 +204,11 @@ public class UserDTO implements Serializable {
 		this.pob = pob;
 	}
 
-	public String getGender() {
+	public Gender getGender() {
 		return gender;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 
@@ -341,14 +348,6 @@ public class UserDTO implements Serializable {
 		this.passportExpiryDate = passportExpiryDate;
 	}
 
-	public String getBusinessName() {
-		return businessName;
-	}
-
-	public void setBusinessName(String businessName) {
-		this.businessName = businessName;
-	}
-
 	public String getExperience() {
 		return experience;
 	}
@@ -435,6 +434,30 @@ public class UserDTO implements Serializable {
 
 	public void setRetailerPhoto(String retailerPhoto) {
 		this.retailerPhoto = retailerPhoto;
+	}
+
+	public List<UserDTO> getNomineesDetails() {
+		return nomineesDetails;
+	}
+
+	public void setNomineesDetails(List<UserDTO> nomineesDetails) {
+		this.nomineesDetails = nomineesDetails;
+	}
+
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public Relationship getRelationship() {
+		return relationship;
+	}
+
+	public void setRelationship(Relationship relationship) {
+		this.relationship = relationship;
 	}
 
 }

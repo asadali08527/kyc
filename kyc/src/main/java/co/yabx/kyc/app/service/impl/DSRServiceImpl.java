@@ -18,6 +18,7 @@ import co.yabx.kyc.app.enums.DsrProfileStatus;
 import co.yabx.kyc.app.enums.OtpType;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.repositories.OtpRepository;
+import co.yabx.kyc.app.service.AdminService;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.DSRService;
 import co.yabx.kyc.app.service.OtpService;
@@ -32,7 +33,7 @@ import co.yabx.kyc.app.util.UtilHelper;
 public class DSRServiceImpl implements DSRService {
 
 	@Autowired
-	private UserRepository userRepository;
+	private AdminService adminService;
 
 	@Autowired
 	private AppConfigService appConfigService;
@@ -48,13 +49,15 @@ public class DSRServiceImpl implements DSRService {
 	@Override
 	public ResponseDTO verifyOTP(VerifyOtpDTO verifyOtpDTO) {
 		// TODO Auto-generated method stub
-		return DsrDtoHelper.getLoginDTO("", "SUCCESS", "200", DsrProfileStatus.NEW);
+		ResponseDTO responseDTO = DsrDtoHelper.getLoginDTO("", "SUCCESS", "200", DsrProfileStatus.NEW);
+		responseDTO.setAuthInfo(adminService.prepareTokenAndKey(null, verifyOtpDTO.getDsrMSISDN()));
+		return responseDTO;
 	}
 
 	@Override
 	public ResponseDTO submitDsrProfile(DsrProfileDTO dsrProfileDTO) {
 		// TODO Auto-generated method stub
-		return null;
+		return DsrDtoHelper.getLoginDTO(null, "SUCCESS", "200", DsrProfileStatus.NEW);
 	}
 
 }

@@ -12,6 +12,24 @@ public class RetailersDTO implements Serializable {
 	private String merchantName;
 	private KycStatus kycStatus;
 	private String comments;
+	private String retailerId;
+	private String dsrMsisdn;
+
+	public String getRetailerId() {
+		return retailerId;
+	}
+
+	public void setRetailerId(String retailerId) {
+		this.retailerId = retailerId;
+	}
+
+	public String getDsrMsisdn() {
+		return dsrMsisdn;
+	}
+
+	public void setDsrMsisdn(String dsrMsisdn) {
+		this.dsrMsisdn = dsrMsisdn;
+	}
 
 	public String getMerchantId() {
 		return merchantId;

@@ -3,17 +3,15 @@ package co.yabx.kyc.app.fullKyc.dto;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
-import co.yabx.kyc.app.fullKyc.entity.User;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BusinessDetailsDTO implements Serializable {
 
 	private Long id;
+
+	private String retailerId;
 
 	private String businessPhone;
 
@@ -50,7 +48,7 @@ public class BusinessDetailsDTO implements Serializable {
 
 	private String vatRegistrationNumber;
 
-	private Long businessStartDate;
+	private String businessStartDate;
 
 	private String businessTin;
 
@@ -226,11 +224,11 @@ public class BusinessDetailsDTO implements Serializable {
 		this.vatRegistrationNumber = vatRegistrationNumber;
 	}
 
-	public Long getBusinessStartDate() {
+	public String getBusinessStartDate() {
 		return businessStartDate;
 	}
 
-	public void setBusinessStartDate(Long businessStartDate) {
+	public void setBusinessStartDate(String businessStartDate) {
 		this.businessStartDate = businessStartDate;
 	}
 
@@ -384,6 +382,14 @@ public class BusinessDetailsDTO implements Serializable {
 
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+
+	public String getRetailerId() {
+		return retailerId;
+	}
+
+	public void setRetailerId(String retailerId) {
+		this.retailerId = retailerId;
 	}
 
 }

@@ -15,10 +15,14 @@ import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.BankAccountIdentifier;
 import co.yabx.kyc.app.enums.BankAccountType;
 import co.yabx.kyc.app.enums.DsrProfileStatus;
+import co.yabx.kyc.app.enums.Gender;
 import co.yabx.kyc.app.enums.KycStatus;
+import co.yabx.kyc.app.enums.LiabilityType;
 import co.yabx.kyc.app.enums.LicenseType;
 import co.yabx.kyc.app.enums.MaritalStatuses;
+import co.yabx.kyc.app.enums.Nationality;
 import co.yabx.kyc.app.enums.Relationship;
+import co.yabx.kyc.app.enums.ResidentStatus;
 import co.yabx.kyc.app.fullKyc.dto.AddressDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.BankAccountDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
@@ -36,7 +40,7 @@ import co.yabx.kyc.app.util.MaskUtil;
 
 public class RetailersDtoHelper implements Serializable {
 
-	public static ResponseDTO getLoginDTO(String msisdn, String status, String statusCode,
+	public static ResponseDTO getResponseDTO(String msisdn, String status, String statusCode,
 			DsrProfileStatus dsrProfileStatus) {
 		ResponseDTO loginDTO = new ResponseDTO();
 		loginDTO.setMessage(status);
@@ -45,8 +49,8 @@ public class RetailersDtoHelper implements Serializable {
 		return loginDTO;
 	}
 
-	public static ResponseDTO getSummary(RetailerRequestDTO retailerRequestDTO) {
-		ResponseDTO loginDTO = getLoginDTO(null, "SUCCESS", "200", null);
+	public static ResponseDTO getSummary() {
+		ResponseDTO loginDTO = getResponseDTO(null, "SUCCESS", "200", null);
 		List<RetailersDTO> retailers = new ArrayList<RetailersDTO>();
 		RetailersDTO retailersDTO = new RetailersDTO();
 		retailersDTO.setMerchantId("123");
@@ -54,12 +58,19 @@ public class RetailersDtoHelper implements Serializable {
 		retailersDTO.setKycStatus(KycStatus.NEW);
 		retailersDTO.setComments("n/a");
 		retailers.add(retailersDTO);
+		RetailersDTO retailersDTO2 = new RetailersDTO();
+		retailersDTO2.setMerchantId("2343");
+		retailersDTO2.setMerchantName("adocbc");
+		retailersDTO2.setKycStatus(KycStatus.APPROVED);
+		retailersDTO2.setComments("all ok");
+		retailers.add(retailersDTO2);
 		loginDTO.setRetailers(retailers);
+		loginDTO.setTotalCount(2);
 		return loginDTO;
 	}
 
 	public static ResponseDTO getCompletRetailerInfo(String dsrMsisdn, String merchantId) {
-		ResponseDTO loginDTO = getLoginDTO(null, "SUCCESS", "200", null);
+		ResponseDTO loginDTO = getResponseDTO(null, "SUCCESS", "200", null);
 		UserDTO userDto = new UserDTO();
 		userDto.setName("asad");
 		userDto.setDob("09/26/2000");
@@ -70,6 +81,21 @@ public class RetailersDtoHelper implements Serializable {
 		userDto.setSpouseName("LMN");
 		userDto.setNumberOfDependents(0);
 		userDto.setRetailerPhoto("");
+		userDto.setAlternateMobileNumber("9876543210");
+		userDto.setBirthRegistrationNumber("AP987GHM2562");
+		userDto.setDrivingLicenseNumber("90KL9772L");
+		userDto.setEmail("abc@abc.com");
+		userDto.setGender(Gender.MALE);
+		userDto.setId(19876l);
+		userDto.setMsisdn("9789876543");
+		userDto.setSisterConcernedOrAllied("yes");
+		userDto.setTaxIdentificationNumber("ABC876L87");
+		userDto.setResidentialStatus(ResidentStatus.CITIZEN);
+		userDto.setPassportNumber("PB8765M");
+		userDto.setPassportExpiryDate("09/26/2023");
+		userDto.setNationality(Nationality.Bangladeshi);
+		userDto.setNationalIdNumber("ABCP897L0976");
+
 		// Bank account details
 		List<BankAccountDetailsDTO> accountDetails = new ArrayList<BankAccountDetailsDTO>();
 		BankAccountDetailsDTO bankAccountDetails = new BankAccountDetailsDTO();
@@ -107,14 +133,24 @@ public class RetailersDtoHelper implements Serializable {
 		workEducationDetailsDTO.setEducationalQualification("SSC");
 		workEducationDetailsDTO.setEmployer("ABC pvt ltd");
 		workEducationDetailsDTO.setOccupation("Salesman");
+		workEducationDetailsDTO.setExperience(5);
 		workEducationDetails.add(workEducationDetailsDTO);
 		userDto.setWorkEducationDetails(workEducationDetails);
 		// Liabilities details
 		List<LiabilitiesDetailsDTO> liabilitiesDetails = new ArrayList<LiabilitiesDetailsDTO>();
 		LiabilitiesDetailsDTO liabilitiesDetailsDTO = new LiabilitiesDetailsDTO();
-		liabilitiesDetailsDTO.setBankOrNbfiName("ABC bank");
+		liabilitiesDetailsDTO.setNameOfTheOrganization("ABC bank");
+		liabilitiesDetailsDTO.setLiabilityFrom("NBFI");
+		liabilitiesDetailsDTO.setTypeOfLiablity(LiabilityType.PERSONAL);
 		liabilitiesDetailsDTO.setLoanAmount(87654);
 		liabilitiesDetails.add(liabilitiesDetailsDTO);
+
+		LiabilitiesDetailsDTO liabilitiesDetailsDTO2 = new LiabilitiesDetailsDTO();
+		liabilitiesDetailsDTO2.setNameOfTheOrganization("ICICI bank");
+		liabilitiesDetailsDTO2.setLiabilityFrom("BANK");
+		liabilitiesDetailsDTO2.setTypeOfLiablity(LiabilityType.PERSONAL);
+		liabilitiesDetailsDTO2.setLoanAmount(8349.0);
+		liabilitiesDetails.add(liabilitiesDetailsDTO2);
 		userDto.setLiabilitiesDetails(liabilitiesDetails);
 		// Business Details
 		List<BusinessDetailsDTO> businessDetails = new ArrayList<BusinessDetailsDTO>();
@@ -133,7 +169,7 @@ public class RetailersDtoHelper implements Serializable {
 		businessDetailsDTO.setBankAccountDetails(businessAccountDetails);
 		businessDetailsDTO.setBusinessName("ABC Handset finance ..");
 		businessDetailsDTO.setBusinessPhone("9876543210");
-		businessDetailsDTO.setBusinessStartDate(new Date().getTime());
+		businessDetailsDTO.setBusinessStartDate("09/26/2019");
 		businessDetailsDTO.setBusinessTin("P56689gf5");
 		businessDetailsDTO.setWithdrawls(34556.00);
 		businessDetailsDTO.setVatRegistrationNumber("9876345PLM");
@@ -179,16 +215,40 @@ public class RetailersDtoHelper implements Serializable {
 		// User Address details
 		List<AddressDetailsDTO> addressDetailsList = new ArrayList<AddressDetailsDTO>();
 		AddressDetailsDTO addressDetailsDTOs = new AddressDetailsDTO();
+		AddressDetailsDTO addressDetailsDTO1 = new AddressDetailsDTO();
+		addressDetailsDTO1.setHouseNumberOrStreetName("ABC Building");
+		addressDetailsDTO1.setAddressType(AddressType.PERMANNET);
+		addressDetailsDTO1.setArea("Dhaka");
+		addressDetailsDTO1.setCity("Dhaka");
+		addressDetailsDTO1.setRegion("North");
+		addressDetailsDTO1.setZipCode(189267);
+		addressDetailsList.add(addressDetailsDTO);
+		addressDetailsDTOs.setHouseNumberOrStreetName("PQR Building");
 		addressDetailsDTOs.setAddressType(AddressType.PRESENT);
-		addressDetailsDTOs.setAddress("BEST WESTERN La Vinchi Building,54 Kwaran Bazar, Dhaka City, 1215");
+		addressDetailsDTOs.setArea("Dhaka");
+		addressDetailsDTOs.setCity("Dhaka");
+		addressDetailsDTOs.setRegion("North");
+		addressDetailsDTOs.setZipCode(189262);
 		addressDetailsList.add(addressDetailsDTOs);
-		AddressDetailsDTO addressDetailsDTOss = new AddressDetailsDTO();
-		addressDetailsDTOss.setAddress("BEST WESTERN La Vinchi Building,54 Kwaran Bazar, Dhaka City, 1215");
-		addressDetailsDTOss.setAddressType(AddressType.PERMANNET);
-		addressDetailsList.add(addressDetailsDTOss);
 		userDto.setAddressDetails(addressDetailsList);
-		// User Bank Accoount details
+		// User Bank Account details
 		userDto.setBankAccountDetails(businessAccountDetails);
+		// Nominees details
+		List<UserDTO> nominees = new ArrayList<UserDTO>();
+		UserDTO nominee = new UserDTO();
+		nominee.setName("apm");
+		nominee.setRetailerId("2");
+		nominee.setDob("23/07/1988");
+		nominee.setAge(31);
+		nominee.setGender(Gender.FEMALE);
+		nominee.setFathersName("mls");
+		nominee.setMothersName("pdq");
+		nominee.setSpouseName("pkdls");
+		nominee.setMsisdn("123456789");
+		nominee.setWorkEducationDetails(workEducationDetails);
+		nominee.setAddressDetails(addressDetailsList);
+		nominees.add(nominee);
+		userDto.setNomineesDetails(nominees);
 		loginDTO.setRetailerInfo(userDto);
 		return loginDTO;
 	}

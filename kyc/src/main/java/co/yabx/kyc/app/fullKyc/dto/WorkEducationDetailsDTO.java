@@ -3,6 +3,8 @@ package co.yabx.kyc.app.fullKyc.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -27,6 +29,8 @@ public class WorkEducationDetailsDTO implements Serializable {
 	private String updatedBy;
 
 	private UserDTO user;
+
+	private Integer experience;
 
 	public Long getId() {
 		return id;
@@ -114,6 +118,14 @@ public class WorkEducationDetailsDTO implements Serializable {
 				+ ", employer=" + employer + ", educationalQualification=" + educationalQualification + ", createdAt="
 				+ createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
 				+ ", user=" + user + "]";
+	}
+
+	public Integer getExperience() {
+		return experience;
+	}
+
+	public void setExperience(Integer experience) {
+		this.experience = experience;
 	}
 
 }

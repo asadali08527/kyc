@@ -2,19 +2,28 @@ package co.yabx.kyc.app.fullKyc.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import co.yabx.kyc.app.fullKyc.entity.User;
+import co.yabx.kyc.app.enums.LiabilityType;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LiabilitiesDetailsDTO implements Serializable {
 
 	private Long id;
 
+	private String retailerId;
+
+	private List<LiabilitiesDetailsDTO> liabilities;
+
 	private double loanAmount;
 
-	private String bankOrNbfiName;
+	private String nameOfTheOrganization;
+
+	private String liabilityFrom;
+
+	private LiabilityType typeOfLiablity;
 
 	private Date createdAt;
 
@@ -32,14 +41,6 @@ public class LiabilitiesDetailsDTO implements Serializable {
 
 	public void setLoanAmount(double loanAmount) {
 		this.loanAmount = loanAmount;
-	}
-
-	public String getBankOrNbfiName() {
-		return bankOrNbfiName;
-	}
-
-	public void setBankOrNbfiName(String bankOrNbfiName) {
-		this.bankOrNbfiName = bankOrNbfiName;
 	}
 
 	public UserDTO getUser() {
@@ -90,11 +91,44 @@ public class LiabilitiesDetailsDTO implements Serializable {
 		this.updatedBy = updatedBy;
 	}
 
-	@Override
-	public String toString() {
-		return "LiabilitiesDetailsDTO [id=" + id + ", loanAmount=" + loanAmount + ", bankOrNbfiName=" + bankOrNbfiName
-				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", updatedBy="
-				+ updatedBy + ", user=" + user + "]";
+	public String getNameOfTheOrganization() {
+		return nameOfTheOrganization;
+	}
+
+	public void setNameOfTheOrganization(String nameOfTheOrganization) {
+		this.nameOfTheOrganization = nameOfTheOrganization;
+	}
+
+	public String getLiabilityFrom() {
+		return liabilityFrom;
+	}
+
+	public void setLiabilityFrom(String liabilityFrom) {
+		this.liabilityFrom = liabilityFrom;
+	}
+
+	public LiabilityType getTypeOfLiablity() {
+		return typeOfLiablity;
+	}
+
+	public void setTypeOfLiablity(LiabilityType typeOfLiablity) {
+		this.typeOfLiablity = typeOfLiablity;
+	}
+
+	public String getRetailerId() {
+		return retailerId;
+	}
+
+	public void setRetailerId(String retailerId) {
+		this.retailerId = retailerId;
+	}
+
+	public List<LiabilitiesDetailsDTO> getLiabilities() {
+		return liabilities;
+	}
+
+	public void setLiabilities(List<LiabilitiesDetailsDTO> liabilities) {
+		this.liabilities = liabilities;
 	}
 
 }

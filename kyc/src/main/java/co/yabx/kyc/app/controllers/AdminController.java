@@ -1,5 +1,14 @@
 package co.yabx.kyc.app.controllers;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import co.yabx.kyc.app.fullKyc.entity.User;
+import co.yabx.kyc.app.security.SecurityUtils;
+import co.yabx.kyc.app.service.AdminService;
 import co.yabx.kyc.app.service.AppConfigService;
 
 /**
@@ -22,9 +34,12 @@ import co.yabx.kyc.app.service.AppConfigService;
 @CrossOrigin
 @RequestMapping(value = "/v1")
 public class AdminController {
-	
+
 	@Autowired
 	private AppConfigService appConfigService;
+
+	@Autowired
+	private AdminService adminService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 
@@ -42,4 +57,12 @@ public class AdminController {
 
 	}
 
+	@RequestMapping(value = "/admin/generateAuthToken")
+	public ResponseEntity<?> generateAuthTokens(@RequestParam("yabxId") Long yabxId) {
+		Map<String, String> jsonResponse = adminService.getAuthToken(yabxId);
+		if (jsonResponse == null)
+			return new ResponseEntity<>("user not found or yabxId is null for this user", HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
+
+	}
 }

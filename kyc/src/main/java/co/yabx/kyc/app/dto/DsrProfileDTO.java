@@ -1,8 +1,12 @@
 package co.yabx.kyc.app.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import co.yabx.kyc.app.fullKyc.dto.AddressDetailsDTO;
+import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DsrProfileDTO implements Serializable {
@@ -15,6 +19,9 @@ public class DsrProfileDTO implements Serializable {
 	private String email;
 	private String alternateMobileNumber;
 	private String educationalQualification;
+	private String dsrMSISDN;
+	private List<AddressDetailsDTO> addressDetailsDTO;
+	private WorkEducationDetailsDTO workEducationDetailsDTO;
 
 	public String getName() {
 		return name;
@@ -86,6 +93,30 @@ public class DsrProfileDTO implements Serializable {
 
 	public void setEducationalQualification(String educationalQualification) {
 		this.educationalQualification = educationalQualification;
+	}
+
+	public String getDsrMSISDN() {
+		return dsrMSISDN;
+	}
+
+	public void setDsrMSISDN(String dsrMSISDN) {
+		this.dsrMSISDN = dsrMSISDN;
+	}
+
+	public List<AddressDetailsDTO> getAddressDetailsDTO() {
+		return addressDetailsDTO;
+	}
+
+	public void setAddressDetailsDTO(List<AddressDetailsDTO> addressDetailsDTO) {
+		this.addressDetailsDTO = addressDetailsDTO;
+	}
+
+	public WorkEducationDetailsDTO getWorkEducationDetailsDTO() {
+		return workEducationDetailsDTO;
+	}
+
+	public void setWorkEducationDetailsDTO(WorkEducationDetailsDTO workEducationDetailsDTO) {
+		this.workEducationDetailsDTO = workEducationDetailsDTO;
 	}
 
 }

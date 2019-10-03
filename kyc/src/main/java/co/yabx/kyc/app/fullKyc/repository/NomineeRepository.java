@@ -3,10 +3,11 @@ package co.yabx.kyc.app.fullKyc.repository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import co.yabx.kyc.app.fullKyc.entity.Nominees;
 import co.yabx.kyc.app.fullKyc.entity.User;
 
-@Repository("userRepository")
-public interface UserRepository extends BaseUserRepository<User>, CrudRepository<User, Long> {
+@Repository("nomineesRepository")
+public interface NomineeRepository extends BaseUserRepository<Nominees>, CrudRepository<Nominees, Long> {
 
 	User findByYabxToken(String yabxToken);
 

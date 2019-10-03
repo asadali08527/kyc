@@ -1,6 +1,7 @@
 package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 
@@ -21,6 +22,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import co.yabx.kyc.app.enums.Gender;
 import co.yabx.kyc.app.enums.MaritalStatuses;
 import co.yabx.kyc.app.enums.Nationality;
 import co.yabx.kyc.app.enums.ResidentStatus;
@@ -35,6 +37,9 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+
+	@Column(insertable = false, updatable = false)
+	private String user_type;
 
 	@Column(name = "msisdn")
 	private String msisdn;
@@ -68,7 +73,7 @@ public class User implements Serializable {
 	private String pob;
 
 	@Column(name = "gender")
-	private String gender;
+	private Gender gender;
 
 	@Column(name = "created_by")
 	private String createdBy;
@@ -92,7 +97,7 @@ public class User implements Serializable {
 	private MaritalStatuses maritalStatus;
 
 	@Column(name = "dependents")
-	private int numberOfDependents;
+	private Integer numberOfDependents;
 
 	@Column(name = "sister_concerned_or_allied")
 	private String sisterConcernedOrAllied;
@@ -120,12 +125,6 @@ public class User implements Serializable {
 
 	@Column(name = "passport_expiry_date")
 	private String passportExpiryDate;
-
-	@Column(name = "business_name")
-	private String businessName;
-
-	@Column(name = "experience")
-	private String experience;
 
 	@Column(name = "business_address")
 	private String businessAddress;
@@ -156,6 +155,20 @@ public class User implements Serializable {
 
 	@Column(name = "minor")
 	private String minor;
+
+	@Column(name = "yabx_token")
+	private String yabxToken;
+
+	@Column(name = "secret_key")
+	private String secretKey;
+
+	public String getSecretKey() {
+		return secretKey;
+	}
+
+	public void setSecretKey(String secretKey) {
+		this.secretKey = secretKey;
+	}
 
 	public Set<IncomeDetails> getIncomeDetails() {
 		return incomeDetails;
@@ -269,11 +282,11 @@ public class User implements Serializable {
 		this.pob = pob;
 	}
 
-	public String getGender() {
+	public Gender getGender() {
 		return gender;
 	}
 
-	public void setGender(String gender) {
+	public void setGender(Gender gender) {
 		this.gender = gender;
 	}
 
@@ -333,11 +346,11 @@ public class User implements Serializable {
 		this.maritalStatus = maritalStatus;
 	}
 
-	public int getNumberOfDependents() {
+	public Integer getNumberOfDependents() {
 		return numberOfDependents;
 	}
 
-	public void setNumberOfDependents(int numberOfDependents) {
+	public void setNumberOfDependents(Integer numberOfDependents) {
 		this.numberOfDependents = numberOfDependents;
 	}
 
@@ -429,22 +442,6 @@ public class User implements Serializable {
 		this.passportExpiryDate = passportExpiryDate;
 	}
 
-	public String getBusinessName() {
-		return businessName;
-	}
-
-	public void setBusinessName(String businessName) {
-		this.businessName = businessName;
-	}
-
-	public String getExperience() {
-		return experience;
-	}
-
-	public void setExperience(String experience) {
-		this.experience = experience;
-	}
-
 	public String getBusinessAddress() {
 		return businessAddress;
 	}
@@ -489,6 +486,22 @@ public class User implements Serializable {
 	private void preUpdate() {
 		updatedAt = new Date();
 
+	}
+
+	public String getYabxToken() {
+		return yabxToken;
+	}
+
+	public void setYabxToken(String yabxToken) {
+		this.yabxToken = yabxToken;
+	}
+
+	public String getUser_type() {
+		return user_type;
+	}
+
+	public void setUser_type(String user_type) {
+		this.user_type = user_type;
 	}
 
 }

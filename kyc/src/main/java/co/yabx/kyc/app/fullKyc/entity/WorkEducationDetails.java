@@ -50,6 +50,9 @@ public class WorkEducationDetails implements Serializable {
 	@Column(name = "update_by")
 	private String updatedBy;
 
+	@Column(name = "experience")
+	private Integer experience;
+
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
 	User user;
 
