@@ -162,6 +162,9 @@ public class User implements Serializable {
 	@Column(name = "secret_key")
 	private String secretKey;
 
+	@Column(length = 25)
+	private String locale;
+
 	public String getSecretKey() {
 		return secretKey;
 	}
