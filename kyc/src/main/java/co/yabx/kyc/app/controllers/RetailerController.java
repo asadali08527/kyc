@@ -1,7 +1,5 @@
 package co.yabx.kyc.app.controllers;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import co.yabx.kyc.app.dto.DsrProfileDTO;
 import co.yabx.kyc.app.dto.QuestionAnswerDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.RetailerRequestDTO;
 import co.yabx.kyc.app.dto.RetailersDTO;
-import co.yabx.kyc.app.dto.VerifyOtpDTO;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.service.AppConfigService;
-import co.yabx.kyc.app.service.DSRService;
 import co.yabx.kyc.app.service.RetailerService;
 
 /**
@@ -36,7 +31,7 @@ import co.yabx.kyc.app.service.RetailerService;
  */
 @Controller
 @CrossOrigin
-@RequestMapping(value = "/v1")
+@RequestMapping(value = "/version/v1")
 public class RetailerController {
 
 	@Autowired

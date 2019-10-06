@@ -25,7 +25,7 @@ import co.yabx.kyc.app.service.DSRService;
  */
 @Controller
 @CrossOrigin
-@RequestMapping(value = "/v1")
+@RequestMapping(value = "/version/v1")
 public class DSRController {
 
 	@Autowired

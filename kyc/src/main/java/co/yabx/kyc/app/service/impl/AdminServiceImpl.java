@@ -49,8 +49,8 @@ public class AdminServiceImpl implements AdminService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdminServiceImpl.class);
 
 	@Override
-	public Map<String, String> getAuthToken(String token) {
-		AuthInfo authInfo = authInfoRepository.findByYabxToken(token);
+	public Map<String, String> getAuthToken(String msisdn) {
+		AuthInfo authInfo = authInfoRepository.findByMsisdn(msisdn);
 		if (authInfo.getYabxToken() == null) {
 			return null;
 		}
@@ -60,7 +60,7 @@ public class AdminServiceImpl implements AdminService {
 			jsonResponse.put("YABX_ACCESS_TOKEN", SecurityUtils.encript(yabxToken));
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException
 				| BadPaddingException e) {
-			LOGGER.info("exception while encripting from admin for token {}", token);
+			LOGGER.info("exception while encripting token for msisdn={}", msisdn);
 			e.printStackTrace();
 		}
 		return jsonResponse;

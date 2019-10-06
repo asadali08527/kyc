@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -43,7 +44,7 @@ public class AdminController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 
-	@RequestMapping(value = "/appConfig/refresh")
+	@RequestMapping(value = "/appConfig/refresh", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> reloadAppConfiguration(
 			@RequestParam(value = "secret_key", required = true) String secret_key) {
@@ -53,20 +54,21 @@ public class AdminController {
 			return new ResponseEntity<>(HttpStatus.OK);
 
 		}
-		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		return new ResponseEntity<>("Invalid secret key", HttpStatus.UNAUTHORIZED);
 
 	}
 
-	/*
-	 * @RequestMapping(value = "/admin/generateAuthToken") public ResponseEntity<?>
-	 * generateAuthTokens(@RequestParam("yabxId") Long yabxId) {
-	 * 
-	 * Map<String, String> jsonResponse = adminService.getAuthToken(token) if
-	 * (jsonResponse == null) return new
-	 * ResponseEntity<>("user not found or yabxId is null for this user",
-	 * HttpStatus.NOT_FOUND); return new ResponseEntity<>(jsonResponse,
-	 * HttpStatus.OK);
-	 * 
-	 * }
-	 */
+	@RequestMapping(value = "/admin/generateAuthToken", method = RequestMethod.GET)
+	public ResponseEntity<?> generateAuthTokens(@RequestParam("msisdn") String msisdn,
+			@RequestParam(value = "secret_key", required = true) String secret_key) {
+		if (secret_key.equals(appConfigService.getProperty("GET_AUTH_TOKEN_API_PASSWORD", "magic@yabx"))) {
+			Map<String, String> jsonResponse = adminService.getAuthToken(msisdn);
+			if (jsonResponse == null)
+				return new ResponseEntity<>("user not found or msisdn is null for this user", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity<>("Invalid secret key", HttpStatus.UNAUTHORIZED);
+
+	}
+
 }
