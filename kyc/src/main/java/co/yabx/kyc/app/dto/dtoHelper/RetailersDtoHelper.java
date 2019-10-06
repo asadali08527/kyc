@@ -52,22 +52,36 @@ public class RetailersDtoHelper implements Serializable {
 
 	public static ResponseDTO getSummary(List<Retailers> retailers2) {
 		ResponseDTO loginDTO = getResponseDTO(null, "SUCCESS", "200", null);
-		List<RetailersDTO> retailers = new ArrayList<RetailersDTO>();
-		RetailersDTO retailersDTO = new RetailersDTO();
-		retailersDTO.setMerchantId("123");
-		retailersDTO.setMerchantName("abc");
-		retailersDTO.setKycStatus(KycStatus.NEW);
-		retailersDTO.setComments("n/a");
-		retailers.add(retailersDTO);
-		RetailersDTO retailersDTO2 = new RetailersDTO();
-		retailersDTO2.setMerchantId("2343");
-		retailersDTO2.setMerchantName("adocbc");
-		retailersDTO2.setKycStatus(KycStatus.APPROVED);
-		retailersDTO2.setComments("all ok");
-		retailers.add(retailersDTO2);
-		loginDTO.setRetailers(retailers);
-		loginDTO.setTotalCount(2);
-		return loginDTO;
+		List<RetailersDTO> retailersList = new ArrayList<RetailersDTO>();
+		if (retailers2 != null && !retailers2.isEmpty()) {
+			for (Retailers retailers : retailers2) {
+				RetailersDTO retailersDTO = new RetailersDTO();
+				retailersDTO.setRetailerId(retailers.getRetailerId());
+				retailersDTO.setRetailerName(retailers.getFirstName());
+				retailersDTO.setKycStatus(KycStatus.NEW);
+				retailersDTO.setComments("n/a");
+				retailersList.add(retailersDTO);
+			}
+			loginDTO.setRetailers(retailersList);
+			loginDTO.setTotalCount(retailersList.size());
+			return loginDTO;
+		} else {
+			RetailersDTO retailersDTO = new RetailersDTO();
+			retailersDTO.setRetailerId("123");
+			retailersDTO.setRetailerName("abc");
+			retailersDTO.setKycStatus(KycStatus.NEW);
+			retailersDTO.setComments("n/a");
+			retailersList.add(retailersDTO);
+			RetailersDTO retailersDTO2 = new RetailersDTO();
+			retailersDTO2.setRetailerId("2343");
+			retailersDTO2.setRetailerName("adocbc");
+			retailersDTO2.setKycStatus(KycStatus.APPROVED);
+			retailersDTO2.setComments("all ok");
+			retailersList.add(retailersDTO2);
+			loginDTO.setRetailers(retailersList);
+			loginDTO.setTotalCount(2);
+			return loginDTO;
+		}
 	}
 
 	public static ResponseDTO getCompletRetailerInfo(String dsrMsisdn, String merchantId) {

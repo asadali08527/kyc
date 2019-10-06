@@ -1,20 +1,27 @@
 package co.yabx.kyc.app.fullKyc.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "dsr_retailers", indexes = { @Index(name = "dsr_msisdn", columnList = "dsr_msisdn") })
-public class DsrRetailersRelationships {
+public class DsrRetailersRelationships implements Serializable {
+
+	private static final long serialVersionUID = -69011539363185L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,8 +30,9 @@ public class DsrRetailersRelationships {
 	@Column(name = "dsr_msisdn")
 	private String dsrMsisdn;
 
-	@Column(name = "ratailer")
-	private Retailers retailers;
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Retailers.class)
+	@JsonIgnore
+	Retailers retailers;
 
 	@Column(name = "created_at")
 	private Date createdAt;

@@ -8,11 +8,10 @@ import co.yabx.kyc.app.enums.KycStatus;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RetailersDTO implements Serializable {
-	private String merchantId;
-	private String merchantName;
+	private String retailerId;
+	private String retailerName;
 	private KycStatus kycStatus;
 	private String comments;
-	private String retailerId;
 	private String dsrMsisdn;
 
 	public String getRetailerId() {
@@ -31,22 +30,6 @@ public class RetailersDTO implements Serializable {
 		this.dsrMsisdn = dsrMsisdn;
 	}
 
-	public String getMerchantId() {
-		return merchantId;
-	}
-
-	public void setMerchantId(String merchantId) {
-		this.merchantId = merchantId;
-	}
-
-	public String getMerchantName() {
-		return merchantName;
-	}
-
-	public void setMerchantName(String merchantName) {
-		this.merchantName = merchantName;
-	}
-
 	public KycStatus getKycStatus() {
 		return kycStatus;
 	}
@@ -61,6 +44,14 @@ public class RetailersDTO implements Serializable {
 
 	public void setComments(String comments) {
 		this.comments = comments;
+	}
+
+	public String getRetailerName() {
+		return retailerName;
+	}
+
+	public void setRetailerName(String retailerName) {
+		this.retailerName = retailerName;
 	}
 
 }

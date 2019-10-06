@@ -67,7 +67,7 @@ public class RetailerServiceImpl implements RetailerService {
 		if (retailerRequestDTO != null && retailerRequestDTO.getDsrMSISDN() != null
 				&& !retailerRequestDTO.getDsrMSISDN().isEmpty()) {
 			List<DsrRetailersRelationships> dsrRetailersRelationships = dsrRetailersRelationshipsRepository
-					.findAllByDsrMsisdn(retailerRequestDTO.getDsrMSISDN());
+					.findByDsrMsisdn(retailerRequestDTO.getDsrMSISDN());
 			if (dsrRetailersRelationships != null && !dsrRetailersRelationships.isEmpty()) {
 				List<Retailers> retailers = dsrRetailersRelationships.stream().map(f -> f.getRetailers())
 						.collect(Collectors.toList());
@@ -174,7 +174,7 @@ public class RetailerServiceImpl implements RetailerService {
 	public ResponseDTO searchRetailerByDsr(String dsrMsisdn, String retailerId) {
 		if (dsrMsisdn != null && retailerId != null && !dsrMsisdn.isEmpty() && !retailerId.isEmpty()) {
 			List<DsrRetailersRelationships> dsrRetailersRelationships = dsrRetailersRelationshipsRepository
-					.findAllByDsrMsisdn(dsrMsisdn);
+					.findByDsrMsisdn(dsrMsisdn);
 			if (dsrRetailersRelationships != null && !dsrRetailersRelationships.isEmpty()) {
 				List<Retailers> retailers = dsrRetailersRelationships.stream()
 						.filter(f -> f.getRetailers().getRetailerId().equalsIgnoreCase(retailerId))

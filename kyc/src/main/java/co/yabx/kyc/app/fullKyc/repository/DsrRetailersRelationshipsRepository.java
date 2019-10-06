@@ -10,6 +10,6 @@ import co.yabx.kyc.app.fullKyc.entity.DsrRetailersRelationships;
 @Repository("dsrRetailersRelationshipsRepository")
 public interface DsrRetailersRelationshipsRepository extends CrudRepository<DsrRetailersRelationships, Long> {
 
-	List<DsrRetailersRelationships> findAllByDsrMsisdn(String dsrMSISDN);
+	List<DsrRetailersRelationships> findByDsrMsisdn(String dsrMSISDN);
 
 }
