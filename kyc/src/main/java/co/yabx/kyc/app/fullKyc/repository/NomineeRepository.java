@@ -9,7 +9,6 @@ import co.yabx.kyc.app.fullKyc.entity.User;
 @Repository("nomineesRepository")
 public interface NomineeRepository extends BaseUserRepository<Nominees>, CrudRepository<Nominees, Long> {
 
-	User findByYabxToken(String yabxToken);
 
 	User findBymsisdn(String msisdn);
 

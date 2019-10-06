@@ -1,6 +1,7 @@
 package co.yabx.kyc.app.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -10,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.yabx.kyc.app.entities.OTP;
+import co.yabx.kyc.app.enums.OtpGroup;
 import co.yabx.kyc.app.enums.OtpType;
+import co.yabx.kyc.app.fullKyc.entity.DSRUser;
+import co.yabx.kyc.app.fullKyc.repository.DSRUserRepository;
 import co.yabx.kyc.app.repositories.OtpRepository;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.OtpService;
@@ -30,12 +34,20 @@ public class OtpServiceImpl implements OtpService {
 	@Autowired
 	private AppConfigService appConfigService;
 
+	@Autowired
+	private DSRUserRepository dsrUserRepository;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtpServiceImpl.class);
 
 	@Transactional
 	@Override
-	public OTP generateAndPersistOTP(Long user, OtpType otpType, Date expiryTime, String otpGroup) {
-		OTP otp = new OTP();
+	public OTP generateAndPersistOTP(Long user, OtpType otpType, Date expiryTime, OtpGroup otpGroup) {
+		OTP otp = null;
+		List<OTP> otps = otpRepository.findByUserOtpType(user, otpType);
+		if (otps == null || otps.isEmpty())
+			otp = new OTP();
+		else
+			otp = otps.get(0);
 		otp.setCreatedAt(new Date());
 		otp.setOtpType(otpType);
 		otp.setUser(user);
@@ -44,6 +56,22 @@ public class OtpServiceImpl implements OtpService {
 		otp.setOtpGroup(otpGroup);
 		otp = otpRepository.save(otp);
 		return otp;
+	}
+
+	@Override
+	public DSRUser verifyOtp(String dsrMSISDN, String otp) {
+		DSRUser dsrUser = dsrUserRepository.findBymsisdn(dsrMSISDN);
+		if (dsrUser != null) {
+			OTP otpFound = otpRepository.findByUserAndOtp(dsrUser.getId(), otp);
+			if (otpFound != null) {
+				if (otpFound.getExpiryTime().after(new Date()))
+					return dsrUser;
+				else
+					return null;
+			} else
+				return null;
+		}
+		return null;
 	}
 
 }

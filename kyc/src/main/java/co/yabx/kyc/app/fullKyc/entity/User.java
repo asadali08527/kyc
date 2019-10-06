@@ -17,11 +17,14 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import co.yabx.kyc.app.entities.AuthInfo;
 import co.yabx.kyc.app.enums.Gender;
 import co.yabx.kyc.app.enums.MaritalStatuses;
 import co.yabx.kyc.app.enums.Nationality;
@@ -30,7 +33,7 @@ import co.yabx.kyc.app.enums.ResidentStatus;
 @Entity
 @Table(name = "users", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
 		@Index(name = "created_at", columnList = "created_at"),
-		@Index(name = "created_by", columnList = "created_by") })
+		@Index(name = "auth_info_id", columnList = "auth_info_id") })
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Least normalisation strategy
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 public class User implements Serializable {
@@ -156,22 +159,12 @@ public class User implements Serializable {
 	@Column(name = "minor")
 	private String minor;
 
-	@Column(name = "yabx_token")
-	private String yabxToken;
-
-	@Column(name = "secret_key")
-	private String secretKey;
-
 	@Column(length = 25)
 	private String locale;
 
-	public String getSecretKey() {
-		return secretKey;
-	}
-
-	public void setSecretKey(String secretKey) {
-		this.secretKey = secretKey;
-	}
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "auth_info_id", referencedColumnName = "id")
+	private AuthInfo authInfo;
 
 	public Set<IncomeDetails> getIncomeDetails() {
 		return incomeDetails;
@@ -491,20 +484,28 @@ public class User implements Serializable {
 
 	}
 
-	public String getYabxToken() {
-		return yabxToken;
-	}
-
-	public void setYabxToken(String yabxToken) {
-		this.yabxToken = yabxToken;
-	}
-
 	public String getUser_type() {
 		return user_type;
 	}
 
 	public void setUser_type(String user_type) {
 		this.user_type = user_type;
+	}
+
+	public String getLocale() {
+		return locale;
+	}
+
+	public void setLocale(String locale) {
+		this.locale = locale;
+	}
+
+	public AuthInfo getAuthInfo() {
+		return authInfo;
+	}
+
+	public void setAuthInfo(AuthInfo authInfo) {
+		this.authInfo = authInfo;
 	}
 
 }

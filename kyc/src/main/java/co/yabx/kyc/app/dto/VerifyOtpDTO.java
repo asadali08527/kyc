@@ -25,4 +25,9 @@ public class VerifyOtpDTO implements Serializable {
 		this.otp = otp;
 	}
 
+	@Override
+	public String toString() {
+		return "VerifyOtpDTO [dsrMSISDN=" + dsrMSISDN + ", otp=" + otp + "]";
+	}
+
 }

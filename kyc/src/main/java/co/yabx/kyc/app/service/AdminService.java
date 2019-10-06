@@ -2,10 +2,11 @@ package co.yabx.kyc.app.service;
 
 import java.util.Map;
 
+import co.yabx.kyc.app.fullKyc.entity.DSRUser;
+
 public interface AdminService {
 
-	Map<String, String> getAuthToken(Long yabxId);
+	Map<String, String> getAuthToken(String token);
 
-	Map<String, String> prepareTokenAndKey(Long yabxId, String msisdn);
-
+	Map<String, String> prepareTokenAndKey(DSRUser dsrUser, String msisdn);
 }

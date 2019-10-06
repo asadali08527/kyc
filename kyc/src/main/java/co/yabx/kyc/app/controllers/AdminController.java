@@ -57,12 +57,16 @@ public class AdminController {
 
 	}
 
-	@RequestMapping(value = "/admin/generateAuthToken")
-	public ResponseEntity<?> generateAuthTokens(@RequestParam("yabxId") Long yabxId) {
-		Map<String, String> jsonResponse = adminService.getAuthToken(yabxId);
-		if (jsonResponse == null)
-			return new ResponseEntity<>("user not found or yabxId is null for this user", HttpStatus.NOT_FOUND);
-		return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
-
-	}
+	/*
+	 * @RequestMapping(value = "/admin/generateAuthToken") public ResponseEntity<?>
+	 * generateAuthTokens(@RequestParam("yabxId") Long yabxId) {
+	 * 
+	 * Map<String, String> jsonResponse = adminService.getAuthToken(token) if
+	 * (jsonResponse == null) return new
+	 * ResponseEntity<>("user not found or yabxId is null for this user",
+	 * HttpStatus.NOT_FOUND); return new ResponseEntity<>(jsonResponse,
+	 * HttpStatus.OK);
+	 * 
+	 * }
+	 */
 }

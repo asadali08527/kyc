@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import co.yabx.kyc.app.dto.DsrProfileDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
+import co.yabx.kyc.app.dto.VerifyOtpDTO;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.DSRService;
 
@@ -25,8 +25,8 @@ import co.yabx.kyc.app.service.DSRService;
  */
 @Controller
 @CrossOrigin
-@RequestMapping(value = "/v1")
-public class DSRController {
+@RequestMapping(value = "/auth")
+public class AuthenticationController {
 
 	@Autowired
 	private AppConfigService appConfigService;
@@ -34,12 +34,22 @@ public class DSRController {
 	@Autowired
 	private DSRService dsrService;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DSRController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationController.class);
 
-	@RequestMapping(value = "/dsr/profile", method = RequestMethod.POST)
+	@RequestMapping(value = "/dsr/otp/verify", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> submitDSRProfile(@RequestBody DsrProfileDTO dsrProfileDTO) {
-		ResponseDTO loginDTO = dsrService.submitDsrProfile(dsrProfileDTO);
+	public ResponseEntity<?> verifyOTP(@RequestBody VerifyOtpDTO verifyOtpDTO) {
+		LOGGER.info("/auth/dsr/otp/verify request recieved with request body={}", verifyOtpDTO);
+		ResponseDTO loginDTO = dsrService.verifyOTP(verifyOtpDTO);
+		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+
+	}
+
+	@RequestMapping(value = "/dsr/login/{msisdn}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> login(@PathVariable(value = "msisdn", required = true) String msisdn) {
+		LOGGER.info("/auth/dsr/login/ request recievedfor msisdn={}", msisdn);
+		ResponseDTO loginDTO = dsrService.login(msisdn);
 		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 
 	}

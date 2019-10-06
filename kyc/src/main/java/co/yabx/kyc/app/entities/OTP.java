@@ -12,6 +12,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
+import co.yabx.kyc.app.enums.OtpGroup;
 import co.yabx.kyc.app.enums.OtpType;
 
 @Entity
@@ -31,7 +32,7 @@ public class OTP implements Serializable {
 	private OtpType otpType;
 
 	@Column(name = "otp_group")
-	private String otpGroup;
+	private OtpGroup otpGroup;
 
 	@Column(name = "expiry_time")
 	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
@@ -69,14 +70,6 @@ public class OTP implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String getOtpGroup() {
-		return otpGroup;
-	}
-
-	public void setOtpGroup(String otpGroup) {
-		this.otpGroup = otpGroup;
 	}
 
 	public Date getExpiryTime() {
@@ -163,6 +156,14 @@ public class OTP implements Serializable {
 	private void preUpdate() {
 		updatedAt = new Date();
 
+	}
+
+	public OtpGroup getOtpGroup() {
+		return otpGroup;
+	}
+
+	public void setOtpGroup(OtpGroup otpGroup) {
+		this.otpGroup = otpGroup;
 	}
 
 	@Override

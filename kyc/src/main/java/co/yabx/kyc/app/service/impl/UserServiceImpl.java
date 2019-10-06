@@ -32,11 +32,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public void persistYabxTokenAndSecretKey(User user, String yabxToken, String aPI_SECRET_KEY) {
-		if (user != null) {
-			user.setYabxToken(yabxToken);
-			user.setSecretKey(aPI_SECRET_KEY);
-			userRepository.save(user);
-		}
-	}
+		/*
+		 * if (user != null) { user.setYabxToken(yabxToken);
+		 * user.setSecretKey(aPI_SECRET_KEY); userRepository.save(user); }
+		 */}
 
 }

@@ -34,7 +34,7 @@ public class SecurityUtils {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SecurityUtils.class);
 	private static final String ALGORITHM = "AES";
-	// public static String API_SECRET_KEY = "1552288939945111";
+	public static String API_SECRET_KEY = "1552288939945111";
 	public static final String FONE_VERIFY_SECRET_KEY = "6f685f236072d5040609fad3faf9d453";
 	private static final String FONE_VERIFY_ALGORITHM = "HmacSHA256";
 
@@ -48,8 +48,8 @@ public class SecurityUtils {
 	 * @throws IllegalBlockSizeException
 	 * @throws BadPaddingException
 	 */
-	public static String encript(String yabxToken, String API_SECRET_KEY) throws NoSuchAlgorithmException,
-			NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+	public static String encript(String yabxToken) throws NoSuchAlgorithmException, NoSuchPaddingException,
+			InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 		Cipher cipher = Cipher.getInstance(ALGORITHM);
 		SecretKeySpec spec = new SecretKeySpec(API_SECRET_KEY.getBytes(), ALGORITHM);
 		cipher.init(Cipher.ENCRYPT_MODE, spec);
@@ -70,11 +70,11 @@ public class SecurityUtils {
 	 * @throws BadPaddingException
 	 * @throws DecoderException
 	 */
-	public static String decript(String encodedYabxToken, String key) {
+	public static String decript(String encodedYabxToken) {
 		Cipher cipher;
 		try {
 			cipher = Cipher.getInstance(ALGORITHM);
-			SecretKeySpec spec = new SecretKeySpec(key.getBytes(), ALGORITHM);
+			SecretKeySpec spec = new SecretKeySpec(API_SECRET_KEY.getBytes(), ALGORITHM);
 			cipher.init(Cipher.DECRYPT_MODE, spec);
 			byte[] decodedBytes = Base64.decodeBase64(encodedYabxToken);
 			byte[] output = cipher.doFinal(decodedBytes);
@@ -84,7 +84,7 @@ public class SecurityUtils {
 			LOGGER.debug("exception {} raised while decoding token", e);
 		}
 		// if unable to decript token return key
-		return key;
+		return null;
 	}
 
 	public static String generateHmacSHA256(String accessToken) {

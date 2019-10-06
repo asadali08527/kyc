@@ -1,5 +1,7 @@
 package co.yabx.kyc.app.service.impl;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,7 +17,11 @@ import co.yabx.kyc.app.dto.DsrProfileDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.VerifyOtpDTO;
 import co.yabx.kyc.app.dto.dtoHelper.DsrDtoHelper;
+import co.yabx.kyc.app.entities.AuthInfo;
+import co.yabx.kyc.app.entities.OTP;
 import co.yabx.kyc.app.enums.DsrProfileStatus;
+import co.yabx.kyc.app.enums.OtpGroup;
+import co.yabx.kyc.app.enums.OtpType;
 import co.yabx.kyc.app.fullKyc.dto.AddressDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
@@ -25,6 +31,7 @@ import co.yabx.kyc.app.fullKyc.repository.DSRUserRepository;
 import co.yabx.kyc.app.service.AdminService;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.DSRService;
+import co.yabx.kyc.app.service.OtpService;
 
 /**
  * 
@@ -43,20 +50,46 @@ public class DSRServiceImpl implements DSRService {
 	@Autowired
 	private DSRUserRepository dsrUserRepository;
 
+	@Autowired
+	private OtpService otpService;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(DSRServiceImpl.class);
 
 	@Override
 	public ResponseDTO login(String msisdn) {
-		// userRepository.findByMsisdn
-		return DsrDtoHelper.getLoginDTO(msisdn, "SUCCESS", "200", null);
+		DSRUser dsrUser = dsrUserRepository.findBymsisdn(msisdn);
+		if (dsrUser != null) {
+			Calendar otpExpiryTime = Calendar.getInstance();
+			otpExpiryTime.add(Calendar.SECOND, appConfigService.getIntProperty("OTP_EXPIRY_TIME_IN_SECONDS", 300));
+			OTP otp = otpService.generateAndPersistOTP(dsrUser.getId(), OtpType.SMS, otpExpiryTime.getTime(),
+					OtpGroup.REGISTRATION);
+			// send otp code
+			return DsrDtoHelper.getLoginDTO(msisdn, "SUCCESS", "200", null);
+		} else {
+			return DsrDtoHelper.getLoginDTO(msisdn, "DSR Not Found", "404", null);
+
+		}
 	}
 
 	@Override
 	public ResponseDTO verifyOTP(VerifyOtpDTO verifyOtpDTO) {
-		// TODO Auto-generated method stub
-		ResponseDTO responseDTO = DsrDtoHelper.getLoginDTO("", "SUCCESS", "200", DsrProfileStatus.NEW);
-		responseDTO.setAuthInfo(adminService.prepareTokenAndKey(null, verifyOtpDTO.getDsrMSISDN()));
-		return responseDTO;
+		if (verifyOtpDTO != null) {
+			if (verifyOtpDTO.getOtp() != null && !verifyOtpDTO.getOtp().isEmpty()) {
+				DSRUser dsrUser = otpService.verifyOtp(verifyOtpDTO.getDsrMSISDN(), verifyOtpDTO.getOtp());
+				if (dsrUser != null) {
+					ResponseDTO responseDTO = DsrDtoHelper.getLoginDTO("", "SUCCESS", "200", DsrProfileStatus.NEW);
+					responseDTO.setAuthInfo(adminService.prepareTokenAndKey(dsrUser, verifyOtpDTO.getDsrMSISDN()));
+					return responseDTO;
+				} else {
+					return DsrDtoHelper.getLoginDTO("", "Incorrect OTP or OTP Expired", "403", null);
+				}
+			} else {
+				return DsrDtoHelper.getLoginDTO("", "Incorrect OTP or OTP Expired", "403", null);
+			}
+
+		}
+		return DsrDtoHelper.getLoginDTO("", "Incorrect OTP or OTP Expired", "403", null);
+
 	}
 
 	@Override
@@ -128,6 +161,15 @@ public class DSRServiceImpl implements DSRService {
 			return workEducationDetails;
 		}
 		return null;
+	}
+
+	@Override
+	@Transactional
+	public void updateAuthInfo(DSRUser dsrUser, AuthInfo authInfo) {
+		if (dsrUser != null && authInfo != null) {
+			dsrUser.setAuthInfo(authInfo);
+			dsrUserRepository.save(dsrUser);
+		}
 	}
 
 }

@@ -16,12 +16,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.yabx.kyc.app.fullKyc.entity.User;
-import co.yabx.kyc.app.fullKyc.repository.UserRepository;
+import co.yabx.kyc.app.entities.AuthInfo;
+import co.yabx.kyc.app.fullKyc.entity.DSRUser;
+import co.yabx.kyc.app.repositories.AuthInfoRepository;
 import co.yabx.kyc.app.security.SecurityUtils;
 import co.yabx.kyc.app.service.AdminService;
 import co.yabx.kyc.app.service.AppConfigService;
-import co.yabx.kyc.app.service.UserService;
+import co.yabx.kyc.app.service.AuthInfoService;
+import co.yabx.kyc.app.service.DSRService;
 import co.yabx.kyc.app.util.UtilHelper;
 
 /**
@@ -33,69 +35,82 @@ import co.yabx.kyc.app.util.UtilHelper;
 public class AdminServiceImpl implements AdminService {
 
 	@Autowired
-	private UserRepository userRepository;
+	private AuthInfoService authInfoService;
+
+	@Autowired
+	private AuthInfoRepository authInfoRepository;
 
 	@Autowired
 	private AppConfigService appConfigService;
 
 	@Autowired
-	private UserService userService;
+	private DSRService dsrService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdminServiceImpl.class);
 
 	@Override
-	public Map<String, String> getAuthToken(Long yabxId) {
-		Optional<User> user = userRepository.findById(yabxId);
-		if (!user.isPresent() || user.get().getYabxToken() == null) {
+	public Map<String, String> getAuthToken(String token) {
+		AuthInfo authInfo = authInfoRepository.findByYabxToken(token);
+		if (authInfo.getYabxToken() == null) {
 			return null;
 		}
-		String yabxToken = user.get().getYabxToken();
-		String API_SECRET_KEY = user.get().getSecretKey();
+		String yabxToken = authInfo.getYabxToken();
 		Map<String, String> jsonResponse = new HashMap<String, String>();
 		try {
-			jsonResponse.put("YABX_ACCESS_TOKEN", SecurityUtils.encript(yabxToken, API_SECRET_KEY));
+			jsonResponse.put("YABX_ACCESS_TOKEN", SecurityUtils.encript(yabxToken));
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException
 				| BadPaddingException e) {
-			LOGGER.info("exception while encripting from admin for yabxId {}", yabxId);
+			LOGGER.info("exception while encripting from admin for token {}", token);
 			e.printStackTrace();
 		}
 		return jsonResponse;
 	}
 
 	@Override
-	public Map<String, String> prepareTokenAndKey(Long yabxId, String msisdn) {
+	public Map<String, String> prepareTokenAndKey(DSRUser dsrUser, String userName) {
 		String yabxToken = null;
 		Map<String, String> jsonResponse = new HashMap<String, String>();
 		try {
 			String uuid = UUID.randomUUID().toString();
-			final String API_SECRET_KEY = UtilHelper
-					.getNumericString(appConfigService.getIntProperty("AES_ENCRYPTION_LENGTH", 16));
-			yabxToken = SecurityUtils.encript(uuid, API_SECRET_KEY);
+			/*
+			 * final String salt = UtilHelper
+			 * .getNumericString(appConfigService.getIntProperty("AES_ENCRYPTION_LENGTH",
+			 * 16));
+			 */
+			yabxToken = SecurityUtils.encript(uuid);
 			if (yabxToken != null) {
-				persistTokenAndKey(uuid, API_SECRET_KEY, yabxId, msisdn);
-				jsonResponse.put("YABX_ACCESS_TOKEN", yabxToken);
+				AuthInfo authInfo = persistTokenAndKey(uuid, userName, dsrUser.getMsisdn());
+				if (authInfo != null) {
+					dsrService.updateAuthInfo(dsrUser, authInfo);
+					jsonResponse.put("YABX_ACCESS_TOKEN", yabxToken);
+				}
 			}
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException
 				| BadPaddingException e) {
 			e.printStackTrace();
-			LOGGER.error("Something went wrong while encripting appLozicToken for yabxId={}, error={}", yabxId,
-					e.getMessage());
+			LOGGER.error("Something went wrong while encripting appLozicToken for yabxId={},msisdn={} error={}",
+					userName, dsrUser.getMsisdn(), e.getMessage());
 		}
 		return jsonResponse;
 	}
 
-	private void persistTokenAndKey(String uuid, String aPI_SECRET_KEY, Long yabxId, String msisdn) {
-		User user = null;
-		if (yabxId != null) {
-			Optional<User> userOptional = userRepository.findById(yabxId);
-			if (userOptional.isPresent()) {
-				user = userOptional.get();
-				userService.persistYabxTokenAndSecretKey(user, uuid, aPI_SECRET_KEY);
+	private AuthInfo persistTokenAndKey(String uuid, String userName, String msisdn) {
+		AuthInfo authInfo = null;
+		if (msisdn != null) {
+			authInfo = authInfoRepository.findByMsisdn(msisdn);
+			if (authInfo == null) {
+				authInfo = new AuthInfo();
 			}
+			authInfoService.persistYabxTokenAndSecretKey(authInfo, uuid, userName, msisdn);
 		} else {
-			user = userRepository.findBymsisdn(msisdn);
-			userService.persistYabxTokenAndSecretKey(user, uuid, aPI_SECRET_KEY);
+			Optional<AuthInfo> userOptional = authInfoRepository.findByUsername(userName);
+			if (userOptional.isPresent()) {
+				authInfo = userOptional.get();
+				authInfoService.persistYabxTokenAndSecretKey(authInfo, uuid, userName, msisdn);
+			}
+
 		}
+		return authInfo;
 
 	}
 
