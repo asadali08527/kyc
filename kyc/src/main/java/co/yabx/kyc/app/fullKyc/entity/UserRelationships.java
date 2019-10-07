@@ -7,22 +7,18 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import co.yabx.kyc.app.enums.Relationship;
 
 @Entity
-@Table(name = "user_relationships", indexes = { @Index(name = "dsr_msisdn", columnList = "dsr_msisdn") })
+@Table(name = "user_relationships", indexes = { @Index(name = "user_msisdn", columnList = "user_msisdn") })
 public class UserRelationships implements Serializable {
 
 	private static final long serialVersionUID = -69011539363185L;

@@ -1,7 +1,5 @@
 package co.yabx.kyc.app.service.impl;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,7 +21,7 @@ public class AppConfigServiceImpl implements AppConfigService {
 	private AppConfigurationRepository appConfigurationRepository;
 
 	private Map<String, String> propertyMap = new ConcurrentHashMap<>();
-	private volatile boolean isLoaded = true;
+	private volatile boolean isLoaded = false;
 
 	@Override
 	public String getProperty(String propertyName, String defaultValue) {
@@ -172,6 +170,7 @@ public class AppConfigServiceImpl implements AppConfigService {
 	public void refresh() {
 		LOGGER.info("Refreshed DbConfig");
 		Iterable<AppConfigurations> propertyList = appConfigurationRepository.findAll();
+		propertyMap.clear();
 		for (AppConfigurations dbConfig : propertyList) {
 			propertyMap.put(dbConfig.getProperty(), dbConfig.getValue());
 

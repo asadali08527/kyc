@@ -2,9 +2,6 @@ package co.yabx.kyc.app.service.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -23,7 +20,6 @@ import co.yabx.kyc.app.entities.OTP;
 import co.yabx.kyc.app.enums.DsrProfileStatus;
 import co.yabx.kyc.app.enums.OtpGroup;
 import co.yabx.kyc.app.enums.OtpType;
-import co.yabx.kyc.app.fullKyc.dto.AddressDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.DSRUser;
@@ -32,6 +28,7 @@ import co.yabx.kyc.app.fullKyc.repository.DSRUserRepository;
 import co.yabx.kyc.app.service.AdminService;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.DSRService;
+import co.yabx.kyc.app.service.EmailService;
 import co.yabx.kyc.app.service.OtpService;
 import co.yabx.kyc.app.wrappers.UserWrapper;
 
@@ -56,7 +53,7 @@ public class DSRServiceImpl implements DSRService {
 	private OtpService otpService;
 
 	@Autowired
-	private UserWrapper userWrapper;
+	private EmailService emailService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DSRServiceImpl.class);
 
@@ -137,7 +134,7 @@ public class DSRServiceImpl implements DSRService {
 	private Set<AddressDetails> prepareAddress(DsrProfileDTO dsrProfileDTO) {
 		if (dsrProfileDTO != null && dsrProfileDTO.getAddressDetailsDTO() != null
 				&& !dsrProfileDTO.getAddressDetailsDTO().isEmpty()) {
-			Set<AddressDetails> addressDetails = userWrapper.getAddressDetails(dsrProfileDTO.getAddressDetailsDTO());
+			Set<AddressDetails> addressDetails = UserWrapper.getAddressDetails(dsrProfileDTO.getAddressDetailsDTO());
 			return addressDetails;
 		}
 		return null;
@@ -145,7 +142,7 @@ public class DSRServiceImpl implements DSRService {
 
 	private Set<WorkEducationDetails> prepareWorkEducationdetails(DsrProfileDTO dsrProfileDTO) {
 		if (dsrProfileDTO != null && dsrProfileDTO.getWorkEducationDetailsDTO() != null) {
-			Set<WorkEducationDetails> workEducationDetails = userWrapper
+			Set<WorkEducationDetails> workEducationDetails = UserWrapper
 					.getWorkEducationDetails(new ArrayList<WorkEducationDetailsDTO>() {
 						{
 							add(dsrProfileDTO.getWorkEducationDetailsDTO());
@@ -186,7 +183,7 @@ public class DSRServiceImpl implements DSRService {
 			otpExpiryTime.add(Calendar.SECOND, appConfigService.getIntProperty("OTP_EXPIRY_TIME_IN_SECONDS", 300));
 			OTP otp = otpService.generateAndPersistOTP(dsrUser.getId(), OtpType.MAIL, otpExpiryTime.getTime(),
 					OtpGroup.VERIFICATION);
-			// send otp code
+			emailService.sendOTP(otp, mail);
 			return DsrDtoHelper.getLoginDTO(mail, "SUCCESS", "200", null);
 
 		}
@@ -200,8 +197,8 @@ public class DSRServiceImpl implements DSRService {
 				DSRUser dsrUser = dsrUserRepository.findBymsisdn(verifyOtpDTO.getDsrMSISDN());
 				dsrUser = otpService.verifyOtp(dsrUser, verifyOtpDTO.getOtp(), OtpType.MAIL);
 				if (dsrUser != null) {
-					ResponseDTO responseDTO = DsrDtoHelper.getLoginDTO("", "SUCCESS", "200", DsrProfileStatus.NEW);
-					responseDTO.setAuthInfo(adminService.prepareTokenAndKey(dsrUser, verifyOtpDTO.getDsrMSISDN()));
+					ResponseDTO responseDTO = DsrDtoHelper.getLoginDTO(verifyOtpDTO.getDsrMSISDN(), "SUCCESS", "200",
+							null);
 					return responseDTO;
 				} else {
 					return DsrDtoHelper.getLoginDTO("", "Incorrect OTP or OTP Expired", "403", null);

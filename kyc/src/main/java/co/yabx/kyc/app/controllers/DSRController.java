@@ -53,10 +53,18 @@ public class DSRController {
 
 	}
 
-	@RequestMapping(value = "/dsr/verify/mail", method = RequestMethod.POST)
+	@RequestMapping(value = "/dsr/verify/otp", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> verifyMail(@RequestBody VerifyOtpDTO verifyOtpDTO) {
 		ResponseDTO loginDTO = dsrService.verifyMail(verifyOtpDTO);
+		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+
+	}
+
+	@RequestMapping(value = "/dsr/verify/mail", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> generateOTP(@RequestBody VerifyOtpDTO verifyOtpDTO) {
+		ResponseDTO loginDTO = dsrService.generateMailOTP(verifyOtpDTO.getEmail());
 		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 
 	}

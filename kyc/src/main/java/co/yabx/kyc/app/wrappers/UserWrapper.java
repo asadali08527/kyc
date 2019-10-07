@@ -1,20 +1,11 @@
 package co.yabx.kyc.app.wrappers;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import co.yabx.kyc.app.enums.BankAccountIdentifier;
-import co.yabx.kyc.app.enums.BankAccountType;
-import co.yabx.kyc.app.enums.Gender;
-import co.yabx.kyc.app.enums.LiabilityType;
-import co.yabx.kyc.app.enums.LicenseType;
-import co.yabx.kyc.app.enums.MaritalStatuses;
-import co.yabx.kyc.app.enums.Nationality;
-import co.yabx.kyc.app.enums.Relationship;
-import co.yabx.kyc.app.enums.ResidentStatus;
+import org.springframework.stereotype.Service;
+
 import co.yabx.kyc.app.fullKyc.dto.AddressDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.BankAccountDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
@@ -31,13 +22,12 @@ import co.yabx.kyc.app.fullKyc.entity.IncomeDetails;
 import co.yabx.kyc.app.fullKyc.entity.IntroducerDetails;
 import co.yabx.kyc.app.fullKyc.entity.LiabilitiesDetails;
 import co.yabx.kyc.app.fullKyc.entity.LicenseDetails;
-import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
 
 public class UserWrapper {
 
-	public Set<AddressDetails> getAddressDetails(List<AddressDetailsDTO> addressDetailsDTO) {
+	public static Set<AddressDetails> getAddressDetails(List<AddressDetailsDTO> addressDetailsDTO) {
 		Set<AddressDetails> addressDetails = new HashSet<AddressDetails>();
 		for (AddressDetailsDTO detailsDTO : addressDetailsDTO) {
 			AddressDetails addressDetail = new AddressDetails();
@@ -52,7 +42,7 @@ public class UserWrapper {
 		return addressDetails;
 	}
 
-	public Set<WorkEducationDetails> getWorkEducationDetails(List<WorkEducationDetailsDTO> workEducationDetailsDTOs) {
+	public static Set<WorkEducationDetails> getWorkEducationDetails(List<WorkEducationDetailsDTO> workEducationDetailsDTOs) {
 		Set<WorkEducationDetails> workEducationDetails = new HashSet<WorkEducationDetails>();
 		for (WorkEducationDetailsDTO workEducationDetailsDTO : workEducationDetailsDTOs) {
 			WorkEducationDetails details = new WorkEducationDetails();
@@ -65,7 +55,7 @@ public class UserWrapper {
 		return workEducationDetails;
 	}
 
-	public Set<BusinessDetails> getBusinessDetails(List<BusinessDetailsDTO> businessDetailsDtos) {
+	public static Set<BusinessDetails> getBusinessDetails(List<BusinessDetailsDTO> businessDetailsDtos) {
 		Set<BusinessDetails> businessDetailsSet = new HashSet<BusinessDetails>();
 		for (BusinessDetailsDTO businessDetailsDTO : businessDetailsDtos) {
 			BusinessDetails businessDetails = new BusinessDetails();
@@ -103,7 +93,7 @@ public class UserWrapper {
 		return businessDetailsSet;
 	}
 
-	public Set<BankAccountDetails> prepareBankAccountDetails(List<BankAccountDetailsDTO> bankAccountDetails) {
+	public static Set<BankAccountDetails> prepareBankAccountDetails(List<BankAccountDetailsDTO> bankAccountDetails) {
 		Set<BankAccountDetails> businessAccountDetailsSet = new HashSet<BankAccountDetails>();
 		for (BankAccountDetailsDTO accountDetailsDTO : bankAccountDetails) {
 			BankAccountDetails businessBankAccountDetails = new BankAccountDetails();
@@ -117,7 +107,7 @@ public class UserWrapper {
 		return businessAccountDetailsSet;
 	}
 
-	public LicenseDetails prepareLicenseDetails(LicenseDetailsDTO licenseDetailsDTO) {
+	public static LicenseDetails prepareLicenseDetails(LicenseDetailsDTO licenseDetailsDTO) {
 		if (licenseDetailsDTO != null) {
 			LicenseDetails licenseDetails = new LicenseDetails();
 			licenseDetails.setLicenseExpiryDate(licenseDetailsDTO.getLicenseExpiryDate());
@@ -129,7 +119,7 @@ public class UserWrapper {
 		return null;
 	}
 
-	public Set<IncomeDetails> getIncomeDetails(List<IncomeDetailsDTO> incomeDetailsDTO) {
+	public static Set<IncomeDetails> getIncomeDetails(List<IncomeDetailsDTO> incomeDetailsDTO) {
 		Set<IncomeDetails> incomeDetailsSet = new HashSet<IncomeDetails>();
 		for (IncomeDetailsDTO detailsDTO : incomeDetailsDTO) {
 			IncomeDetails incomeDetails = new IncomeDetails();
@@ -144,7 +134,7 @@ public class UserWrapper {
 		return incomeDetailsSet;
 	}
 
-	public Set<IntroducerDetails> getIntroducerDetails(List<IntroducerDetailsDTO> introducerDetailsDTOList) {
+	public static Set<IntroducerDetails> getIntroducerDetails(List<IntroducerDetailsDTO> introducerDetailsDTOList) {
 		Set<IntroducerDetails> introducerDetailsSet = new HashSet<IntroducerDetails>();
 		for (IntroducerDetailsDTO introducerDetailsDTO : introducerDetailsDTOList) {
 			IntroducerDetails introducerDetails = new IntroducerDetails();
@@ -157,7 +147,7 @@ public class UserWrapper {
 		return introducerDetailsSet;
 	}
 
-	public Set<LiabilitiesDetails> prepareLiabilitiesDetails(List<LiabilitiesDetailsDTO> liabilitiesDetailsDTOList) {
+	public static Set<LiabilitiesDetails> prepareLiabilitiesDetails(List<LiabilitiesDetailsDTO> liabilitiesDetailsDTOList) {
 		Set<LiabilitiesDetails> liabilitiesDetailsSet = new HashSet<LiabilitiesDetails>();
 		for (LiabilitiesDetailsDTO liabilitiesDetailsDTO : liabilitiesDetailsDTOList) {
 			LiabilitiesDetails liabilitiesDetails = new LiabilitiesDetails();
@@ -170,7 +160,7 @@ public class UserWrapper {
 		return liabilitiesDetailsSet;
 	}
 
-	public User prepareUserPersonalInfo(UserDTO userDTO) {
+	public static User prepareUserPersonalInfo(UserDTO userDTO) {
 		User user = new User();
 		user.setFirstName(userDTO.getName());
 		user.setDob(userDTO.getDob());

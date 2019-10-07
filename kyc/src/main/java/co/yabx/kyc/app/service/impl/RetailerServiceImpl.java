@@ -52,9 +52,6 @@ public class RetailerServiceImpl implements RetailerService {
 	@Autowired
 	private UserRelationshipsRepository userRelationshipsRepository;
 
-	@Autowired
-	private UserWrapper userWrapper;
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetailerServiceImpl.class);
 
 	@Override
@@ -89,7 +86,7 @@ public class RetailerServiceImpl implements RetailerService {
 
 	@Override
 	public ResponseDTO submitRetailerProfile(UserDTO userDTO) {
-		Retailers retailers = (Retailers) userWrapper.prepareUserPersonalInfo(userDTO);
+		Retailers retailers = (Retailers) UserWrapper.prepareUserPersonalInfo(userDTO);
 		/*
 		 * retailers.setRetailerId(userDTO.getRetailerId());
 		 * retailers.setFirstName(userDTO.getName());
@@ -107,13 +104,13 @@ public class RetailerServiceImpl implements RetailerService {
 		 * retailers.setPassportExpiryDate(userDTO.getPassportExpiryDate());
 		 */
 		// retailers.setBankAccountDetails(getBankAccountDetails(userDTO.getBankAccountDetails()));
-		retailers.setBusinessDetails(userWrapper.getBusinessDetails(userDTO.getBusinessDetails()));
-		retailers.setAddressDetails(userWrapper.getAddressDetails(userDTO.getAddressDetails()));
-		retailers.setBankAccountDetails(userWrapper.prepareBankAccountDetails(userDTO.getBankAccountDetails()));
-		retailers.setIncomeDetails(userWrapper.getIncomeDetails(userDTO.getIncomeDetails()));
-		retailers.setIntroducerDetails(userWrapper.getIntroducerDetails(userDTO.getIntroducerDetails()));
-		retailers.setLiabilitiesDetails(userWrapper.prepareLiabilitiesDetails(userDTO.getLiabilitiesDetails()));
-		retailers.setWorkEducationDetails(userWrapper.getWorkEducationDetails(userDTO.getWorkEducationDetails()));
+		retailers.setBusinessDetails(UserWrapper.getBusinessDetails(userDTO.getBusinessDetails()));
+		retailers.setAddressDetails(UserWrapper.getAddressDetails(userDTO.getAddressDetails()));
+		retailers.setBankAccountDetails(UserWrapper.prepareBankAccountDetails(userDTO.getBankAccountDetails()));
+		retailers.setIncomeDetails(UserWrapper.getIncomeDetails(userDTO.getIncomeDetails()));
+		retailers.setIntroducerDetails(UserWrapper.getIntroducerDetails(userDTO.getIntroducerDetails()));
+		retailers.setLiabilitiesDetails(UserWrapper.prepareLiabilitiesDetails(userDTO.getLiabilitiesDetails()));
+		retailers.setWorkEducationDetails(UserWrapper.getWorkEducationDetails(userDTO.getWorkEducationDetails()));
 		userRepository.save(retailers);
 		return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
 	}
@@ -134,7 +131,7 @@ public class RetailerServiceImpl implements RetailerService {
 
 	@Override
 	public ResponseDTO submitRetailerNomineeProfile(UserDTO userDTO) {
-		Nominees retailers = (Nominees) userWrapper.prepareUserPersonalInfo(userDTO);
+		Nominees retailers = (Nominees) UserWrapper.prepareUserPersonalInfo(userDTO);
 		/*
 		 * retailers.setFirstName(userDTO.getName());
 		 * retailers.setDob(userDTO.getDob()); retailers.setPob(userDTO.getPob());
