@@ -16,4 +16,6 @@ public interface DSRService {
 
 	void updateAuthInfo(DSRUser dsrUser, AuthInfo authInfo);
 
+	ResponseDTO logout(String msisdn);
+
 }

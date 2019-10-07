@@ -114,4 +114,17 @@ public class AdminServiceImpl implements AdminService {
 
 	}
 
+	@Override
+	public void resetYabxToken(AuthInfo authInfo) {
+		if (authInfo != null) {
+			authInfo.setYabxToken(null);
+			authInfo.setCredentialsNonExpired(false);
+			authInfo.setCredentialsNonExpired(false);
+			authInfo.setAccountNonLocked(false);
+			authInfo.setAccountNonExpired(false);
+			authInfo.setEnabled(false);
+			authInfoRepository.save(authInfo);
+		}
+	}
+
 }

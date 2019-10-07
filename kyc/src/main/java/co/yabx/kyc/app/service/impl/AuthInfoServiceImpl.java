@@ -62,6 +62,10 @@ public class AuthInfoServiceImpl implements AuthInfoService {
 			authInfo.setMsisdn(msisdn);
 			authInfo.setUsername(userName);
 			authInfo.setYabxToken(uuid);
+			authInfo.setCredentialsNonExpired(true);
+			authInfo.setAccountNonLocked(true);
+			authInfo.setAccountNonExpired(true);
+			authInfo.setEnabled(true);
 			authInfo = authInfoRepository.save(authInfo);
 			return authInfo;
 		}

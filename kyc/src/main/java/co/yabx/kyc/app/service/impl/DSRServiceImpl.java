@@ -164,4 +164,17 @@ public class DSRServiceImpl implements DSRService {
 		}
 	}
 
+	@Override
+	public ResponseDTO logout(String msisdn) {
+		DSRUser dsrUser = dsrUserRepository.findBymsisdn(msisdn);
+		if (dsrUser != null) {
+			AuthInfo authInfo = dsrUser.getAuthInfo();
+			if (authInfo != null) {
+				adminService.resetYabxToken(authInfo);
+				return DsrDtoHelper.getLoginDTO(msisdn, "SUCCESS", "200", null);
+			}
+		}
+		return DsrDtoHelper.getLoginDTO(msisdn, "DSR Not Found", "404", null);
+	}
+
 }
