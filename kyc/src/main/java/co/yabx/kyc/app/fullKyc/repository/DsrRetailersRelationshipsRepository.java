@@ -12,4 +12,6 @@ public interface DsrRetailersRelationshipsRepository extends CrudRepository<DsrR
 
 	List<DsrRetailersRelationships> findByDsrMsisdn(String dsrMSISDN);
 
+	DsrRetailersRelationships findByDsrMsisdnAndRetailers(String dsrMsisdn, String retailerId);
+
 }

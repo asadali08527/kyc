@@ -17,4 +17,5 @@ public interface OtpRepository extends CrudRepository<OTP, Long> {
 	@Query("select o from OTP o where o.user=?1 and o.otpType=?2")
 	List<OTP> findByUserOtpType(Long user, OtpType otpType);
 
+
 }

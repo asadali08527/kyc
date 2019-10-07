@@ -1,7 +1,9 @@
 package co.yabx.kyc.app.service.impl;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -23,10 +25,12 @@ import co.yabx.kyc.app.dto.dtoHelper.RetailersDtoHelper;
 import co.yabx.kyc.app.entities.OTP;
 import co.yabx.kyc.app.enums.DsrProfileStatus;
 import co.yabx.kyc.app.enums.OtpType;
+import co.yabx.kyc.app.fullKyc.dto.BankAccountDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
+import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
 import co.yabx.kyc.app.fullKyc.entity.DsrRetailersRelationships;
 import co.yabx.kyc.app.fullKyc.entity.Nominees;
 import co.yabx.kyc.app.fullKyc.entity.Retailers;
@@ -81,9 +85,11 @@ public class RetailerServiceImpl implements RetailerService {
 	}
 
 	@Override
-	public ResponseDTO retailerDetails(String dsrMsisdn, String merchantId) {
-		// TODO Auto-generated method stub
-		return RetailersDtoHelper.getCompletRetailerInfo(dsrMsisdn, merchantId);
+	public ResponseDTO retailerDetails(String dsrMsisdn, String retailerId) {
+		DsrRetailersRelationships dsrRetailersRelationships = dsrRetailersRelationshipsRepository
+				.findByDsrMsisdnAndRetailers(dsrMsisdn, retailerId);
+
+		return RetailersDtoHelper.getCompletRetailerInfo(dsrMsisdn, retailerId);
 	}
 
 	@Override
@@ -104,10 +110,59 @@ public class RetailerServiceImpl implements RetailerService {
 		retailers.setBirthRegistrationNumber(userDTO.getBirthRegistrationNumber());
 		retailers.setPassportNumber(userDTO.getPassportNumber());
 		retailers.setPassportExpiryDate(userDTO.getPassportExpiryDate());
-		BankAccountDetails bankAccountDetails = new BankAccountDetails();
-		// bankAccountDetails.setAccountNumber(userDTO.getB);
+		retailers.setBankAccountDetails(getBankAccountDetails(userDTO.getBankAccountDetails()));
+		retailers.setBusinessDetails(getBusinessDetails(userDTO.getBusinessDetails()));
 		userRepository.save(retailers);
 		return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
+	}
+
+	private Set<BusinessDetails> getBusinessDetails(List<BusinessDetailsDTO> businessDetailsDtos) {
+		Set<BusinessDetails> businessDetailsSet = new HashSet<BusinessDetails>();
+		for (BusinessDetailsDTO businessDetailsDTO : businessDetailsDtos) {
+			BusinessDetails businessDetails = new BusinessDetails();
+			businessDetails.setBusinessName(businessDetailsDTO.getBusinessName());
+			businessDetails.setBusinessPhone(businessDetailsDTO.getBusinessPhone());
+			businessDetails.setBusinessStartDate(businessDetailsDTO.getBusinessStartDate());
+			businessDetails.setBusinessTin(businessDetailsDTO.getBusinessTin());
+			businessDetails.setWithdrawls(businessDetailsDTO.getWithdrawls());
+			businessDetails.setVatRegistrationNumber(businessDetailsDTO.getVatRegistrationNumber());
+			businessDetails.setValueOfFixedAssets(businessDetailsDTO.getValueOfFixedAssets());
+			businessDetails.setStockValue(businessDetailsDTO.getStockValue());
+			businessDetails.setSector(businessDetailsDTO.getSector());
+			businessDetails.setProposedCollateral(businessDetailsDTO.getProposedCollateral());
+			businessDetails.setPrice(businessDetailsDTO.getPrice());
+			businessDetails.setOrigin(businessDetailsDTO.getOrigin());
+			businessDetails.setNumberOfEmployees(businessDetailsDTO.getNumberOfEmployees());
+			businessDetails.setMonthlyTurnOver(businessDetailsDTO.getMonthlyTurnOver());
+			businessDetails.setBusinessType(businessDetailsDTO.getBusinessType());
+			businessDetails.setDeposits(businessDetailsDTO.getDeposits());
+			businessDetails.setDetailOfBusness(businessDetailsDTO.getDetailOfBusness());
+			businessDetails.setDirectorOrPartnerName(businessDetailsDTO.getDirectorOrPartnerName());
+			businessDetails.setFacilityDetails(businessDetailsDTO.getFacilityDetails());
+			businessDetails.setFacilityType(businessDetailsDTO.getFacilityType());
+			businessDetails.setFixedAssetName(businessDetailsDTO.getFixedAssetName());
+			businessDetails.setFixedAssetPurchase(businessDetailsDTO.getFixedAssetPurchase());
+			businessDetails.setFundSource(businessDetailsDTO.getFundSource());
+			businessDetails.setInitialCapital(businessDetailsDTO.getInitialCapital());
+			businessDetails.setInitialDeposit(businessDetailsDTO.getInitialDeposit());
+
+			businessDetailsSet.add(businessDetails);
+		}
+		return businessDetailsSet;
+	}
+
+	private Set<BankAccountDetails> getBankAccountDetails(List<BankAccountDetailsDTO> bankAccountDetails) {
+		Set<BankAccountDetails> set = new HashSet<BankAccountDetails>();
+		for (BankAccountDetailsDTO bankAccountDetailsDTO : bankAccountDetails) {
+			BankAccountDetails accountDetails = new BankAccountDetails();
+			accountDetails.setAccountNumber(bankAccountDetailsDTO.getAccountNumber());
+			accountDetails.setBankAccountIdentifier(bankAccountDetailsDTO.getBankAccountIdentifier());
+			accountDetails.setBankAccountType(bankAccountDetailsDTO.getBankAccountType());
+			accountDetails.setBankName(bankAccountDetailsDTO.getBankName());
+			accountDetails.setBranch(bankAccountDetailsDTO.getBranch());
+			set.add(accountDetails);
+		}
+		return set;
 	}
 
 	@Override

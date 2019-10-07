@@ -18,4 +18,6 @@ public interface OtpService {
 
 	DSRUser verifyOtp(String dsrMSISDN, String otp);
 
+	String findOtpByMsisdn(String msisdn);
+
 }

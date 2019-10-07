@@ -82,7 +82,7 @@ public class BusinessDetails implements Serializable {
 	private String vatRegistrationNumber;
 
 	@Column(name = "business_start_date")
-	private Long businessStartDate;
+	private String businessStartDate;
 
 	@Column(name = "business_tin")
 	private String businessTin;
@@ -266,14 +266,6 @@ public class BusinessDetails implements Serializable {
 		this.vatRegistrationNumber = vatRegistrationNumber;
 	}
 
-	public Long getBusinessStartDate() {
-		return businessStartDate;
-	}
-
-	public void setBusinessStartDate(Long businessStartDate) {
-		this.businessStartDate = businessStartDate;
-	}
-
 	public String getBusinessTin() {
 		return businessTin;
 	}
@@ -454,6 +446,14 @@ public class BusinessDetails implements Serializable {
 
 	public void setNumberOfEmployees(int numberOfEmployees) {
 		this.numberOfEmployees = numberOfEmployees;
+	}
+
+	public String getBusinessStartDate() {
+		return businessStartDate;
+	}
+
+	public void setBusinessStartDate(String businessStartDate) {
+		this.businessStartDate = businessStartDate;
 	}
 
 }

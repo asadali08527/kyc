@@ -25,6 +25,7 @@ import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.security.SecurityUtils;
 import co.yabx.kyc.app.service.AdminService;
 import co.yabx.kyc.app.service.AppConfigService;
+import co.yabx.kyc.app.service.OtpService;
 
 /**
  * 
@@ -41,6 +42,9 @@ public class AdminController {
 
 	@Autowired
 	private AdminService adminService;
+
+	@Autowired
+	private OtpService otpService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 
@@ -65,6 +69,18 @@ public class AdminController {
 			Map<String, String> jsonResponse = adminService.getAuthToken(msisdn);
 			if (jsonResponse == null)
 				return new ResponseEntity<>("user not found or msisdn is null for this user", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity<>("Invalid secret key", HttpStatus.UNAUTHORIZED);
+
+	}
+
+	@RequestMapping(value = "/admin/otp", method = RequestMethod.GET)
+	public ResponseEntity<?> findOTP(@RequestParam("msisdn") String msisdn,
+			@RequestParam(value = "secret_key", required = true) String secret_key) {
+		if (secret_key.equals(appConfigService.getProperty("GET_AUTH_TOKEN_API_PASSWORD", "magic@yabx"))) {
+			Map<String, String> jsonResponse = new HashMap<String, String>();
+			jsonResponse.put("OTP", otpService.findOtpByMsisdn(msisdn));
 			return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
 		}
 		return new ResponseEntity<>("Invalid secret key", HttpStatus.UNAUTHORIZED);

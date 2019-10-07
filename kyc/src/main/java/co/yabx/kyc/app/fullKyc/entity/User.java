@@ -129,9 +129,6 @@ public class User implements Serializable {
 	@Column(name = "passport_expiry_date")
 	private String passportExpiryDate;
 
-	@Column(name = "business_address")
-	private String businessAddress;
-
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<IncomeDetails> incomeDetails;
 
@@ -436,14 +433,6 @@ public class User implements Serializable {
 
 	public void setPassportExpiryDate(String passportExpiryDate) {
 		this.passportExpiryDate = passportExpiryDate;
-	}
-
-	public String getBusinessAddress() {
-		return businessAddress;
-	}
-
-	public void setBusinessAddress(String businessAddress) {
-		this.businessAddress = businessAddress;
 	}
 
 	public String getMinor() {

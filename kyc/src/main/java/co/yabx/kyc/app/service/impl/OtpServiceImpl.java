@@ -74,4 +74,20 @@ public class OtpServiceImpl implements OtpService {
 		return null;
 	}
 
+	@Override
+	public String findOtpByMsisdn(String msisdn) {
+		DSRUser dsrUser = dsrUserRepository.findBymsisdn(msisdn);
+		if (dsrUser != null) {
+			List<OTP> otps = otpRepository.findByUserOtpType(dsrUser.getId(), OtpType.SMS);
+			OTP otpFound = otps.get(0);
+			if (otpFound != null) {
+				if (otpFound.getExpiryTime().after(new Date()))
+					return otpFound.getOtp();
+				else
+					return null;
+			}
+		}
+		return null;
+	}
+
 }
