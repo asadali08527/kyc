@@ -1,6 +1,6 @@
 package co.yabx.kyc.app.enums;
 
 public enum Relationship {
-	FRIEND
+	FRIEND, FAMILY, SON, FATHER, DAUGHTER, NOMINEE, RETAILER, DISTRIBUTOR
 
 }

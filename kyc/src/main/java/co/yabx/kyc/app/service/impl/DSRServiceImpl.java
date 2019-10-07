@@ -1,5 +1,6 @@
 package co.yabx.kyc.app.service.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -32,6 +33,7 @@ import co.yabx.kyc.app.service.AdminService;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.DSRService;
 import co.yabx.kyc.app.service.OtpService;
+import co.yabx.kyc.app.wrappers.UserWrapper;
 
 /**
  * 
@@ -52,6 +54,9 @@ public class DSRServiceImpl implements DSRService {
 
 	@Autowired
 	private OtpService otpService;
+
+	@Autowired
+	private UserWrapper userWrapper;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DSRServiceImpl.class);
 
@@ -131,18 +136,7 @@ public class DSRServiceImpl implements DSRService {
 	private Set<AddressDetails> prepareAddress(DsrProfileDTO dsrProfileDTO) {
 		if (dsrProfileDTO != null && dsrProfileDTO.getAddressDetailsDTO() != null
 				&& !dsrProfileDTO.getAddressDetailsDTO().isEmpty()) {
-			Set<AddressDetails> addressDetails = new HashSet<AddressDetails>();
-			List<AddressDetailsDTO> addressDetailsDTO = dsrProfileDTO.getAddressDetailsDTO();
-			for (AddressDetailsDTO detailsDTO : addressDetailsDTO) {
-				AddressDetails addressDetail = new AddressDetails();
-				addressDetail.setAddressType(detailsDTO.getAddressType());
-				addressDetail.setArea(detailsDTO.getArea());
-				addressDetail.setCity(detailsDTO.getCity());
-				addressDetail.setHouseNumberOrStreetName(detailsDTO.getHouseNumberOrStreetName());
-				addressDetail.setRegion(detailsDTO.getRegion());
-				addressDetail.setZipCode(detailsDTO.getZipCode());
-				addressDetails.add(addressDetail);
-			}
+			Set<AddressDetails> addressDetails = userWrapper.getAddressDetails(dsrProfileDTO.getAddressDetailsDTO());
 			return addressDetails;
 		}
 		return null;
@@ -150,14 +144,12 @@ public class DSRServiceImpl implements DSRService {
 
 	private Set<WorkEducationDetails> prepareWorkEducationdetails(DsrProfileDTO dsrProfileDTO) {
 		if (dsrProfileDTO != null && dsrProfileDTO.getWorkEducationDetailsDTO() != null) {
-			WorkEducationDetailsDTO workEducationDetailsDTO = dsrProfileDTO.getWorkEducationDetailsDTO();
-			Set<WorkEducationDetails> workEducationDetails = new HashSet<WorkEducationDetails>();
-			WorkEducationDetails details = new WorkEducationDetails();
-			details.setDesignation(workEducationDetailsDTO.getDesignation());
-			details.setEducationalQualification(workEducationDetailsDTO.getEducationalQualification());
-			details.setEmployer(workEducationDetailsDTO.getEmployer());
-			details.setOccupation(workEducationDetailsDTO.getOccupation());
-			workEducationDetails.add(details);
+			Set<WorkEducationDetails> workEducationDetails = userWrapper
+					.getWorkEducationDetails(new ArrayList<WorkEducationDetailsDTO>() {
+						{
+							add(dsrProfileDTO.getWorkEducationDetailsDTO());
+						}
+					});
 			return workEducationDetails;
 		}
 		return null;

@@ -1,7 +1,6 @@
 package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 

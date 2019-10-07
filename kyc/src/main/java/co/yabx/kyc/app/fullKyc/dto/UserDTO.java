@@ -11,7 +11,6 @@ import co.yabx.kyc.app.enums.MaritalStatuses;
 import co.yabx.kyc.app.enums.Nationality;
 import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.ResidentStatus;
-import co.yabx.kyc.app.fullKyc.entity.Nominees;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO implements Serializable {

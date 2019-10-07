@@ -15,6 +15,8 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import co.yabx.kyc.app.enums.LiabilityType;
+
 @Entity
 @Table(name = "liabilities_details", indexes = { @Index(name = "bank_nbfi_name", columnList = "bank_nbfi_name") })
 public class LiabilitiesDetails implements Serializable {
@@ -28,6 +30,12 @@ public class LiabilitiesDetails implements Serializable {
 
 	@Column(name = "bank_nbfi_name")
 	private String bankOrNbfiName;
+
+	@Column(name = "liability_from")
+	private String liabilityFrom;
+
+	@Column(name = "liability_type")
+	private LiabilityType typeOfLiablity;
 
 	@Column(name = "created_at")
 	private Date createdAt;
@@ -120,6 +128,22 @@ public class LiabilitiesDetails implements Serializable {
 	private void preUpdate() {
 		updatedAt = new Date();
 
+	}
+
+	public String getLiabilityFrom() {
+		return liabilityFrom;
+	}
+
+	public void setLiabilityFrom(String liabilityFrom) {
+		this.liabilityFrom = liabilityFrom;
+	}
+
+	public LiabilityType getTypeOfLiablity() {
+		return typeOfLiablity;
+	}
+
+	public void setTypeOfLiablity(LiabilityType typeOfLiablity) {
+		this.typeOfLiablity = typeOfLiablity;
 	}
 
 }

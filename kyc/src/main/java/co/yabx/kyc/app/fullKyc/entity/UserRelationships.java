@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,9 +19,11 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import co.yabx.kyc.app.enums.Relationship;
+
 @Entity
-@Table(name = "dsr_retailers", indexes = { @Index(name = "dsr_msisdn", columnList = "dsr_msisdn") })
-public class DsrRetailersRelationships implements Serializable {
+@Table(name = "user_relationships", indexes = { @Index(name = "dsr_msisdn", columnList = "dsr_msisdn") })
+public class UserRelationships implements Serializable {
 
 	private static final long serialVersionUID = -69011539363185L;
 
@@ -27,12 +31,15 @@ public class DsrRetailersRelationships implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "dsr_msisdn")
-	private String dsrMsisdn;
+	@Column(name = "user_msisdn")
+	private String msisdn;
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Retailers.class)
-	@JsonIgnore
-	Retailers retailers;
+	@Column(name = "related_user")
+	private User relative;
+
+	@Column(name = "relationship", nullable = false, columnDefinition = "varchar(32) default 'NO'")
+	@Enumerated(value = EnumType.STRING)
+	private Relationship relationship;
 
 	@Column(name = "created_at")
 	private Date createdAt;
@@ -62,22 +69,6 @@ public class DsrRetailersRelationships implements Serializable {
 		this.id = id;
 	}
 
-	public String getDsrMsisdn() {
-		return dsrMsisdn;
-	}
-
-	public void setDsrMsisdn(String dsrMsisdn) {
-		this.dsrMsisdn = dsrMsisdn;
-	}
-
-	public Retailers getRetailers() {
-		return retailers;
-	}
-
-	public void setRetailers(Retailers retailers) {
-		this.retailers = retailers;
-	}
-
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -92,6 +83,30 @@ public class DsrRetailersRelationships implements Serializable {
 
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	public User getRelative() {
+		return relative;
+	}
+
+	public void setRelative(User relative) {
+		this.relative = relative;
+	}
+
+	public Relationship getRelationship() {
+		return relationship;
+	}
+
+	public void setRelationship(Relationship relationship) {
+		this.relationship = relationship;
+	}
+
+	public String getMsisdn() {
+		return msisdn;
+	}
+
+	public void setMsisdn(String msisdn) {
+		this.msisdn = msisdn;
 	}
 
 }
