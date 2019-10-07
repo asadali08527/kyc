@@ -51,7 +51,7 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public Map<String, String> getAuthToken(String msisdn) {
 		AuthInfo authInfo = authInfoRepository.findByMsisdn(msisdn);
-		if (authInfo.getYabxToken() == null) {
+		if (authInfo == null || authInfo.getYabxToken() == null) {
 			return null;
 		}
 		String yabxToken = authInfo.getYabxToken();

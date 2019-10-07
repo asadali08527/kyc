@@ -48,7 +48,7 @@ public class AuthenticationController {
 	@RequestMapping(value = "/dsr/login/{msisdn}", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<?> login(@PathVariable(value = "msisdn", required = true) String msisdn) {
-		LOGGER.info("/auth/dsr/login/ request recievedfor msisdn={}", msisdn);
+		LOGGER.info("/auth/dsr/login/ request recieved for msisdn={}", msisdn);
 		ResponseDTO loginDTO = dsrService.login(msisdn);
 		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 
