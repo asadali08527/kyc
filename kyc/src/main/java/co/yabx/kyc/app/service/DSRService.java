@@ -10,12 +10,16 @@ public interface DSRService {
 
 	ResponseDTO login(String msisdn);
 
-	ResponseDTO verifyOTP(VerifyOtpDTO verifyOtpDTO);
-
 	ResponseDTO submitDsrProfile(DsrProfileDTO dsrProfileDTO);
 
 	void updateAuthInfo(DSRUser dsrUser, AuthInfo authInfo);
 
 	ResponseDTO logout(String msisdn);
+
+	ResponseDTO generateMailOTP(String mail);
+
+	ResponseDTO verifyPhoneOTP(VerifyOtpDTO verifyOtpDTO);
+
+	ResponseDTO verifyMail(VerifyOtpDTO verifyOtpDTO);
 
 }

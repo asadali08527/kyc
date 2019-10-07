@@ -59,17 +59,21 @@ public class OtpServiceImpl implements OtpService {
 	}
 
 	@Override
-	public DSRUser verifyOtp(String dsrMSISDN, String otp) {
-		DSRUser dsrUser = dsrUserRepository.findBymsisdn(dsrMSISDN);
+	public DSRUser verifyOtp(DSRUser dsrUser, String otp, OtpType otpType) {
 		if (dsrUser != null) {
 			OTP otpFound = otpRepository.findByUserAndOtp(dsrUser.getId(), otp);
 			if (otpFound != null) {
-				if (otpFound.getExpiryTime().after(new Date()))
+				if (otpFound.getExpiryTime().after(new Date()) && otpType.equals(otpFound.getOtpType())) {
 					return dsrUser;
-				else
+				} else {
+					LOGGER.info("OTP={} is either expired or of different type, for msisdn={}, and type={}", otp,
+							dsrUser.getMsisdn(), otpType);
 					return null;
-			} else
+				}
+			} else {
+				LOGGER.info("OTP={} doesn't exist for msisdn={} and type={}", otp, dsrUser.getMsisdn(), otpType);
 				return null;
+			}
 		}
 		return null;
 	}

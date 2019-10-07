@@ -77,10 +77,11 @@ public class DSRServiceImpl implements DSRService {
 	}
 
 	@Override
-	public ResponseDTO verifyOTP(VerifyOtpDTO verifyOtpDTO) {
+	public ResponseDTO verifyPhoneOTP(VerifyOtpDTO verifyOtpDTO) {
 		if (verifyOtpDTO != null) {
 			if (verifyOtpDTO.getOtp() != null && !verifyOtpDTO.getOtp().isEmpty()) {
-				DSRUser dsrUser = otpService.verifyOtp(verifyOtpDTO.getDsrMSISDN(), verifyOtpDTO.getOtp());
+				DSRUser dsrUser = dsrUserRepository.findBymsisdn(verifyOtpDTO.getDsrMSISDN());
+				dsrUser = otpService.verifyOtp(dsrUser, verifyOtpDTO.getOtp(), OtpType.SMS);
 				if (dsrUser != null) {
 					ResponseDTO responseDTO = DsrDtoHelper.getLoginDTO("", "SUCCESS", "200", DsrProfileStatus.NEW);
 					responseDTO.setAuthInfo(adminService.prepareTokenAndKey(dsrUser, verifyOtpDTO.getDsrMSISDN()));
@@ -175,6 +176,43 @@ public class DSRServiceImpl implements DSRService {
 			}
 		}
 		return DsrDtoHelper.getLoginDTO(msisdn, "DSR Not Found", "404", null);
+	}
+
+	@Override
+	public ResponseDTO generateMailOTP(String mail) {
+		DSRUser dsrUser = dsrUserRepository.findByEmail(mail);
+		if (dsrUser != null) {
+			Calendar otpExpiryTime = Calendar.getInstance();
+			otpExpiryTime.add(Calendar.SECOND, appConfigService.getIntProperty("OTP_EXPIRY_TIME_IN_SECONDS", 300));
+			OTP otp = otpService.generateAndPersistOTP(dsrUser.getId(), OtpType.MAIL, otpExpiryTime.getTime(),
+					OtpGroup.VERIFICATION);
+			// send otp code
+			return DsrDtoHelper.getLoginDTO(mail, "SUCCESS", "200", null);
+
+		}
+		return DsrDtoHelper.getLoginDTO(mail, "DSR Not Found", "404", null);
+	}
+
+	@Override
+	public ResponseDTO verifyMail(VerifyOtpDTO verifyOtpDTO) {
+		if (verifyOtpDTO != null) {
+			if (verifyOtpDTO.getOtp() != null && !verifyOtpDTO.getOtp().isEmpty()) {
+				DSRUser dsrUser = dsrUserRepository.findBymsisdn(verifyOtpDTO.getDsrMSISDN());
+				dsrUser = otpService.verifyOtp(dsrUser, verifyOtpDTO.getOtp(), OtpType.MAIL);
+				if (dsrUser != null) {
+					ResponseDTO responseDTO = DsrDtoHelper.getLoginDTO("", "SUCCESS", "200", DsrProfileStatus.NEW);
+					responseDTO.setAuthInfo(adminService.prepareTokenAndKey(dsrUser, verifyOtpDTO.getDsrMSISDN()));
+					return responseDTO;
+				} else {
+					return DsrDtoHelper.getLoginDTO("", "Incorrect OTP or OTP Expired", "403", null);
+				}
+			} else {
+				return DsrDtoHelper.getLoginDTO("", "Incorrect OTP or OTP Expired", "403", null);
+			}
+
+		}
+		return DsrDtoHelper.getLoginDTO("", "Incorrect OTP or OTP Expired", "403", null);
+
 	}
 
 }

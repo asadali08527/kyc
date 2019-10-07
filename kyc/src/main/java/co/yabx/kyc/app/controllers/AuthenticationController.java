@@ -40,7 +40,7 @@ public class AuthenticationController {
 	@ResponseBody
 	public ResponseEntity<?> verifyOTP(@RequestBody VerifyOtpDTO verifyOtpDTO) {
 		LOGGER.info("/auth/dsr/otp/verify request recieved with request body={}", verifyOtpDTO);
-		ResponseDTO loginDTO = dsrService.verifyOTP(verifyOtpDTO);
+		ResponseDTO loginDTO = dsrService.verifyPhoneOTP(verifyOtpDTO);
 		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 
 	}

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class VerifyOtpDTO implements Serializable {
 	private String dsrMSISDN;
 	private String otp;
+	private String email;
 
 	public String getDsrMSISDN() {
 		return dsrMSISDN;
@@ -28,6 +29,14 @@ public class VerifyOtpDTO implements Serializable {
 	@Override
 	public String toString() {
 		return "VerifyOtpDTO [dsrMSISDN=" + dsrMSISDN + ", otp=" + otp + "]";
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }

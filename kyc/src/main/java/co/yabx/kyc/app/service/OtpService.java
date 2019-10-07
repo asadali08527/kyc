@@ -16,7 +16,7 @@ public interface OtpService {
 
 	OTP generateAndPersistOTP(Long user, OtpType otpType, Date expiryTime, OtpGroup otpGroup);
 
-	DSRUser verifyOtp(String dsrMSISDN, String otp);
+	DSRUser verifyOtp(DSRUser dsrUser, String dsrMSISDN, OtpType sms);
 
 	String findOtpByMsisdn(String msisdn);
 

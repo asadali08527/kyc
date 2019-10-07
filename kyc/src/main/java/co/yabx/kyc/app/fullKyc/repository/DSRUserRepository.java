@@ -10,4 +10,6 @@ public interface DSRUserRepository extends BaseUserRepository<DSRUser>, CrudRepo
 
 	DSRUser findBymsisdn(String msisdn);
 
+	DSRUser findByEmail(String mail);
+
 }

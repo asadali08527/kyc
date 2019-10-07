@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import co.yabx.kyc.app.dto.DsrProfileDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
+import co.yabx.kyc.app.dto.VerifyOtpDTO;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.DSRService;
 
@@ -43,11 +44,19 @@ public class DSRController {
 		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 
 	}
-	
+
 	@RequestMapping(value = "/dsr/logout/{msisdn}", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> logout(@PathVariable String msisdn) {
 		ResponseDTO loginDTO = dsrService.logout(msisdn);
+		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+
+	}
+
+	@RequestMapping(value = "/dsr/verify/mail", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> verifyMail(@RequestBody VerifyOtpDTO verifyOtpDTO) {
+		ResponseDTO loginDTO = dsrService.verifyMail(verifyOtpDTO);
 		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 
 	}
