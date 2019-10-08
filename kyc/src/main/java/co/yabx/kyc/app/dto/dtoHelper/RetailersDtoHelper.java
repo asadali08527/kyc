@@ -34,6 +34,7 @@ import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.Retailers;
+import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.miniKyc.entity.KycDetails;
 import co.yabx.kyc.app.miniKyc.entity.KycDocuments;
 import co.yabx.kyc.app.util.EncoderDecoderUtil;
@@ -50,13 +51,13 @@ public class RetailersDtoHelper implements Serializable {
 		return loginDTO;
 	}
 
-	public static ResponseDTO getSummary(List<Retailers> retailers2) {
+	public static ResponseDTO getSummary(List<User> retailers2) {
 		ResponseDTO loginDTO = getResponseDTO(null, "SUCCESS", "200", null);
 		List<RetailersDTO> retailersList = new ArrayList<RetailersDTO>();
 		if (retailers2 != null && !retailers2.isEmpty()) {
-			for (Retailers retailers : retailers2) {
+			for (User retailers : retailers2) {
 				RetailersDTO retailersDTO = new RetailersDTO();
-				retailersDTO.setRetailerId(retailers.getRetailerId());
+				retailersDTO.setRetailerId(retailers.getId());
 				retailersDTO.setRetailerName(retailers.getFirstName());
 				retailersDTO.setKycStatus(KycStatus.NEW);
 				retailersDTO.setComments("n/a");
@@ -67,13 +68,13 @@ public class RetailersDtoHelper implements Serializable {
 			return loginDTO;
 		} else {
 			RetailersDTO retailersDTO = new RetailersDTO();
-			retailersDTO.setRetailerId("123");
+			retailersDTO.setRetailerId(123l);
 			retailersDTO.setRetailerName("abc");
 			retailersDTO.setKycStatus(KycStatus.NEW);
 			retailersDTO.setComments("n/a");
 			retailersList.add(retailersDTO);
 			RetailersDTO retailersDTO2 = new RetailersDTO();
-			retailersDTO2.setRetailerId("2343");
+			retailersDTO2.setRetailerId(2343l);
 			retailersDTO2.setRetailerName("adocbc");
 			retailersDTO2.setKycStatus(KycStatus.APPROVED);
 			retailersDTO2.setComments("all ok");

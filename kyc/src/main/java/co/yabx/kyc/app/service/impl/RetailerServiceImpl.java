@@ -24,6 +24,7 @@ import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.Nominees;
 import co.yabx.kyc.app.fullKyc.entity.Retailers;
+import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
 import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
@@ -61,9 +62,9 @@ public class RetailerServiceImpl implements RetailerService {
 			List<UserRelationships> dsrRetailersRelationships = userRelationshipsRepository
 					.findByMsisdn(retailerRequestDTO.getDsrMSISDN());
 			if (dsrRetailersRelationships != null && !dsrRetailersRelationships.isEmpty()) {
-				List<Retailers> retailers = dsrRetailersRelationships.stream()
-						.filter(f -> Relationship.RETAILER.equals(f.getRelationship()))
-						.map(f -> (Retailers) f.getRelative()).collect(Collectors.toList());
+				List<User> retailers = dsrRetailersRelationships.stream()
+						.filter(f -> Relationship.RETAILER.equals(f.getRelationship())).map(f -> f.getRelative())
+						.collect(Collectors.toList());
 				return RetailersDtoHelper.getSummary(retailers);
 			}
 			return RetailersDtoHelper.getSummary(null);
@@ -197,9 +198,9 @@ public class RetailerServiceImpl implements RetailerService {
 		if (dsrMsisdn != null && retailerId != null && !dsrMsisdn.isEmpty() && !retailerId.isEmpty()) {
 			List<UserRelationships> dsrRetailersRelationships = userRelationshipsRepository.findByMsisdn(dsrMsisdn);
 			if (dsrRetailersRelationships != null && !dsrRetailersRelationships.isEmpty()) {
-				List<Retailers> retailers = dsrRetailersRelationships.stream()
-						.filter(f -> Relationship.RETAILER.equals(f.getRelationship()))
-						.map(f -> (Retailers) f.getRelative()).collect(Collectors.toList());
+				List<User> retailers = dsrRetailersRelationships.stream()
+						.filter(f -> Relationship.RETAILER.equals(f.getRelationship())).map(f -> f.getRelative())
+						.collect(Collectors.toList());
 				return RetailersDtoHelper.getSummary(retailers);
 			}
 			return RetailersDtoHelper.getResponseDTO(null, "No Retailers Found for the DSR", "404", null);

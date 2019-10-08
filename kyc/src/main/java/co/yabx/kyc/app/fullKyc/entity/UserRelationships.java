@@ -7,10 +7,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -30,8 +33,9 @@ public class UserRelationships implements Serializable {
 	@Column(name = "user_msisdn")
 	private String msisdn;
 
-	@Column(name = "related_user")
-	private User relative;
+	@JoinColumn(name = "related_user")
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+	User relative;
 
 	@Column(name = "relationship", nullable = false, columnDefinition = "varchar(32) default 'NO'")
 	@Enumerated(value = EnumType.STRING)

@@ -8,17 +8,17 @@ import co.yabx.kyc.app.enums.KycStatus;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RetailersDTO implements Serializable {
-	private String retailerId;
+	private Long retailerId;
 	private String retailerName;
 	private KycStatus kycStatus;
 	private String comments;
 	private String dsrMsisdn;
 
-	public String getRetailerId() {
+	public Long getRetailerId() {
 		return retailerId;
 	}
 
-	public void setRetailerId(String retailerId) {
+	public void setRetailerId(Long retailerId) {
 		this.retailerId = retailerId;
 	}
 

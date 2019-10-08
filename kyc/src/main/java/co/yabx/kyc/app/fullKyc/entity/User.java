@@ -36,6 +36,9 @@ import co.yabx.kyc.app.enums.ResidentStatus;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Least normalisation strategy
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
 public class User implements Serializable {
+
+	private static final long serialVersionUID = -6901150039363185L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -151,6 +154,11 @@ public class User implements Serializable {
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<AttachmentDetails> attachmentDetails;
+	/*
+	 * @OneToMany(mappedBy = "relative", cascade = CascadeType.ALL, orphanRemoval =
+	 * true, fetch = FetchType.LAZY) private Set<UserRelationships>
+	 * userRelationships;
+	 */
 
 	@Column(name = "minor")
 	private String minor;
