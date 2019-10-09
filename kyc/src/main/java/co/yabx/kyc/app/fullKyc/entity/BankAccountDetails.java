@@ -1,6 +1,7 @@
 package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
+import java.util.Currency;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -30,6 +31,12 @@ public class BankAccountDetails implements Serializable {
 	@Column(name = "msisdn")
 	private String msisdn;
 
+	@Column(name = "account_title")
+	private String accountTitle;
+
+	@Column(name = "concern_type")
+	private String typeOfConcern;
+
 	@Column(name = "bank_name")
 	private String bankName;
 
@@ -38,6 +45,12 @@ public class BankAccountDetails implements Serializable {
 
 	@Column(name = "branch")
 	private String branch;
+
+	@Column(name = "currency")
+	private Currency currency;
+
+	@Column(name = "operation_mode")
+	private String modeOfOperation;
 
 	@Column(name = "account_type")
 	private BankAccountType bankAccountType;
@@ -50,6 +63,9 @@ public class BankAccountDetails implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = BusinessDetails.class)
 	BusinessDetails businessDetails;
+
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = CustomerInformations.class)
+	CustomerInformations customerInformations;
 
 	@Column(name = "created_at")
 	private Date createdAt;

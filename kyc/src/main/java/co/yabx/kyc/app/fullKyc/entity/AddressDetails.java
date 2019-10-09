@@ -65,6 +65,9 @@ public class AddressDetails implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = BusinessDetails.class)
 	BusinessDetails businessDetails;
 
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = CustomerInformations.class)
+	CustomerInformations customerInformations;
+
 	public User getUser() {
 		return user;
 	}
