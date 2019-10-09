@@ -50,10 +50,10 @@ public class RetailerController {
 
 	}
 
-	@RequestMapping(value = "/retailer/{dsrMsisdn}/{merchantId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/retailer/{dsrMsisdn}/{retailerId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseDTO> fetchRetailerDetails(@PathVariable String dsrMsisdn,
-			@PathVariable String merchantId) {
-		ResponseDTO loginDTO = retailerService.retailerDetails(dsrMsisdn, merchantId);
+			@PathVariable Long retailerId) {
+		ResponseDTO loginDTO = retailerService.retailerDetails(dsrMsisdn, retailerId);
 		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 
 	}
@@ -122,7 +122,7 @@ public class RetailerController {
 
 	@RequestMapping(value = "/retailer/{dsrMsisdn}/search/{retailerId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseDTO> searchRetailer(@PathVariable String dsrMsisdn, @PathVariable String retailerId) {
-		ResponseDTO loginDTO = retailerService.searchRetailerByDsr(dsrMsisdn,retailerId);
+		ResponseDTO loginDTO = retailerService.searchRetailerByDsr(dsrMsisdn, retailerId);
 		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 
 	}

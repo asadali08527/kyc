@@ -4,8 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.stereotype.Service;
-
+import co.yabx.kyc.app.entities.AppDynamicFields;
 import co.yabx.kyc.app.fullKyc.dto.AddressDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.BankAccountDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
@@ -42,7 +41,8 @@ public class UserWrapper {
 		return addressDetails;
 	}
 
-	public static Set<WorkEducationDetails> getWorkEducationDetails(List<WorkEducationDetailsDTO> workEducationDetailsDTOs) {
+	public static Set<WorkEducationDetails> getWorkEducationDetails(
+			List<WorkEducationDetailsDTO> workEducationDetailsDTOs) {
 		Set<WorkEducationDetails> workEducationDetails = new HashSet<WorkEducationDetails>();
 		for (WorkEducationDetailsDTO workEducationDetailsDTO : workEducationDetailsDTOs) {
 			WorkEducationDetails details = new WorkEducationDetails();
@@ -147,7 +147,8 @@ public class UserWrapper {
 		return introducerDetailsSet;
 	}
 
-	public static Set<LiabilitiesDetails> prepareLiabilitiesDetails(List<LiabilitiesDetailsDTO> liabilitiesDetailsDTOList) {
+	public static Set<LiabilitiesDetails> prepareLiabilitiesDetails(
+			List<LiabilitiesDetailsDTO> liabilitiesDetailsDTOList) {
 		Set<LiabilitiesDetails> liabilitiesDetailsSet = new HashSet<LiabilitiesDetails>();
 		for (LiabilitiesDetailsDTO liabilitiesDetailsDTO : liabilitiesDetailsDTOList) {
 			LiabilitiesDetails liabilitiesDetails = new LiabilitiesDetails();
@@ -185,5 +186,10 @@ public class UserWrapper {
 		user.setNationality(userDTO.getNationality());
 		user.setNationalIdNumber(userDTO.getNationalIdNumber());
 		return user;
+	}
+
+	public UserDTO getCompletRetailerInfo(User retailers) {
+
+		return null;
 	}
 }

@@ -1,7 +1,5 @@
 package co.yabx.kyc.app.service;
 
-import java.util.List;
-
 import co.yabx.kyc.app.dto.QuestionAnswerDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.RetailerRequestDTO;
@@ -14,7 +12,7 @@ public interface RetailerService {
 
 	ResponseDTO getSummaries(RetailerRequestDTO retailerRequestDTO);
 
-	ResponseDTO retailerDetails(String dsrMsisdn, String merchantId);
+	ResponseDTO retailerDetails(String dsrMsisdn, Long retailerId);
 
 	ResponseDTO submitRetailerProfile(UserDTO userDTO);
 

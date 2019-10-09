@@ -3,14 +3,12 @@ package co.yabx.kyc.app.dto.dtoHelper;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import co.yabx.kyc.app.dto.KycDetailsDTO;
-import co.yabx.kyc.app.dto.KycDocumentsDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
-import co.yabx.kyc.app.dto.RetailerRequestDTO;
 import co.yabx.kyc.app.dto.RetailersDTO;
+import co.yabx.kyc.app.entities.AppDynamicFields;
 import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.BankAccountIdentifier;
 import co.yabx.kyc.app.enums.BankAccountType;
@@ -32,13 +30,7 @@ import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LicenseDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
-import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
-import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
-import co.yabx.kyc.app.miniKyc.entity.KycDetails;
-import co.yabx.kyc.app.miniKyc.entity.KycDocuments;
-import co.yabx.kyc.app.util.EncoderDecoderUtil;
-import co.yabx.kyc.app.util.MaskUtil;
 
 public class RetailersDtoHelper implements Serializable {
 
@@ -85,7 +77,7 @@ public class RetailersDtoHelper implements Serializable {
 		}
 	}
 
-	public static ResponseDTO getCompletRetailerInfo(String dsrMsisdn, String merchantId) {
+	public static ResponseDTO getCompletRetailerInfo(String dsrMsisdn, Long retailerId) {
 		ResponseDTO loginDTO = getResponseDTO(null, "SUCCESS", "200", null);
 		UserDTO userDto = new UserDTO();
 		userDto.setName("asad");
@@ -265,7 +257,105 @@ public class RetailersDtoHelper implements Serializable {
 		nominee.setAddressDetails(addressDetailsList);
 		nominees.add(nominee);
 		userDto.setNomineesDetails(nominees);
-		loginDTO.setRetailerInfo(userDto);
+		// loginDTO.setRetailerInfo(userDto);
 		return loginDTO;
 	}
+
+	public static List<AppDynamicFields> getRetailersDetails(User retailers,
+			Iterable<AppDynamicFields> appDynamicFields) {
+		List<AppDynamicFields> fields = new ArrayList<AppDynamicFields>();
+		Iterator<AppDynamicFields> iterator = appDynamicFields.iterator();
+		while (iterator.hasNext()) {
+			AppDynamicFields dynamicFields = iterator.next();
+			if (dynamicFields.getFieldId().equals("firstName")) {
+				dynamicFields.setSavedData(retailers.getFirstName());
+			} else if (dynamicFields.getFieldId().equals("lastName")) {
+				dynamicFields.setSavedData(retailers.getLastName());
+			} else if (dynamicFields.getFieldId().equals("middleName")) {
+				dynamicFields.setSavedData(retailers.getMiddleName());
+			} else if (dynamicFields.getFieldId().equals("dob")) {
+				dynamicFields.setSavedData(retailers.getDob());
+			} else if (dynamicFields.getFieldId().equals("pob")) {
+				dynamicFields.setSavedData(retailers.getPob());
+			} else if (dynamicFields.getFieldId().equals("fathersName")) {
+				dynamicFields.setSavedData(retailers.getFathersName());
+			} else if (dynamicFields.getFieldId().equals("mothersName")) {
+				dynamicFields.setSavedData(retailers.getMothersName());
+			} else if (dynamicFields.getFieldId().equals("maritalStatus")) {
+				dynamicFields.setSavedData(
+						retailers.getMaritalStatus() != null ? retailers.getMaritalStatus().name() : null);
+				if (dynamicFields.getSavedData() == null) {
+					List<String> options = new ArrayList<String>();
+					MaritalStatuses[] maritalStatuses = MaritalStatuses.values();
+					for (MaritalStatuses statuses : maritalStatuses) {
+						options.add(statuses.name());
+					}
+					dynamicFields.setOptions(options);
+				}
+			} else if (dynamicFields.getFieldId().equals("spouseName")) {
+				dynamicFields.setSavedData(retailers.getSpouseName());
+			} else if (dynamicFields.getFieldId().equals("numberOfDependents")) {
+				dynamicFields.setSavedData(String.valueOf(retailers.getNumberOfDependents()));
+			} else if (dynamicFields.getFieldId().equals("alternateMobileNumber")) {
+				dynamicFields.setSavedData(retailers.getAlternateMobileNumber());
+			}
+			// userDto.setRetailerPhoto("");
+			else if (dynamicFields.getFieldId().equals("birthRegistrationNumber")) {
+				dynamicFields.setSavedData(retailers.getBirthRegistrationNumber());
+			} else if (dynamicFields.getFieldId().equals("drivingLicenseNumber")) {
+				dynamicFields.setSavedData(retailers.getDrivingLicenseNumber());
+			} else if (dynamicFields.getFieldId().equals("email")) {
+				dynamicFields.setSavedData(retailers.getEmail());
+			} else if (dynamicFields.getFieldId().equals("gender")) {
+				dynamicFields.setSavedData(retailers.getGender() != null ? retailers.getGender().name() : null);
+				if (dynamicFields.getSavedData() == null) {
+					List<String> options = new ArrayList<String>();
+					Gender[] genders = Gender.values();
+					for (Gender statuses : genders) {
+						options.add(statuses.name());
+					}
+					dynamicFields.setOptions(options);
+				}
+			} else if (dynamicFields.getFieldId().equals("id")) {
+				dynamicFields.setSavedData(retailers.getId() + "");
+			} else if (dynamicFields.getFieldId().equals("msisdn")) {
+				dynamicFields.setSavedData(retailers.getMsisdn());
+			} else if (dynamicFields.getFieldId().equals("sisterConcernedOrAllied")) {
+				dynamicFields.setSavedData(retailers.getSisterConcernedOrAllied());
+			} else if (dynamicFields.getFieldId().equals("taxIdentificationNumber")) {
+				dynamicFields.setSavedData(retailers.getTaxIdentificationNumber());
+			} else if (dynamicFields.getFieldId().equals("residentialStatus")) {
+				dynamicFields.setSavedData(
+						retailers.getResidentialStatus() != null ? retailers.getResidentialStatus().name() : null);
+				if (dynamicFields.getSavedData() == null) {
+					List<String> options = new ArrayList<String>();
+					ResidentStatus[] residentStatuses = ResidentStatus.values();
+					for (ResidentStatus statuses : residentStatuses) {
+						options.add(statuses.name());
+					}
+					dynamicFields.setOptions(options);
+				}
+			} else if (dynamicFields.getFieldId().equals("passportNumber")) {
+				dynamicFields.setSavedData(retailers.getPassportNumber());
+			} else if (dynamicFields.getFieldId().equals("passportExpiryDate")) {
+				dynamicFields.setSavedData(retailers.getPassportExpiryDate());
+			} else if (dynamicFields.getFieldId().equals("nationality")) {
+				dynamicFields
+						.setSavedData(retailers.getNationality() != null ? retailers.getNationality().name() : null);
+				if (dynamicFields.getSavedData() == null) {
+					List<String> options = new ArrayList<String>();
+					Nationality[] nationalities = Nationality.values();
+					for (Nationality statuses : nationalities) {
+						options.add(statuses.name());
+					}
+					dynamicFields.setOptions(options);
+				}
+			} else if (dynamicFields.getFieldId().equals("nationalIdNumber")) {
+				dynamicFields.setSavedData(retailers.getNationalIdNumber());
+			}
+			fields.add(dynamicFields);
+		}
+		return fields;
+	}
+
 }

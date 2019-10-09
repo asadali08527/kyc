@@ -1,8 +1,7 @@
 package co.yabx.kyc.app.service.impl;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -17,11 +16,9 @@ import co.yabx.kyc.app.dto.RetailersDTO;
 import co.yabx.kyc.app.dto.dtoHelper.QuestionAnswerDTOHelper;
 import co.yabx.kyc.app.dto.dtoHelper.RetailersDtoHelper;
 import co.yabx.kyc.app.enums.Relationship;
-import co.yabx.kyc.app.fullKyc.dto.BankAccountDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
-import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.Nominees;
 import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
@@ -29,6 +26,7 @@ import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
 import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
+import co.yabx.kyc.app.repositories.AppDynamicFieldsRepository;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.RetailerService;
 import co.yabx.kyc.app.wrappers.UserWrapper;
@@ -53,6 +51,11 @@ public class RetailerServiceImpl implements RetailerService {
 	@Autowired
 	private UserRelationshipsRepository userRelationshipsRepository;
 
+	@Autowired
+	private AppDynamicFieldsRepository appDynamicFieldsRepository;
+
+//	private Iterable<AppDynamicFields> appDynamicFields = SpringUtil.bean(AppDynamicFieldsRepository.class).findAll();
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetailerServiceImpl.class);
 
 	@Override
@@ -75,36 +78,25 @@ public class RetailerServiceImpl implements RetailerService {
 	}
 
 	@Override
-	public ResponseDTO retailerDetails(String dsrMsisdn, String retailerId) {
-		List<UserRelationships> dsrRetailersRelationships = userRelationshipsRepository.findByMsisdn(dsrMsisdn);
-		if (dsrRetailersRelationships != null && !dsrRetailersRelationships.isEmpty()) {
-			List<Retailers> retailers = dsrRetailersRelationships.stream()
-					.filter(f -> Relationship.RETAILER.equals(f.getRelationship()))
-					.map(f -> (Retailers) f.getRelative()).collect(Collectors.toList());
+	public ResponseDTO retailerDetails(String dsrMsisdn, Long retailerId) {
+		Optional<Retailers> user = retailersRepository.findById(retailerId);
+		if (user.isPresent()) {
+			UserRelationships dsrRetailersRelationships = userRelationshipsRepository.findByMsisdnAndRelative(dsrMsisdn,
+					user.get());
+			if (dsrRetailersRelationships != null) {
+				ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
+				responseDTO.setRetailerInfo(
+						RetailersDtoHelper.getRetailersDetails(user.get(), appDynamicFieldsRepository.findAll()));
+				return responseDTO;
+			}
 		}
-		return RetailersDtoHelper.getCompletRetailerInfo(dsrMsisdn, retailerId);
+		return RetailersDtoHelper.getResponseDTO(null, "Retailer Not Found", "404", null);
+		// return RetailersDtoHelper.getCompletRetailerInfo(dsrMsisdn, retailerId);
 	}
 
 	@Override
 	public ResponseDTO submitRetailerProfile(UserDTO userDTO) {
 		Retailers retailers = (Retailers) UserWrapper.prepareUserPersonalInfo(userDTO);
-		/*
-		 * retailers.setRetailerId(userDTO.getRetailerId());
-		 * retailers.setFirstName(userDTO.getName());
-		 * retailers.setDob(userDTO.getDob()); retailers.setPob(userDTO.getPob());
-		 * retailers.setFathersName(userDTO.getFathersName());
-		 * retailers.setMothersName(userDTO.getMothersName());
-		 * retailers.setMaritalStatus(userDTO.getMaritalStatus());
-		 * retailers.setSpouseName(userDTO.getSpouseName());
-		 * retailers.setNumberOfDependents(userDTO.getNumberOfDependents());
-		 * retailers.setEmail(userDTO.getEmail());
-		 * retailers.setTaxIdentificationNumber(userDTO.getTaxIdentificationNumber());
-		 * retailers.setNationalIdNumber(userDTO.getNationalIdNumber());
-		 * retailers.setBirthRegistrationNumber(userDTO.getBirthRegistrationNumber());
-		 * retailers.setPassportNumber(userDTO.getPassportNumber());
-		 * retailers.setPassportExpiryDate(userDTO.getPassportExpiryDate());
-		 */
-		// retailers.setBankAccountDetails(getBankAccountDetails(userDTO.getBankAccountDetails()));
 		retailers.setBusinessDetails(UserWrapper.getBusinessDetails(userDTO.getBusinessDetails()));
 		retailers.setAddressDetails(UserWrapper.getAddressDetails(userDTO.getAddressDetails()));
 		retailers.setBankAccountDetails(UserWrapper.prepareBankAccountDetails(userDTO.getBankAccountDetails()));
@@ -116,38 +108,9 @@ public class RetailerServiceImpl implements RetailerService {
 		return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
 	}
 
-	private Set<BankAccountDetails> getBankAccountDetails(List<BankAccountDetailsDTO> bankAccountDetails) {
-		Set<BankAccountDetails> set = new HashSet<BankAccountDetails>();
-		for (BankAccountDetailsDTO bankAccountDetailsDTO : bankAccountDetails) {
-			BankAccountDetails accountDetails = new BankAccountDetails();
-			accountDetails.setAccountNumber(bankAccountDetailsDTO.getAccountNumber());
-			accountDetails.setBankAccountIdentifier(bankAccountDetailsDTO.getBankAccountIdentifier());
-			accountDetails.setBankAccountType(bankAccountDetailsDTO.getBankAccountType());
-			accountDetails.setBankName(bankAccountDetailsDTO.getBankName());
-			accountDetails.setBranch(bankAccountDetailsDTO.getBranch());
-			set.add(accountDetails);
-		}
-		return set;
-	}
-
 	@Override
 	public ResponseDTO submitRetailerNomineeProfile(UserDTO userDTO) {
 		Nominees retailers = (Nominees) UserWrapper.prepareUserPersonalInfo(userDTO);
-		/*
-		 * retailers.setFirstName(userDTO.getName());
-		 * retailers.setDob(userDTO.getDob()); retailers.setPob(userDTO.getPob());
-		 * retailers.setFathersName(userDTO.getFathersName());
-		 * retailers.setMothersName(userDTO.getMothersName());
-		 * retailers.setMaritalStatus(userDTO.getMaritalStatus());
-		 * retailers.setSpouseName(userDTO.getSpouseName());
-		 * retailers.setNumberOfDependents(userDTO.getNumberOfDependents());
-		 * retailers.setEmail(userDTO.getEmail());
-		 * retailers.setTaxIdentificationNumber(userDTO.getTaxIdentificationNumber());
-		 * retailers.setNationalIdNumber(userDTO.getNationalIdNumber());
-		 * retailers.setBirthRegistrationNumber(userDTO.getBirthRegistrationNumber());
-		 * retailers.setPassportNumber(userDTO.getPassportNumber());
-		 * retailers.setPassportExpiryDate(userDTO.getPassportExpiryDate());
-		 */
 		userRepository.save(retailers);
 		return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
 	}

@@ -11,6 +11,7 @@ import co.yabx.kyc.app.enums.MaritalStatuses;
 import co.yabx.kyc.app.enums.Nationality;
 import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.ResidentStatus;
+import co.yabx.kyc.app.fullKyc.entity.User;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDTO implements Serializable {
@@ -34,7 +35,7 @@ public class UserDTO implements Serializable {
 	private Date createdAt;
 
 	private Date updatedAt;
-	
+
 	private Integer age;
 	/**
 	 * Date of birth
@@ -104,8 +105,10 @@ public class UserDTO implements Serializable {
 	private List<UserDTO> nomineesDetails;
 
 	private String retailerPhoto;
-	
+
 	private Relationship relationship;
+
+	private User info;
 
 	public Long getId() {
 		return id;
@@ -457,6 +460,14 @@ public class UserDTO implements Serializable {
 
 	public void setRelationship(Relationship relationship) {
 		this.relationship = relationship;
+	}
+
+	public User getInfo() {
+		return info;
+	}
+
+	public void setInfo(User info) {
+		this.info = info;
 	}
 
 }
