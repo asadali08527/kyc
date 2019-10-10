@@ -3,7 +3,6 @@ package co.yabx.kyc.app.fullKyc.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,20 +10,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import co.yabx.kyc.app.enums.Frequency;
-import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.Status;
 
 @Entity
-@Table(name = "other_services", indexes = { @Index(name = "relationship", columnList = "relationship"),
-		@Index(name = "msisdn", columnList = "msisdn") })
+@Table(name = "other_services", indexes = { @Index(name = "sms_banking", columnList = "sms_banking"),
+		@Index(name = "e_statement", columnList = "e_statement") })
 public class OtherServicesInformations implements Serializable {
 
 	@Id

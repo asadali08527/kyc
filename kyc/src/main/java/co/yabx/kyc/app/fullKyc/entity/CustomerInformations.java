@@ -19,8 +19,8 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "customer_informations", indexes = { @Index(name = "monthly_turnover", columnList = "monthly_turnover"),
-		@Index(name = "deposit", columnList = "deposit") })
+@Table(name = "customer_informations", indexes = { @Index(name = "loan_amount", columnList = "loan_amount"),
+		@Index(name = "customer_id", columnList = "customer_id") })
 public class CustomerInformations implements Serializable {
 
 	@Id

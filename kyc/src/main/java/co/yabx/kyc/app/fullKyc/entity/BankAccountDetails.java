@@ -20,7 +20,7 @@ import co.yabx.kyc.app.enums.BankAccountIdentifier;
 import co.yabx.kyc.app.enums.BankAccountType;
 
 @Entity
-@Table(name = "bank_account_details", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
+@Table(name = "bank_account_details", indexes = { @Index(name = "bank_name", columnList = "bank_name"),
 		@Index(name = "account_number", columnList = "account_number") })
 public class BankAccountDetails implements Serializable {
 
