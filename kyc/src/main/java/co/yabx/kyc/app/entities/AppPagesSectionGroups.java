@@ -13,7 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -23,14 +22,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "app_pages_section_groups", indexes = { @Index(name = "group_name", columnList = "group_name") })
-@NamedQuery(name = "AppPagesSectionGroups.findAll", query = "SELECT apsg FROM AppPagesSectionGroups apsg")
 public class AppPagesSectionGroups implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 214321L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(unique = true, nullable = false)
-	private int groupId;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
+	private Long groupId;
 
 	@Column(name = "group_name")
 	private String groupName;
@@ -38,23 +36,17 @@ public class AppPagesSectionGroups implements Serializable {
 	@Column(name = "group_title")
 	private String groupTitle;
 
-	@Column(name = "order")
-	private Integer order;
-
 	@Column(name = "created_at")
 	private Date createdAt;
 
 	@Column(name = "updated_at")
 	private Date updatedAt;
 
-	@Column(name = "enable", nullable = false, columnDefinition = "boolean default true")
+	@Column(name = "enable", columnDefinition = "boolean default true")
 	private boolean enable;
 
-	@OneToMany(mappedBy = "appPagesSectionGroups", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "appPagesSectionGroups", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private Set<AppDynamicFields> appDynamicFields;
-
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = AppPagesSections.class)
-	private AppPagesSections appPagesSections;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -70,14 +62,6 @@ public class AppPagesSectionGroups implements Serializable {
 
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
-	}
-
-	public int getGroupId() {
-		return groupId;
-	}
-
-	public void setGroupId(int groupId) {
-		this.groupId = groupId;
 	}
 
 	public String getGroupName() {
@@ -96,14 +80,6 @@ public class AppPagesSectionGroups implements Serializable {
 		this.groupTitle = groupTitle;
 	}
 
-	public Integer getOrder() {
-		return order;
-	}
-
-	public void setOrder(Integer order) {
-		this.order = order;
-	}
-
 	public boolean isEnable() {
 		return enable;
 	}
@@ -112,20 +88,20 @@ public class AppPagesSectionGroups implements Serializable {
 		this.enable = enable;
 	}
 
+	public Long getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Long groupId) {
+		this.groupId = groupId;
+	}
+
 	public Set<AppDynamicFields> getAppDynamicFields() {
 		return appDynamicFields;
 	}
 
 	public void setAppDynamicFields(Set<AppDynamicFields> appDynamicFields) {
 		this.appDynamicFields = appDynamicFields;
-	}
-
-	public AppPagesSections getAppPagesSections() {
-		return appPagesSections;
-	}
-
-	public void setAppPagesSections(AppPagesSections appPagesSections) {
-		this.appPagesSections = appPagesSections;
 	}
 
 }

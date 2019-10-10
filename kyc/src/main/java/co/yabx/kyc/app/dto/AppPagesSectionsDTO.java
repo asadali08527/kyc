@@ -1,49 +1,28 @@
-package co.yabx.kyc.app.entities;
+package co.yabx.kyc.app.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-/**
- * The persistent class for the Question database table.
- * 
- */
-@Entity
-@Table(name = "app_pages_sections", indexes = { @Index(name = "section_name", columnList = "section_name") })
-public class AppPagesSections implements Serializable {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class AppPagesSectionsDTO implements Serializable {
 	private static final long serialVersionUID = 1547547L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
 	private Long sectionId;
 
-	@Column(name = "section_name")
 	private String sectionName;
 
-	@Column(name = "section_title")
 	private String sectionTitle;
 
-	@Column(name = "created_at")
 	private Date createdAt;
 
-	@Column(name = "updated_at")
 	private Date updatedAt;
 
-	@Column(name = "enable", columnDefinition = "boolean default true")
 	private boolean enable;
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = AppPages.class)
-	AppPages appPages;
+	private List<AppPagesSectionGroupsDTO> groups;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -93,12 +72,19 @@ public class AppPagesSections implements Serializable {
 		this.sectionId = sectionId;
 	}
 
-	public AppPages getAppPages() {
-		return appPages;
+	public List<AppPagesSectionGroupsDTO> getGroups() {
+		return groups;
 	}
 
-	public void setAppPages(AppPages appPages) {
-		this.appPages = appPages;
+	public void setGroups(List<AppPagesSectionGroupsDTO> groups) {
+		this.groups = groups;
+	}
+
+	@Override
+	public String toString() {
+		return "AppPagesSectionsDTO [sectionId=" + sectionId + ", sectionName=" + sectionName + ", sectionTitle="
+				+ sectionTitle + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable
+				+ ", groups=" + groups + "]";
 	}
 
 }

@@ -1,14 +1,35 @@
 package co.yabx.kyc.app.dto.dtoHelper;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import co.yabx.kyc.app.dto.AppDynamicFieldsDTO;
+import co.yabx.kyc.app.dto.AppPagesDTO;
+import co.yabx.kyc.app.dto.AppPagesSectionGroupsDTO;
+import co.yabx.kyc.app.dto.AppPagesSectionsDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.RetailersDTO;
 import co.yabx.kyc.app.entities.AppDynamicFields;
+import co.yabx.kyc.app.entities.AppPages;
+import co.yabx.kyc.app.entities.AppPagesSectionGroups;
+import co.yabx.kyc.app.entities.AppPagesSections;
+import co.yabx.kyc.app.entities.SectionGroupRelationship;
 import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.BankAccountIdentifier;
 import co.yabx.kyc.app.enums.BankAccountType;
@@ -30,9 +51,18 @@ import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LicenseDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
+import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
+import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
+import co.yabx.kyc.app.repositories.AppPagesRepository;
+import co.yabx.kyc.app.repositories.SectionGroupRelationshipRepository;
+import co.yabx.kyc.app.util.DTOConverter;
+import co.yabx.kyc.app.util.SpringUtil;
 
 public class RetailersDtoHelper implements Serializable {
+
+	@Autowired
+	private AppPagesRepository appPagesRepository;
 
 	public static ResponseDTO getResponseDTO(String msisdn, String status, String statusCode,
 			DsrProfileStatus dsrProfileStatus) {
@@ -261,101 +291,232 @@ public class RetailersDtoHelper implements Serializable {
 		return loginDTO;
 	}
 
-	public static List<AppDynamicFields> getRetailersDetails(User retailers,
-			Iterable<AppDynamicFields> appDynamicFields) {
-		List<AppDynamicFields> fields = new ArrayList<AppDynamicFields>();
-		Iterator<AppDynamicFields> iterator = appDynamicFields.iterator();
-		while (iterator.hasNext()) {
-			AppDynamicFields dynamicFields = iterator.next();
-			if (dynamicFields.getFieldId().equals("firstName")) {
-				dynamicFields.setSavedData(retailers.getFirstName());
-			} else if (dynamicFields.getFieldId().equals("lastName")) {
-				dynamicFields.setSavedData(retailers.getLastName());
-			} else if (dynamicFields.getFieldId().equals("middleName")) {
-				dynamicFields.setSavedData(retailers.getMiddleName());
-			} else if (dynamicFields.getFieldId().equals("dob")) {
-				dynamicFields.setSavedData(retailers.getDob());
-			} else if (dynamicFields.getFieldId().equals("pob")) {
-				dynamicFields.setSavedData(retailers.getPob());
-			} else if (dynamicFields.getFieldId().equals("fathersName")) {
-				dynamicFields.setSavedData(retailers.getFathersName());
-			} else if (dynamicFields.getFieldId().equals("mothersName")) {
-				dynamicFields.setSavedData(retailers.getMothersName());
-			} else if (dynamicFields.getFieldId().equals("maritalStatus")) {
-				dynamicFields.setSavedData(
-						retailers.getMaritalStatus() != null ? retailers.getMaritalStatus().name() : null);
-				if (dynamicFields.getSavedData() == null) {
-					List<String> options = new ArrayList<String>();
-					MaritalStatuses[] maritalStatuses = MaritalStatuses.values();
-					for (MaritalStatuses statuses : maritalStatuses) {
-						options.add(statuses.name());
-					}
-					dynamicFields.setOptions(options);
-				}
-			} else if (dynamicFields.getFieldId().equals("spouseName")) {
-				dynamicFields.setSavedData(retailers.getSpouseName());
-			} else if (dynamicFields.getFieldId().equals("numberOfDependents")) {
-				dynamicFields.setSavedData(String.valueOf(retailers.getNumberOfDependents()));
-			} else if (dynamicFields.getFieldId().equals("alternateMobileNumber")) {
-				dynamicFields.setSavedData(retailers.getAlternateMobileNumber());
-			}
-			// userDto.setRetailerPhoto("");
-			else if (dynamicFields.getFieldId().equals("birthRegistrationNumber")) {
-				dynamicFields.setSavedData(retailers.getBirthRegistrationNumber());
-			} else if (dynamicFields.getFieldId().equals("drivingLicenseNumber")) {
-				dynamicFields.setSavedData(retailers.getDrivingLicenseNumber());
-			} else if (dynamicFields.getFieldId().equals("email")) {
-				dynamicFields.setSavedData(retailers.getEmail());
-			} else if (dynamicFields.getFieldId().equals("gender")) {
-				dynamicFields.setSavedData(retailers.getGender() != null ? retailers.getGender().name() : null);
-				if (dynamicFields.getSavedData() == null) {
-					List<String> options = new ArrayList<String>();
-					Gender[] genders = Gender.values();
-					for (Gender statuses : genders) {
-						options.add(statuses.name());
-					}
-					dynamicFields.setOptions(options);
-				}
-			} else if (dynamicFields.getFieldId().equals("id")) {
-				dynamicFields.setSavedData(retailers.getId() + "");
-			} else if (dynamicFields.getFieldId().equals("msisdn")) {
-				dynamicFields.setSavedData(retailers.getMsisdn());
-			} else if (dynamicFields.getFieldId().equals("sisterConcernedOrAllied")) {
-				dynamicFields.setSavedData(retailers.getSisterConcernedOrAllied());
-			} else if (dynamicFields.getFieldId().equals("taxIdentificationNumber")) {
-				dynamicFields.setSavedData(retailers.getTaxIdentificationNumber());
-			} else if (dynamicFields.getFieldId().equals("residentialStatus")) {
-				dynamicFields.setSavedData(
-						retailers.getResidentialStatus() != null ? retailers.getResidentialStatus().name() : null);
-				if (dynamicFields.getSavedData() == null) {
-					List<String> options = new ArrayList<String>();
-					ResidentStatus[] residentStatuses = ResidentStatus.values();
-					for (ResidentStatus statuses : residentStatuses) {
-						options.add(statuses.name());
-					}
-					dynamicFields.setOptions(options);
-				}
-			} else if (dynamicFields.getFieldId().equals("passportNumber")) {
-				dynamicFields.setSavedData(retailers.getPassportNumber());
-			} else if (dynamicFields.getFieldId().equals("passportExpiryDate")) {
-				dynamicFields.setSavedData(retailers.getPassportExpiryDate());
-			} else if (dynamicFields.getFieldId().equals("nationality")) {
-				dynamicFields
-						.setSavedData(retailers.getNationality() != null ? retailers.getNationality().name() : null);
-				if (dynamicFields.getSavedData() == null) {
-					List<String> options = new ArrayList<String>();
-					Nationality[] nationalities = Nationality.values();
-					for (Nationality statuses : nationalities) {
-						options.add(statuses.name());
-					}
-					dynamicFields.setOptions(options);
-				}
-			} else if (dynamicFields.getFieldId().equals("nationalIdNumber")) {
-				dynamicFields.setSavedData(retailers.getNationalIdNumber());
-			}
-			fields.add(dynamicFields);
+	public static AppPagesDTO getRetailersDetails(User retailers, Iterable<AppDynamicFields> appDynamicFields) {
+		AppPages appPages = null;
+		if (retailers instanceof Retailers) {
+			appPages = SpringUtil.bean(AppPagesRepository.class).findByPageName(retailers.getUser_type());
 		}
-		return fields;
+		AppPagesDTO appPagesDTO = new AppPagesDTO();
+		if (appPages != null) {
+			Set<AppPagesSections> appPagesSectionsSet = appPages.getAppPagesSections();
+			if (appPagesSectionsSet != null && !appPagesSectionsSet.isEmpty()) {
+				List<AppPagesSectionsDTO> appPagesSectionSet = getSections(appPagesSectionsSet, retailers);
+				appPagesDTO.setSections(appPagesSectionSet.stream()
+						.sorted(Comparator.comparing(AppPagesSectionsDTO::getSectionId)).collect(Collectors.toList()));
+				appPagesDTO.setEnable(appPages.isEnable());
+				appPagesDTO.setPageId(appPages.getPageId());
+				appPagesDTO.setPageName(appPages.getPageName());
+				appPagesDTO.setPageTitle(appPages.getPageTitle());
+			}
+		}
+
+		return appPagesDTO;
+	}
+
+	private static List<AppPagesSectionsDTO> getSections(Set<AppPagesSections> appPagesSectionsSet, User retailers) {
+
+		List<AppPagesSectionsDTO> appPagesSectionDTOSet = new ArrayList<AppPagesSectionsDTO>();
+		for (AppPagesSections appPagesSections : appPagesSectionsSet) {
+			AppPagesSectionsDTO appPagesSectionsDTO = new AppPagesSectionsDTO();
+			List<SectionGroupRelationship> sectionGroupRelationships = SpringUtil
+					.bean(SectionGroupRelationshipRepository.class).findBySectionId(appPagesSections.getSectionId());
+			Set<AppPagesSectionGroups> appPagesSectionGroupsSet = sectionGroupRelationships.stream()
+					.map(f -> f.getAppPagesSectionGroups()).collect(Collectors.toSet());
+			if (appPagesSectionGroupsSet != null && !appPagesSectionGroupsSet.isEmpty()) {
+				List<AppPagesSectionGroupsDTO> appPagesSectionGroupSet = getGroups(appPagesSectionGroupsSet, retailers);
+				appPagesSectionsDTO.setGroups(appPagesSectionGroupSet.stream()
+						.sorted(Comparator.comparing(AppPagesSectionGroupsDTO::getGroupId))
+						.collect(Collectors.toList()));
+				appPagesSectionsDTO.setEnable(appPagesSections.isEnable());
+				appPagesSectionsDTO.setSectionId(appPagesSections.getSectionId());
+				appPagesSectionsDTO.setSectionName(appPagesSections.getSectionName());
+				appPagesSectionsDTO.setSectionTitle(appPagesSections.getSectionTitle());
+			}
+			appPagesSectionDTOSet.add(appPagesSectionsDTO);
+		}
+		return appPagesSectionDTOSet;
+
+	}
+
+	private static List<AppPagesSectionGroupsDTO> getGroups(Set<AppPagesSectionGroups> appPagesSectionGroupsSet,
+			User retailers) {
+
+		List<AppPagesSectionGroupsDTO> appPagesSectionGroupSet = new ArrayList<AppPagesSectionGroupsDTO>();
+		for (AppPagesSectionGroups appPagesSectionGroups : appPagesSectionGroupsSet) {
+			AppPagesSectionGroupsDTO appPagesSectionGroupsDTO = new AppPagesSectionGroupsDTO();
+			Set<AppDynamicFields> appDynamicFieldsSet = appPagesSectionGroups.getAppDynamicFields();
+			if (appDynamicFieldsSet != null && !appDynamicFieldsSet.isEmpty()) {
+				List<AppDynamicFieldsDTO> fields = getFields(appDynamicFieldsSet, retailers);
+				appPagesSectionGroupsDTO.setFields(fields.stream()
+						.sorted(Comparator.comparing(AppDynamicFieldsDTO::getId)).collect(Collectors.toList()));
+				appPagesSectionGroupsDTO.setEnable(appPagesSectionGroups.isEnable());
+				appPagesSectionGroupsDTO.setGroupId(appPagesSectionGroups.getGroupId());
+				appPagesSectionGroupsDTO.setGroupName(appPagesSectionGroups.getGroupName());
+				appPagesSectionGroupsDTO.setGroupTitle(appPagesSectionGroups.getGroupTitle());
+			}
+			appPagesSectionGroupSet.add(appPagesSectionGroupsDTO);
+		}
+		return appPagesSectionGroupSet;
+
+	}
+
+	private static List<AppDynamicFieldsDTO> getFields(Set<AppDynamicFields> appDynamicFieldsSet, User retailers) {
+		List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet = new ArrayList<AppDynamicFieldsDTO>();
+		for (AppDynamicFields dynamicFields : appDynamicFieldsSet) {
+			if (dynamicFields.getAppPagesSectionGroups().getGroupId() == 1) {
+				prepareProfileInformation(dynamicFields, retailers, appDynamicFieldsDTOSet);
+
+			} else if (dynamicFields.getAppPagesSectionGroups().getGroupId() == 2) {
+				prepareAddress(dynamicFields, retailers, appDynamicFieldsDTOSet);
+			}
+
+		}
+		return appDynamicFieldsDTOSet;
+
+	}
+
+	private static void prepareAddress(AppDynamicFields dynamicFields, User retailers,
+			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+		Set<AddressDetails> addressDetailsSet = retailers.getAddressDetails();
+		if (addressDetailsSet != null && !addressDetailsSet.isEmpty()) {
+			for (AddressDetails addressDetails : addressDetailsSet) {
+				if (dynamicFields.getFieldId().equals("houseNumberOrStreetName")) {
+					dynamicFields.setSavedData(addressDetails.getHouseNumberOrStreetName());
+				} else if (dynamicFields.getFieldId().equals("area")) {
+					dynamicFields.setSavedData(addressDetails.getArea());
+				} else if (dynamicFields.getFieldId().equals("city")) {
+					dynamicFields.setSavedData(addressDetails.getCity());
+				} else if (dynamicFields.getFieldId().equals("region")) {
+					dynamicFields.setSavedData(addressDetails.getRegion());
+				} else if (dynamicFields.getFieldId().equals("zipCode")) {
+					dynamicFields.setSavedData(addressDetails.getZipCode() + "");
+				} else if (dynamicFields.getFieldId().equals("addressType")) {
+					dynamicFields.setSavedData(
+							addressDetails.getAddressType() != null ? addressDetails.getAddressType().name() : null);
+					List<String> options = new ArrayList<String>();
+					AddressType[] addressTypes = AddressType.values();
+					for (AddressType statuses : addressTypes) {
+						options.add(statuses.name());
+					}
+					dynamicFields.setOptions(options);
+				}
+				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+			}
+		} else {
+			if (dynamicFields.getFieldId().equals("addressType")) {
+				List<String> options = new ArrayList<String>();
+				AddressType[] addressTypes = AddressType.values();
+				for (AddressType statuses : addressTypes) {
+					options.add(statuses.name());
+				}
+				dynamicFields.setOptions(options);
+			}
+			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+		}
+	}
+
+	private static void prepareProfileInformation(AppDynamicFields dynamicFields, User retailers,
+			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+
+		if (dynamicFields.getFieldId().equals("firstName")) {
+			dynamicFields.setSavedData(retailers.getFirstName());
+		} else if (dynamicFields.getFieldId().equals("lastName")) {
+			dynamicFields.setSavedData(retailers.getLastName());
+		} else if (dynamicFields.getFieldId().equals("middleName")) {
+			dynamicFields.setSavedData(retailers.getMiddleName());
+		} else if (dynamicFields.getFieldId().equals("dob")) {
+			dynamicFields.setSavedData(retailers.getDob());
+		} else if (dynamicFields.getFieldId().equals("pob")) {
+			dynamicFields.setSavedData(retailers.getPob());
+		} else if (dynamicFields.getFieldId().equals("fathersName")) {
+			dynamicFields.setSavedData(retailers.getFathersName());
+		} else if (dynamicFields.getFieldId().equals("mothersName")) {
+			dynamicFields.setSavedData(retailers.getMothersName());
+		} else if (dynamicFields.getFieldId().equals("maritalStatus")) {
+			dynamicFields
+					.setSavedData(retailers.getMaritalStatus() != null ? retailers.getMaritalStatus().name() : null);
+			List<String> options = new ArrayList<String>();
+			MaritalStatuses[] maritalStatuses = MaritalStatuses.values();
+			for (MaritalStatuses statuses : maritalStatuses) {
+				options.add(statuses.name());
+			}
+			dynamicFields.setOptions(options);
+
+		} else if (dynamicFields.getFieldId().equals("spouseName")) {
+			dynamicFields.setSavedData(retailers.getSpouseName());
+		} else if (dynamicFields.getFieldId().equals("numberOfDependents")) {
+			dynamicFields.setSavedData(String.valueOf(retailers.getNumberOfDependents()));
+		} else if (dynamicFields.getFieldId().equals("alternateMobileNumber")) {
+			dynamicFields.setSavedData(retailers.getAlternateMobileNumber());
+		}
+		// userDto.setRetailerPhoto("");
+		else if (dynamicFields.getFieldId().equals("birthRegistrationNumber")) {
+			dynamicFields.setSavedData(retailers.getBirthRegistrationNumber());
+		} else if (dynamicFields.getFieldId().equals("drivingLicenseNumber")) {
+			dynamicFields.setSavedData(retailers.getDrivingLicenseNumber());
+		} else if (dynamicFields.getFieldId().equals("email")) {
+			dynamicFields.setSavedData(retailers.getEmail());
+		} else if (dynamicFields.getFieldId().equals("gender")) {
+			dynamicFields.setSavedData(retailers.getGender() != null ? retailers.getGender().name() : null);
+			List<String> options = new ArrayList<String>();
+			Gender[] genders = Gender.values();
+			for (Gender statuses : genders) {
+				options.add(statuses.name());
+			}
+			dynamicFields.setOptions(options);
+		} else if (dynamicFields.getFieldId().equals("id")) {
+			dynamicFields.setSavedData(retailers.getId() + "");
+		} else if (dynamicFields.getFieldId().equals("msisdn")) {
+			dynamicFields.setSavedData(retailers.getMsisdn());
+		} else if (dynamicFields.getFieldId().equals("sisterConcernedOrAllied")) {
+			dynamicFields.setSavedData(retailers.getSisterConcernedOrAllied());
+		} else if (dynamicFields.getFieldId().equals("taxIdentificationNumber")) {
+			dynamicFields.setSavedData(retailers.getTaxIdentificationNumber());
+		} else if (dynamicFields.getFieldId().equals("residentialStatus")) {
+			dynamicFields.setSavedData(
+					retailers.getResidentialStatus() != null ? retailers.getResidentialStatus().name() : null);
+			List<String> options = new ArrayList<String>();
+			ResidentStatus[] residentStatuses = ResidentStatus.values();
+			for (ResidentStatus statuses : residentStatuses) {
+				options.add(statuses.name());
+			}
+			dynamicFields.setOptions(options);
+
+		} else if (dynamicFields.getFieldId().equals("passportNumber")) {
+			dynamicFields.setSavedData(retailers.getPassportNumber());
+		} else if (dynamicFields.getFieldId().equals("passportExpiryDate")) {
+			dynamicFields.setSavedData(retailers.getPassportExpiryDate());
+		} else if (dynamicFields.getFieldId().equals("nationality")) {
+			dynamicFields.setSavedData(retailers.getNationality() != null ? retailers.getNationality().name() : null);
+			List<String> options = new ArrayList<String>();
+			Nationality[] nationalities = Nationality.values();
+			for (Nationality statuses : nationalities) {
+				options.add(statuses.name());
+			}
+			dynamicFields.setOptions(options);
+
+		} else if (dynamicFields.getFieldId().equals("nationalIdNumber")) {
+			dynamicFields.setSavedData(retailers.getNationalIdNumber());
+		}
+		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+
+	}
+
+	private static AppDynamicFieldsDTO getAppDynamicFieldDTO(AppDynamicFields dynamicFields) {
+		AppDynamicFieldsDTO appDynamicFieldsDTO = new AppDynamicFieldsDTO();
+		appDynamicFieldsDTO.setCamera(dynamicFields.isCamera());
+		appDynamicFieldsDTO.setDataType(dynamicFields.getDataType());
+		appDynamicFieldsDTO.setEditable(dynamicFields.isEditable());
+		appDynamicFieldsDTO.setFieldId(dynamicFields.getFieldId());
+		appDynamicFieldsDTO.setFieldName(dynamicFields.getFieldName());
+		appDynamicFieldsDTO.setId(dynamicFields.getId());
+		appDynamicFieldsDTO.setMandatory(dynamicFields.isMandatory());
+		appDynamicFieldsDTO.setOptions(dynamicFields.getOptions());
+		appDynamicFieldsDTO.setPlaceHolderText(dynamicFields.getPlaceHolderText());
+		appDynamicFieldsDTO.setSavedData(dynamicFields.getSavedData());
+		appDynamicFieldsDTO.setType(dynamicFields.getType());
+		appDynamicFieldsDTO.setValidation(dynamicFields.getValidation());
+		return appDynamicFieldsDTO;
 	}
 
 }

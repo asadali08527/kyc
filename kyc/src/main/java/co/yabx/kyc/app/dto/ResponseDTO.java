@@ -6,10 +6,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import co.yabx.kyc.app.entities.AppDynamicFields;
 import co.yabx.kyc.app.enums.DsrProfileStatus;
-import co.yabx.kyc.app.fullKyc.dto.UserDTO;
-import co.yabx.kyc.app.fullKyc.entity.User;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseDTO implements Serializable {
@@ -17,7 +14,7 @@ public class ResponseDTO implements Serializable {
 	private String statusCode;
 	private DsrProfileStatus dsrProfileStatus;
 	private List<RetailersDTO> retailers;
-	private List<AppDynamicFields> retailerInfo;
+	private AppPagesDTO retailerInfo;
 	private Map<String, String> authInfo;
 	private Integer totalCount;
 	private QuestionAnswerDTO questionAnswerDTO;
@@ -93,11 +90,11 @@ public class ResponseDTO implements Serializable {
 		this.questionAnswerDTO = questionAnswerDTO;
 	}
 
-	public List<AppDynamicFields> getRetailerInfo() {
+	public AppPagesDTO getRetailerInfo() {
 		return retailerInfo;
 	}
 
-	public void setRetailerInfo(List<AppDynamicFields> retailerInfo) {
+	public void setRetailerInfo(AppPagesDTO retailerInfo) {
 		this.retailerInfo = retailerInfo;
 	}
 

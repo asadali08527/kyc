@@ -1,7 +1,8 @@
-package co.yabx.kyc.app.entities;
+package co.yabx.kyc.app.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -15,37 +16,29 @@ import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  * The persistent class for the Question database table.
  * 
  */
-@Entity
-@Table(name = "app_pages", indexes = { @Index(name = "page_name", columnList = "page_name") })
-public class AppPages implements Serializable {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class AppPagesDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
 	private Long pageId;
 
-	@Column(name = "page_name")
 	private String pageName;
 
-	@Column(name = "page_title")
 	private String pageTitle;
 
-	@Column(name = "created_at")
 	private Date createdAt;
 
-	@Column(name = "updated_at")
 	private Date updatedAt;
 
-	@Column(name = "enable", nullable = false, columnDefinition = "boolean default true")
 	private boolean enable;
 
-	@OneToMany(mappedBy = "appPages", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-	private Set<AppPagesSections> appPagesSections;
+	private List<AppPagesSectionsDTO> sections;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -87,20 +80,26 @@ public class AppPages implements Serializable {
 		this.enable = enable;
 	}
 
-	public Set<AppPagesSections> getAppPagesSections() {
-		return appPagesSections;
-	}
-
-	public void setAppPagesSections(Set<AppPagesSections> appPagesSections) {
-		this.appPagesSections = appPagesSections;
-	}
-
 	public Long getPageId() {
 		return pageId;
 	}
 
 	public void setPageId(Long pageId) {
 		this.pageId = pageId;
+	}
+
+	public List<AppPagesSectionsDTO> getSections() {
+		return sections;
+	}
+
+	public void setSections(List<AppPagesSectionsDTO> sections) {
+		this.sections = sections;
+	}
+
+	@Override
+	public String toString() {
+		return "AppPagesDTO [pageId=" + pageId + ", pageName=" + pageName + ", pageTitle=" + pageTitle + ", createdAt="
+				+ createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable + ", sections=" + sections + "]";
 	}
 
 }

@@ -8,4 +8,6 @@ import co.yabx.kyc.app.entities.AppPages;
 @Repository("appPagesRepository")
 public interface AppPagesRepository extends CrudRepository<AppPages, Long> {
 
+	AppPages findByPageName(String user_type);
+
 }
