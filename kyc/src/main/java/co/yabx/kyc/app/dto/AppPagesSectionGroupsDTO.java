@@ -73,19 +73,19 @@ public class AppPagesSectionGroupsDTO implements Serializable {
 		this.groupId = groupId;
 	}
 
-	@Override
-	public String toString() {
-		return "AppPagesSectionGroupsDTO [groupId=" + groupId + ", groupName=" + groupName + ", groupTitle="
-				+ groupTitle + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable
-				+ ", fields=" + fields + "]";
-	}
-
 	public List<AppDynamicFieldsDTO> getFields() {
 		return fields;
 	}
 
 	public void setFields(List<AppDynamicFieldsDTO> fields) {
 		this.fields = fields;
+	}
+
+	@Override
+	public String toString() {
+		return "AppPagesSectionGroupsDTO [groupId=" + groupId + ", groupName=" + groupName + ", groupTitle="
+				+ groupTitle + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable
+				+ ", fields=" + fields + "]";
 	}
 
 }

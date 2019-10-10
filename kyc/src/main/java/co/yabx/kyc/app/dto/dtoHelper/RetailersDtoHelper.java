@@ -291,26 +291,35 @@ public class RetailersDtoHelper implements Serializable {
 		return loginDTO;
 	}
 
-	public static AppPagesDTO getRetailersDetails(User retailers, Iterable<AppDynamicFields> appDynamicFields) {
-		AppPages appPages = null;
-		if (retailers instanceof Retailers) {
+	public static List<AppPagesDTO> getRetailersDetails(User retailers) {
+		Iterable<AppPages> appPages = null;
+		if (retailers == null)
+			appPages = SpringUtil.bean(AppPagesRepository.class).findAll();
+		else if (retailers instanceof Retailers) {
 			appPages = SpringUtil.bean(AppPagesRepository.class).findByPageName(retailers.getUser_type());
 		}
-		AppPagesDTO appPagesDTO = new AppPagesDTO();
+		List<AppPagesDTO> appPagesDTOList = new ArrayList<AppPagesDTO>();
 		if (appPages != null) {
-			Set<AppPagesSections> appPagesSectionsSet = appPages.getAppPagesSections();
-			if (appPagesSectionsSet != null && !appPagesSectionsSet.isEmpty()) {
-				List<AppPagesSectionsDTO> appPagesSectionSet = getSections(appPagesSectionsSet, retailers);
-				appPagesDTO.setSections(appPagesSectionSet.stream()
-						.sorted(Comparator.comparing(AppPagesSectionsDTO::getSectionId)).collect(Collectors.toList()));
-				appPagesDTO.setEnable(appPages.isEnable());
-				appPagesDTO.setPageId(appPages.getPageId());
-				appPagesDTO.setPageName(appPages.getPageName());
-				appPagesDTO.setPageTitle(appPages.getPageTitle());
+			Iterator<AppPages> iterator = appPages.iterator();
+			while (iterator.hasNext()) {
+				AppPages pages = iterator.next();
+				AppPagesDTO appPagesDTO = new AppPagesDTO();
+				Set<AppPagesSections> appPagesSectionsSet = pages.getAppPagesSections();
+				if (appPagesSectionsSet != null && !appPagesSectionsSet.isEmpty()) {
+					List<AppPagesSectionsDTO> appPagesSectionSet = getSections(appPagesSectionsSet, retailers);
+					appPagesDTO.setSections(
+							appPagesSectionSet.stream().sorted(Comparator.comparing(AppPagesSectionsDTO::getSectionId))
+									.collect(Collectors.toList()));
+					appPagesDTO.setEnable(pages.isEnable());
+					appPagesDTO.setPageId(pages.getPageId());
+					appPagesDTO.setPageName(pages.getPageName());
+					appPagesDTO.setPageTitle(pages.getPageTitle());
+				}
+				appPagesDTOList.add(appPagesDTO);
 			}
 		}
 
-		return appPagesDTO;
+		return appPagesDTOList;
 	}
 
 	private static List<AppPagesSectionsDTO> getSections(Set<AppPagesSections> appPagesSectionsSet, User retailers) {
@@ -363,10 +372,10 @@ public class RetailersDtoHelper implements Serializable {
 	private static List<AppDynamicFieldsDTO> getFields(Set<AppDynamicFields> appDynamicFieldsSet, User retailers) {
 		List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet = new ArrayList<AppDynamicFieldsDTO>();
 		for (AppDynamicFields dynamicFields : appDynamicFieldsSet) {
-			if (dynamicFields.getAppPagesSectionGroups().getGroupId() == 1) {
+			if (dynamicFields.getGroups().getGroupId() == 1) {
 				prepareProfileInformation(dynamicFields, retailers, appDynamicFieldsDTOSet);
 
-			} else if (dynamicFields.getAppPagesSectionGroups().getGroupId() == 2) {
+			} else if (dynamicFields.getGroups().getGroupId() == 2) {
 				prepareAddress(dynamicFields, retailers, appDynamicFieldsDTOSet);
 			}
 
@@ -377,32 +386,7 @@ public class RetailersDtoHelper implements Serializable {
 
 	private static void prepareAddress(AppDynamicFields dynamicFields, User retailers,
 			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
-		Set<AddressDetails> addressDetailsSet = retailers.getAddressDetails();
-		if (addressDetailsSet != null && !addressDetailsSet.isEmpty()) {
-			for (AddressDetails addressDetails : addressDetailsSet) {
-				if (dynamicFields.getFieldId().equals("houseNumberOrStreetName")) {
-					dynamicFields.setSavedData(addressDetails.getHouseNumberOrStreetName());
-				} else if (dynamicFields.getFieldId().equals("area")) {
-					dynamicFields.setSavedData(addressDetails.getArea());
-				} else if (dynamicFields.getFieldId().equals("city")) {
-					dynamicFields.setSavedData(addressDetails.getCity());
-				} else if (dynamicFields.getFieldId().equals("region")) {
-					dynamicFields.setSavedData(addressDetails.getRegion());
-				} else if (dynamicFields.getFieldId().equals("zipCode")) {
-					dynamicFields.setSavedData(addressDetails.getZipCode() + "");
-				} else if (dynamicFields.getFieldId().equals("addressType")) {
-					dynamicFields.setSavedData(
-							addressDetails.getAddressType() != null ? addressDetails.getAddressType().name() : null);
-					List<String> options = new ArrayList<String>();
-					AddressType[] addressTypes = AddressType.values();
-					for (AddressType statuses : addressTypes) {
-						options.add(statuses.name());
-					}
-					dynamicFields.setOptions(options);
-				}
-				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
-			}
-		} else {
+		if (retailers == null) {
 			if (dynamicFields.getFieldId().equals("addressType")) {
 				List<String> options = new ArrayList<String>();
 				AddressType[] addressTypes = AddressType.values();
@@ -412,91 +396,155 @@ public class RetailersDtoHelper implements Serializable {
 				dynamicFields.setOptions(options);
 			}
 			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+		} else {
+			Set<AddressDetails> addressDetailsSet = retailers.getAddressDetails();
+			if (addressDetailsSet != null && !addressDetailsSet.isEmpty()) {
+				for (AddressDetails addressDetails : addressDetailsSet) {
+					if (dynamicFields.getFieldId().equals("houseNumberOrStreetName")) {
+						dynamicFields.setSavedData(addressDetails.getHouseNumberOrStreetName());
+					} else if (dynamicFields.getFieldId().equals("area")) {
+						dynamicFields.setSavedData(addressDetails.getArea());
+					} else if (dynamicFields.getFieldId().equals("city")) {
+						dynamicFields.setSavedData(addressDetails.getCity());
+					} else if (dynamicFields.getFieldId().equals("region")) {
+						dynamicFields.setSavedData(addressDetails.getRegion());
+					} else if (dynamicFields.getFieldId().equals("zipCode")) {
+						dynamicFields.setSavedData(addressDetails.getZipCode() + "");
+					} else if (dynamicFields.getFieldId().equals("addressType")) {
+						dynamicFields.setSavedData(
+								addressDetails.getAddressType() != null ? addressDetails.getAddressType().name()
+										: null);
+						List<String> options = new ArrayList<String>();
+						AddressType[] addressTypes = AddressType.values();
+						for (AddressType statuses : addressTypes) {
+							options.add(statuses.name());
+						}
+						dynamicFields.setOptions(options);
+					}
+					appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+				}
+			}
 		}
+
 	}
 
 	private static void prepareProfileInformation(AppDynamicFields dynamicFields, User retailers,
 			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+		if (retailers != null) {
+			if (dynamicFields.getFieldId().equals("firstName")) {
+				dynamicFields.setSavedData(retailers.getFirstName());
+			} else if (dynamicFields.getFieldId().equals("lastName")) {
+				dynamicFields.setSavedData(retailers.getLastName());
+			} else if (dynamicFields.getFieldId().equals("middleName")) {
+				dynamicFields.setSavedData(retailers.getMiddleName());
+			} else if (dynamicFields.getFieldId().equals("dob")) {
+				dynamicFields.setSavedData(retailers.getDob());
+			} else if (dynamicFields.getFieldId().equals("pob")) {
+				dynamicFields.setSavedData(retailers.getPob());
+			} else if (dynamicFields.getFieldId().equals("fathersName")) {
+				dynamicFields.setSavedData(retailers.getFathersName());
+			} else if (dynamicFields.getFieldId().equals("mothersName")) {
+				dynamicFields.setSavedData(retailers.getMothersName());
+			} else if (dynamicFields.getFieldId().equals("maritalStatus")) {
+				dynamicFields.setSavedData(
+						retailers.getMaritalStatus() != null ? retailers.getMaritalStatus().name() : null);
+				List<String> options = new ArrayList<String>();
+				MaritalStatuses[] maritalStatuses = MaritalStatuses.values();
+				for (MaritalStatuses statuses : maritalStatuses) {
+					options.add(statuses.name());
+				}
+				dynamicFields.setOptions(options);
 
-		if (dynamicFields.getFieldId().equals("firstName")) {
-			dynamicFields.setSavedData(retailers.getFirstName());
-		} else if (dynamicFields.getFieldId().equals("lastName")) {
-			dynamicFields.setSavedData(retailers.getLastName());
-		} else if (dynamicFields.getFieldId().equals("middleName")) {
-			dynamicFields.setSavedData(retailers.getMiddleName());
-		} else if (dynamicFields.getFieldId().equals("dob")) {
-			dynamicFields.setSavedData(retailers.getDob());
-		} else if (dynamicFields.getFieldId().equals("pob")) {
-			dynamicFields.setSavedData(retailers.getPob());
-		} else if (dynamicFields.getFieldId().equals("fathersName")) {
-			dynamicFields.setSavedData(retailers.getFathersName());
-		} else if (dynamicFields.getFieldId().equals("mothersName")) {
-			dynamicFields.setSavedData(retailers.getMothersName());
-		} else if (dynamicFields.getFieldId().equals("maritalStatus")) {
-			dynamicFields
-					.setSavedData(retailers.getMaritalStatus() != null ? retailers.getMaritalStatus().name() : null);
-			List<String> options = new ArrayList<String>();
-			MaritalStatuses[] maritalStatuses = MaritalStatuses.values();
-			for (MaritalStatuses statuses : maritalStatuses) {
-				options.add(statuses.name());
+			} else if (dynamicFields.getFieldId().equals("spouseName")) {
+				dynamicFields.setSavedData(retailers.getSpouseName());
+			} else if (dynamicFields.getFieldId().equals("numberOfDependents")) {
+				dynamicFields.setSavedData(String.valueOf(retailers.getNumberOfDependents()));
+			} else if (dynamicFields.getFieldId().equals("alternateMobileNumber")) {
+				dynamicFields.setSavedData(retailers.getAlternateMobileNumber());
 			}
-			dynamicFields.setOptions(options);
+			// userDto.setRetailerPhoto("");
+			else if (dynamicFields.getFieldId().equals("birthRegistrationNumber")) {
+				dynamicFields.setSavedData(retailers.getBirthRegistrationNumber());
+			} else if (dynamicFields.getFieldId().equals("drivingLicenseNumber")) {
+				dynamicFields.setSavedData(retailers.getDrivingLicenseNumber());
+			} else if (dynamicFields.getFieldId().equals("email")) {
+				dynamicFields.setSavedData(retailers.getEmail());
+			} else if (dynamicFields.getFieldId().equals("gender")) {
+				dynamicFields.setSavedData(retailers.getGender() != null ? retailers.getGender().name() : null);
+				List<String> options = new ArrayList<String>();
+				Gender[] genders = Gender.values();
+				for (Gender statuses : genders) {
+					options.add(statuses.name());
+				}
+				dynamicFields.setOptions(options);
+			} else if (dynamicFields.getFieldId().equals("id")) {
+				dynamicFields.setSavedData(retailers.getId() + "");
+			} else if (dynamicFields.getFieldId().equals("msisdn")) {
+				dynamicFields.setSavedData(retailers.getMsisdn());
+			} else if (dynamicFields.getFieldId().equals("sisterConcernedOrAllied")) {
+				dynamicFields.setSavedData(retailers.getSisterConcernedOrAllied());
+			} else if (dynamicFields.getFieldId().equals("taxIdentificationNumber")) {
+				dynamicFields.setSavedData(retailers.getTaxIdentificationNumber());
+			} else if (dynamicFields.getFieldId().equals("residentialStatus")) {
+				dynamicFields.setSavedData(
+						retailers.getResidentialStatus() != null ? retailers.getResidentialStatus().name() : null);
+				List<String> options = new ArrayList<String>();
+				ResidentStatus[] residentStatuses = ResidentStatus.values();
+				for (ResidentStatus statuses : residentStatuses) {
+					options.add(statuses.name());
+				}
+				dynamicFields.setOptions(options);
 
-		} else if (dynamicFields.getFieldId().equals("spouseName")) {
-			dynamicFields.setSavedData(retailers.getSpouseName());
-		} else if (dynamicFields.getFieldId().equals("numberOfDependents")) {
-			dynamicFields.setSavedData(String.valueOf(retailers.getNumberOfDependents()));
-		} else if (dynamicFields.getFieldId().equals("alternateMobileNumber")) {
-			dynamicFields.setSavedData(retailers.getAlternateMobileNumber());
-		}
-		// userDto.setRetailerPhoto("");
-		else if (dynamicFields.getFieldId().equals("birthRegistrationNumber")) {
-			dynamicFields.setSavedData(retailers.getBirthRegistrationNumber());
-		} else if (dynamicFields.getFieldId().equals("drivingLicenseNumber")) {
-			dynamicFields.setSavedData(retailers.getDrivingLicenseNumber());
-		} else if (dynamicFields.getFieldId().equals("email")) {
-			dynamicFields.setSavedData(retailers.getEmail());
-		} else if (dynamicFields.getFieldId().equals("gender")) {
-			dynamicFields.setSavedData(retailers.getGender() != null ? retailers.getGender().name() : null);
-			List<String> options = new ArrayList<String>();
-			Gender[] genders = Gender.values();
-			for (Gender statuses : genders) {
-				options.add(statuses.name());
-			}
-			dynamicFields.setOptions(options);
-		} else if (dynamicFields.getFieldId().equals("id")) {
-			dynamicFields.setSavedData(retailers.getId() + "");
-		} else if (dynamicFields.getFieldId().equals("msisdn")) {
-			dynamicFields.setSavedData(retailers.getMsisdn());
-		} else if (dynamicFields.getFieldId().equals("sisterConcernedOrAllied")) {
-			dynamicFields.setSavedData(retailers.getSisterConcernedOrAllied());
-		} else if (dynamicFields.getFieldId().equals("taxIdentificationNumber")) {
-			dynamicFields.setSavedData(retailers.getTaxIdentificationNumber());
-		} else if (dynamicFields.getFieldId().equals("residentialStatus")) {
-			dynamicFields.setSavedData(
-					retailers.getResidentialStatus() != null ? retailers.getResidentialStatus().name() : null);
-			List<String> options = new ArrayList<String>();
-			ResidentStatus[] residentStatuses = ResidentStatus.values();
-			for (ResidentStatus statuses : residentStatuses) {
-				options.add(statuses.name());
-			}
-			dynamicFields.setOptions(options);
+			} else if (dynamicFields.getFieldId().equals("passportNumber")) {
+				dynamicFields.setSavedData(retailers.getPassportNumber());
+			} else if (dynamicFields.getFieldId().equals("passportExpiryDate")) {
+				dynamicFields.setSavedData(retailers.getPassportExpiryDate());
+			} else if (dynamicFields.getFieldId().equals("nationality")) {
+				dynamicFields
+						.setSavedData(retailers.getNationality() != null ? retailers.getNationality().name() : null);
+				List<String> options = new ArrayList<String>();
+				Nationality[] nationalities = Nationality.values();
+				for (Nationality statuses : nationalities) {
+					options.add(statuses.name());
+				}
+				dynamicFields.setOptions(options);
 
-		} else if (dynamicFields.getFieldId().equals("passportNumber")) {
-			dynamicFields.setSavedData(retailers.getPassportNumber());
-		} else if (dynamicFields.getFieldId().equals("passportExpiryDate")) {
-			dynamicFields.setSavedData(retailers.getPassportExpiryDate());
-		} else if (dynamicFields.getFieldId().equals("nationality")) {
-			dynamicFields.setSavedData(retailers.getNationality() != null ? retailers.getNationality().name() : null);
-			List<String> options = new ArrayList<String>();
-			Nationality[] nationalities = Nationality.values();
-			for (Nationality statuses : nationalities) {
-				options.add(statuses.name());
+			} else if (dynamicFields.getFieldId().equals("nationalIdNumber")) {
+				dynamicFields.setSavedData(retailers.getNationalIdNumber());
 			}
-			dynamicFields.setOptions(options);
+		} else {
+			if (dynamicFields.getFieldId().equals("nationality")) {
+				List<String> options = new ArrayList<String>();
+				Nationality[] nationalities = Nationality.values();
+				for (Nationality statuses : nationalities) {
+					options.add(statuses.name());
+				}
+				dynamicFields.setOptions(options);
+			} else if (dynamicFields.getFieldId().equals("residentialStatus")) {
 
-		} else if (dynamicFields.getFieldId().equals("nationalIdNumber")) {
-			dynamicFields.setSavedData(retailers.getNationalIdNumber());
+				List<String> options = new ArrayList<String>();
+				ResidentStatus[] residentStatuses = ResidentStatus.values();
+				for (ResidentStatus statuses : residentStatuses) {
+					options.add(statuses.name());
+				}
+				dynamicFields.setOptions(options);
+			} else if (dynamicFields.getFieldId().equals("gender")) {
+				List<String> options = new ArrayList<String>();
+				Gender[] genders = Gender.values();
+				for (Gender statuses : genders) {
+					options.add(statuses.name());
+				}
+				dynamicFields.setOptions(options);
+			} else if (dynamicFields.getFieldId().equals("maritalStatus")) {
+
+				List<String> options = new ArrayList<String>();
+				MaritalStatuses[] maritalStatuses = MaritalStatuses.values();
+				for (MaritalStatuses statuses : maritalStatuses) {
+					options.add(statuses.name());
+				}
+				dynamicFields.setOptions(options);
+
+			}
 		}
 		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 

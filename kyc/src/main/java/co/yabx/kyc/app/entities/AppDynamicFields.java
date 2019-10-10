@@ -27,7 +27,7 @@ import co.yabx.kyc.app.enums.InputType;
  * 
  */
 @Entity
-@Table(name = "app_dynamic_fields", indexes = { @Index(name = "field_id", columnList = "field_id"),
+@Table(name = "fields", indexes = { @Index(name = "field_id", columnList = "field_id"),
 		@Index(name = "field_name", columnList = "field_name") })
 @NamedQuery(name = "AppDynamicFields.findAll", query = "SELECT q FROM AppDynamicFields q")
 public class AppDynamicFields implements Serializable {
@@ -86,7 +86,7 @@ public class AppDynamicFields implements Serializable {
 	private List<String> options;
 
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = AppPagesSectionGroups.class)
-	AppPagesSectionGroups appPagesSectionGroups;
+	private AppPagesSectionGroups groups;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -200,20 +200,20 @@ public class AppDynamicFields implements Serializable {
 		this.id = id;
 	}
 
-	public AppPagesSectionGroups getAppPagesSectionGroups() {
-		return appPagesSectionGroups;
-	}
-
-	public void setAppPagesSectionGroups(AppPagesSectionGroups appPagesSectionGroups) {
-		this.appPagesSectionGroups = appPagesSectionGroups;
-	}
-
 	public String getValidation() {
 		return validation;
 	}
 
 	public void setValidation(String validation) {
 		this.validation = validation;
+	}
+
+	public AppPagesSectionGroups getGroups() {
+		return groups;
+	}
+
+	public void setGroups(AppPagesSectionGroups groups) {
+		this.groups = groups;
 	}
 
 	@Override

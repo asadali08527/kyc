@@ -93,4 +93,10 @@ public class SectionGroupRelationship implements Serializable {
 		this.appPagesSectionGroups = appPagesSectionGroups;
 	}
 
+	@Override
+	public String toString() {
+		return "SectionGroupRelationship [id=" + id + ", sectionId=" + sectionId + ", appPagesSectionGroups="
+				+ appPagesSectionGroups + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+	}
+
 }

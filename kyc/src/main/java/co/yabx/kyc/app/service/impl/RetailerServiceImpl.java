@@ -85,12 +85,14 @@ public class RetailerServiceImpl implements RetailerService {
 					user.get());
 			if (dsrRetailersRelationships != null) {
 				ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
-				responseDTO.setRetailerInfo(
-						RetailersDtoHelper.getRetailersDetails(user.get(), appDynamicFieldsRepository.findAll()));
+				responseDTO.setRetailerInfo(RetailersDtoHelper.getRetailersDetails(user.get()));
 				return responseDTO;
 			}
 		}
-		return RetailersDtoHelper.getResponseDTO(null, "Retailer Not Found", "404", null);
+		ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "Retailer Not Found", "404", null);
+		responseDTO.setRetailerInfo(RetailersDtoHelper.getRetailersDetails(null));
+		return responseDTO;
+
 		// return RetailersDtoHelper.getCompletRetailerInfo(dsrMsisdn, retailerId);
 	}
 

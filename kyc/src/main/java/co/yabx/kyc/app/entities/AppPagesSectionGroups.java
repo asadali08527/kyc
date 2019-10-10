@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -21,7 +20,7 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "app_pages_section_groups", indexes = { @Index(name = "group_name", columnList = "group_name") })
+@Table(name = "groups", indexes = { @Index(name = "group_name", columnList = "group_name") })
 public class AppPagesSectionGroups implements Serializable {
 	private static final long serialVersionUID = 214321L;
 
@@ -45,7 +44,7 @@ public class AppPagesSectionGroups implements Serializable {
 	@Column(name = "enable", columnDefinition = "boolean default true")
 	private boolean enable;
 
-	@OneToMany(mappedBy = "appPagesSectionGroups", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "groups", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private Set<AppDynamicFields> appDynamicFields;
 
 	public Date getCreatedAt() {
@@ -102,6 +101,13 @@ public class AppPagesSectionGroups implements Serializable {
 
 	public void setAppDynamicFields(Set<AppDynamicFields> appDynamicFields) {
 		this.appDynamicFields = appDynamicFields;
+	}
+
+	@Override
+	public String toString() {
+		return "AppPagesSectionGroups [groupId=" + groupId + ", groupName=" + groupName + ", groupTitle=" + groupTitle
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable + ", appDynamicFields="
+				+ appDynamicFields + "]";
 	}
 
 }

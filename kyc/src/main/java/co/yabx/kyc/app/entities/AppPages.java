@@ -20,7 +20,7 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "app_pages", indexes = { @Index(name = "page_name", columnList = "page_name") })
+@Table(name = "pages", indexes = { @Index(name = "page_name", columnList = "page_name") })
 public class AppPages implements Serializable {
 	private static final long serialVersionUID = 1L;
 

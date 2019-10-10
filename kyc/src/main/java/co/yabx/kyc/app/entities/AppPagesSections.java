@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "app_pages_sections", indexes = { @Index(name = "section_name", columnList = "section_name") })
+@Table(name = "pages_sections", indexes = { @Index(name = "section_name", columnList = "section_name") })
 public class AppPagesSections implements Serializable {
 	private static final long serialVersionUID = 1547547L;
 
