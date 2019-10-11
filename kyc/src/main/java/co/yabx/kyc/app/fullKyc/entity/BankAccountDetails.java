@@ -1,11 +1,12 @@
 package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
-import java.util.Currency;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 
 import co.yabx.kyc.app.enums.BankAccountIdentifier;
 import co.yabx.kyc.app.enums.BankAccountType;
+import co.yabx.kyc.app.enums.Currency;
 
 @Entity
 @Table(name = "bank_account_details", indexes = { @Index(name = "bank_name", columnList = "bank_name"),
@@ -46,13 +48,15 @@ public class BankAccountDetails implements Serializable {
 	@Column(name = "branch")
 	private String branch;
 
-	@Column(name = "currency")
+	@Column(name = "currency", length = 100, nullable = false, columnDefinition = "varchar(32) ")
+	@Enumerated(value = EnumType.STRING)
 	private Currency currency;
 
 	@Column(name = "operation_mode")
 	private String modeOfOperation;
 
-	@Column(name = "account_type")
+	@Column(name = "account_type", length = 100, nullable = false, columnDefinition = "varchar(32) ")
+	@Enumerated(value = EnumType.STRING)
 	private BankAccountType bankAccountType;
 
 	@Column(name = "account_identifier")
@@ -195,6 +199,46 @@ public class BankAccountDetails implements Serializable {
 	private void preUpdate() {
 		updatedAt = new Date();
 
+	}
+
+	public String getAccountTitle() {
+		return accountTitle;
+	}
+
+	public void setAccountTitle(String accountTitle) {
+		this.accountTitle = accountTitle;
+	}
+
+	public String getTypeOfConcern() {
+		return typeOfConcern;
+	}
+
+	public void setTypeOfConcern(String typeOfConcern) {
+		this.typeOfConcern = typeOfConcern;
+	}
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
+
+	public String getModeOfOperation() {
+		return modeOfOperation;
+	}
+
+	public void setModeOfOperation(String modeOfOperation) {
+		this.modeOfOperation = modeOfOperation;
+	}
+
+	public CustomerInformations getCustomerInformations() {
+		return customerInformations;
+	}
+
+	public void setCustomerInformations(CustomerInformations customerInformations) {
+		this.customerInformations = customerInformations;
 	}
 
 }
