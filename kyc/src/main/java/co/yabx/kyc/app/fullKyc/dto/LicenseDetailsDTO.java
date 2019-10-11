@@ -14,7 +14,7 @@ public class LicenseDetailsDTO implements Serializable {
 
 	private String licenseNumber;
 
-	private Long licenseExpiryDate;
+	private String licenseExpiryDate;
 
 	private String licenseIssuingAuthority;
 
@@ -76,11 +76,11 @@ public class LicenseDetailsDTO implements Serializable {
 		this.licenseNumber = licenseNumber;
 	}
 
-	public Long getLicenseExpiryDate() {
+	public String getLicenseExpiryDate() {
 		return licenseExpiryDate;
 	}
 
-	public void setLicenseExpiryDate(Long licenseExpiryDate) {
+	public void setLicenseExpiryDate(String licenseExpiryDate) {
 		this.licenseExpiryDate = licenseExpiryDate;
 	}
 

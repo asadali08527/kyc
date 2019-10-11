@@ -28,7 +28,7 @@ public class LicenseDetails implements Serializable {
 	private String licenseNumber;
 
 	@Column(name = "license_expiry_date")
-	private Long licenseExpiryDate;
+	private String licenseExpiryDate;
 
 	@Column(name = "license_issuing_authority")
 	private String licenseIssuingAuthority;
@@ -110,11 +110,11 @@ public class LicenseDetails implements Serializable {
 		this.licenseNumber = licenseNumber;
 	}
 
-	public Long getLicenseExpiryDate() {
+	public String getLicenseExpiryDate() {
 		return licenseExpiryDate;
 	}
 
-	public void setLicenseExpiryDate(Long licenseExpiryDate) {
+	public void setLicenseExpiryDate(String licenseExpiryDate) {
 		this.licenseExpiryDate = licenseExpiryDate;
 	}
 

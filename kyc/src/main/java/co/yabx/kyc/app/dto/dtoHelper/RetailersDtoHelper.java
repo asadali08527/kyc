@@ -54,7 +54,9 @@ import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
+import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
 import co.yabx.kyc.app.fullKyc.entity.LiabilitiesDetails;
+import co.yabx.kyc.app.fullKyc.entity.LicenseDetails;
 import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.repositories.AppPagesRepository;
@@ -235,7 +237,7 @@ public class RetailersDtoHelper implements Serializable {
 		businessDetailsDTO.setInitialDeposit(76543.00);
 		// Business License Details
 		LicenseDetailsDTO licenseDetailsDTO = new LicenseDetailsDTO();
-		licenseDetailsDTO.setLicenseExpiryDate(new Date().getTime());
+		// licenseDetailsDTO.setLicenseExpiryDate(new Date().getTime());
 		licenseDetailsDTO.setLicenseIssuingAuthority("Govt.");
 		licenseDetailsDTO.setLicenseNumber("AB768Mn01");
 		licenseDetailsDTO.setLicenseType(LicenseType.TRADE);
@@ -315,7 +317,7 @@ public class RetailersDtoHelper implements Serializable {
 									.collect(Collectors.toList()));
 					appPagesDTO.setEnable(pages.isEnable());
 					appPagesDTO.setPageId(pages.getPageId());
-					appPagesDTO.setPageName(pages.getPageName());
+					//appPagesDTO.setPageName(pages.getPageName());
 					appPagesDTO.setPageTitle(pages.getPageTitle());
 				}
 				appPagesDTOList.add(appPagesDTO);
@@ -384,10 +386,123 @@ public class RetailersDtoHelper implements Serializable {
 				prepareAccountInformations(dynamicFields, retailers, appDynamicFieldsDTOSet);
 			} else if (dynamicFields.getGroups().getGroupId() == 4) {
 				prepareLiabilitiesDetails(dynamicFields, retailers, appDynamicFieldsDTOSet);
+			} else if (dynamicFields.getGroups().getGroupId() == 5) {
+				prepareBusinessInformation(dynamicFields, retailers, appDynamicFieldsDTOSet);
+			} else if (dynamicFields.getGroups().getGroupId() == 6) {
+				prepareLicenseDetails(dynamicFields, retailers, appDynamicFieldsDTOSet);
 			}
 
 		}
 		return appDynamicFieldsDTOSet;
+
+	}
+
+	private static void prepareLicenseDetails(AppDynamicFields dynamicFields, User retailers,
+			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+		if (retailers == null || retailers.getBusinessDetails() == null || retailers.getBusinessDetails().isEmpty()) {
+			if (dynamicFields.getFieldId().equals("licenseType")) {
+				List<String> options = new ArrayList<String>();
+				LicenseType[] accountTypes = LicenseType.values();
+				for (LicenseType statuses : accountTypes) {
+					options.add(statuses.name());
+				}
+				dynamicFields.setOptions(options);
+			}
+			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+		} else {
+			Set<BusinessDetails> businessDetailsSet = retailers.getBusinessDetails();
+			for (BusinessDetails businessDetails : businessDetailsSet) {
+				LicenseDetails licenseDetails = businessDetails.getLicenseDetails();
+				if (dynamicFields.getFieldId().equals("licenseNumber")) {
+					dynamicFields.setSavedData(licenseDetails.getLicenseNumber());
+				} else if (dynamicFields.getFieldId().equals("licenseExpiryDate")) {
+					dynamicFields.setSavedData(licenseDetails.getLicenseExpiryDate());
+				} else if (dynamicFields.getFieldId().equals("licenseIssuingAuthority")) {
+					dynamicFields.setSavedData(licenseDetails.getLicenseIssuingAuthority());
+				} else if (dynamicFields.getFieldId().equals("licenseType")) {
+					dynamicFields.setSavedData(
+							licenseDetails.getLicenseType() != null ? licenseDetails.getLicenseType().name() : null);
+					List<String> options = new ArrayList<String>();
+					LicenseType[] accountTypes = LicenseType.values();
+					for (LicenseType statuses : accountTypes) {
+						options.add(statuses.name());
+					}
+					dynamicFields.setOptions(options);
+				}
+				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+			}
+
+		}
+
+	}
+
+	private static void prepareBusinessInformation(AppDynamicFields dynamicFields, User retailers,
+			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+
+		if (retailers == null || retailers.getBusinessDetails() == null || retailers.getBusinessDetails().isEmpty()) {
+			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+		} else {
+			Set<BusinessDetails> BusinessDetailsSet = retailers.getBusinessDetails();
+			for (BusinessDetails businessDetails : BusinessDetailsSet) {
+				if (dynamicFields.getFieldId().equals("businessPhone")) {
+					dynamicFields.setSavedData(businessDetails.getBusinessPhone());
+				} else if (dynamicFields.getFieldId().equals("businessName")) {
+					dynamicFields.setSavedData(businessDetails.getBusinessName());
+				} else if (dynamicFields.getFieldId().equals("directorOrPartnerName")) {
+					dynamicFields.setSavedData(businessDetails.getDirectorOrPartnerName());
+				} else if (dynamicFields.getFieldId().equals("facilityDetails")) {
+					dynamicFields.setSavedData(businessDetails.getFacilityDetails());
+				} else if (dynamicFields.getFieldId().equals("facilityType")) {
+					dynamicFields.setSavedData(businessDetails.getFacilityType());
+				} else if (dynamicFields.getFieldId().equals("fixedAssetPurchase")) {
+					dynamicFields.setSavedData(businessDetails.getFixedAssetPurchase());
+				} else if (dynamicFields.getFieldId().equals("fixedAssetName")) {
+					dynamicFields.setSavedData(businessDetails.getFixedAssetName());
+				} else if (dynamicFields.getFieldId().equals("price")) {
+					dynamicFields.setSavedData(businessDetails.getPrice() + "");
+				} else if (dynamicFields.getFieldId().equals("origin")) {
+					dynamicFields.setSavedData(businessDetails.getOrigin());
+				} else if (dynamicFields.getFieldId().equals("proposedCollateral")) {
+					dynamicFields.setSavedData(businessDetails.getProposedCollateral());
+				} else if (dynamicFields.getFieldId().equals("businessType")) {
+					dynamicFields.setSavedData(businessDetails.getBusinessType());
+				} else if (dynamicFields.getFieldId().equals("sector")) {
+					dynamicFields.setSavedData(businessDetails.getSector());
+				} else if (dynamicFields.getFieldId().equals("detailOfBusness")) {
+					dynamicFields.setSavedData(businessDetails.getDetailOfBusness());
+				} else if (dynamicFields.getFieldId().equals("initialCapital")) {
+					dynamicFields.setSavedData(businessDetails.getInitialCapital() + "");
+				} else if (dynamicFields.getFieldId().equals("fundSource")) {
+					dynamicFields.setSavedData(businessDetails.getFundSource());
+				} else if (dynamicFields.getFieldId().equals("vatRegistrationNumber")) {
+					dynamicFields.setSavedData(businessDetails.getVatRegistrationNumber());
+				} else if (dynamicFields.getFieldId().equals("businessStartDate")) {
+					dynamicFields.setSavedData(businessDetails.getBusinessStartDate());
+				} else if (dynamicFields.getFieldId().equals("businessTin")) {
+					dynamicFields.setSavedData(businessDetails.getBusinessTin());
+				} else if (dynamicFields.getFieldId().equals("annualSales")) {
+					dynamicFields.setSavedData(businessDetails.getAnnualSales() + "");
+				} else if (dynamicFields.getFieldId().equals("annualGrossProfit")) {
+					dynamicFields.setSavedData(businessDetails.getAnnualGrossProfit() + "");
+				} else if (dynamicFields.getFieldId().equals("annualExpenses")) {
+					dynamicFields.setSavedData(businessDetails.getAnnualExpenses() + "");
+				} else if (dynamicFields.getFieldId().equals("valueOfFixedAssets")) {
+					dynamicFields.setSavedData(businessDetails.getValueOfFixedAssets() + "");
+				} else if (dynamicFields.getFieldId().equals("numberOfEmployees")) {
+					dynamicFields.setSavedData(businessDetails.getNumberOfEmployees() + "");
+				} else if (dynamicFields.getFieldId().equals("stockValue")) {
+					dynamicFields.setSavedData(businessDetails.getStockValue() + "");
+				} else if (dynamicFields.getFieldId().equals("deposits")) {
+					dynamicFields.setSavedData(businessDetails.getDeposits() + "");
+				} else if (dynamicFields.getFieldId().equals("withdrawls")) {
+					dynamicFields.setSavedData(businessDetails.getWithdrawls() + "");
+				} else if (dynamicFields.getFieldId().equals("initialDeposit")) {
+					dynamicFields.setSavedData(businessDetails.getInitialDeposit() + "");
+				}
+				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+			}
+
+		}
 
 	}
 
