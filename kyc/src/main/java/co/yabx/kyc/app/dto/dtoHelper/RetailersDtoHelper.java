@@ -310,30 +310,34 @@ public class RetailersDtoHelper implements Serializable {
 		if (appPages != null) {
 			Iterator<AppPages> iterator = appPages.iterator();
 			while (iterator.hasNext()) {
-				Map<String, Integer> filledVsUnfilled = new HashMap<String, Integer>();
-				filledVsUnfilled.put("filledFields", 0);
-				filledVsUnfilled.put("totalFields", 0);
 				AppPages pages = iterator.next();
-				AppPagesDTO appPagesDTO = new AppPagesDTO();
-				Set<AppPagesSections> appPagesSectionsSet = pages.getAppPagesSections();
-				if (appPagesSectionsSet != null && !appPagesSectionsSet.isEmpty()) {
-					List<AppPagesSectionsDTO> appPagesSectionSet = getSections(appPagesSectionsSet, retailers,
-							filledVsUnfilled);
-					appPagesDTO.setSections(
-							appPagesSectionSet.stream().sorted(Comparator.comparing(AppPagesSectionsDTO::getSectionId))
-									.collect(Collectors.toList()));
-					appPagesDTO.setEnable(pages.isEnable());
-					appPagesDTO.setPageId(pages.getPageId());
-					// appPagesDTO.setPageName(pages.getPageName());
-					appPagesDTO.setPageTitle(pages.getPageTitle());
-					appPagesDTO.setTotalFields(filledVsUnfilled.get("totalFields"));
-					appPagesDTO.setFilledFields(filledVsUnfilled.get("filledFields"));
-				}
-				appPagesDTOList.add(appPagesDTO);
+				appPagesDTOList.add(preparePages(pages, retailers));
 			}
 		}
-
 		return appPagesDTOList;
+	}
+
+	private static AppPagesDTO preparePages(AppPages pages, User retailers) {
+		AppPagesDTO appPagesDTO = new AppPagesDTO();
+		Map<String, Integer> filledVsUnfilled = new HashMap<String, Integer>();
+		filledVsUnfilled.put("filledFields", 0);
+		filledVsUnfilled.put("totalFields", 0);
+		Set<AppPagesSections> appPagesSectionsSet = pages.getAppPagesSections();
+		if (appPagesSectionsSet != null && !appPagesSectionsSet.isEmpty()) {
+			List<AppPagesSectionsDTO> appPagesSectionSet = getSections(appPagesSectionsSet, retailers,
+					filledVsUnfilled);
+			appPagesDTO.setSections(appPagesSectionSet.stream()
+					.sorted(Comparator.comparing(AppPagesSectionsDTO::getSectionId)).collect(Collectors.toList()));
+			appPagesDTO.setEnable(pages.isEnable());
+			appPagesDTO.setPageId(pages.getPageId());
+			// appPagesDTO.setPageName(pages.getPageName());
+			appPagesDTO.setPageTitle(pages.getPageTitle());
+			appPagesDTO.setTotalFields(filledVsUnfilled.get("totalFields"));
+			appPagesDTO.setFilledFields(filledVsUnfilled.get("filledFields"));
+			appPagesDTO
+					.setProfileCompeltion(((appPagesDTO.getFilledFields() * 100) / appPagesDTO.getTotalFields()) + "%");
+		}
+		return appPagesDTO;
 	}
 
 	private static List<AppPagesSectionsDTO> getSections(Set<AppPagesSections> appPagesSectionsSet, User retailers,
