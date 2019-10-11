@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
@@ -16,5 +17,7 @@ public interface UserRelationshipsRepository extends CrudRepository<UserRelation
 
 	UserRelationships findByRelative(User user);
 
-	UserRelationships findByMsisdnAndRelative(String dsrMsisdn, Retailers retailers);;
+	UserRelationships findByMsisdnAndRelative(String dsrMsisdn, Retailers retailers);
+
+	User findByMsisdnAndRelationship(String msisdn, Relationship nominee);
 }
