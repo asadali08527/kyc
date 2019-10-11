@@ -295,7 +295,7 @@ public class RetailersDtoHelper implements Serializable {
 		Iterable<AppPages> appPages = null;
 		if (retailers == null)
 			appPages = SpringUtil.bean(AppPagesRepository.class).findAll();
-		else if (retailers instanceof Retailers) {
+		else if ("retailers".equalsIgnoreCase(retailers.getUser_type())) {
 			appPages = SpringUtil.bean(AppPagesRepository.class).findByPageName(retailers.getUser_type());
 		}
 		List<AppPagesDTO> appPagesDTOList = new ArrayList<AppPagesDTO>();
@@ -386,7 +386,7 @@ public class RetailersDtoHelper implements Serializable {
 
 	private static void prepareAddress(AppDynamicFields dynamicFields, User retailers,
 			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
-		if (retailers == null) {
+		if (retailers == null || retailers.getAddressDetails() == null || retailers.getAddressDetails().isEmpty()) {
 			if (dynamicFields.getFieldId().equals("addressType")) {
 				List<String> options = new ArrayList<String>();
 				AddressType[] addressTypes = AddressType.values();
