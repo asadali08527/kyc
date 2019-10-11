@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import co.yabx.kyc.app.dto.ActionDTO;
 import co.yabx.kyc.app.dto.AppDynamicFieldsDTO;
 import co.yabx.kyc.app.dto.AppPagesDTO;
 import co.yabx.kyc.app.dto.AppPagesSectionGroupsDTO;
@@ -436,6 +437,7 @@ public class RetailersDtoHelper implements Serializable {
 				appPagesSectionGroupsDTO.setGroupTitle(appPagesSectionGroups.getGroupTitle());
 				appPagesSectionGroupsDTO.setTotalFields(groups.get("totalFields"));
 				appPagesSectionGroupsDTO.setFilledFields(groups.get("filledFields"));
+				appPagesSectionGroupsDTO.setAction(prepareActions(appPagesSectionGroups));
 			}
 			appPagesSectionGroupSet.add(appPagesSectionGroupsDTO);
 			filledVsUnfilled.put("filledFields", filledVsUnfilled.get("filledFields") + groups.get("filledFields"));
@@ -444,6 +446,14 @@ public class RetailersDtoHelper implements Serializable {
 
 		return appPagesSectionGroupSet;
 
+	}
+
+	private static ActionDTO prepareActions(AppPagesSectionGroups appPagesSectionGroups) {
+		ActionDTO actionDTO = new ActionDTO();
+		actionDTO.setData("Submit");
+		actionDTO.setName("submitForm");
+		actionDTO.setType("submit");
+		return actionDTO;
 	}
 
 	private static List<AppDynamicFieldsDTO> getFields(Set<AppDynamicFields> appDynamicFieldsSet, User retailers,

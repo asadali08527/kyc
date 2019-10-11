@@ -3,7 +3,6 @@ package co.yabx.kyc.app.dto;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -26,6 +25,8 @@ public class AppPagesSectionGroupsDTO implements Serializable {
 	private Integer totalFields;
 
 	private Integer filledFields;
+
+	private ActionDTO action;
 
 	private List<AppDynamicFieldsDTO> fields;
 
@@ -106,6 +107,14 @@ public class AppPagesSectionGroupsDTO implements Serializable {
 		return "AppPagesSectionGroupsDTO [groupId=" + groupId + ", groupName=" + groupName + ", groupTitle="
 				+ groupTitle + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable
 				+ ", fields=" + fields + "]";
+	}
+
+	public ActionDTO getAction() {
+		return action;
+	}
+
+	public void setAction(ActionDTO action) {
+		this.action = action;
 	}
 
 }
