@@ -36,7 +36,7 @@ public class AppPagesDTO implements Serializable {
 
 	private List<AppPagesSectionsDTO> sections;
 
-	private String profileCompeltion;
+	private String pageCompletion;
 
 	public String getPageType() {
 		return pageType;
@@ -132,12 +132,12 @@ public class AppPagesDTO implements Serializable {
 				+ createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable + ", sections=" + sections + "]";
 	}
 
-	public String getProfileCompeltion() {
-		return profileCompeltion;
+	public String getPageCompletion() {
+		return pageCompletion;
 	}
 
-	public void setProfileCompeltion(String profileCompeltion) {
-		this.profileCompeltion = profileCompeltion;
+	public void setPageCompletion(String pageCompletion) {
+		this.pageCompletion = pageCompletion;
 	}
 
 }

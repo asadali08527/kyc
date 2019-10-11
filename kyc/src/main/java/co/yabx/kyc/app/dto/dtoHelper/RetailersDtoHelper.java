@@ -366,8 +366,7 @@ public class RetailersDtoHelper implements Serializable {
 			appPagesDTO.setPageTitle(pages.getPageTitle());
 			appPagesDTO.setTotalFields(filledVsUnfilled.get("totalFields"));
 			appPagesDTO.setFilledFields(filledVsUnfilled.get("filledFields"));
-			appPagesDTO
-					.setProfileCompeltion(((appPagesDTO.getFilledFields() * 100) / appPagesDTO.getTotalFields()) + "%");
+			appPagesDTO.setPageCompletion(((appPagesDTO.getFilledFields() * 100) / appPagesDTO.getTotalFields()) + "%");
 		}
 		return appPagesDTO;
 	}
