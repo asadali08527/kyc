@@ -1,5 +1,6 @@
 package co.yabx.kyc.app.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import co.yabx.kyc.app.dto.AppPagesDTO;
 import co.yabx.kyc.app.dto.QuestionAnswerDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.RetailerRequestDTO;
@@ -68,9 +70,19 @@ public class RetailerServiceImpl implements RetailerService {
 				List<User> retailers = dsrRetailersRelationships.stream()
 						.filter(f -> Relationship.RETAILER.equals(f.getRelationship())).map(f -> f.getRelative())
 						.collect(Collectors.toList());
-				return RetailersDtoHelper.getSummary(retailers);
+				ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
+				List<AppPagesDTO> appPagesDTOs = new ArrayList<AppPagesDTO>();
+				for (User user : retailers) {
+					appPagesDTOs.addAll(RetailersDtoHelper.getRetailersDetails(user));
+				}
+				responseDTO.setRetailerInfo(appPagesDTOs);
+				return responseDTO;
+			} else {
+				ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "No Retailers Found for the DSR",
+						"404", null);
+				responseDTO.setRetailerInfo(RetailersDtoHelper.getRetailersDetails(null));
+				return responseDTO;
 			}
-			return RetailersDtoHelper.getSummary(null);
 			// return RetailersDtoHelper.getResponseDTO(null, "No Retailers Found for the
 			// DSR", "404", null);
 		}
