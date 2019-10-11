@@ -7,9 +7,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -297,6 +299,7 @@ public class RetailersDtoHelper implements Serializable {
 	}
 
 	public static List<AppPagesDTO> getRetailersDetails(User retailers) {
+
 		Iterable<AppPages> appPages = null;
 		if (retailers == null)
 			appPages = SpringUtil.bean(AppPagesRepository.class).findAll();
@@ -307,18 +310,24 @@ public class RetailersDtoHelper implements Serializable {
 		if (appPages != null) {
 			Iterator<AppPages> iterator = appPages.iterator();
 			while (iterator.hasNext()) {
+				Map<String, Integer> filledVsUnfilled = new HashMap<String, Integer>();
+				filledVsUnfilled.put("filledFields", 0);
+				filledVsUnfilled.put("totalFields", 0);
 				AppPages pages = iterator.next();
 				AppPagesDTO appPagesDTO = new AppPagesDTO();
 				Set<AppPagesSections> appPagesSectionsSet = pages.getAppPagesSections();
 				if (appPagesSectionsSet != null && !appPagesSectionsSet.isEmpty()) {
-					List<AppPagesSectionsDTO> appPagesSectionSet = getSections(appPagesSectionsSet, retailers);
+					List<AppPagesSectionsDTO> appPagesSectionSet = getSections(appPagesSectionsSet, retailers,
+							filledVsUnfilled);
 					appPagesDTO.setSections(
 							appPagesSectionSet.stream().sorted(Comparator.comparing(AppPagesSectionsDTO::getSectionId))
 									.collect(Collectors.toList()));
 					appPagesDTO.setEnable(pages.isEnable());
 					appPagesDTO.setPageId(pages.getPageId());
-					//appPagesDTO.setPageName(pages.getPageName());
+					// appPagesDTO.setPageName(pages.getPageName());
 					appPagesDTO.setPageTitle(pages.getPageTitle());
+					appPagesDTO.setTotalFields(filledVsUnfilled.get("totalFields"));
+					appPagesDTO.setFilledFields(filledVsUnfilled.get("filledFields"));
 				}
 				appPagesDTOList.add(appPagesDTO);
 			}
@@ -327,17 +336,21 @@ public class RetailersDtoHelper implements Serializable {
 		return appPagesDTOList;
 	}
 
-	private static List<AppPagesSectionsDTO> getSections(Set<AppPagesSections> appPagesSectionsSet, User retailers) {
-
+	private static List<AppPagesSectionsDTO> getSections(Set<AppPagesSections> appPagesSectionsSet, User retailers,
+			Map<String, Integer> filledVsUnfilled) {
 		List<AppPagesSectionsDTO> appPagesSectionDTOSet = new ArrayList<AppPagesSectionsDTO>();
 		for (AppPagesSections appPagesSections : appPagesSectionsSet) {
+			Map<String, Integer> section = new HashMap<String, Integer>();
+			section.put("filledFields", 0);
+			section.put("totalFields", 0);
 			AppPagesSectionsDTO appPagesSectionsDTO = new AppPagesSectionsDTO();
 			List<SectionGroupRelationship> sectionGroupRelationships = SpringUtil
 					.bean(SectionGroupRelationshipRepository.class).findBySectionId(appPagesSections.getSectionId());
 			Set<AppPagesSectionGroups> appPagesSectionGroupsSet = sectionGroupRelationships.stream()
 					.map(f -> f.getAppPagesSectionGroups()).collect(Collectors.toSet());
 			if (appPagesSectionGroupsSet != null && !appPagesSectionGroupsSet.isEmpty()) {
-				List<AppPagesSectionGroupsDTO> appPagesSectionGroupSet = getGroups(appPagesSectionGroupsSet, retailers);
+				List<AppPagesSectionGroupsDTO> appPagesSectionGroupSet = getGroups(appPagesSectionGroupsSet, retailers,
+						section);
 				appPagesSectionsDTO.setGroups(appPagesSectionGroupSet.stream()
 						.sorted(Comparator.comparing(AppPagesSectionGroupsDTO::getGroupId))
 						.collect(Collectors.toList()));
@@ -345,41 +358,57 @@ public class RetailersDtoHelper implements Serializable {
 				appPagesSectionsDTO.setSectionId(appPagesSections.getSectionId());
 				appPagesSectionsDTO.setSectionName(appPagesSections.getSectionName());
 				appPagesSectionsDTO.setSectionTitle(appPagesSections.getSectionTitle());
+				appPagesSectionsDTO.setFilledFields(section.get("filledFields"));
+				appPagesSectionsDTO.setTotalFields(section.get("totalFields"));
 			}
 			appPagesSectionDTOSet.add(appPagesSectionsDTO);
+			filledVsUnfilled.put("filledFields", filledVsUnfilled.get("filledFields") + section.get("filledFields"));
+			filledVsUnfilled.put("totalFields", filledVsUnfilled.get("totalFields") + section.get("totalFields"));
 		}
+
 		return appPagesSectionDTOSet;
 
 	}
 
 	private static List<AppPagesSectionGroupsDTO> getGroups(Set<AppPagesSectionGroups> appPagesSectionGroupsSet,
-			User retailers) {
+			User retailers, Map<String, Integer> filledVsUnfilled) {
 
 		List<AppPagesSectionGroupsDTO> appPagesSectionGroupSet = new ArrayList<AppPagesSectionGroupsDTO>();
 		for (AppPagesSectionGroups appPagesSectionGroups : appPagesSectionGroupsSet) {
+			Map<String, Integer> groups = new HashMap<String, Integer>();
+			groups.put("filledFields", 0);
+			groups.put("totalFields", 0);
 			AppPagesSectionGroupsDTO appPagesSectionGroupsDTO = new AppPagesSectionGroupsDTO();
 			Set<AppDynamicFields> appDynamicFieldsSet = appPagesSectionGroups.getAppDynamicFields();
 			if (appDynamicFieldsSet != null && !appDynamicFieldsSet.isEmpty()) {
-				List<AppDynamicFieldsDTO> fields = getFields(appDynamicFieldsSet, retailers);
+				List<AppDynamicFieldsDTO> fields = getFields(appDynamicFieldsSet, retailers, groups);
 				appPagesSectionGroupsDTO.setFields(fields.stream()
 						.sorted(Comparator.comparing(AppDynamicFieldsDTO::getId)).collect(Collectors.toList()));
 				appPagesSectionGroupsDTO.setEnable(appPagesSectionGroups.isEnable());
 				appPagesSectionGroupsDTO.setGroupId(appPagesSectionGroups.getGroupId());
 				appPagesSectionGroupsDTO.setGroupName(appPagesSectionGroups.getGroupName());
 				appPagesSectionGroupsDTO.setGroupTitle(appPagesSectionGroups.getGroupTitle());
+				appPagesSectionGroupsDTO.setTotalFields(groups.get("totalFields"));
+				appPagesSectionGroupsDTO.setFilledFields(groups.get("filledFields"));
 			}
 			appPagesSectionGroupSet.add(appPagesSectionGroupsDTO);
+			filledVsUnfilled.put("filledFields", filledVsUnfilled.get("filledFields") + groups.get("filledFields"));
+			filledVsUnfilled.put("totalFields", filledVsUnfilled.get("totalFields") + groups.get("totalFields"));
 		}
+
 		return appPagesSectionGroupSet;
 
 	}
 
-	private static List<AppDynamicFieldsDTO> getFields(Set<AppDynamicFields> appDynamicFieldsSet, User retailers) {
+	private static List<AppDynamicFieldsDTO> getFields(Set<AppDynamicFields> appDynamicFieldsSet, User retailers,
+			Map<String, Integer> filledVsUnfilled) {
+		Integer totalFields = 0;
+		Integer filledFields = 0;
 		List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet = new ArrayList<AppDynamicFieldsDTO>();
 		for (AppDynamicFields dynamicFields : appDynamicFieldsSet) {
+			totalFields++;
 			if (dynamicFields.getGroups().getGroupId() == 1) {
 				prepareProfileInformation(dynamicFields, retailers, appDynamicFieldsDTOSet);
-
 			} else if (dynamicFields.getGroups().getGroupId() == 2) {
 				prepareAddress(dynamicFields, retailers, appDynamicFieldsDTOSet);
 			} else if (dynamicFields.getGroups().getGroupId() == 3) {
@@ -391,8 +420,11 @@ public class RetailersDtoHelper implements Serializable {
 			} else if (dynamicFields.getGroups().getGroupId() == 6) {
 				prepareLicenseDetails(dynamicFields, retailers, appDynamicFieldsDTOSet);
 			}
-
+			if (dynamicFields.getSavedData() != null && !dynamicFields.getSavedData().isEmpty())
+				filledFields++;
 		}
+		filledVsUnfilled.put("filledFields", filledFields);
+		filledVsUnfilled.put("totalFields", totalFields);
 		return appDynamicFieldsDTOSet;
 
 	}

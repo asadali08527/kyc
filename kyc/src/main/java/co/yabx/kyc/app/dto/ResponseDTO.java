@@ -19,6 +19,8 @@ public class ResponseDTO implements Serializable {
 	private Integer totalCount;
 	private QuestionAnswerDTO questionAnswerDTO;
 	private List<QuestionAnswerDTO> questionAnswerDTOs;
+	private String kycRejectedMessage;
+	private String profileCompeltion;
 
 	public List<QuestionAnswerDTO> getQuestionAnswerDTOs() {
 		return questionAnswerDTOs;

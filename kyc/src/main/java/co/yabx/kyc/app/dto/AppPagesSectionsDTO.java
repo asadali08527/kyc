@@ -22,6 +22,46 @@ public class AppPagesSectionsDTO implements Serializable {
 
 	private boolean enable;
 
+	private String sectionType;
+
+	private String icon;
+
+	private Integer filledFields;
+
+	private Integer totalFields;
+
+	public String getSectionType() {
+		return sectionType;
+	}
+
+	public void setSectionType(String sectionType) {
+		this.sectionType = sectionType;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public Integer getFilledFields() {
+		return filledFields;
+	}
+
+	public void setFilledFields(Integer filledFields) {
+		this.filledFields = filledFields;
+	}
+
+	public Integer getTotalFields() {
+		return totalFields;
+	}
+
+	public void setTotalFields(Integer totalFields) {
+		this.totalFields = totalFields;
+	}
+
 	private List<AppPagesSectionGroupsDTO> groups;
 
 	public Date getCreatedAt() {

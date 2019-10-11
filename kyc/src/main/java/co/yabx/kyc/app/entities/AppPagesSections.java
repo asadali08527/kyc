@@ -33,6 +33,12 @@ public class AppPagesSections implements Serializable {
 	@Column(name = "section_title")
 	private String sectionTitle;
 
+	@Column(name = "section_type")
+	private String sectionType;
+
+	@Column(name = "icon")
+	private String icon;
+
 	@Column(name = "created_at")
 	private Date createdAt;
 

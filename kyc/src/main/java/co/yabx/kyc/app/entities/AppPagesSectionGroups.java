@@ -44,6 +44,9 @@ public class AppPagesSectionGroups implements Serializable {
 	@Column(name = "enable", columnDefinition = "boolean default true")
 	private boolean enable;
 
+	@Column(name = "total_fields")
+	private Integer totalFields;
+
 	@OneToMany(mappedBy = "groups", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private Set<AppDynamicFields> appDynamicFields;
 
@@ -101,6 +104,14 @@ public class AppPagesSectionGroups implements Serializable {
 
 	public void setAppDynamicFields(Set<AppDynamicFields> appDynamicFields) {
 		this.appDynamicFields = appDynamicFields;
+	}
+
+	public Integer getTotalFields() {
+		return totalFields;
+	}
+
+	public void setTotalFields(Integer totalFields) {
+		this.totalFields = totalFields;
 	}
 
 	@Override

@@ -3,18 +3,6 @@ package co.yabx.kyc.app.dto;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -38,7 +26,47 @@ public class AppPagesDTO implements Serializable {
 
 	private boolean enable;
 
+	private String pageType;
+
+	private String icon;
+
+	private Integer filledFields;
+
+	private Integer totalFields;
+
 	private List<AppPagesSectionsDTO> sections;
+
+	public String getPageType() {
+		return pageType;
+	}
+
+	public void setPageType(String pageType) {
+		this.pageType = pageType;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public Integer getFilledFields() {
+		return filledFields;
+	}
+
+	public void setFilledFields(Integer filledFields) {
+		this.filledFields = filledFields;
+	}
+
+	public Integer getTotalFields() {
+		return totalFields;
+	}
+
+	public void setTotalFields(Integer totalFields) {
+		this.totalFields = totalFields;
+	}
 
 	public Date getCreatedAt() {
 		return createdAt;

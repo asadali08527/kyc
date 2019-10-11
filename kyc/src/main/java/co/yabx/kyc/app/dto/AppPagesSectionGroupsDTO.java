@@ -23,6 +23,10 @@ public class AppPagesSectionGroupsDTO implements Serializable {
 
 	private boolean enable;
 
+	private Integer totalFields;
+
+	private Integer filledFields;
+
 	private List<AppDynamicFieldsDTO> fields;
 
 	public Date getCreatedAt() {
@@ -79,6 +83,22 @@ public class AppPagesSectionGroupsDTO implements Serializable {
 
 	public void setFields(List<AppDynamicFieldsDTO> fields) {
 		this.fields = fields;
+	}
+
+	public Integer getTotalFields() {
+		return totalFields;
+	}
+
+	public void setTotalFields(Integer totalFields) {
+		this.totalFields = totalFields;
+	}
+
+	public Integer getFilledFields() {
+		return filledFields;
+	}
+
+	public void setFilledFields(Integer filledFields) {
+		this.filledFields = filledFields;
 	}
 
 	@Override
