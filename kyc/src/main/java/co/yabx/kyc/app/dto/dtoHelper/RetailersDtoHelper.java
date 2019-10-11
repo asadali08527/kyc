@@ -54,6 +54,7 @@ import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
+import co.yabx.kyc.app.fullKyc.entity.LiabilitiesDetails;
 import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.repositories.AppPagesRepository;
@@ -381,10 +382,52 @@ public class RetailersDtoHelper implements Serializable {
 				prepareAddress(dynamicFields, retailers, appDynamicFieldsDTOSet);
 			} else if (dynamicFields.getGroups().getGroupId() == 3) {
 				prepareAccountInformations(dynamicFields, retailers, appDynamicFieldsDTOSet);
+			} else if (dynamicFields.getGroups().getGroupId() == 4) {
+				prepareLiabilitiesDetails(dynamicFields, retailers, appDynamicFieldsDTOSet);
 			}
 
 		}
 		return appDynamicFieldsDTOSet;
+
+	}
+
+	private static void prepareLiabilitiesDetails(AppDynamicFields dynamicFields, User retailers,
+			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+		if (retailers == null || retailers.getLiabilitiesDetails() == null
+				|| retailers.getLiabilitiesDetails().isEmpty()) {
+			if (dynamicFields.getFieldId().equals("typeOfLiablity")) {
+				List<String> options = new ArrayList<String>();
+				LiabilityType[] accountTypes = LiabilityType.values();
+				for (LiabilityType statuses : accountTypes) {
+					options.add(statuses.name());
+				}
+				dynamicFields.setOptions(options);
+			}
+			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+		} else {
+			Set<LiabilitiesDetails> LiabilitiesDetailsSet = retailers.getLiabilitiesDetails();
+			for (LiabilitiesDetails liabilitiesDetails : LiabilitiesDetailsSet) {
+				if (dynamicFields.getFieldId().equals("loanAmount")) {
+					dynamicFields.setSavedData(liabilitiesDetails.getLoanAmount() + "");
+				} else if (dynamicFields.getFieldId().equals("bankOrNbfiName")) {
+					dynamicFields.setSavedData(liabilitiesDetails.getBankOrNbfiName());
+				} else if (dynamicFields.getFieldId().equals("liabilityFrom")) {
+					dynamicFields.setSavedData(liabilitiesDetails.getLiabilityFrom());
+				} else if (dynamicFields.getFieldId().equals("typeOfLiablity")) {
+					dynamicFields.setSavedData(liabilitiesDetails.getTypeOfLiablity() != null
+							? liabilitiesDetails.getTypeOfLiablity().name()
+							: null);
+					List<String> options = new ArrayList<String>();
+					LiabilityType[] liabilityTypes = LiabilityType.values();
+					for (LiabilityType statuses : liabilityTypes) {
+						options.add(statuses.name());
+					}
+					dynamicFields.setOptions(options);
+				}
+				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+			}
+
+		}
 
 	}
 
