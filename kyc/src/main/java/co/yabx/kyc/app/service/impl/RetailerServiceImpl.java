@@ -18,6 +18,7 @@ import co.yabx.kyc.app.dto.RetailersDTO;
 import co.yabx.kyc.app.dto.dtoHelper.QuestionAnswerDTOHelper;
 import co.yabx.kyc.app.dto.dtoHelper.RetailersDtoHelper;
 import co.yabx.kyc.app.enums.Relationship;
+import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
@@ -28,9 +29,9 @@ import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
 import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
-import co.yabx.kyc.app.repositories.AppDynamicFieldsRepository;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.RetailerService;
+import co.yabx.kyc.app.service.UserService;
 import co.yabx.kyc.app.wrappers.UserWrapper;
 
 /**
@@ -54,7 +55,7 @@ public class RetailerServiceImpl implements RetailerService {
 	private UserRelationshipsRepository userRelationshipsRepository;
 
 	@Autowired
-	private AppDynamicFieldsRepository appDynamicFieldsRepository;
+	private UserService userService;
 
 //	private Iterable<AppDynamicFields> appDynamicFields = SpringUtil.bean(AppDynamicFieldsRepository.class).findAll();
 
@@ -73,14 +74,14 @@ public class RetailerServiceImpl implements RetailerService {
 				ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
 				List<AppPagesDTO> appPagesDTOs = new ArrayList<AppPagesDTO>();
 				for (User user : retailers) {
-					appPagesDTOs.addAll(RetailersDtoHelper.getRetailersDetails(user));
+					appPagesDTOs.addAll(userService.getUserDetails(user, UserType.RETAILERS.name()));
 				}
 				responseDTO.setRetailerInfo(appPagesDTOs);
 				return responseDTO;
 			} else {
 				ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "No Retailers Found for the DSR",
 						"404", null);
-				responseDTO.setRetailerInfo(RetailersDtoHelper.getRetailersDetails(null));
+				responseDTO.setRetailerInfo(userService.getUserDetails(null, UserType.RETAILERS.name()));
 				return responseDTO;
 			}
 			// return RetailersDtoHelper.getResponseDTO(null, "No Retailers Found for the
@@ -97,12 +98,12 @@ public class RetailerServiceImpl implements RetailerService {
 					user.get());
 			if (dsrRetailersRelationships != null) {
 				ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
-				responseDTO.setRetailerInfo(RetailersDtoHelper.getRetailersDetails(user.get()));
+				responseDTO.setRetailerInfo(userService.getUserDetails(user.get(), UserType.RETAILERS.name()));
 				return responseDTO;
 			}
 		}
 		ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "Retailer Not Found", "404", null);
-		responseDTO.setRetailerInfo(RetailersDtoHelper.getRetailersDetails(null));
+		responseDTO.setRetailerInfo(userService.getUserDetails(null, UserType.RETAILERS.name()));
 		return responseDTO;
 
 		// return RetailersDtoHelper.getCompletRetailerInfo(dsrMsisdn, retailerId);

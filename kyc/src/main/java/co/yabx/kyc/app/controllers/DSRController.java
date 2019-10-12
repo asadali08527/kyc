@@ -45,6 +45,14 @@ public class DSRController {
 
 	}
 
+	@RequestMapping(value = "/dsr/profile/{dsrMsisdn}", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> fetchDSRProfile(@PathVariable String dsrMsisdn) {
+		ResponseDTO loginDTO = dsrService.getDsrProfile(dsrMsisdn);
+		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+
+	}
+
 	@RequestMapping(value = "/dsr/logout/{msisdn}", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> logout(@PathVariable String msisdn) {

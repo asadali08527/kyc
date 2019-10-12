@@ -15,11 +15,13 @@ import co.yabx.kyc.app.dto.DsrProfileDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.VerifyOtpDTO;
 import co.yabx.kyc.app.dto.dtoHelper.DsrDtoHelper;
+import co.yabx.kyc.app.dto.dtoHelper.RetailersDtoHelper;
 import co.yabx.kyc.app.entities.AuthInfo;
 import co.yabx.kyc.app.entities.OTP;
 import co.yabx.kyc.app.enums.DsrProfileStatus;
 import co.yabx.kyc.app.enums.OtpGroup;
 import co.yabx.kyc.app.enums.OtpType;
+import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.DSRUser;
@@ -30,6 +32,7 @@ import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.DSRService;
 import co.yabx.kyc.app.service.EmailService;
 import co.yabx.kyc.app.service.OtpService;
+import co.yabx.kyc.app.service.UserService;
 import co.yabx.kyc.app.wrappers.UserWrapper;
 
 /**
@@ -54,6 +57,9 @@ public class DSRServiceImpl implements DSRService {
 
 	@Autowired
 	private EmailService emailService;
+
+	@Autowired
+	private UserService userService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DSRServiceImpl.class);
 
@@ -210,6 +216,20 @@ public class DSRServiceImpl implements DSRService {
 		}
 		return DsrDtoHelper.getLoginDTO("", "Incorrect OTP or OTP Expired", "403", null);
 
+	}
+
+	@Override
+	public ResponseDTO getDsrProfile(String msisdn) {
+		DSRUser dsrUser = dsrUserRepository.findBymsisdn(msisdn);
+		if (dsrUser != null) {
+			ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
+			responseDTO.setDsrInfo(userService.getUserDetails(dsrUser, UserType.DISTRIBUTORS.name()));
+			return responseDTO;
+		} else {
+			ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "No DSR Found", "404", null);
+			//responseDTO.setDsrInfo(userService.getUserDetails(dsrUser, UserType.DISTRIBUTORS.name()));
+			return responseDTO;
+		}
 	}
 
 }

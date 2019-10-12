@@ -15,6 +15,7 @@ public class ResponseDTO implements Serializable {
 	private DsrProfileStatus dsrProfileStatus;
 	private List<RetailersDTO> retailers;
 	private List<AppPagesDTO> retailerInfo;
+	private List<AppPagesDTO> dsrInfo;
 	private Map<String, String> authInfo;
 	private Integer totalCount;
 	private QuestionAnswerDTO questionAnswerDTO;
@@ -98,6 +99,30 @@ public class ResponseDTO implements Serializable {
 
 	public void setRetailerInfo(List<AppPagesDTO> retailerInfo) {
 		this.retailerInfo = retailerInfo;
+	}
+
+	public List<AppPagesDTO> getDsrInfo() {
+		return dsrInfo;
+	}
+
+	public void setDsrInfo(List<AppPagesDTO> dsrInfo) {
+		this.dsrInfo = dsrInfo;
+	}
+
+	public String getKycRejectedMessage() {
+		return kycRejectedMessage;
+	}
+
+	public void setKycRejectedMessage(String kycRejectedMessage) {
+		this.kycRejectedMessage = kycRejectedMessage;
+	}
+
+	public String getProfileCompeltion() {
+		return profileCompeltion;
+	}
+
+	public void setProfileCompeltion(String profileCompeltion) {
+		this.profileCompeltion = profileCompeltion;
 	}
 
 }

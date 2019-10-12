@@ -12,4 +12,6 @@ public interface AppPagesRepository extends CrudRepository<AppPages, Long> {
 
 	List<AppPages> findByPageName(String user_type);
 
+	List<AppPages> findByPageType(String type);
+
 }
