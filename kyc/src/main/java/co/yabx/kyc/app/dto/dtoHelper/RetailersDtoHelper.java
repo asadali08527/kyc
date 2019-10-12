@@ -436,7 +436,6 @@ public class RetailersDtoHelper implements Serializable {
 				appPagesSectionGroupsDTO.setGroupTitle(appPagesSectionGroups.getGroupTitle());
 				appPagesSectionGroupsDTO.setTotalFields(groups.get("totalFields"));
 				appPagesSectionGroupsDTO.setFilledFields(groups.get("filledFields"));
-				appPagesSectionGroupsDTO.setAction(prepareActions(appPagesSectionGroups));
 			}
 			appPagesSectionGroupSet.add(appPagesSectionGroupsDTO);
 			filledVsUnfilled.put("filledFields", filledVsUnfilled.get("filledFields") + groups.get("filledFields"));
@@ -447,12 +446,16 @@ public class RetailersDtoHelper implements Serializable {
 
 	}
 
-	private static ActionDTO prepareActions(AppPagesSectionGroups appPagesSectionGroups) {
+	private static AppDynamicFieldsDTO prepareActions(AppDynamicFieldsDTO appDynamicFieldsDTO2) {
 		ActionDTO actionDTO = new ActionDTO();
 		actionDTO.setData("Submit");
 		actionDTO.setName("submitForm");
 		actionDTO.setType("submit");
-		return actionDTO;
+		AppDynamicFieldsDTO appDynamicFieldsDTO = new AppDynamicFieldsDTO();
+		appDynamicFieldsDTO.setId(appDynamicFieldsDTO2.getId() + 1);
+		appDynamicFieldsDTO.setMandatory(true);
+		appDynamicFieldsDTO.setAction(actionDTO);
+		return appDynamicFieldsDTO;
 	}
 
 	private static List<AppDynamicFieldsDTO> getFields(Set<AppDynamicFields> appDynamicFieldsSet, User retailers,
@@ -501,6 +504,8 @@ public class RetailersDtoHelper implements Serializable {
 		}
 		filledVsUnfilled.put("filledFields", filledFields);
 		filledVsUnfilled.put("totalFields", totalFields);
+		appDynamicFieldsDTOSet.add(prepareActions(
+				appDynamicFieldsDTOSet.stream().max(Comparator.comparing(AppDynamicFieldsDTO::getId)).get()));
 		return appDynamicFieldsDTOSet;
 
 	}

@@ -26,8 +26,6 @@ public class AppPagesSectionGroupsDTO implements Serializable {
 
 	private Integer filledFields;
 
-	private ActionDTO action;
-
 	private List<AppDynamicFieldsDTO> fields;
 
 	public Date getCreatedAt() {
@@ -107,14 +105,6 @@ public class AppPagesSectionGroupsDTO implements Serializable {
 		return "AppPagesSectionGroupsDTO [groupId=" + groupId + ", groupName=" + groupName + ", groupTitle="
 				+ groupTitle + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable
 				+ ", fields=" + fields + "]";
-	}
-
-	public ActionDTO getAction() {
-		return action;
-	}
-
-	public void setAction(ActionDTO action) {
-		this.action = action;
 	}
 
 }

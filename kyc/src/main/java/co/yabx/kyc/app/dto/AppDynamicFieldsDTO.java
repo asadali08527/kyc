@@ -44,6 +44,8 @@ public class AppDynamicFieldsDTO implements Serializable {
 
 	private Integer hash;
 
+	private ActionDTO action;
+
 	/**
 	 * options field is non persistent field, and will be used only while returning
 	 * options of a radio or check box input types.
@@ -178,6 +180,14 @@ public class AppDynamicFieldsDTO implements Serializable {
 				+ ", validation=" + validation + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", camera="
 				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", hash=" + hash + ", options="
 				+ options + "]";
+	}
+
+	public ActionDTO getAction() {
+		return action;
+	}
+
+	public void setAction(ActionDTO action) {
+		this.action = action;
 	}
 
 }
