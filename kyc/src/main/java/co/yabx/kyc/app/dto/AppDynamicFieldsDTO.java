@@ -27,7 +27,6 @@ public class AppDynamicFieldsDTO implements Serializable {
 
 	private String placeHolderText;
 
-	@Transient
 	private String savedData;
 
 	private String validation;
@@ -45,6 +44,8 @@ public class AppDynamicFieldsDTO implements Serializable {
 	private Integer hash;
 
 	private ActionDTO action;
+
+	private String response;
 
 	/**
 	 * options field is non persistent field, and will be used only while returning
@@ -188,6 +189,14 @@ public class AppDynamicFieldsDTO implements Serializable {
 
 	public void setAction(ActionDTO action) {
 		this.action = action;
+	}
+
+	public String getResponse() {
+		return response;
+	}
+
+	public void setResponse(String response) {
+		this.response = response;
 	}
 
 }

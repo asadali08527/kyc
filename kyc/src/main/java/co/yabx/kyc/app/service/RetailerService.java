@@ -14,7 +14,7 @@ public interface RetailerService {
 
 	ResponseDTO retailerDetails(String dsrMsisdn, Long retailerId);
 
-	ResponseDTO submitRetailerProfile(UserDTO userDTO);
+	ResponseDTO submitRetailerProfile(RetailerRequestDTO retailerRequestDTO);
 
 	ResponseDTO submitRetailerNomineeProfile(UserDTO userDTO);
 
@@ -31,5 +31,7 @@ public interface RetailerService {
 	ResponseDTO persistRetailerAnswer(QuestionAnswerDTO questionAnswerDTO);
 
 	ResponseDTO searchRetailerByDsr(String dsrMsisdn, String retailerId);
+
+	ResponseDTO submitRetailerProfile(UserDTO userDTO);
 
 }

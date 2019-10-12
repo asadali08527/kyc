@@ -65,7 +65,7 @@ public class DSRServiceImpl implements DSRService {
 
 	@Override
 	public ResponseDTO login(String msisdn) {
-		DSRUser dsrUser = dsrUserRepository.findBymsisdn(msisdn);
+		DSRUser dsrUser = dsrUserRepository.findByMsisdn(msisdn);
 		if (dsrUser != null) {
 			Calendar otpExpiryTime = Calendar.getInstance();
 			otpExpiryTime.add(Calendar.SECOND, appConfigService.getIntProperty("OTP_EXPIRY_TIME_IN_SECONDS", 300));
@@ -83,7 +83,7 @@ public class DSRServiceImpl implements DSRService {
 	public ResponseDTO verifyPhoneOTP(VerifyOtpDTO verifyOtpDTO) {
 		if (verifyOtpDTO != null) {
 			if (verifyOtpDTO.getOtp() != null && !verifyOtpDTO.getOtp().isEmpty()) {
-				DSRUser dsrUser = dsrUserRepository.findBymsisdn(verifyOtpDTO.getDsrMSISDN());
+				DSRUser dsrUser = dsrUserRepository.findByMsisdn(verifyOtpDTO.getDsrMSISDN());
 				dsrUser = otpService.verifyOtp(dsrUser, verifyOtpDTO.getOtp(), OtpType.SMS);
 				if (dsrUser != null) {
 					ResponseDTO responseDTO = DsrDtoHelper.getLoginDTO("", "SUCCESS", "200", DsrProfileStatus.NEW);
@@ -105,7 +105,7 @@ public class DSRServiceImpl implements DSRService {
 	public ResponseDTO submitDsrProfile(DsrProfileDTO dsrProfileDTO) {
 		if (dsrProfileDTO != null && dsrProfileDTO.getDsrMSISDN() != null) {
 			try {
-				DSRUser dsrUser = dsrUserRepository.findBymsisdn(dsrProfileDTO.getDsrMSISDN());
+				DSRUser dsrUser = dsrUserRepository.findByMsisdn(dsrProfileDTO.getDsrMSISDN());
 				if (dsrUser == null) {
 					dsrUser = persistDSRUser(dsrProfileDTO, DsrProfileStatus.NEW);
 					return DsrDtoHelper.getLoginDTO(null, "SUCCESS", "200", DsrProfileStatus.NEW);
@@ -170,7 +170,7 @@ public class DSRServiceImpl implements DSRService {
 
 	@Override
 	public ResponseDTO logout(String msisdn) {
-		DSRUser dsrUser = dsrUserRepository.findBymsisdn(msisdn);
+		DSRUser dsrUser = dsrUserRepository.findByMsisdn(msisdn);
 		if (dsrUser != null) {
 			AuthInfo authInfo = dsrUser.getAuthInfo();
 			if (authInfo != null) {
@@ -200,7 +200,7 @@ public class DSRServiceImpl implements DSRService {
 	public ResponseDTO verifyMail(VerifyOtpDTO verifyOtpDTO) {
 		if (verifyOtpDTO != null) {
 			if (verifyOtpDTO.getOtp() != null && !verifyOtpDTO.getOtp().isEmpty()) {
-				DSRUser dsrUser = dsrUserRepository.findBymsisdn(verifyOtpDTO.getDsrMSISDN());
+				DSRUser dsrUser = dsrUserRepository.findByMsisdn(verifyOtpDTO.getDsrMSISDN());
 				dsrUser = otpService.verifyOtp(dsrUser, verifyOtpDTO.getOtp(), OtpType.MAIL);
 				if (dsrUser != null) {
 					ResponseDTO responseDTO = DsrDtoHelper.getLoginDTO(verifyOtpDTO.getDsrMSISDN(), "SUCCESS", "200",
@@ -220,14 +220,15 @@ public class DSRServiceImpl implements DSRService {
 
 	@Override
 	public ResponseDTO getDsrProfile(String msisdn) {
-		DSRUser dsrUser = dsrUserRepository.findBymsisdn(msisdn);
+		DSRUser dsrUser = dsrUserRepository.findByMsisdn(msisdn);
 		if (dsrUser != null) {
 			ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
 			responseDTO.setDsrInfo(userService.getUserDetails(dsrUser, UserType.DISTRIBUTORS.name()));
 			return responseDTO;
 		} else {
 			ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "No DSR Found", "404", null);
-			//responseDTO.setDsrInfo(userService.getUserDetails(dsrUser, UserType.DISTRIBUTORS.name()));
+			// responseDTO.setDsrInfo(userService.getUserDetails(dsrUser,
+			// UserType.DISTRIBUTORS.name()));
 			return responseDTO;
 		}
 	}

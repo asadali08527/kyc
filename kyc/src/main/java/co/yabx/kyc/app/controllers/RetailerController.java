@@ -60,8 +60,8 @@ public class RetailerController {
 
 	@RequestMapping(value = "/retailer/personal-information", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> submitRetailerProfile(@RequestBody UserDTO UserDTO) {
-		ResponseDTO loginDTO = retailerService.submitRetailerProfile(UserDTO);
+	public ResponseEntity<?> submitRetailerProfile(@RequestBody RetailerRequestDTO retailerRequestDTO) {
+		ResponseDTO loginDTO = retailerService.submitRetailerProfile(retailerRequestDTO);
 		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 
 	}

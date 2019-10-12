@@ -30,6 +30,8 @@ public class AppPagesSectionsDTO implements Serializable {
 
 	private Integer totalFields;
 
+	private Long nomineeId;
+
 	public String getSectionType() {
 		return sectionType;
 	}
@@ -125,6 +127,14 @@ public class AppPagesSectionsDTO implements Serializable {
 		return "AppPagesSectionsDTO [sectionId=" + sectionId + ", sectionName=" + sectionName + ", sectionTitle="
 				+ sectionTitle + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable
 				+ ", groups=" + groups + "]";
+	}
+
+	public Long getNomineeId() {
+		return nomineeId;
+	}
+
+	public void setNomineeId(Long nomineeId) {
+		this.nomineeId = nomineeId;
 	}
 
 }

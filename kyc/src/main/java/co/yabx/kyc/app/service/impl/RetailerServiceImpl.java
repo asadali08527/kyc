@@ -10,7 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import co.yabx.kyc.app.dto.AppDynamicFieldsDTO;
 import co.yabx.kyc.app.dto.AppPagesDTO;
+import co.yabx.kyc.app.dto.AppPagesSectionGroupsDTO;
+import co.yabx.kyc.app.dto.AppPagesSectionsDTO;
 import co.yabx.kyc.app.dto.QuestionAnswerDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.RetailerRequestDTO;
@@ -22,6 +25,7 @@ import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
+import co.yabx.kyc.app.fullKyc.entity.DSRUser;
 import co.yabx.kyc.app.fullKyc.entity.Nominees;
 import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
@@ -56,8 +60,6 @@ public class RetailerServiceImpl implements RetailerService {
 
 	@Autowired
 	private UserService userService;
-
-//	private Iterable<AppDynamicFields> appDynamicFields = SpringUtil.bean(AppDynamicFieldsRepository.class).findAll();
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetailerServiceImpl.class);
 
@@ -184,6 +186,26 @@ public class RetailerServiceImpl implements RetailerService {
 			return RetailersDtoHelper.getResponseDTO(null, "No Retailers Found for the DSR", "404", null);
 		}
 		return RetailersDtoHelper.getResponseDTO(null, "Either DSR msisdn or retailers id is missing", "403", null);
+	}
+
+	@Override
+	public ResponseDTO submitRetailerProfile(RetailerRequestDTO retailerRequestDTO) {
+		if (retailerRequestDTO != null) {
+			String dsrMsisdn = retailerRequestDTO.getDsrMSISDN();
+			DSRUser dsrUser = userService.getDSRByMsisdn(dsrMsisdn);
+			Retailers retailers = null;
+			if (dsrUser == null)
+				return RetailersDtoHelper.getResponseDTO(null, "DSR not found", "404", null);
+			Long retailerId = retailerRequestDTO.getRetailerId();
+			if (retailerId != null) {
+				retailers = userService.getRetailerById(retailerId);
+				if (retailers == null)
+					return RetailersDtoHelper.getResponseDTO(null, "Retailer not found", "404", null);
+			}
+			userService.persistOrUpdateRetailerInfo(retailerRequestDTO.getPageResponse(), dsrUser, retailers);
+			return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
+		}
+		return null;
 	}
 
 }

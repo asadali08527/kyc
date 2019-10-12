@@ -38,6 +38,10 @@ public class AppPagesDTO implements Serializable {
 
 	private String pageCompletion;
 
+	private Long retailerId;
+
+	private Long dsrId;
+
 	public String getPageType() {
 		return pageType;
 	}
@@ -138,6 +142,22 @@ public class AppPagesDTO implements Serializable {
 
 	public void setPageCompletion(String pageCompletion) {
 		this.pageCompletion = pageCompletion;
+	}
+
+	public Long getRetailerId() {
+		return retailerId;
+	}
+
+	public void setRetailerId(Long retailerId) {
+		this.retailerId = retailerId;
+	}
+
+	public Long getDsrId() {
+		return dsrId;
+	}
+
+	public void setDsrId(Long dsrId) {
+		this.dsrId = dsrId;
 	}
 
 }

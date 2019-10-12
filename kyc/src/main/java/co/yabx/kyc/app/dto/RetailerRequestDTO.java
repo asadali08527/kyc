@@ -4,15 +4,32 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import co.yabx.kyc.app.enums.DsrProfileStatus;
 import co.yabx.kyc.app.enums.KycStatus;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RetailerRequestDTO implements Serializable {
 	private String dsrMSISDN;
 	private KycStatus kycStatus;
+	private Long retailerId;
 	private int startIndex;
 	private int endIndex;
+	private AppPagesDTO pageResponse;
+
+	public Long getRetailerId() {
+		return retailerId;
+	}
+
+	public void setRetailerId(Long retailerId) {
+		this.retailerId = retailerId;
+	}
+
+	public AppPagesDTO getPageResponse() {
+		return pageResponse;
+	}
+
+	public void setPageResponse(AppPagesDTO pageResponse) {
+		this.pageResponse = pageResponse;
+	}
 
 	public String getDsrMSISDN() {
 		return dsrMSISDN;
@@ -44,6 +61,12 @@ public class RetailerRequestDTO implements Serializable {
 
 	public void setEndIndex(int endIndex) {
 		this.endIndex = endIndex;
+	}
+
+	@Override
+	public String toString() {
+		return "RetailerRequestDTO [dsrMSISDN=" + dsrMSISDN + ", kycStatus=" + kycStatus + ", retailerId=" + retailerId
+				+ ", startIndex=" + startIndex + ", endIndex=" + endIndex + ", pageResponse=" + pageResponse + "]";
 	}
 
 }

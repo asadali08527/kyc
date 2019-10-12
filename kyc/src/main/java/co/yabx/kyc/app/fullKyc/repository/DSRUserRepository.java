@@ -8,8 +8,9 @@ import co.yabx.kyc.app.fullKyc.entity.DSRUser;
 @Repository("dsrUserRepository")
 public interface DSRUserRepository extends BaseUserRepository<DSRUser>, CrudRepository<DSRUser, Long> {
 
-	DSRUser findBymsisdn(String msisdn);
 
 	DSRUser findByEmail(String mail);
+
+	DSRUser findByMsisdn(String dsrMsisdn);
 
 }
