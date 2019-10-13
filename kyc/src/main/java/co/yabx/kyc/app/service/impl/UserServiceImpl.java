@@ -47,7 +47,9 @@ import co.yabx.kyc.app.fullKyc.entity.LicenseDetails;
 import co.yabx.kyc.app.fullKyc.entity.Nominees;
 import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
+import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
 import co.yabx.kyc.app.fullKyc.repository.DSRUserRepository;
+import co.yabx.kyc.app.fullKyc.repository.NomineesRepository;
 import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
@@ -76,6 +78,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private DSRUserRepository dsrUserRepository;
+
+	@Autowired
+	private NomineesRepository nomineesRepository;
 
 	@Autowired
 	private UserRelationshipsRepository userRelationshipsRepository;
@@ -107,8 +112,9 @@ public class UserServiceImpl implements UserService {
 		Set<BankAccountDetails> businessBankAccountDetailsSet = null;
 		List<AppPagesDTO> appPagesDTOList = new ArrayList<AppPagesDTO>();
 		if (user != null) {
-			nominee = SpringUtil.bean(UserRelationshipsRepository.class).findByMsisdnAndRelationship(user.getMsisdn(),
-					Relationship.NOMINEE);
+			UserRelationships userRelationships = userRelationshipsRepository
+					.findByMsisdnAndRelationship(user.getMsisdn(), Relationship.NOMINEE);
+			nominee = userRelationships != null ? userRelationships.getRelative() : null;
 			userAddressDetailsSet = user.getAddressDetails();
 			nomineeAddressDetailsSet = nominee != null ? nominee.getAddressDetails() : null;
 			userBankAccountDetailsSet = user.getBankAccountDetails();
@@ -708,7 +714,7 @@ public class UserServiceImpl implements UserService {
 	public Retailers getRetailerById(Long retailerId) {
 		if (retailerId != null) {
 			Optional<Retailers> retailer = retailersRepository.findById(retailerId);
-			if (retailer.isPresent() && retailer.get().getUser_type().equals(UserType.RETAILERS.name()))
+			if (retailer.isPresent() && retailer.get().getUserType().equals(UserType.RETAILERS.name()))
 				return retailer.get();
 		}
 		return null;
@@ -718,7 +724,7 @@ public class UserServiceImpl implements UserService {
 	public void persistOrUpdateRetailerInfo(AppPagesDTO appPagesDTO, User dsrUser, User retailer) {
 
 		if (appPagesDTO != null && dsrUser != null) {
-			Boolean isToUpdate = true;
+			Boolean isNew = false;
 			User nominees = null;
 			Set<AddressDetails> userAddressDetailsSet = null;
 			Set<AddressDetails> nomineeAddressDetailsSet = null;
@@ -727,10 +733,11 @@ public class UserServiceImpl implements UserService {
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet = null;
 			Set<BankAccountDetails> businessBankAccountDetailsSet = null;
 			Set<BusinessDetails> businessDetailsSet = null;
-			Set<LiabilitiesDetails> liabilitiesDetails = null;
+			Set<LiabilitiesDetails> liabilitiesDetailsSet = null;
+			UserRelationships nomineeRelationship = null;
 			if (retailer == null) {
 				retailer = new Retailers();
-				isToUpdate = false;
+				isNew = true;
 				nominees = new Nominees();
 				userAddressDetailsSet = new HashSet<AddressDetails>();
 				nomineeAddressDetailsSet = new HashSet<AddressDetails>();
@@ -743,17 +750,24 @@ public class UserServiceImpl implements UserService {
 				userBankAccountDetailsSet = retailer.getBankAccountDetails();
 				userAddressDetailsSet = retailer.getAddressDetails();
 				businessDetailsSet = retailer.getBusinessDetails();
-				liabilitiesDetails = retailer.getLiabilitiesDetails();
-				nominees = userRelationshipsRepository.findByMsisdnAndRelationship(retailer.getMsisdn(),
+				liabilitiesDetailsSet = retailer.getLiabilitiesDetails();
+				nomineeRelationship = userRelationshipsRepository.findByMsisdnAndRelationship(retailer.getMsisdn(),
 						Relationship.NOMINEE);
+				nominees = nomineeRelationship != null ? nomineeRelationship.getRelative() : null;
 				if (nominees != null) {
 					nomineeAddressDetailsSet = nominees.getAddressDetails();
 					nomineeBankAccountDetailsSet = nominees.getBankAccountDetails();
+				} else {
+					isNew = true;
+
 				}
-				if (businessDetailsSet != null && !businessDetailsSet.isEmpty()) {
-					businessDetailsSet.forEach(f -> businessAddressDetailsSet.addAll(f.getAddressDetails()));
-					businessDetailsSet.forEach(f -> businessBankAccountDetailsSet.addAll(f.getBankAccountDetails()));
-				}
+				/*
+				 * if (businessDetailsSet != null && !businessDetailsSet.isEmpty()) {
+				 * businessDetailsSet.forEach(f ->
+				 * businessAddressDetailsSet.addAll(f.getAddressDetails()));
+				 * businessDetailsSet.forEach(f ->
+				 * businessBankAccountDetailsSet.addAll(f.getBankAccountDetails())); }
+				 */
 			}
 			List<AppPagesSectionsDTO> appPagesSectionsDTOList = appPagesDTO.getSections();
 			if (appPagesSectionsDTOList != null && !appPagesSectionsDTOList.isEmpty()) {
@@ -762,54 +776,429 @@ public class UserServiceImpl implements UserService {
 					if (appPagesSectionGroupsDTOList != null && !appPagesSectionGroupsDTOList.isEmpty()) {
 						for (AppPagesSectionGroupsDTO appPagesSectionGroupsDTO : appPagesSectionGroupsDTOList) {
 							List<AppDynamicFieldsDTO> appDynamicFieldsDTOList = appPagesSectionGroupsDTO.getFields();
+							AddressDetails addressDetails = null;
+							BankAccountDetails bankAccountDetails = null;
+							LiabilitiesDetails liabilitiesDetails = null;
+							if (appPagesSectionGroupsDTO.getGroupId() == 2 && (appPagesSectionsDTO.getSectionId() == 1
+									|| appPagesSectionsDTO.getSectionId() == 3)) {
+								// user address details
+								addressDetails = new AddressDetails();
+								addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
+								if (addressDetails != null) {
+									if (userAddressDetailsSet == null) {
+										userAddressDetailsSet = new HashSet<AddressDetails>();
+									}
+									userAddressDetailsSet.add(addressDetails);
+								}
+								continue;
+							} else if (appPagesSectionGroupsDTO.getGroupId() == 2
+									&& appPagesSectionsDTO.getSectionId() == 2) {
+								// nominee address details
+								addressDetails = new AddressDetails();
+								addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
+								if (addressDetails != null) {
+									if (nomineeAddressDetailsSet == null) {
+										nomineeAddressDetailsSet = new HashSet<AddressDetails>();
+									}
+									nomineeAddressDetailsSet.add(addressDetails);
+								}
+								continue;
+							} else if (appPagesSectionGroupsDTO.getGroupId() == 2
+									&& appPagesSectionsDTO.getSectionId() == 5) {
+								// Business address details
+								addressDetails = new AddressDetails();
+								addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
+								if (addressDetails != null) {
+									if (businessAddressDetailsSet == null) {
+										businessAddressDetailsSet = new HashSet<AddressDetails>();
+									}
+									businessAddressDetailsSet.add(addressDetails);
+								}
+								continue;
+							} else if (appPagesSectionGroupsDTO.getGroupId() == 3
+									&& (appPagesSectionsDTO.getSectionId() == 1
+											|| appPagesSectionsDTO.getSectionId() == 3)) {
+								bankAccountDetails = new BankAccountDetails();
+								bankAccountDetails = preparebankAccounts(appDynamicFieldsDTOList, bankAccountDetails);
+								if (userBankAccountDetailsSet == null)
+									userBankAccountDetailsSet = new HashSet<BankAccountDetails>();
+								userBankAccountDetailsSet.add(bankAccountDetails);
+								continue;
+
+							} else if (appPagesSectionGroupsDTO.getGroupId() == 3
+									&& appPagesSectionsDTO.getSectionId() == 2) {
+								bankAccountDetails = new BankAccountDetails();
+								bankAccountDetails = preparebankAccounts(appDynamicFieldsDTOList, bankAccountDetails);
+								if (nomineeBankAccountDetailsSet == null)
+									nomineeBankAccountDetailsSet = new HashSet<BankAccountDetails>();
+								nomineeBankAccountDetailsSet.add(bankAccountDetails);
+								continue;
+
+							} else if (appPagesSectionGroupsDTO.getGroupId() == 3
+									&& appPagesSectionsDTO.getSectionId() == 5) {
+								bankAccountDetails = new BankAccountDetails();
+								bankAccountDetails = preparebankAccounts(appDynamicFieldsDTOList, bankAccountDetails);
+								if (businessBankAccountDetailsSet == null)
+									businessBankAccountDetailsSet = new HashSet<BankAccountDetails>();
+								businessBankAccountDetailsSet.add(bankAccountDetails);
+								continue;
+							} else if (appPagesSectionGroupsDTO.getGroupId() == 4) {
+								liabilitiesDetails = new LiabilitiesDetails();
+								liabilitiesDetails = prepareLiabilities(appDynamicFieldsDTOList, liabilitiesDetails);
+								if (liabilitiesDetailsSet == null)
+									liabilitiesDetailsSet = new HashSet<LiabilitiesDetails>();
+								liabilitiesDetailsSet.add(liabilitiesDetails);
+								continue;
+							}
 							for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 								if (appPagesSectionGroupsDTO.getGroupId() == 1
 										&& (appPagesSectionsDTO.getSectionId() == 1
 												|| appPagesSectionsDTO.getSectionId() == 3)) {
 									// User personal Info
-									prepareProfileInformation(appDynamicFieldsDTO, retailer);
+									retailer = prepareProfileInformation(appDynamicFieldsDTO, retailer);
 								} else if (appPagesSectionGroupsDTO.getGroupId() == 1
 										&& appPagesSectionsDTO.getSectionId() == 2) {
 									// nominee
-									prepareProfileInformation(appDynamicFieldsDTO, nominees);
-								} else if (appPagesSectionGroupsDTO.getGroupId() == 2
-										&& (appPagesSectionsDTO.getSectionId() == 1
-												|| appPagesSectionsDTO.getSectionId() == 3)) {
-									// user address details
-									prepareAddress(appDynamicFieldsDTO, userAddressDetailsSet);
-								} else if (appPagesSectionGroupsDTO.getGroupId() == 2
-										&& appPagesSectionsDTO.getSectionId() == 2) {
-									// nominee address details
-									prepareAddress(appDynamicFieldsDTO, nomineeAddressDetailsSet);
-								} else if (appPagesSectionGroupsDTO.getGroupId() == 2
-										&& appPagesSectionsDTO.getSectionId() == 5) {
-									// Business address details
-									prepareAddress(appDynamicFieldsDTO, businessAddressDetailsSet);
-								} else if (appPagesSectionGroupsDTO.getGroupId() == 3
-										&& (appPagesSectionsDTO.getSectionId() == 1
-												|| appPagesSectionsDTO.getSectionId() == 3)) {
-									// user account details
-									prepareAccountInformations(appDynamicFieldsDTO, userBankAccountDetailsSet);
-								} else if (appPagesSectionGroupsDTO.getGroupId() == 3
-										&& appPagesSectionsDTO.getSectionId() == 2) {
-									// nominee account details
-									prepareAccountInformations(appDynamicFieldsDTO, nomineeBankAccountDetailsSet);
-								} else if (appPagesSectionGroupsDTO.getGroupId() == 3
-										&& appPagesSectionsDTO.getSectionId() == 5) {
-									// business account details
-									prepareAccountInformations(appDynamicFieldsDTO, businessBankAccountDetailsSet);
-								} else if (appPagesSectionGroupsDTO.getGroupId() == 4) {
-									prepareLiabilitiesDetails(appDynamicFieldsDTO, liabilitiesDetails);
-								} /*
-									 * else if (appPagesSectionGroupsDTO.getGroupId() == 5) {
-									 * prepareBusinessInformation(appDynamicFieldsDTO, businessDetailsSet); } else
-									 * if (appPagesSectionGroupsDTO.getGroupId() == 6) {
-									 * prepareLicenseDetails(appDynamicFieldsDTO, businessAddressDetailsSet); }
-									 */
+									nominees = prepareProfileInformation(appDynamicFieldsDTO, nominees);
+								} else if (appPagesSectionGroupsDTO.getGroupId() == 5) {
+									prepareBusinessInformation(appDynamicFieldsDTO, businessDetailsSet);
+								} else if (appPagesSectionGroupsDTO.getGroupId() == 6) {
+									prepareLicenseDetails(appDynamicFieldsDTO, businessDetailsSet);
+								}
 
 							}
 						}
 					}
+
+				}
+				persistUser(retailer, nominees, userAddressDetailsSet, userBankAccountDetailsSet, liabilitiesDetailsSet,
+						isNew, nomineeRelationship);
+			}
+		}
+
+	}
+
+	private LiabilitiesDetails prepareLiabilities(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
+			LiabilitiesDetails liabilitiesDetails) {
+		for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+			if (appDynamicFieldsDTO != null) {
+				if (appDynamicFieldsDTO.getFieldId().equals("loanAmount")) {
+					try {
+						double loanAmount = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? Double.valueOf(appDynamicFieldsDTO.getResponse())
+								: 0.0;
+						liabilitiesDetails.setLoanAmount(loanAmount);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating loanAmount ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				} else if (appDynamicFieldsDTO.getFieldId().equals("bankOrNbfiName")) {
+					liabilitiesDetails.setBankOrNbfiName(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("liabilityFrom")) {
+					liabilitiesDetails.setLiabilityFrom(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("typeOfLiablity")) {
+					try {
+						LiabilityType typeOfLiablity = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? LiabilityType.valueOf(appDynamicFieldsDTO.getResponse())
+								: null;
+						liabilitiesDetails.setTypeOfLiablity(typeOfLiablity);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating liabilityType ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				}
+			}
+		}
+		return liabilitiesDetails;
+	}
+
+	private BankAccountDetails preparebankAccounts(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
+			BankAccountDetails bankAccountDetails) {
+		for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+			if (appDynamicFieldsDTO != null) {
+				if (appDynamicFieldsDTO.getFieldId().equals("accountTitle")) {
+					bankAccountDetails.setAccountTitle(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("typeOfConcern")) {
+					bankAccountDetails.setTypeOfConcern(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("bankName")) {
+					bankAccountDetails.setBankName(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("accountNumber")) {
+					try {
+						Long accountNumber = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? Long.valueOf(appDynamicFieldsDTO.getResponse())
+								: null;
+						bankAccountDetails.setAccountNumber(accountNumber);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating accountNumber ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				} else if (appDynamicFieldsDTO.getFieldId().equals("branch")) {
+					bankAccountDetails.setBranch(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("modeOfOperation")) {
+					bankAccountDetails.setModeOfOperation(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("currency")) {
+					try {
+						Currency currency = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? Currency.valueOf(appDynamicFieldsDTO.getResponse())
+								: null;
+						bankAccountDetails.setCurrency(currency);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating currency ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				} else if (appDynamicFieldsDTO.getFieldId().equals("bankAccountType")) {
+					BankAccountType bankAccountType = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? BankAccountType.valueOf(appDynamicFieldsDTO.getResponse())
+							: null;
+					bankAccountDetails.setBankAccountType(bankAccountType);
+				}
+			}
+
+		}
+		return bankAccountDetails;
+	}
+
+	private AddressDetails prepareAddress(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
+			AddressDetails addressDetails) {
+		for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+			if (appDynamicFieldsDTO != null) {
+				if (appDynamicFieldsDTO.getFieldId().equals("houseNumberOrStreetName")) {
+					addressDetails.setHouseNumberOrStreetName(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("area")) {
+					addressDetails.setArea(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("city")) {
+					addressDetails.setCity(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("region")) {
+					addressDetails.setRegion(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("zipCode")) {
+					try {
+						Integer zipCode = appDynamicFieldsDTO.getResponse() != null
+								&& !appDynamicFieldsDTO.getResponse().isEmpty()
+										? Integer.valueOf(appDynamicFieldsDTO.getResponse())
+										: null;
+						addressDetails.setZipCode(zipCode);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating zipcode ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				} else if (appDynamicFieldsDTO.getFieldId().equals("addressType")) {
+					try {
+						AddressType addressType = appDynamicFieldsDTO.getResponse() != null
+								&& !appDynamicFieldsDTO.getResponse().isEmpty()
+										? AddressType.valueOf(appDynamicFieldsDTO.getResponse())
+										: null;
+						addressDetails.setAddressType(addressType);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating addressType ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				}
+
+			}
+
+		}
+		return addressDetails;
+	}
+
+	@Transactional
+	private User persistUser(User retailer, User nominees, Set<AddressDetails> userAddressDetailsSet,
+			Set<BankAccountDetails> userBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetails,
+			Boolean isNew, UserRelationships nomineeRelationship) {
+		retailer.setUserType(UserType.RETAILERS.name());
+		retailer.setAddressDetails(userAddressDetailsSet);
+		retailer.setBankAccountDetails(userBankAccountDetailsSet);
+		// retailer.setBusinessDetails(businessDetailsSet);
+		retailer.setLiabilitiesDetails(liabilitiesDetails);
+		retailer = userRepository.save(retailer);
+		if (nominees != null) {
+			nominees.setUserType(UserType.NOMINEES.name());
+			nominees = userRepository.save(nominees);
+			persistUserRelationship(retailer, nominees, UserType.NOMINEES, isNew, nomineeRelationship);
+		}
+		return retailer;
+	}
+
+	private void persistUserRelationship(User retailer, User nominees, UserType nominees2, Boolean isNew,
+			UserRelationships nomineeRelationship) {
+		if (isNew)
+			nomineeRelationship = new UserRelationships();
+		nomineeRelationship.setMsisdn(retailer.getMsisdn());
+		nomineeRelationship.setRelative(nominees);
+		nomineeRelationship.setRelationship(Relationship.NOMINEE);
+		userRelationshipsRepository.save(nomineeRelationship);
+	}
+
+	private void prepareBusinessInformation(AppDynamicFieldsDTO appDynamicFieldsDTO,
+			Set<BusinessDetails> businessDetailsSet) {
+		if (appDynamicFieldsDTO != null) {
+			BusinessDetails businessDetails = new BusinessDetails();
+			if (appDynamicFieldsDTO.getFieldId().equals("businessPhone")) {
+				businessDetails.setBusinessPhone(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("businessName")) {
+				businessDetails.setBusinessName(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("directorOrPartnerName")) {
+				businessDetails.setDirectorOrPartnerName(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("facilityDetails")) {
+				businessDetails.setFacilityDetails(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("facilityType")) {
+				businessDetails.setFacilityType(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("fixedAssetPurchase")) {
+				businessDetails.setFixedAssetPurchase(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("fixedAssetName")) {
+				businessDetails.setFixedAssetName(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("price")) {
+				try {
+					double price = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? Double.valueOf(appDynamicFieldsDTO.getResponse())
+							: 0.0;
+					businessDetails.setPrice(price);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating price ={}, error={}", appDynamicFieldsDTO.getResponse(),
+							e.getMessage());
+				}
+			} else if (appDynamicFieldsDTO.getFieldId().equals("origin")) {
+				businessDetails.setOrigin(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("proposedCollateral")) {
+				businessDetails.setProposedCollateral(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("businessType")) {
+				businessDetails.setBusinessType(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("sector")) {
+				businessDetails.setSector(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("detailOfBusness")) {
+				businessDetails.setDetailOfBusness(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("initialCapital")) {
+				try {
+					double initialCapital = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? Double.valueOf(appDynamicFieldsDTO.getResponse())
+							: 0.0;
+					businessDetails.setInitialCapital(initialCapital);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating initialCapital ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
+				}
+			} else if (appDynamicFieldsDTO.getFieldId().equals("fundSource")) {
+				businessDetails.setFundSource(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("vatRegistrationNumber")) {
+				businessDetails.setVatRegistrationNumber(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("businessStartDate")) {
+				businessDetails.setBusinessStartDate(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("businessTin")) {
+				businessDetails.setBusinessTin(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("annualSales")) {
+				try {
+					double annualSales = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? Double.valueOf(appDynamicFieldsDTO.getResponse())
+							: 0.0;
+					businessDetails.setAnnualSales(annualSales);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating annualSales ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
+				}
+			} else if (appDynamicFieldsDTO.getFieldId().equals("annualGrossProfit")) {
+				try {
+					double annualGrossProfit = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? Double.valueOf(appDynamicFieldsDTO.getResponse())
+							: 0.0;
+					businessDetails.setAnnualGrossProfit(annualGrossProfit);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating annualGrossProfit ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
+				}
+			} else if (appDynamicFieldsDTO.getFieldId().equals("annualExpenses")) {
+				try {
+					double annualExpenses = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? Double.valueOf(appDynamicFieldsDTO.getResponse())
+							: 0.0;
+					businessDetails.setAnnualExpenses(annualExpenses);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating annualExpenses ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
+				}
+			} else if (appDynamicFieldsDTO.getFieldId().equals("valueOfFixedAssets")) {
+				try {
+					double valueOfFixedAssets = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? Double.valueOf(appDynamicFieldsDTO.getResponse())
+							: 0.0;
+					businessDetails.setValueOfFixedAssets(valueOfFixedAssets);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating valueOfFixedAssets ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
+				}
+			} else if (appDynamicFieldsDTO.getFieldId().equals("numberOfEmployees")) {
+				try {
+					int numberOfEmployees = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? Integer.valueOf(appDynamicFieldsDTO.getResponse())
+							: 0;
+					businessDetails.setNumberOfEmployees(numberOfEmployees);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating numberOfEmployees ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
+				}
+			} else if (appDynamicFieldsDTO.getFieldId().equals("stockValue")) {
+				try {
+					double stockValue = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? Double.valueOf(appDynamicFieldsDTO.getResponse())
+							: 0.0;
+					businessDetails.setStockValue(stockValue);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating stockValue ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
+				}
+			} else if (appDynamicFieldsDTO.getFieldId().equals("deposits")) {
+				try {
+					double deposits = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? Double.valueOf(appDynamicFieldsDTO.getResponse())
+							: 0.0;
+					businessDetails.setDeposits(deposits);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating deposits ={}, error={}", appDynamicFieldsDTO.getResponse(),
+							e.getMessage());
+				}
+			} else if (appDynamicFieldsDTO.getFieldId().equals("withdrawls")) {
+				try {
+					double withdrawls = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? Double.valueOf(appDynamicFieldsDTO.getResponse())
+							: 0.0;
+					businessDetails.setWithdrawls(withdrawls);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating withdrawls ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
+				}
+			} else if (appDynamicFieldsDTO.getFieldId().equals("initialDeposit")) {
+				try {
+					double initialDeposit = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? Double.valueOf(appDynamicFieldsDTO.getResponse())
+							: 0.0;
+					businessDetails.setInitialDeposit(initialDeposit);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating initialDeposit ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
+				}
+			}
+			businessDetailsSet.add(businessDetails);
+
+		}
+	}
+
+	private void prepareLicenseDetails(AppDynamicFieldsDTO appDynamicFieldsDTO,
+			Set<BusinessDetails> businessDetailsSet) {
+		if (appDynamicFieldsDTO != null) {
+			LicenseDetails licenseDetails = new LicenseDetails();
+			if (appDynamicFieldsDTO.getFieldId().equals("licenseNumber")) {
+				licenseDetails.setLicenseNumber(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("licenseExpiryDate")) {
+				licenseDetails.setLicenseExpiryDate(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("licenseIssuingAuthority")) {
+				licenseDetails.setLicenseIssuingAuthority(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("licenseType")) {
+				try {
+					LicenseType licenseType = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? LicenseType.valueOf(appDynamicFieldsDTO.getResponse())
+							: null;
+					licenseDetails.setLicenseType(licenseType);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating licenseType ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
 				}
 			}
 		}
@@ -817,24 +1206,130 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private void prepareLiabilitiesDetails(AppDynamicFieldsDTO appDynamicFieldsDTO,
-			Set<LiabilitiesDetails> liabilitiesDetails) {
-		// TODO Auto-generated method stub
+			Set<LiabilitiesDetails> liabilitiesDetailsSet) {
+		if (appDynamicFieldsDTO != null) {
+			LiabilitiesDetails liabilitiesDetails = new LiabilitiesDetails();
+			if (appDynamicFieldsDTO.getFieldId().equals("loanAmount")) {
+				try {
+					double loanAmount = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? Double.valueOf(appDynamicFieldsDTO.getResponse())
+							: 0.0;
+					liabilitiesDetails.setLoanAmount(loanAmount);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating loanAmount ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
+				}
+			} else if (appDynamicFieldsDTO.getFieldId().equals("bankOrNbfiName")) {
+				liabilitiesDetails.setBankOrNbfiName(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("liabilityFrom")) {
+				liabilitiesDetails.setLiabilityFrom(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("typeOfLiablity")) {
+				try {
+					LiabilityType typeOfLiablity = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? LiabilityType.valueOf(appDynamicFieldsDTO.getResponse())
+							: null;
+					liabilitiesDetails.setTypeOfLiablity(typeOfLiablity);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating liabilityType ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
+				}
+			}
+			liabilitiesDetailsSet.add(liabilitiesDetails);
+		}
 
 	}
 
-	private void prepareAddress(AppDynamicFieldsDTO appDynamicFieldsDTO, Set<AddressDetails> nomineeAddressDetailsSet) {
-		// TODO Auto-generated method stub
+	private AddressDetails prepareAddress(AppDynamicFieldsDTO appDynamicFieldsDTO,
+			Set<AddressDetails> addressDetailsSet, AddressDetails addressDetails) {
+		if (appDynamicFieldsDTO != null && addressDetailsSet != null && !addressDetailsSet.isEmpty()) {
+			if (appDynamicFieldsDTO.getFieldId().equals("houseNumberOrStreetName")) {
+				addressDetails.setHouseNumberOrStreetName(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("area")) {
+				addressDetails.setArea(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("city")) {
+				addressDetails.setCity(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("region")) {
+				addressDetails.setRegion(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("zipCode")) {
+				try {
+					Integer zipCode = appDynamicFieldsDTO.getResponse() != null
+							&& !appDynamicFieldsDTO.getResponse().isEmpty()
+									? Integer.valueOf(appDynamicFieldsDTO.getResponse())
+									: null;
+					addressDetails.setZipCode(zipCode);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating zipcode ={}, error={}", appDynamicFieldsDTO.getResponse(),
+							e.getMessage());
+				}
+			} else if (appDynamicFieldsDTO.getFieldId().equals("addressType")) {
+				try {
+					AddressType addressType = appDynamicFieldsDTO.getResponse() != null
+							&& !appDynamicFieldsDTO.getResponse().isEmpty()
+									? AddressType.valueOf(appDynamicFieldsDTO.getResponse())
+									: null;
+					addressDetails.setAddressType(addressType);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating addressType ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
+				}
+			}
 
+		}
+		return addressDetails;
 	}
 
 	private void prepareAccountInformations(AppDynamicFieldsDTO appDynamicFieldsDTO,
 			Set<BankAccountDetails> businessBankAccountDetailsSet) {
-		// TODO Auto-generated method stub
-
+		if (appDynamicFieldsDTO != null) {
+			BankAccountDetails bankAccountDetails = new BankAccountDetails();
+			if (appDynamicFieldsDTO.getFieldId().equals("accountTitle")) {
+				bankAccountDetails.setAccountTitle(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("typeOfConcern")) {
+				bankAccountDetails.setTypeOfConcern(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("bankName")) {
+				bankAccountDetails.setBankName(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("accountNumber")) {
+				try {
+					Long accountNumber = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? Long.valueOf(appDynamicFieldsDTO.getResponse())
+							: null;
+					bankAccountDetails.setAccountNumber(accountNumber);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating accountNumber ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
+				}
+			} else if (appDynamicFieldsDTO.getFieldId().equals("branch")) {
+				bankAccountDetails.setBranch(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("modeOfOperation")) {
+				bankAccountDetails.setModeOfOperation(appDynamicFieldsDTO.getResponse());
+			} else if (appDynamicFieldsDTO.getFieldId().equals("currency")) {
+				try {
+					Currency currency = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+							? Currency.valueOf(appDynamicFieldsDTO.getResponse())
+							: null;
+					bankAccountDetails.setCurrency(currency);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating currency ={}, error={}", appDynamicFieldsDTO.getResponse(),
+							e.getMessage());
+				}
+			} else if (appDynamicFieldsDTO.getFieldId().equals("bankAccountType")) {
+				BankAccountType bankAccountType = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+						? BankAccountType.valueOf(appDynamicFieldsDTO.getResponse())
+						: null;
+				bankAccountDetails.setBankAccountType(bankAccountType);
+			}
+			businessBankAccountDetailsSet.add(bankAccountDetails);
+		}
 	}
 
-	private void prepareProfileInformation(AppDynamicFieldsDTO appDynamicFieldsDTO, User user) {
+	private boolean neitherBlankNorNull(String response) {
+		return response != null && !response.isEmpty();
+	}
+
+	private User prepareProfileInformation(AppDynamicFieldsDTO appDynamicFieldsDTO, User user) {
 		if (appDynamicFieldsDTO != null) {
+			if (user == null)
+				user = new User();
 			if (appDynamicFieldsDTO.getFieldId().equals("firstName")) {
 				user.setFirstName(appDynamicFieldsDTO.getResponse());
 			} else if (appDynamicFieldsDTO.getFieldId().equals("lastName")) {
@@ -924,6 +1419,7 @@ public class UserServiceImpl implements UserService {
 			}
 
 		}
+		return user;
 	}
 
 }

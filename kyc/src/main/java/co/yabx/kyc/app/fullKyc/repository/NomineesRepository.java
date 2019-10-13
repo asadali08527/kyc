@@ -7,8 +7,7 @@ import co.yabx.kyc.app.fullKyc.entity.Nominees;
 import co.yabx.kyc.app.fullKyc.entity.User;
 
 @Repository("nomineesRepository")
-public interface NomineeRepository extends BaseUserRepository<Nominees>, CrudRepository<Nominees, Long> {
-
+public interface NomineesRepository extends BaseUserRepository<Nominees>, CrudRepository<Nominees, Long> {
 
 	User findBymsisdn(String msisdn);
 

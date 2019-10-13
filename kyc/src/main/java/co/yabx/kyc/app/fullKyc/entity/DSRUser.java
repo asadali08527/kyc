@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import co.yabx.kyc.app.enums.DsrProfileStatus;
 
 @Entity
-@DiscriminatorValue("dsr_users")
+@DiscriminatorValue("DISTRIBUTORS")
 public class DSRUser extends User {
 	
 	private DsrProfileStatus dsrStatus;

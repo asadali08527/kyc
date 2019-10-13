@@ -4,7 +4,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("nominees")
+@DiscriminatorValue("NOMINEES")
 public class Nominees extends User {
 
 }

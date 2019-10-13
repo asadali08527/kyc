@@ -37,7 +37,7 @@ public class UserRelationships implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
 	User relative;
 
-	@Column(name = "relationship", nullable = false, columnDefinition = "varchar(32) default 'NO'")
+	@Column(name = "relationship", nullable = false, columnDefinition = "varchar(32)")
 	@Enumerated(value = EnumType.STRING)
 	private Relationship relationship;
 

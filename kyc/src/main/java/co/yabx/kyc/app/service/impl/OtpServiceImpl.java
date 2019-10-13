@@ -80,7 +80,7 @@ public class OtpServiceImpl implements OtpService {
 
 	@Override
 	public String findOtpByMsisdn(String msisdn) {
-		DSRUser dsrUser = dsrUserRepository.findBymsisdn(msisdn);
+		DSRUser dsrUser = dsrUserRepository.findByMsisdn(msisdn);
 		if (dsrUser != null) {
 			List<OTP> otps = otpRepository.findByUserOtpType(dsrUser.getId(), OtpType.SMS);
 			OTP otpFound = otps.get(0);

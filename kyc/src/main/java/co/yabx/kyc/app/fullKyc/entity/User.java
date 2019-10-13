@@ -43,8 +43,8 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(insertable = false, updatable = false)
-	private String user_type;
+	@Column(name = "user_type", insertable = false, updatable = false)
+	private String userType;
 
 	@Column(name = "msisdn")
 	private String msisdn;
@@ -480,14 +480,6 @@ public class User implements Serializable {
 
 	}
 
-	public String getUser_type() {
-		return user_type;
-	}
-
-	public void setUser_type(String user_type) {
-		this.user_type = user_type;
-	}
-
 	public String getLocale() {
 		return locale;
 	}
@@ -502,6 +494,14 @@ public class User implements Serializable {
 
 	public void setAuthInfo(AuthInfo authInfo) {
 		this.authInfo = authInfo;
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
 	}
 
 }
