@@ -150,4 +150,12 @@ public class WorkEducationDetails implements Serializable {
 		this.educationalQualification = educationalQualification;
 	}
 
+	public Integer getExperience() {
+		return experience;
+	}
+
+	public void setExperience(Integer experience) {
+		this.experience = experience;
+	}
+
 }

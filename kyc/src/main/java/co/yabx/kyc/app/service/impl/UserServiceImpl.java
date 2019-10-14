@@ -44,10 +44,12 @@ import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
 import co.yabx.kyc.app.fullKyc.entity.DSRUser;
 import co.yabx.kyc.app.fullKyc.entity.LiabilitiesDetails;
 import co.yabx.kyc.app.fullKyc.entity.LicenseDetails;
+import co.yabx.kyc.app.fullKyc.entity.MonthlyTransactionProfiles;
 import co.yabx.kyc.app.fullKyc.entity.Nominees;
 import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
+import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
 import co.yabx.kyc.app.fullKyc.repository.DSRUserRepository;
 import co.yabx.kyc.app.fullKyc.repository.NomineesRepository;
 import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
@@ -299,6 +301,15 @@ public class UserServiceImpl implements UserService {
 				prepareBusinessInformation(dynamicFields, retailers, appDynamicFieldsDTOSet);
 			} else if (dynamicFields.getGroups().getGroupId() == 6) {
 				prepareLicenseDetails(dynamicFields, retailers, appDynamicFieldsDTOSet);
+			} else if (dynamicFields.getGroups().getGroupId() == 7) {
+				prepareMonthlyTransactionProfile(dynamicFields, retailers, appDynamicFieldsDTOSet);
+			} else if (dynamicFields.getGroups().getGroupId() == 8
+					&& (appPagesSections.getSectionId() == 1 || appPagesSections.getSectionId() == 3)) {
+				// user or distributor work education
+				prepareWorkEducationDetails(dynamicFields, retailers, appDynamicFieldsDTOSet);
+			} else if (dynamicFields.getGroups().getGroupId() == 8 && appPagesSections.getSectionId() == 2) {
+				// nominee work education
+				prepareWorkEducationDetails(dynamicFields, nominee, appDynamicFieldsDTOSet);
 			}
 			if (dynamicFields.getSavedData() != null && !dynamicFields.getSavedData().isEmpty())
 				filledFields++;
@@ -308,6 +319,66 @@ public class UserServiceImpl implements UserService {
 		appDynamicFieldsDTOSet
 				.add(appDynamicFieldsDTOSet.stream().max(Comparator.comparing(AppDynamicFieldsDTO::getId)).get());
 		return appDynamicFieldsDTOSet;
+
+	}
+
+	private static void prepareWorkEducationDetails(AppDynamicFields dynamicFields, User retailers,
+			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+
+		if (retailers == null || retailers.getWorkEducationDetails() == null
+				|| retailers.getWorkEducationDetails().isEmpty()) {
+			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+		} else {
+			Set<WorkEducationDetails> WorkEducationDetailsSet = retailers.getWorkEducationDetails();
+			for (WorkEducationDetails workEducationDetails : WorkEducationDetailsSet) {
+				if (dynamicFields.getFieldId().equals("occupation")) {
+					dynamicFields.setSavedData(workEducationDetails.getOccupation());
+				} else if (dynamicFields.getFieldId().equals("designation")) {
+					dynamicFields.setSavedData(workEducationDetails.getDesignation());
+				} else if (dynamicFields.getFieldId().equals("employer")) {
+					dynamicFields.setSavedData(workEducationDetails.getEmployer());
+				} else if (dynamicFields.getFieldId().equals("educationalQualification")) {
+					dynamicFields.setSavedData(workEducationDetails.getEducationalQualification());
+				} else if (dynamicFields.getFieldId().equals("experience")) {
+					try {
+						dynamicFields.setSavedData(workEducationDetails.getExperience() != null
+								? String.valueOf(workEducationDetails.getExperience())
+								: null);
+					} catch (Exception e) {
+						LOGGER.error("Exceptiong while parsing experience={},error={}",
+								workEducationDetails.getExperience(), e.getMessage());
+					}
+				}
+				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+			}
+
+		}
+
+	}
+
+	private static void prepareMonthlyTransactionProfile(AppDynamicFields dynamicFields, User retailers,
+			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+		if (retailers == null || retailers.getMonthlyTransactionProfiles() == null
+				|| retailers.getMonthlyTransactionProfiles().isEmpty()) {
+
+			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+		} else {
+			Set<MonthlyTransactionProfiles> monthlyTransactionProfiles = retailers.getMonthlyTransactionProfiles();
+			for (MonthlyTransactionProfiles monthlyTransactionProfile : monthlyTransactionProfiles) {
+				if (dynamicFields.getFieldId().equals("monthlyTurnOver")) {
+					dynamicFields.setSavedData(monthlyTransactionProfile.getMonthlyTurnOver() + "");
+				} else if (dynamicFields.getFieldId().equals("deposits")) {
+					dynamicFields.setSavedData(monthlyTransactionProfile.getDeposits() + "");
+				} else if (dynamicFields.getFieldId().equals("withdrawls")) {
+					dynamicFields.setSavedData(monthlyTransactionProfile.getWithdrawls() + "");
+				} else if (dynamicFields.getFieldId().equals("initialDeposit")) {
+					dynamicFields.setSavedData(monthlyTransactionProfile.getInitialDeposit() + "");
+
+				}
+				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+			}
+
+		}
 
 	}
 
