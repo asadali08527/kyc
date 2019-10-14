@@ -231,8 +231,9 @@ public class UserServiceImpl implements UserService {
 				List<AppDynamicFieldsDTO> fields = getFields(appDynamicFieldsSet, retailers, groups, appPagesSections,
 						nominee, userAddressDetailsSet, nomineeAddressDetailsSet, businessAddressDetailsSet,
 						userBankAccountDetailsSet, nomineeBankAccountDetailsSet, businessBankAccountDetailsSet);
-				appPagesSectionGroupsDTO.setFields(fields.stream()
-						.sorted(Comparator.comparing(AppDynamicFieldsDTO::getId)).collect(Collectors.toList()));
+				Set<AppDynamicFieldsDTO> appDynamicFieldsDTOs = fields.stream()
+						.sorted(Comparator.comparing(AppDynamicFieldsDTO::getId)).collect(Collectors.toSet());
+				appPagesSectionGroupsDTO.setFields(appDynamicFieldsDTOs.stream().collect(Collectors.toList()));
 				appPagesSectionGroupsDTO.setEnable(appPagesSectionGroups.isEnable());
 				appPagesSectionGroupsDTO.setGroupId(appPagesSectionGroups.getGroupId());
 				appPagesSectionGroupsDTO.setGroupName(appPagesSectionGroups.getGroupName());
