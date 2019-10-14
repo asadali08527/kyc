@@ -42,6 +42,8 @@ public class AppPagesDTO implements Serializable {
 
 	private Long dsrId;
 
+	private ActionDTO action;
+
 	public String getPageType() {
 		return pageType;
 	}
@@ -158,6 +160,14 @@ public class AppPagesDTO implements Serializable {
 
 	public void setDsrId(Long dsrId) {
 		this.dsrId = dsrId;
+	}
+
+	public ActionDTO getAction() {
+		return action;
+	}
+
+	public void setAction(ActionDTO action) {
+		this.action = action;
 	}
 
 }

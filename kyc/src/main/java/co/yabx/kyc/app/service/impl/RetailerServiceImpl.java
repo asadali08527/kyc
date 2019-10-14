@@ -73,17 +73,10 @@ public class RetailerServiceImpl implements RetailerService {
 				List<User> retailers = dsrRetailersRelationships.stream()
 						.filter(f -> Relationship.RETAILER.equals(f.getRelationship())).map(f -> f.getRelative())
 						.collect(Collectors.toList());
-				ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
-				List<AppPagesDTO> appPagesDTOs = new ArrayList<AppPagesDTO>();
-				for (User user : retailers) {
-					appPagesDTOs.addAll(userService.getUserDetails(user, UserType.RETAILERS.name()));
-				}
-				responseDTO.setRetailerInfo(appPagesDTOs);
-				return responseDTO;
+				return RetailersDtoHelper.getSummary(retailers);
 			} else {
 				ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "No Retailers Found for the DSR",
 						"404", null);
-				responseDTO.setRetailerInfo(userService.getUserDetails(null, UserType.RETAILERS.name()));
 				return responseDTO;
 			}
 			// return RetailersDtoHelper.getResponseDTO(null, "No Retailers Found for the

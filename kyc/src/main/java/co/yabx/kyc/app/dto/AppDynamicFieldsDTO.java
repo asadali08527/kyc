@@ -43,8 +43,6 @@ public class AppDynamicFieldsDTO implements Serializable {
 
 	private Integer hash;
 
-	private ActionDTO action;
-
 	private String response;
 
 	/**
@@ -174,14 +172,6 @@ public class AppDynamicFieldsDTO implements Serializable {
 		this.id = id;
 	}
 
-	public ActionDTO getAction() {
-		return action;
-	}
-
-	public void setAction(ActionDTO action) {
-		this.action = action;
-	}
-
 	public String getResponse() {
 		return response;
 	}
@@ -195,8 +185,8 @@ public class AppDynamicFieldsDTO implements Serializable {
 		return "AppDynamicFieldsDTO [id=" + id + ", type=" + type + ", fieldId=" + fieldId + ", dataType=" + dataType
 				+ ", fieldName=" + fieldName + ", placeHolderText=" + placeHolderText + ", savedData=" + savedData
 				+ ", validation=" + validation + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", camera="
-				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", hash=" + hash + ", action="
-				+ action + ", response=" + response + ", options=" + options + "]";
+				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", hash=" + hash + ", response="
+				+ response + ", options=" + options + "]";
 	}
 
 }

@@ -165,6 +165,7 @@ public class UserServiceImpl implements UserService {
 			else if (UserType.DISTRIBUTORS.name().equals(type))
 				appPagesDTO.setDsrId(retailers != null ? retailers.getId() : null);
 			appPagesDTO.setPageCompletion(((appPagesDTO.getFilledFields() * 100) / appPagesDTO.getTotalFields()) + "%");
+			appPagesDTO.setAction(prepareActions());
 		}
 		return appPagesDTO;
 	}
@@ -246,16 +247,12 @@ public class UserServiceImpl implements UserService {
 
 	}
 
-	private static AppDynamicFieldsDTO prepareActions(AppDynamicFieldsDTO appDynamicFieldsDTO2) {
+	private static ActionDTO prepareActions() {
 		ActionDTO actionDTO = new ActionDTO();
 		actionDTO.setData("Submit");
 		actionDTO.setName("submitForm");
 		actionDTO.setType("submit");
-		AppDynamicFieldsDTO appDynamicFieldsDTO = new AppDynamicFieldsDTO();
-		appDynamicFieldsDTO.setId(appDynamicFieldsDTO2.getId() + 1);
-		appDynamicFieldsDTO.setMandatory(true);
-		appDynamicFieldsDTO.setAction(actionDTO);
-		return appDynamicFieldsDTO;
+		return actionDTO;
 	}
 
 	private static List<AppDynamicFieldsDTO> getFields(Set<AppDynamicFields> appDynamicFieldsSet, User retailers,
@@ -308,8 +305,8 @@ public class UserServiceImpl implements UserService {
 		}
 		filledVsUnfilled.put("filledFields", filledFields);
 		filledVsUnfilled.put("totalFields", totalFields);
-		appDynamicFieldsDTOSet.add(prepareActions(
-				appDynamicFieldsDTOSet.stream().max(Comparator.comparing(AppDynamicFieldsDTO::getId)).get()));
+		appDynamicFieldsDTOSet
+				.add(appDynamicFieldsDTOSet.stream().max(Comparator.comparing(AppDynamicFieldsDTO::getId)).get());
 		return appDynamicFieldsDTOSet;
 
 	}
