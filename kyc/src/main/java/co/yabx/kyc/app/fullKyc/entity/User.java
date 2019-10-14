@@ -35,7 +35,7 @@ import co.yabx.kyc.app.enums.ResidentStatus;
 		@Index(name = "auth_info_id", columnList = "auth_info_id") })
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Least normalisation strategy
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
-public class User implements Serializable {
+public abstract class User implements Serializable {
 
 	private static final long serialVersionUID = -6901150039363185L;
 
@@ -175,6 +175,9 @@ public class User implements Serializable {
 	}
 
 	public void setIncomeDetails(Set<IncomeDetails> incomeDetails) {
+		for (IncomeDetails details : incomeDetails) {
+			details.setUser(this);
+		}
 		this.incomeDetails = incomeDetails;
 	}
 
@@ -183,6 +186,10 @@ public class User implements Serializable {
 	}
 
 	public void setIntroducerDetails(Set<IntroducerDetails> introducerDetails) {
+
+		for (IntroducerDetails details : introducerDetails) {
+			details.setUser(this);
+		}
 		this.introducerDetails = introducerDetails;
 	}
 
@@ -191,6 +198,9 @@ public class User implements Serializable {
 	}
 
 	public void setWorkEducationDetails(Set<WorkEducationDetails> workEducationDetails) {
+		for (WorkEducationDetails details : workEducationDetails) {
+			details.setUser(this);
+		}
 		this.workEducationDetails = workEducationDetails;
 	}
 
@@ -199,6 +209,9 @@ public class User implements Serializable {
 	}
 
 	public void setLiabilitiesDetails(Set<LiabilitiesDetails> liabilitiesDetails) {
+		for (LiabilitiesDetails details : liabilitiesDetails) {
+			details.setUser(this);
+		}
 		this.liabilitiesDetails = liabilitiesDetails;
 	}
 
@@ -207,6 +220,9 @@ public class User implements Serializable {
 	}
 
 	public void setBusinessDetails(Set<BusinessDetails> businessDetails) {
+		for (BusinessDetails details : businessDetails) {
+			details.setUser(this);
+		}
 		this.businessDetails = businessDetails;
 	}
 
@@ -215,6 +231,9 @@ public class User implements Serializable {
 	}
 
 	public void setAddressDetails(Set<AddressDetails> addressDetails) {
+		for (AddressDetails details : addressDetails) {
+			details.setUser(this);
+		}
 		this.addressDetails = addressDetails;
 	}
 
@@ -223,6 +242,9 @@ public class User implements Serializable {
 	}
 
 	public void setBankAccountDetails(Set<BankAccountDetails> bankAccountDetails) {
+		for (BankAccountDetails details : bankAccountDetails) {
+			details.setUser(this);
+		}
 		this.bankAccountDetails = bankAccountDetails;
 	}
 

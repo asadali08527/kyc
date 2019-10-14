@@ -856,6 +856,8 @@ public class UserServiceImpl implements UserService {
 								} else if (appPagesSectionGroupsDTO.getGroupId() == 1
 										&& appPagesSectionsDTO.getSectionId() == 2) {
 									// nominee
+									if (nominees == null)
+										nominees = new Nominees();
 									nominees = prepareProfileInformation(appDynamicFieldsDTO, nominees);
 								} else if (appPagesSectionGroupsDTO.getGroupId() == 5) {
 									prepareBusinessInformation(appDynamicFieldsDTO, businessDetailsSet);
@@ -869,7 +871,7 @@ public class UserServiceImpl implements UserService {
 
 				}
 				persistUser(retailer, nominees, userAddressDetailsSet, userBankAccountDetailsSet, liabilitiesDetailsSet,
-						isNew, nomineeRelationship);
+						isNew, nomineeRelationship,nomineeAddressDetailsSet);
 			}
 		}
 
@@ -1000,7 +1002,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	private User persistUser(User retailer, User nominees, Set<AddressDetails> userAddressDetailsSet,
 			Set<BankAccountDetails> userBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetails,
-			Boolean isNew, UserRelationships nomineeRelationship) {
+			Boolean isNew, UserRelationships nomineeRelationship, Set<AddressDetails> nomineeAddressDetailsSet) {
 		retailer.setUserType(UserType.RETAILERS.name());
 		retailer.setAddressDetails(userAddressDetailsSet);
 		retailer.setBankAccountDetails(userBankAccountDetailsSet);
@@ -1009,6 +1011,7 @@ public class UserServiceImpl implements UserService {
 		retailer = userRepository.save(retailer);
 		if (nominees != null) {
 			nominees.setUserType(UserType.NOMINEES.name());
+			nominees.setAddressDetails(nomineeAddressDetailsSet);
 			nominees = userRepository.save(nominees);
 			persistUserRelationship(retailer, nominees, UserType.NOMINEES, isNew, nomineeRelationship);
 		}
@@ -1324,9 +1327,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private User prepareProfileInformation(AppDynamicFieldsDTO appDynamicFieldsDTO, User user) {
-		if (appDynamicFieldsDTO != null) {
-			if (user == null)
-				user = new User();
+		if (appDynamicFieldsDTO != null && user != null) {
 			if (appDynamicFieldsDTO.getFieldId().equals("firstName")) {
 				user.setFirstName(appDynamicFieldsDTO.getResponse());
 			} else if (appDynamicFieldsDTO.getFieldId().equals("lastName")) {

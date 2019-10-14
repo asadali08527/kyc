@@ -21,6 +21,7 @@ import co.yabx.kyc.app.fullKyc.entity.IncomeDetails;
 import co.yabx.kyc.app.fullKyc.entity.IntroducerDetails;
 import co.yabx.kyc.app.fullKyc.entity.LiabilitiesDetails;
 import co.yabx.kyc.app.fullKyc.entity.LicenseDetails;
+import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
 
@@ -162,7 +163,7 @@ public class UserWrapper {
 	}
 
 	public static User prepareUserPersonalInfo(UserDTO userDTO) {
-		User user = new User();
+		User user = new Retailers();
 		user.setFirstName(userDTO.getName());
 		user.setDob(userDTO.getDob());
 		user.setPob(userDTO.getPob());
