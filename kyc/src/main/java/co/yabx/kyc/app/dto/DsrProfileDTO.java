@@ -22,6 +22,8 @@ public class DsrProfileDTO implements Serializable {
 	private String dsrMSISDN;
 	private List<AddressDetailsDTO> addressDetailsDTO;
 	private WorkEducationDetailsDTO workEducationDetailsDTO;
+	private AppPagesDTO pageResponse;
+
 
 	public String getName() {
 		return name;
@@ -117,6 +119,14 @@ public class DsrProfileDTO implements Serializable {
 
 	public void setWorkEducationDetailsDTO(WorkEducationDetailsDTO workEducationDetailsDTO) {
 		this.workEducationDetailsDTO = workEducationDetailsDTO;
+	}
+
+	public AppPagesDTO getPageResponse() {
+		return pageResponse;
+	}
+
+	public void setPageResponse(AppPagesDTO pageResponse) {
+		this.pageResponse = pageResponse;
 	}
 
 }

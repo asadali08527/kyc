@@ -57,8 +57,8 @@ public class IncomeDetails implements Serializable {
 	@Column(name = "update_by")
 	private String updatedBy;
 
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
-	User user;
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Guarantors.class)
+	Guarantors guarantors;
 
 	public Long getId() {
 		return id;
@@ -66,14 +66,6 @@ public class IncomeDetails implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
 	}
 
 	public double getMonthlyIncome() {

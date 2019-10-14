@@ -132,7 +132,7 @@ public abstract class User implements Serializable {
 	private String passportExpiryDate;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<IncomeDetails> incomeDetails;
+	private Set<MonthlyTransactionProfiles> monthlyTransactionProfiles;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<IntroducerDetails> introducerDetails;
@@ -169,17 +169,6 @@ public abstract class User implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "auth_info_id", referencedColumnName = "id")
 	private AuthInfo authInfo;
-
-	public Set<IncomeDetails> getIncomeDetails() {
-		return incomeDetails;
-	}
-
-	public void setIncomeDetails(Set<IncomeDetails> incomeDetails) {
-		for (IncomeDetails details : incomeDetails) {
-			details.setUser(this);
-		}
-		this.incomeDetails = incomeDetails;
-	}
 
 	public Set<IntroducerDetails> getIntroducerDetails() {
 		return introducerDetails;
@@ -524,6 +513,17 @@ public abstract class User implements Serializable {
 
 	public void setUserType(String userType) {
 		this.userType = userType;
+	}
+
+	public Set<MonthlyTransactionProfiles> getMonthlyTransactionProfiles() {
+		return monthlyTransactionProfiles;
+	}
+
+	public void setMonthlyTransactionProfiles(Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet) {
+		for (MonthlyTransactionProfiles monthlyTransactionProfile : monthlyTransactionProfilesSet) {
+			monthlyTransactionProfile.setUser(this);
+		}
+		this.monthlyTransactionProfiles = monthlyTransactionProfilesSet;
 	}
 
 }

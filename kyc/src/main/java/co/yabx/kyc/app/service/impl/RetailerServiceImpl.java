@@ -1,6 +1,5 @@
 package co.yabx.kyc.app.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -10,10 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.yabx.kyc.app.dto.AppDynamicFieldsDTO;
-import co.yabx.kyc.app.dto.AppPagesDTO;
-import co.yabx.kyc.app.dto.AppPagesSectionGroupsDTO;
-import co.yabx.kyc.app.dto.AppPagesSectionsDTO;
 import co.yabx.kyc.app.dto.QuestionAnswerDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.RetailerRequestDTO;
@@ -110,7 +105,7 @@ public class RetailerServiceImpl implements RetailerService {
 		retailers.setBusinessDetails(UserWrapper.getBusinessDetails(userDTO.getBusinessDetails()));
 		retailers.setAddressDetails(UserWrapper.getAddressDetails(userDTO.getAddressDetails()));
 		retailers.setBankAccountDetails(UserWrapper.prepareBankAccountDetails(userDTO.getBankAccountDetails()));
-		retailers.setIncomeDetails(UserWrapper.getIncomeDetails(userDTO.getIncomeDetails()));
+		// retailers.setIncomeDetails(UserWrapper.getIncomeDetails(userDTO.getIncomeDetails()));
 		retailers.setIntroducerDetails(UserWrapper.getIntroducerDetails(userDTO.getIntroducerDetails()));
 		retailers.setLiabilitiesDetails(UserWrapper.prepareLiabilitiesDetails(userDTO.getLiabilitiesDetails()));
 		retailers.setWorkEducationDetails(UserWrapper.getWorkEducationDetails(userDTO.getWorkEducationDetails()));
