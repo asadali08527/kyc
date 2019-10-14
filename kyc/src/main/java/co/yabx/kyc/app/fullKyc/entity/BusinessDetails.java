@@ -367,6 +367,9 @@ public class BusinessDetails implements Serializable {
 	}
 
 	public void setAddressDetails(Set<AddressDetails> addressDetails) {
+		for (AddressDetails details : addressDetails) {
+			details.setBusinessDetails(this);
+		}
 		this.addressDetails = addressDetails;
 	}
 
@@ -375,6 +378,9 @@ public class BusinessDetails implements Serializable {
 	}
 
 	public void setBankAccountDetails(Set<BankAccountDetails> bankAccountDetails) {
+		for (BankAccountDetails details : bankAccountDetails) {
+			details.setBusinessDetails(this);
+		}
 		this.bankAccountDetails = bankAccountDetails;
 	}
 

@@ -178,6 +178,9 @@ public class AttachmentDetails implements Serializable {
 	}
 
 	public void setAttachmenets(Set<Attachments> attachmenets) {
+		for (Attachments attachments : attachmenets) {
+			attachments.setAttachmentDetails(this);
+		}
 		this.attachmenets = attachmenets;
 	}
 
