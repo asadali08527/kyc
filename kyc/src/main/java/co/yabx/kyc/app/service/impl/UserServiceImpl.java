@@ -794,6 +794,7 @@ public class UserServiceImpl implements UserService {
 
 		if (appPagesDTO != null && dsrUser != null) {
 			Boolean isNew = false;
+			Boolean isDsrUser = false;
 			User nominees = null;
 			Set<AddressDetails> userAddressDetailsSet = null;
 			Set<AddressDetails> nomineeAddressDetailsSet = null;
@@ -805,16 +806,45 @@ public class UserServiceImpl implements UserService {
 			Set<LiabilitiesDetails> liabilitiesDetailsSet = null;
 			UserRelationships nomineeRelationship = null;
 			if (retailer == null) {
-				retailer = new Retailers();
-				isNew = true;
-				nominees = new Nominees();
-				userAddressDetailsSet = new HashSet<AddressDetails>();
-				nomineeAddressDetailsSet = new HashSet<AddressDetails>();
-				businessAddressDetailsSet = new HashSet<AddressDetails>();
-				userBankAccountDetailsSet = new HashSet<BankAccountDetails>();
-				nomineeBankAccountDetailsSet = new HashSet<BankAccountDetails>();
-				businessBankAccountDetailsSet = new HashSet<BankAccountDetails>();
-				businessDetailsSet = new HashSet<BusinessDetails>();
+				// It means DSR profile need to be persisted
+				retailer = dsrUser;
+				isDsrUser = true;
+				userAddressDetailsSet = dsrUser.getAddressDetails() != null ? dsrUser.getAddressDetails()
+						: new HashSet<AddressDetails>();
+				userBankAccountDetailsSet = dsrUser.getBankAccountDetails() != null ? dsrUser.getBankAccountDetails()
+						: new HashSet<BankAccountDetails>();
+				liabilitiesDetailsSet = dsrUser.getLiabilitiesDetails() != null ? dsrUser.getLiabilitiesDetails()
+						: new HashSet<LiabilitiesDetails>();
+				nomineeRelationship = userRelationshipsRepository.findByMsisdnAndRelationship(dsrUser.getMsisdn(),
+						Relationship.NOMINEE);
+				nominees = nomineeRelationship != null ? nomineeRelationship.getRelative() : null;
+				if (nominees != null) {
+					nomineeAddressDetailsSet = nominees.getAddressDetails() != null ? nominees.getAddressDetails()
+							: new HashSet<AddressDetails>();
+					userBankAccountDetailsSet = dsrUser.getBankAccountDetails() != null
+							? dsrUser.getBankAccountDetails()
+							: new HashSet<BankAccountDetails>();
+					nomineeBankAccountDetailsSet = nominees.getBankAccountDetails() != null
+							? nominees.getBankAccountDetails()
+							: new HashSet<BankAccountDetails>();
+				} else {
+					isNew = true;
+					nominees = new Nominees();
+				}
+
+				businessDetailsSet = dsrUser.getBusinessDetails() != null ? dsrUser.getBusinessDetails()
+						: new HashSet<BusinessDetails>();
+				if (businessDetailsSet != null && !businessDetailsSet.isEmpty()) {
+					for (BusinessDetails businessDetails : businessDetailsSet) {
+						businessAddressDetailsSet.addAll(businessDetails.getAddressDetails());
+						businessBankAccountDetailsSet.addAll(businessDetails.getBankAccountDetails());
+					}
+				} else {
+					businessDetailsSet = businessDetailsSet == null ? new HashSet<BusinessDetails>()
+							: businessDetailsSet;
+					businessAddressDetailsSet = new HashSet<AddressDetails>();
+					businessBankAccountDetailsSet = new HashSet<BankAccountDetails>();
+				}
 			} else {
 				userBankAccountDetailsSet = retailer.getBankAccountDetails();
 				userAddressDetailsSet = retailer.getAddressDetails();
@@ -830,13 +860,18 @@ public class UserServiceImpl implements UserService {
 					isNew = true;
 
 				}
-				/*
-				 * if (businessDetailsSet != null && !businessDetailsSet.isEmpty()) {
-				 * businessDetailsSet.forEach(f ->
-				 * businessAddressDetailsSet.addAll(f.getAddressDetails()));
-				 * businessDetailsSet.forEach(f ->
-				 * businessBankAccountDetailsSet.addAll(f.getBankAccountDetails())); }
-				 */
+
+				if (businessDetailsSet != null && !businessDetailsSet.isEmpty()) {
+					for (BusinessDetails businessDetails : businessDetailsSet) {
+						businessAddressDetailsSet.addAll(businessDetails.getAddressDetails());
+						businessBankAccountDetailsSet.addAll(businessDetails.getBankAccountDetails());
+					}
+				} else {
+					businessAddressDetailsSet = new HashSet<AddressDetails>();
+					businessBankAccountDetailsSet = new HashSet<BankAccountDetails>();
+
+				}
+
 			}
 			List<AppPagesSectionsDTO> appPagesSectionsDTOList = appPagesDTO.getSections();
 			if (appPagesSectionsDTOList != null && !appPagesSectionsDTOList.isEmpty()) {
@@ -981,7 +1016,7 @@ public class UserServiceImpl implements UserService {
 
 				}
 				persistUser(retailer, nominees, userAddressDetailsSet, userBankAccountDetailsSet, liabilitiesDetailsSet,
-						isNew, nomineeRelationship, nomineeAddressDetailsSet);
+						isNew, nomineeRelationship, nomineeAddressDetailsSet, isDsrUser, businessDetailsSet);
 			}
 		}
 
@@ -1112,11 +1147,15 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	private User persistUser(User retailer, User nominees, Set<AddressDetails> userAddressDetailsSet,
 			Set<BankAccountDetails> userBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetails,
-			Boolean isNew, UserRelationships nomineeRelationship, Set<AddressDetails> nomineeAddressDetailsSet) {
-		retailer.setUserType(UserType.RETAILERS.name());
+			Boolean isNew, UserRelationships nomineeRelationship, Set<AddressDetails> nomineeAddressDetailsSet,
+			Boolean isDsrUser, Set<BusinessDetails> businessDetailsSet) {
+		if (isDsrUser)
+			retailer.setUserType(UserType.DISTRIBUTORS.name());
+		else
+			retailer.setUserType(UserType.RETAILERS.name());
 		retailer.setAddressDetails(userAddressDetailsSet);
 		retailer.setBankAccountDetails(userBankAccountDetailsSet);
-		// retailer.setBusinessDetails(businessDetailsSet);
+		retailer.setBusinessDetails(businessDetailsSet);
 		retailer.setLiabilitiesDetails(liabilitiesDetails);
 		retailer = userRepository.save(retailer);
 		if (nominees != null) {

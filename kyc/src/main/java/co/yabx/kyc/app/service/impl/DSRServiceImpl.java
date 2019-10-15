@@ -106,9 +106,12 @@ public class DSRServiceImpl implements DSRService {
 		if (dsrProfileDTO != null && dsrProfileDTO.getDsrMSISDN() != null) {
 			try {
 				DSRUser dsrUser = dsrUserRepository.findByMsisdn(dsrProfileDTO.getDsrMSISDN());
-				if (dsrUser == null) {
-					dsrUser = persistDSRUser(dsrProfileDTO, DsrProfileStatus.NEW);
+				if (dsrUser != null) {
+					userService.persistOrUpdateRetailerInfo(dsrProfileDTO.getPageResponse(), dsrUser, null);
 					return DsrDtoHelper.getLoginDTO(null, "SUCCESS", "200", DsrProfileStatus.NEW);
+				} else {
+					return DsrDtoHelper.getLoginDTO(null, "NO DSR Found", "404", null);
+
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -125,11 +128,6 @@ public class DSRServiceImpl implements DSRService {
 	private DSRUser persistDSRUser(DsrProfileDTO dsrProfileDTO, DsrProfileStatus dsrStatus) {
 		DSRUser dsrUser = new DSRUser();
 		dsrUser.setDsrStatus(dsrStatus);
-		dsrUser.setFirstName(dsrProfileDTO.getName());
-		dsrUser.setDob(dsrProfileDTO.getDateOfBirth());
-		dsrUser.setFathersName(dsrProfileDTO.getFatherName());
-		dsrUser.setEmail(dsrProfileDTO.getEmail());
-		dsrUser.setAlternateMobileNumber(dsrProfileDTO.getAlternateMobileNumber());
 		dsrUser.setMsisdn(dsrProfileDTO.getDsrMSISDN());
 		dsrUser.setWorkEducationDetails(prepareWorkEducationdetails(dsrProfileDTO));
 		dsrUser.setAddressDetails(prepareAddress(dsrProfileDTO));
