@@ -1099,10 +1099,15 @@ public class UserServiceImpl implements UserService {
 								appDynamicFieldsDTO.getResponse(), e.getMessage());
 					}
 				} else if (appDynamicFieldsDTO.getFieldId().equals("bankAccountType")) {
-					BankAccountType bankAccountType = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
-							? BankAccountType.valueOf(appDynamicFieldsDTO.getResponse())
-							: null;
-					bankAccountDetails.setBankAccountType(bankAccountType);
+					try {
+						BankAccountType bankAccountType = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? BankAccountType.valueOf(appDynamicFieldsDTO.getResponse())
+								: null;
+						bankAccountDetails.setBankAccountType(bankAccountType);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating account_type ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
 				}
 			}
 
@@ -1515,10 +1520,16 @@ public class UserServiceImpl implements UserService {
 			} else if (appDynamicFieldsDTO.getFieldId().equals("spouseName")) {
 				user.setSpouseName(appDynamicFieldsDTO.getResponse());
 			} else if (appDynamicFieldsDTO.getFieldId().equals("numberOfDependents")) {
-				Integer nod = appDynamicFieldsDTO.getResponse() != null && !appDynamicFieldsDTO.getResponse().isEmpty()
-						? Integer.valueOf(appDynamicFieldsDTO.getResponse())
-						: null;
-				user.setNumberOfDependents(nod);
+				try {
+					Integer nod = appDynamicFieldsDTO.getResponse() != null
+							&& !appDynamicFieldsDTO.getResponse().isEmpty()
+									? Integer.valueOf(appDynamicFieldsDTO.getResponse())
+									: null;
+					user.setNumberOfDependents(nod);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating number of dependents ={}, error={}",
+							appDynamicFieldsDTO.getResponse(), e.getMessage());
+				}
 			} else if (appDynamicFieldsDTO.getFieldId().equals("alternateMobileNumber")) {
 				user.setAlternateMobileNumber(appDynamicFieldsDTO.getResponse());
 			}
