@@ -815,21 +815,19 @@ public class UserServiceImpl implements UserService {
 						: new HashSet<BankAccountDetails>();
 				liabilitiesDetailsSet = dsrUser.getLiabilitiesDetails() != null ? dsrUser.getLiabilitiesDetails()
 						: new HashSet<LiabilitiesDetails>();
+				userBankAccountDetailsSet = dsrUser.getBankAccountDetails() != null ? dsrUser.getBankAccountDetails()
+						: new HashSet<BankAccountDetails>();
 				nomineeRelationship = userRelationshipsRepository.findByMsisdnAndRelationship(dsrUser.getMsisdn(),
 						Relationship.NOMINEE);
 				nominees = nomineeRelationship != null ? nomineeRelationship.getRelative() : null;
 				if (nominees != null) {
 					nomineeAddressDetailsSet = nominees.getAddressDetails() != null ? nominees.getAddressDetails()
 							: new HashSet<AddressDetails>();
-					userBankAccountDetailsSet = dsrUser.getBankAccountDetails() != null
-							? dsrUser.getBankAccountDetails()
-							: new HashSet<BankAccountDetails>();
 					nomineeBankAccountDetailsSet = nominees.getBankAccountDetails() != null
 							? nominees.getBankAccountDetails()
 							: new HashSet<BankAccountDetails>();
 				} else {
 					isNew = true;
-					nominees = new Nominees();
 				}
 
 				businessDetailsSet = dsrUser.getBusinessDetails() != null ? dsrUser.getBusinessDetails()
@@ -1024,7 +1022,8 @@ public class UserServiceImpl implements UserService {
 
 				}
 				persistUser(retailer, nominees, userAddressDetailsSet, userBankAccountDetailsSet, liabilitiesDetailsSet,
-						isNew, nomineeRelationship, nomineeAddressDetailsSet, isDsrUser, businessDetailsSet);
+						isNew, nomineeRelationship, nomineeAddressDetailsSet, isDsrUser, businessDetailsSet,
+						nomineeBankAccountDetailsSet);
 			}
 		}
 
@@ -1161,7 +1160,8 @@ public class UserServiceImpl implements UserService {
 	private User persistUser(User retailer, User nominees, Set<AddressDetails> userAddressDetailsSet,
 			Set<BankAccountDetails> userBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetails,
 			Boolean isNew, UserRelationships nomineeRelationship, Set<AddressDetails> nomineeAddressDetailsSet,
-			Boolean isDsrUser, Set<BusinessDetails> businessDetailsSet) {
+			Boolean isDsrUser, Set<BusinessDetails> businessDetailsSet,
+			Set<BankAccountDetails> nomineeBankAccountDetailsSet) {
 		if (isDsrUser)
 			retailer.setUserType(UserType.DISTRIBUTORS.name());
 		else
@@ -1173,7 +1173,10 @@ public class UserServiceImpl implements UserService {
 		retailer = userRepository.save(retailer);
 		if (nominees != null) {
 			nominees.setUserType(UserType.NOMINEES.name());
-			nominees.setAddressDetails(nomineeAddressDetailsSet);
+			if (nomineeAddressDetailsSet != null)
+				nominees.setAddressDetails(nomineeAddressDetailsSet);
+			if (nomineeBankAccountDetailsSet != null)
+				nominees.setBankAccountDetails(nomineeBankAccountDetailsSet);
 			nominees = userRepository.save(nominees);
 			persistUserRelationship(retailer, nominees, UserType.NOMINEES, isNew, nomineeRelationship);
 		}
