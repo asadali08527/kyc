@@ -846,19 +846,26 @@ public class UserServiceImpl implements UserService {
 					businessBankAccountDetailsSet = new HashSet<BankAccountDetails>();
 				}
 			} else {
-				userBankAccountDetailsSet = retailer.getBankAccountDetails();
-				userAddressDetailsSet = retailer.getAddressDetails();
-				businessDetailsSet = retailer.getBusinessDetails();
-				liabilitiesDetailsSet = retailer.getLiabilitiesDetails();
+				userBankAccountDetailsSet = retailer.getBankAccountDetails() != null ? retailer.getBankAccountDetails()
+						: new HashSet<BankAccountDetails>();
+				userAddressDetailsSet = retailer.getAddressDetails() != null ? retailer.getAddressDetails()
+						: new HashSet<AddressDetails>();
+				businessDetailsSet = retailer.getBusinessDetails() != null ? retailer.getBusinessDetails()
+						: new HashSet<BusinessDetails>();
+				liabilitiesDetailsSet = retailer.getLiabilitiesDetails() != null ? retailer.getLiabilitiesDetails()
+						: new HashSet<LiabilitiesDetails>();
 				nomineeRelationship = userRelationshipsRepository.findByMsisdnAndRelationship(retailer.getMsisdn(),
 						Relationship.NOMINEE);
 				nominees = nomineeRelationship != null ? nomineeRelationship.getRelative() : null;
 				if (nominees != null) {
-					nomineeAddressDetailsSet = nominees.getAddressDetails();
-					nomineeBankAccountDetailsSet = nominees.getBankAccountDetails();
+					nomineeAddressDetailsSet = nominees.getAddressDetails() != null ? nominees.getAddressDetails()
+							: new HashSet<AddressDetails>();
+					nomineeBankAccountDetailsSet = nominees.getBankAccountDetails() != null
+							? nominees.getBankAccountDetails()
+							: new HashSet<BankAccountDetails>();
 				} else {
 					isNew = true;
-
+					nominees = new Nominees();
 				}
 
 				if (businessDetailsSet != null && !businessDetailsSet.isEmpty()) {
@@ -867,9 +874,10 @@ public class UserServiceImpl implements UserService {
 						businessBankAccountDetailsSet.addAll(businessDetails.getBankAccountDetails());
 					}
 				} else {
+					businessDetailsSet = businessDetailsSet == null ? new HashSet<BusinessDetails>()
+							: businessDetailsSet;
 					businessAddressDetailsSet = new HashSet<AddressDetails>();
 					businessBankAccountDetailsSet = new HashSet<BankAccountDetails>();
-
 				}
 
 			}
