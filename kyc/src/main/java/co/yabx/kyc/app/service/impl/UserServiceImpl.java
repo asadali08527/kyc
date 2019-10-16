@@ -24,11 +24,14 @@ import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
 import co.yabx.kyc.app.fullKyc.entity.DSRUser;
+import co.yabx.kyc.app.fullKyc.entity.IntroducerDetails;
 import co.yabx.kyc.app.fullKyc.entity.LiabilitiesDetails;
+import co.yabx.kyc.app.fullKyc.entity.MonthlyTransactionProfiles;
 import co.yabx.kyc.app.fullKyc.entity.Nominees;
 import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
+import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
 import co.yabx.kyc.app.fullKyc.repository.DSRUserRepository;
 import co.yabx.kyc.app.fullKyc.repository.NomineesRepository;
 import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
@@ -154,6 +157,10 @@ public class UserServiceImpl implements UserService {
 			Set<BusinessDetails> businessDetailsSet = null;
 			Set<LiabilitiesDetails> liabilitiesDetailsSet = null;
 			UserRelationships nomineeRelationship = null;
+			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet = null;
+			Set<WorkEducationDetails> workEducationDetailsSet = null;
+			Set<IntroducerDetails> introducerDetailsSet = null;
+
 			if (retailer == null) {
 				// It means DSR profile need to be persisted
 				retailer = dsrUser;
@@ -192,6 +199,8 @@ public class UserServiceImpl implements UserService {
 					businessAddressDetailsSet = new HashSet<AddressDetails>();
 					businessBankAccountDetailsSet = new HashSet<BankAccountDetails>();
 				}
+				workEducationDetailsSet = dsrUser.getWorkEducationDetails();
+
 			} else {
 				userBankAccountDetailsSet = retailer.getBankAccountDetails() != null ? retailer.getBankAccountDetails()
 						: new HashSet<BankAccountDetails>();
@@ -226,6 +235,9 @@ public class UserServiceImpl implements UserService {
 					businessAddressDetailsSet = new HashSet<AddressDetails>();
 					businessBankAccountDetailsSet = new HashSet<BankAccountDetails>();
 				}
+				monthlyTransactionProfilesSet = retailer.getMonthlyTransactionProfiles();
+				workEducationDetailsSet = retailer.getWorkEducationDetails();
+				introducerDetailsSet = retailer.getIntroducerDetails();
 
 			}
 			List<AppPagesSectionsDTO> appPagesSectionsDTOList = appPagesDTO.getSections();
@@ -233,7 +245,8 @@ public class UserServiceImpl implements UserService {
 				appPagesSectionService.prepareUserDetails(appPagesSectionsDTOList, retailer, nominees,
 						userAddressDetailsSet, userBankAccountDetailsSet, nomineeAddressDetailsSet,
 						nomineeBankAccountDetailsSet, businessDetailsSet, businessAddressDetailsSet,
-						businessBankAccountDetailsSet, liabilitiesDetailsSet);
+						businessBankAccountDetailsSet, liabilitiesDetailsSet, workEducationDetailsSet,
+						introducerDetailsSet, monthlyTransactionProfilesSet);
 				persistUser(retailer, nominees, userAddressDetailsSet, userBankAccountDetailsSet, liabilitiesDetailsSet,
 						isNew, nomineeRelationship, nomineeAddressDetailsSet, isDsrUser, businessDetailsSet,
 						nomineeBankAccountDetailsSet);

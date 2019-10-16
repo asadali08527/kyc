@@ -10,8 +10,6 @@ import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 
 public interface RetailerService {
 
-	ResponseDTO getSummaries(RetailerRequestDTO retailerRequestDTO);
-
 	ResponseDTO retailerDetails(String dsrMsisdn, Long retailerId);
 
 	ResponseDTO submitRetailerProfile(RetailerRequestDTO retailerRequestDTO);
@@ -33,5 +31,7 @@ public interface RetailerService {
 	ResponseDTO searchRetailerByDsr(String dsrMsisdn, String retailerId);
 
 	ResponseDTO submitRetailerProfile(UserDTO userDTO);
+
+	ResponseDTO getSummaries(String dsrMSISDN, Integer startIndex, Integer endIndex);
 
 }

@@ -25,10 +25,13 @@ import co.yabx.kyc.app.enums.ResidentStatus;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
+import co.yabx.kyc.app.fullKyc.entity.IntroducerDetails;
 import co.yabx.kyc.app.fullKyc.entity.LiabilitiesDetails;
 import co.yabx.kyc.app.fullKyc.entity.LicenseDetails;
+import co.yabx.kyc.app.fullKyc.entity.MonthlyTransactionProfiles;
 import co.yabx.kyc.app.fullKyc.entity.Nominees;
 import co.yabx.kyc.app.fullKyc.entity.User;
+import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.repositories.AuthInfoRepository;
 import co.yabx.kyc.app.service.AppConfigService;
@@ -59,7 +62,8 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 			Set<AddressDetails> nomineeAddressDetailsSet, Set<BankAccountDetails> nomineeBankAccountDetailsSet,
 			Set<BusinessDetails> businessDetailsSet, Set<AddressDetails> businessAddressDetailsSet,
 			Set<BankAccountDetails> businessBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetailsSet,
-			AppPagesSectionsDTO appPagesSectionsDTO) {
+			AppPagesSectionsDTO appPagesSectionsDTO, Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet,
+			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet) {
 
 		List<AppDynamicFieldsDTO> appDynamicFieldsDTOList = appPagesSectionGroupsDTO.getFields();
 		AddressDetails addressDetails = null;
@@ -133,7 +137,6 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 			businessBankAccountDetailsSet.add(bankAccountDetails);
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == 4) {
-			liabilitiesDetails = new LiabilitiesDetails();
 			liabilitiesDetails = prepareLiabilities(appDynamicFieldsDTOList, liabilitiesDetails);
 			if (liabilitiesDetailsSet == null) {
 				liabilitiesDetailsSet = new HashSet<LiabilitiesDetails>();
@@ -182,6 +185,31 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 				}
 			}
 			return;
+		} else if (appPagesSectionGroupsDTO.getGroupId() == 7) {
+			MonthlyTransactionProfiles monthlyTransactionProfiles = null;
+			monthlyTransactionProfiles = prepareMonthlyTxnProfiles(appDynamicFieldsDTOList, monthlyTransactionProfiles);
+			if (monthlyTransactionProfiles != null) {
+				if (monthlyTransactionProfilesSet == null)
+					monthlyTransactionProfilesSet = new HashSet<MonthlyTransactionProfiles>();
+				monthlyTransactionProfilesSet.add(monthlyTransactionProfiles);
+			} else {
+				monthlyTransactionProfilesSet.clear();
+				monthlyTransactionProfilesSet.add(monthlyTransactionProfiles);
+			}
+			return;
+		} else if (appPagesSectionGroupsDTO.getGroupId() == 8) {
+			WorkEducationDetails workEducationDetails = null;
+			workEducationDetails = prepareWorkEducationDetails(appDynamicFieldsDTOList, workEducationDetails);
+			if (workEducationDetails != null) {
+				if (workEducationDetailsSet == null) {
+					workEducationDetailsSet = new HashSet<WorkEducationDetails>();
+					workEducationDetailsSet.add(workEducationDetails);
+				} else {
+					workEducationDetailsSet.clear();
+					workEducationDetailsSet.add(workEducationDetails);
+				}
+			}
+			return;
 		}
 		for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 			if (appPagesSectionGroupsDTO.getGroupId() == 1
@@ -199,10 +227,93 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 
 	}
 
+	private WorkEducationDetails prepareWorkEducationDetails(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
+			WorkEducationDetails workEducationDetails) {
+		if (appDynamicFieldsDTOList != null && !appDynamicFieldsDTOList.isEmpty()) {
+			workEducationDetails = new WorkEducationDetails();
+			for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+				if (appDynamicFieldsDTO.getFieldId().equals("experience")) {
+					try {
+						Integer experience = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? Integer.valueOf(appDynamicFieldsDTO.getResponse())
+								: 0;
+						workEducationDetails.setExperience(experience);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating experience ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				} else if (appDynamicFieldsDTO.getFieldId().equals("occupation")) {
+					workEducationDetails.setOccupation(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("designation")) {
+					workEducationDetails.setDesignation(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("employer")) {
+					workEducationDetails.setEmployer(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("educationalQualification")) {
+					workEducationDetails.setEducationalQualification(appDynamicFieldsDTO.getResponse());
+				}
+			}
+		}
+		return workEducationDetails;
+
+	}
+
+	private MonthlyTransactionProfiles prepareMonthlyTxnProfiles(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
+			MonthlyTransactionProfiles monthlyTransactionProfiles) {
+		if (appDynamicFieldsDTOList != null) {
+			monthlyTransactionProfiles = new MonthlyTransactionProfiles();
+			for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+				if (appDynamicFieldsDTO.getFieldId().equals("monthlyTurnOver")) {
+					try {
+						double monthlyTurnOver = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? Double.valueOf(appDynamicFieldsDTO.getResponse())
+								: 0.0;
+						monthlyTransactionProfiles.setMonthlyTurnOver(monthlyTurnOver);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating monthlyTurnOver ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				} else if (appDynamicFieldsDTO.getFieldId().equals("deposits")) {
+					try {
+						double deposits = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? Double.valueOf(appDynamicFieldsDTO.getResponse())
+								: 0.0;
+						monthlyTransactionProfiles.setDeposits(deposits);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating deposits ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				} else if (appDynamicFieldsDTO.getFieldId().equals("withdrawls")) {
+					try {
+						double withdrawls = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? Double.valueOf(appDynamicFieldsDTO.getResponse())
+								: 0.0;
+						monthlyTransactionProfiles.setWithdrawls(withdrawls);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating withdrawls ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				} else if (appDynamicFieldsDTO.getFieldId().equals("initialDeposit")) {
+					try {
+						double initialDeposit = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? Double.valueOf(appDynamicFieldsDTO.getResponse())
+								: 0.0;
+						monthlyTransactionProfiles.setInitialDeposit(initialDeposit);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating initialDeposit ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				}
+			}
+		}
+		return monthlyTransactionProfiles;
+
+	}
+
 	private LiabilitiesDetails prepareLiabilities(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
 			LiabilitiesDetails liabilitiesDetails) {
-		for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
-			if (appDynamicFieldsDTO != null) {
+		if (appDynamicFieldsDTOList != null && !appDynamicFieldsDTOList.isEmpty()) {
+			liabilitiesDetails = new LiabilitiesDetails();
+			for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 				if (appDynamicFieldsDTO.getFieldId().equals("loanAmount")) {
 					try {
 						double loanAmount = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())

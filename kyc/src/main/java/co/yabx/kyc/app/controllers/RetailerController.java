@@ -44,8 +44,9 @@ public class RetailerController {
 
 	@RequestMapping(value = "/retailer/summary", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<?> fetchRetailersSummary(@RequestBody RetailerRequestDTO retailerRequestDTO) {
-		ResponseDTO loginDTO = retailerService.getSummaries(retailerRequestDTO);
+	public ResponseEntity<?> fetchRetailersSummary(@RequestParam("dsrMSISDN") String dsrMSISDN,
+			@RequestParam("startIndex") Integer startIndex, @RequestParam("endIndex") Integer endIndex) {
+		ResponseDTO loginDTO = retailerService.getSummaries(dsrMSISDN, startIndex, endIndex);
 		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 
 	}

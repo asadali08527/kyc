@@ -59,11 +59,9 @@ public class RetailerServiceImpl implements RetailerService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetailerServiceImpl.class);
 
 	@Override
-	public ResponseDTO getSummaries(RetailerRequestDTO retailerRequestDTO) {
-		if (retailerRequestDTO != null && retailerRequestDTO.getDsrMSISDN() != null
-				&& !retailerRequestDTO.getDsrMSISDN().isEmpty()) {
-			List<UserRelationships> dsrRetailersRelationships = userRelationshipsRepository
-					.findByMsisdn(retailerRequestDTO.getDsrMSISDN());
+	public ResponseDTO getSummaries(String dsrMSISDN, Integer startIndex, Integer endIndex) {
+		if (dsrMSISDN != null && !dsrMSISDN.isEmpty()) {
+			List<UserRelationships> dsrRetailersRelationships = userRelationshipsRepository.findByMsisdn(dsrMSISDN);
 			if (dsrRetailersRelationships != null && !dsrRetailersRelationships.isEmpty()) {
 				List<User> retailers = dsrRetailersRelationships.stream()
 						.filter(f -> Relationship.RETAILER.equals(f.getRelationship())).map(f -> f.getRelative())
