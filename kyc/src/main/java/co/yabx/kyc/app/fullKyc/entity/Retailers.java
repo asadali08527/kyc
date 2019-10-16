@@ -7,7 +7,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("retailers")
+@DiscriminatorValue("RETAILERS")
 public class Retailers extends User implements Serializable {
 
 	@Column(name = "retailer_id", unique = true)
