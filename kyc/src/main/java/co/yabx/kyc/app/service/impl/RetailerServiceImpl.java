@@ -72,8 +72,7 @@ public class RetailerServiceImpl implements RetailerService {
 						"404", null);
 				return responseDTO;
 			}
-			// return RetailersDtoHelper.getResponseDTO(null, "No Retailers Found for the
-			// DSR", "404", null);
+			
 		}
 		return RetailersDtoHelper.getResponseDTO(null, "Either DSR msisdn is missing or no data passed", "403", null);
 	}

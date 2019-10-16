@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void persistOrUpdateUserInfo(AppPagesDTO appPagesDTO, User dsrUser, User retailer) {
+	public User persistOrUpdateUserInfo(AppPagesDTO appPagesDTO, User dsrUser, User retailer) {
 
 		if (appPagesDTO != null && dsrUser != null) {
 			Boolean isNew = false;
@@ -247,11 +247,12 @@ public class UserServiceImpl implements UserService {
 						nomineeBankAccountDetailsSet, businessDetailsSet, businessAddressDetailsSet,
 						businessBankAccountDetailsSet, liabilitiesDetailsSet, workEducationDetailsSet,
 						introducerDetailsSet, monthlyTransactionProfilesSet);
-				persistUser(retailer, nominees, userAddressDetailsSet, userBankAccountDetailsSet, liabilitiesDetailsSet,
-						isNew, nomineeRelationship, nomineeAddressDetailsSet, isDsrUser, businessDetailsSet,
-						nomineeBankAccountDetailsSet);
+				return persistUser(retailer, nominees, userAddressDetailsSet, userBankAccountDetailsSet,
+						liabilitiesDetailsSet, isNew, nomineeRelationship, nomineeAddressDetailsSet, isDsrUser,
+						businessDetailsSet, nomineeBankAccountDetailsSet);
 			}
 		}
+		return dsrUser;
 
 	}
 
