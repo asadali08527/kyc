@@ -36,6 +36,7 @@ import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.repositories.AppPagesRepository;
 import co.yabx.kyc.app.service.AppConfigService;
+import co.yabx.kyc.app.service.AppPagesSectionService;
 import co.yabx.kyc.app.service.DynamicFieldService;
 import co.yabx.kyc.app.service.UserService;
 import co.yabx.kyc.app.util.SpringUtil;
@@ -61,13 +62,10 @@ public class UserServiceImpl implements UserService {
 	private DSRUserRepository dsrUserRepository;
 
 	@Autowired
-	private NomineesRepository nomineesRepository;
+	private AppPagesSectionService appPagesSectionService;
 
 	@Autowired
 	private UserRelationshipsRepository userRelationshipsRepository;
-
-	@Autowired
-	private DynamicFieldService dynamicFieldService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -232,18 +230,10 @@ public class UserServiceImpl implements UserService {
 			}
 			List<AppPagesSectionsDTO> appPagesSectionsDTOList = appPagesDTO.getSections();
 			if (appPagesSectionsDTOList != null && !appPagesSectionsDTOList.isEmpty()) {
-				for (AppPagesSectionsDTO appPagesSectionsDTO : appPagesSectionsDTOList) {
-					List<AppPagesSectionGroupsDTO> appPagesSectionGroupsDTOList = appPagesSectionsDTO.getGroups();
-					if (appPagesSectionGroupsDTOList != null && !appPagesSectionGroupsDTOList.isEmpty()) {
-						for (AppPagesSectionGroupsDTO appPagesSectionGroupsDTO : appPagesSectionGroupsDTOList) {
-							dynamicFieldService.prepareFields(retailer, nominees, appPagesSectionGroupsDTO,
-									userAddressDetailsSet, userBankAccountDetailsSet, nomineeAddressDetailsSet,
-									nomineeBankAccountDetailsSet, businessDetailsSet, businessAddressDetailsSet,
-									businessBankAccountDetailsSet, liabilitiesDetailsSet, appPagesSectionsDTO);
-						}
-					}
-
-				}
+				appPagesSectionService.prepareUserDetails(appPagesSectionsDTOList, retailer, nominees,
+						userAddressDetailsSet, userBankAccountDetailsSet, nomineeAddressDetailsSet,
+						nomineeBankAccountDetailsSet, businessDetailsSet, businessAddressDetailsSet,
+						businessBankAccountDetailsSet, liabilitiesDetailsSet);
 				persistUser(retailer, nominees, userAddressDetailsSet, userBankAccountDetailsSet, liabilitiesDetailsSet,
 						isNew, nomineeRelationship, nomineeAddressDetailsSet, isDsrUser, businessDetailsSet,
 						nomineeBankAccountDetailsSet);
