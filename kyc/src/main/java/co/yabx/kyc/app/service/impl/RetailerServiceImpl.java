@@ -190,7 +190,7 @@ public class RetailerServiceImpl implements RetailerService {
 				if (retailers == null)
 					return RetailersDtoHelper.getResponseDTO(null, "Retailer not found", "404", null);
 			}
-			userService.persistOrUpdateRetailerInfo(retailerRequestDTO.getPageResponse(), dsrUser, retailers);
+			userService.persistOrUpdateUserInfo(retailerRequestDTO.getPageResponse(), dsrUser, retailers);
 			return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
 		}
 		return null;

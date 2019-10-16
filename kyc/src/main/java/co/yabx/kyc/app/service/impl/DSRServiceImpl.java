@@ -107,7 +107,7 @@ public class DSRServiceImpl implements DSRService {
 			try {
 				DSRUser dsrUser = dsrUserRepository.findByMsisdn(dsrProfileDTO.getDsrMSISDN());
 				if (dsrUser != null) {
-					userService.persistOrUpdateRetailerInfo(dsrProfileDTO.getPageResponse(), dsrUser, null);
+					userService.persistOrUpdateUserInfo(dsrProfileDTO.getPageResponse(), dsrUser, null);
 					return DsrDtoHelper.getLoginDTO(null, "SUCCESS", "200", DsrProfileStatus.NEW);
 				} else {
 					return DsrDtoHelper.getLoginDTO(null, "NO DSR Found", "404", null);

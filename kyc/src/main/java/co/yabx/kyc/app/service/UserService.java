@@ -17,6 +17,6 @@ public interface UserService {
 
 	Retailers getRetailerById(Long retailerId);
 
-	void persistOrUpdateRetailerInfo(AppPagesDTO appPagesDTO, User user, User retailer);
+	void persistOrUpdateUserInfo(AppPagesDTO appPagesDTO, User dsrUser, User retailer);
 
 }
