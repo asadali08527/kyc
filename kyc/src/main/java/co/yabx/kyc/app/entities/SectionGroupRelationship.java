@@ -33,6 +33,12 @@ public class SectionGroupRelationship implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = AppPagesSectionGroups.class)
 	private AppPagesSectionGroups appPagesSectionGroups;
 
+	@Column(name = "is_multiple", columnDefinition = "boolean default false")
+	private boolean multiple;
+
+	@Column(name = "multiple_title")
+	private String multipleTitlle;
+
 	@Column(name = "created_at")
 	private Date createdAt;
 
@@ -91,6 +97,22 @@ public class SectionGroupRelationship implements Serializable {
 
 	public void setAppPagesSectionGroups(AppPagesSectionGroups appPagesSectionGroups) {
 		this.appPagesSectionGroups = appPagesSectionGroups;
+	}
+
+	public boolean isMultiple() {
+		return multiple;
+	}
+
+	public void setMultiple(boolean multiple) {
+		this.multiple = multiple;
+	}
+
+	public String getMultipleTitlle() {
+		return multipleTitlle;
+	}
+
+	public void setMultipleTitlle(String multipleTitlle) {
+		this.multipleTitlle = multipleTitlle;
 	}
 
 	@Override

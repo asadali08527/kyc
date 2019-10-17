@@ -15,7 +15,7 @@ import co.yabx.kyc.app.enums.DataType;
 public class AppDynamicFieldsDTO implements Serializable {
 	private static final long serialVersionUID = 1588962L;
 
-	private Long id;
+	private Integer id;
 
 	private ControlType type;
 
@@ -164,11 +164,11 @@ public class AppDynamicFieldsDTO implements Serializable {
 		this.fieldName = fieldName;
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

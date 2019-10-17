@@ -20,7 +20,6 @@ import javax.persistence.Transient;
 
 import co.yabx.kyc.app.enums.ControlType;
 import co.yabx.kyc.app.enums.DataType;
-import co.yabx.kyc.app.enums.InputType;
 
 /**
  * The persistent class for the Question database table.
@@ -77,6 +76,9 @@ public class AppDynamicFields implements Serializable {
 	private boolean mandatory;
 
 	private Integer hash;
+
+	@Column(name = "display_order")
+	private Integer displayOrder;
 
 	/**
 	 * options field is non persistent field, and will be used only while returning
@@ -216,13 +218,21 @@ public class AppDynamicFields implements Serializable {
 		this.groups = groups;
 	}
 
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
+	}
+
 	@Override
 	public String toString() {
 		return "AppDynamicFields [id=" + id + ", type=" + type + ", fieldId=" + fieldId + ", dataType=" + dataType
 				+ ", fieldName=" + fieldName + ", placeHolderText=" + placeHolderText + ", savedData=" + savedData
 				+ ", validation=" + validation + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", camera="
-				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", hash=" + hash + ", options="
-				+ options + "]";
+				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", hash=" + hash + ", displayOrder="
+				+ displayOrder + ", options=" + options + ", groups=" + groups + "]";
 	}
 
 }
