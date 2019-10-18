@@ -15,7 +15,7 @@ import co.yabx.kyc.app.enums.DataType;
 public class AppDynamicFieldsDTO implements Serializable {
 	private static final long serialVersionUID = 1588962L;
 
-	private Integer id;
+	private Long id;
 
 	private ControlType type;
 
@@ -41,7 +41,7 @@ public class AppDynamicFieldsDTO implements Serializable {
 
 	private boolean mandatory;
 
-	private Integer hash;
+	private Integer order;
 
 	private String response;
 
@@ -66,14 +66,6 @@ public class AppDynamicFieldsDTO implements Serializable {
 
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
-	}
-
-	public Integer getHash() {
-		return hash;
-	}
-
-	public void setHash(Integer hash) {
-		this.hash = hash;
 	}
 
 	public ControlType getType() {
@@ -164,14 +156,6 @@ public class AppDynamicFieldsDTO implements Serializable {
 		this.fieldName = fieldName;
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
 	public String getResponse() {
 		return response;
 	}
@@ -180,12 +164,28 @@ public class AppDynamicFieldsDTO implements Serializable {
 		this.response = response;
 	}
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Integer getOrder() {
+		return order;
+	}
+
+	public void setOrder(Integer order) {
+		this.order = order;
+	}
+
 	@Override
 	public String toString() {
 		return "AppDynamicFieldsDTO [id=" + id + ", type=" + type + ", fieldId=" + fieldId + ", dataType=" + dataType
 				+ ", fieldName=" + fieldName + ", placeHolderText=" + placeHolderText + ", savedData=" + savedData
 				+ ", validation=" + validation + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", camera="
-				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", hash=" + hash + ", response="
+				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", order=" + order + ", response="
 				+ response + ", options=" + options + "]";
 	}
 

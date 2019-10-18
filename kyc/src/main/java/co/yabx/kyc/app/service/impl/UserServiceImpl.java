@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.yabx.kyc.app.dto.AppPagesDTO;
-import co.yabx.kyc.app.dto.AppPagesSectionGroupsDTO;
 import co.yabx.kyc.app.dto.AppPagesSectionsDTO;
 import co.yabx.kyc.app.dto.dtoHelper.AppPagesDynamicDtoHeper;
 import co.yabx.kyc.app.entities.AppPages;
@@ -33,14 +32,12 @@ import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
 import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
 import co.yabx.kyc.app.fullKyc.repository.DSRUserRepository;
-import co.yabx.kyc.app.fullKyc.repository.NomineesRepository;
 import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.repositories.AppPagesRepository;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.AppPagesSectionService;
-import co.yabx.kyc.app.service.DynamicFieldService;
 import co.yabx.kyc.app.service.UserService;
 import co.yabx.kyc.app.util.SpringUtil;
 

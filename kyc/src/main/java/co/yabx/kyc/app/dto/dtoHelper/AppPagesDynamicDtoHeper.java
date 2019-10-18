@@ -171,7 +171,8 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 						userBankAccountDetailsSet, nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, title);
 				Set<AppDynamicFieldsDTO> appDynamicFieldsDTOs = fields.stream()
 						.sorted(Comparator.comparing(AppDynamicFieldsDTO::getId)).collect(Collectors.toSet());
-				appPagesSectionGroupsDTO.setFields(appDynamicFieldsDTOs.stream().sorted(Comparator.comparing(AppDynamicFieldsDTO::getId)).collect(Collectors.toList()));
+				appPagesSectionGroupsDTO.setFields(appDynamicFieldsDTOs.stream()
+						.sorted(Comparator.comparing(AppDynamicFieldsDTO::getId)).collect(Collectors.toList()));
 				appPagesSectionGroupsDTO.setEnable(appPagesSectionGroups.isEnable());
 				appPagesSectionGroupsDTO.setGroupId(appPagesSectionGroups.getGroupId());
 				appPagesSectionGroupsDTO.setGroupName(appPagesSectionGroups.getGroupName());
@@ -698,7 +699,8 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 		appDynamicFieldsDTO.setEditable(dynamicFields.isEditable());
 		appDynamicFieldsDTO.setFieldId(dynamicFields.getFieldId());
 		appDynamicFieldsDTO.setFieldName(dynamicFields.getFieldName());
-		appDynamicFieldsDTO.setId(dynamicFields.getDisplayOrder());
+		appDynamicFieldsDTO.setId(dynamicFields.getId());
+		appDynamicFieldsDTO.setOrder(dynamicFields.getDisplayOrder());
 		appDynamicFieldsDTO.setMandatory(dynamicFields.isMandatory());
 		appDynamicFieldsDTO.setOptions(dynamicFields.getOptions());
 		appDynamicFieldsDTO.setPlaceHolderText(dynamicFields.getPlaceHolderText());
