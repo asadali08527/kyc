@@ -92,6 +92,12 @@ public class UserServiceImpl implements UserService {
 		Set<BankAccountDetails> userBankAccountDetailsSet = null;
 		Set<BankAccountDetails> nomineeBankAccountDetailsSet = null;
 		Set<BankAccountDetails> businessBankAccountDetailsSet = null;
+		/*
+		 * Set<LiabilitiesDetails> liabilitiesDetailsSet = null;
+		 * Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet = null;
+		 * Set<WorkEducationDetails> workEducationDetailsSet = null;
+		 * Set<IntroducerDetails> introducerDetailsSet = null;
+		 */
 		List<AppPagesDTO> appPagesDTOList = new ArrayList<AppPagesDTO>();
 		if (user != null) {
 			UserRelationships userRelationships = userRelationshipsRepository
@@ -101,6 +107,12 @@ public class UserServiceImpl implements UserService {
 			nomineeAddressDetailsSet = nominee != null ? nominee.getAddressDetails() : null;
 			userBankAccountDetailsSet = user.getBankAccountDetails();
 			nomineeBankAccountDetailsSet = nominee != null ? nominee.getBankAccountDetails() : null;
+			/*
+			 * liabilitiesDetailsSet = user.getLiabilitiesDetails();
+			 * monthlyTransactionProfilesSet = user.getMonthlyTransactionProfiles();
+			 * workEducationDetailsSet = user.getWorkEducationDetails();
+			 * introducerDetailsSet = user.getIntroducerDetails();
+			 */
 			if (user.getBusinessDetails() != null) {
 				user.getBusinessDetails().forEach(f -> {
 					businessAddressDetailsSet.addAll(f.getAddressDetails());
@@ -153,10 +165,10 @@ public class UserServiceImpl implements UserService {
 			Set<BankAccountDetails> businessBankAccountDetailsSet = null;
 			Set<BusinessDetails> businessDetailsSet = null;
 			Set<LiabilitiesDetails> liabilitiesDetailsSet = null;
-			UserRelationships nomineeRelationship = null;
 			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet = null;
 			Set<WorkEducationDetails> workEducationDetailsSet = null;
 			Set<IntroducerDetails> introducerDetailsSet = null;
+			UserRelationships nomineeRelationship = null;
 
 			if (retailer == null) {
 				// It means DSR profile need to be persisted

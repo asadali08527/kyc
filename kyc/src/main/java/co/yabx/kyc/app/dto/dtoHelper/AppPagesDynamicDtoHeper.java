@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -34,8 +35,11 @@ import co.yabx.kyc.app.enums.Nationality;
 import co.yabx.kyc.app.enums.ResidentStatus;
 import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
+import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
+import co.yabx.kyc.app.fullKyc.entity.Attachments;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
+import co.yabx.kyc.app.fullKyc.entity.IntroducerDetails;
 import co.yabx.kyc.app.fullKyc.entity.LiabilitiesDetails;
 import co.yabx.kyc.app.fullKyc.entity.LicenseDetails;
 import co.yabx.kyc.app.fullKyc.entity.MonthlyTransactionProfiles;
@@ -78,7 +82,9 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 				appPagesDTO.setRetailerId(retailers != null ? retailers.getId() : null);
 			else if (UserType.DISTRIBUTORS.name().equals(type))
 				appPagesDTO.setDsrId(retailers != null ? retailers.getId() : null);
-			appPagesDTO.setPageCompletion(((appPagesDTO.getFilledFields() * 100) / appPagesDTO.getTotalFields()) + "%");
+			appPagesDTO.setPageCompletion(appPagesDTO.getTotalFields() != 0
+					? ((appPagesDTO.getFilledFields() * 100) / appPagesDTO.getTotalFields()) + "%"
+					: "0%");
 			appPagesDTO.setAction(prepareActions());
 		}
 		return appPagesDTO;
@@ -248,7 +254,11 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 			} else if (dynamicFields.getGroups().getGroupId() == 8 && appPagesSections.getSectionId() == 2) {
 				// nominee work education
 				prepareWorkEducationDetails(dynamicFields, nominee, appDynamicFieldsDTOSet);
+			} else if (dynamicFields.getGroups().getGroupId() == 9) {
+				// Introducer Detaiils
+				prepareIntroducerDetails(dynamicFields, retailers, appDynamicFieldsDTOSet);
 			}
+
 			if (dynamicFields.getSavedData() != null && !dynamicFields.getSavedData().isEmpty())
 				filledFields++;
 		}
@@ -257,6 +267,49 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 		appDynamicFieldsDTOSet
 				.add(appDynamicFieldsDTOSet.stream().max(Comparator.comparing(AppDynamicFieldsDTO::getId)).get());
 		return appDynamicFieldsDTOSet;
+
+	}
+
+	private static void prepareIntroducerDetails(AppDynamicFields dynamicFields, User retailers,
+			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+
+		if (retailers == null || retailers.getIntroducerDetails() == null
+				|| retailers.getIntroducerDetails().isEmpty()) {
+			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+		} else {
+			Set<IntroducerDetails> introducerDetailsSet = retailers.getIntroducerDetails();
+			for (IntroducerDetails introducerDetails : introducerDetailsSet) {
+				if (dynamicFields.getFieldId().equals("name")) {
+					dynamicFields.setSavedData(introducerDetails.getName());
+				} else if (dynamicFields.getFieldId().equals("accountNumber")) {
+					dynamicFields.setSavedData(introducerDetails.getAccountNumber() + "");
+				} else if (dynamicFields.getFieldId().equals("isSignatureVerified")) {
+					dynamicFields.setSavedData(introducerDetails.isSignatureVerified() + "");
+				} else if (dynamicFields.getFieldId().equals("signature")) {
+					AttachmentDetails attachmentDetails = introducerDetails.getSignature();
+					Optional<Attachments> optionalAttachments = attachmentDetails != null
+							? attachmentDetails.getAttachments() != null
+									&& !attachmentDetails.getAttachments().isEmpty()
+											? attachmentDetails.getAttachments().stream().findFirst()
+											: Optional.empty()
+							: Optional.empty();
+					dynamicFields.setSavedData(optionalAttachments != null && optionalAttachments.isPresent()
+							? optionalAttachments.get().getDocumentUrl()
+							: null);
+				} else if (dynamicFields.getFieldId().equals("relationship")) {
+					try {
+						dynamicFields.setSavedData(introducerDetails.getRelationship() != null
+								? String.valueOf(introducerDetails.getRelationship())
+								: null);
+					} catch (Exception e) {
+						LOGGER.error("Exceptiong while parsing Relationship={},error={}",
+								introducerDetails.getRelationship(), e.getMessage());
+					}
+				}
+				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+			}
+
+		}
 
 	}
 
@@ -709,9 +762,5 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 		appDynamicFieldsDTO.setValidation(dynamicFields.getValidation());
 		return appDynamicFieldsDTO;
 	}
-	public static void main(String[] args) {
-		String a="abc";
-		String b= new String(a);
-		System.out.println(a==b);
-	}
+
 }

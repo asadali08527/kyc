@@ -34,9 +34,6 @@ public class AttachmentDetails implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "document_url")
-	private String documentUrl;
-
 	@Column(name = "snap_time")
 	private Date snapTime;
 
@@ -65,7 +62,7 @@ public class AttachmentDetails implements Serializable {
 	private Long documentExpiryDate;
 
 	@OneToMany(mappedBy = "attachmentDetails", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<Attachments> attachmenets;
+	private Set<Attachments> attachments;
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
 	User user;
@@ -125,14 +122,6 @@ public class AttachmentDetails implements Serializable {
 		updatedAt = new Date();
 	}
 
-	public String getDocumentUrl() {
-		return documentUrl;
-	}
-
-	public void setDocumentUrl(String documentUrl) {
-		this.documentUrl = documentUrl;
-	}
-
 	public String getDocumentNumber() {
 		return documentNumber;
 	}
@@ -173,17 +162,6 @@ public class AttachmentDetails implements Serializable {
 		this.documentType = documentType;
 	}
 
-	public Set<Attachments> getAttachmenets() {
-		return attachmenets;
-	}
-
-	public void setAttachmenets(Set<Attachments> attachmenets) {
-		for (Attachments attachments : attachmenets) {
-			attachments.setAttachmentDetails(this);
-		}
-		this.attachmenets = attachmenets;
-	}
-
 	public User getUser() {
 		return user;
 	}
@@ -191,4 +169,13 @@ public class AttachmentDetails implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	public Set<Attachments> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(Set<Attachments> attachments) {
+		this.attachments = attachments;
+	}
+
 }

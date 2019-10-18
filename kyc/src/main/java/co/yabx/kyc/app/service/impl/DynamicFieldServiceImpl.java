@@ -21,8 +21,10 @@ import co.yabx.kyc.app.enums.LiabilityType;
 import co.yabx.kyc.app.enums.LicenseType;
 import co.yabx.kyc.app.enums.MaritalStatuses;
 import co.yabx.kyc.app.enums.Nationality;
+import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.ResidentStatus;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
+import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
 import co.yabx.kyc.app.fullKyc.entity.IntroducerDetails;
@@ -210,6 +212,19 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 				}
 			}
 			return;
+		} else if (appPagesSectionGroupsDTO.getGroupId() == 9) {
+			IntroducerDetails introducerDetails = null;
+			introducerDetails = prepareIntroducerDetails(appDynamicFieldsDTOList, introducerDetails);
+			if (introducerDetails != null) {
+				if (introducerDetailsSet == null) {
+					introducerDetailsSet = new HashSet<IntroducerDetails>();
+					introducerDetailsSet.add(introducerDetails);
+				} else {
+					introducerDetailsSet.clear();
+					introducerDetailsSet.add(introducerDetails);
+				}
+			}
+			return;
 		}
 		for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 			if (appPagesSectionGroupsDTO.getGroupId() == 1
@@ -224,6 +239,51 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 			}
 
 		}
+
+	}
+
+	private IntroducerDetails prepareIntroducerDetails(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
+			IntroducerDetails introducerDetails) {
+		if (appDynamicFieldsDTOList != null && !appDynamicFieldsDTOList.isEmpty()) {
+			introducerDetails = new IntroducerDetails();
+			for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+				if (appDynamicFieldsDTO.getFieldId().equals("accountNumber")) {
+					try {
+						Long accountNumber = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? Long.valueOf(appDynamicFieldsDTO.getResponse())
+								: 0;
+						introducerDetails.setAccountNumber(accountNumber);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating accountNumber ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				} else if (appDynamicFieldsDTO.getFieldId().equals("name")) {
+					introducerDetails.setName(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("isSignatureVerified")) {
+					try {
+						introducerDetails.setSignatureVerified(appDynamicFieldsDTO.getResponse() != null
+								? Boolean.valueOf(appDynamicFieldsDTO.getResponse())
+								: false);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating isSignatureVerified ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				} else if (appDynamicFieldsDTO.getFieldId().equals("signature")) {
+
+				} else if (appDynamicFieldsDTO.getFieldId().equals("relationship")) {
+					try {
+						Relationship relationship = appDynamicFieldsDTO.getResponse() != null
+								? Relationship.valueOf(appDynamicFieldsDTO.getResponse())
+								: null;
+						introducerDetails.setRelationship(relationship);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating relationship ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				}
+			}
+		}
+		return introducerDetails;
 
 	}
 
