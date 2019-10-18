@@ -17,6 +17,6 @@ public interface UserService {
 
 	Retailers getRetailerById(Long retailerId);
 
-	User persistOrUpdateUserInfo(AppPagesDTO appPagesDTO, User dsrUser, User retailer);
+	User persistOrUpdateUserInfo(AppPagesDTO appPagesDTO, User dsrUser, User retailer) throws Exception;
 
 }

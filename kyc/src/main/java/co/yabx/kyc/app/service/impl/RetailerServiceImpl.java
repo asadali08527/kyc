@@ -72,7 +72,7 @@ public class RetailerServiceImpl implements RetailerService {
 						"404", null);
 				return responseDTO;
 			}
-			
+
 		}
 		return RetailersDtoHelper.getResponseDTO(null, "Either DSR msisdn is missing or no data passed", "403", null);
 	}
@@ -187,8 +187,16 @@ public class RetailerServiceImpl implements RetailerService {
 				if (retailers == null)
 					return RetailersDtoHelper.getResponseDTO(null, "Retailer not found", "404", null);
 			}
-			userService.persistOrUpdateUserInfo(retailerRequestDTO.getPageResponse(), dsrUser, retailers);
-			return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
+			try {
+				userService.persistOrUpdateUserInfo(retailerRequestDTO.getPageResponse(), dsrUser, retailers);
+				return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOGGER.error("Something went wrong while persisting user={} info={}, error={}", retailers.getMsisdn(),
+						retailerRequestDTO, e.getMessage());
+				return RetailersDtoHelper.getResponseDTO(null, "Internal Server Error", "500", null);
+
+			}
 		}
 		return null;
 	}

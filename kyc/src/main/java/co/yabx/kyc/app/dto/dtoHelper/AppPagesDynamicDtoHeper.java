@@ -709,4 +709,9 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 		appDynamicFieldsDTO.setValidation(dynamicFields.getValidation());
 		return appDynamicFieldsDTO;
 	}
+	public static void main(String[] args) {
+		String a="abc";
+		String b= new String(a);
+		System.out.println(a==b);
+	}
 }

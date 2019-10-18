@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User persistOrUpdateUserInfo(AppPagesDTO appPagesDTO, User dsrUser, User retailer) {
+	public User persistOrUpdateUserInfo(AppPagesDTO appPagesDTO, User dsrUser, User retailer) throws Exception {
 
 		if (appPagesDTO != null && dsrUser != null) {
 			Boolean isNew = false;
@@ -246,7 +246,8 @@ public class UserServiceImpl implements UserService {
 						introducerDetailsSet, monthlyTransactionProfilesSet);
 				return persistUser(retailer, nominees, userAddressDetailsSet, userBankAccountDetailsSet,
 						liabilitiesDetailsSet, isNew, nomineeRelationship, nomineeAddressDetailsSet, isDsrUser,
-						businessDetailsSet, nomineeBankAccountDetailsSet);
+						businessDetailsSet, nomineeBankAccountDetailsSet, monthlyTransactionProfilesSet,
+						workEducationDetailsSet, introducerDetailsSet);
 			}
 		}
 		return dsrUser;
@@ -258,15 +259,28 @@ public class UserServiceImpl implements UserService {
 			Set<BankAccountDetails> userBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetails,
 			Boolean isNew, UserRelationships nomineeRelationship, Set<AddressDetails> nomineeAddressDetailsSet,
 			Boolean isDsrUser, Set<BusinessDetails> businessDetailsSet,
-			Set<BankAccountDetails> nomineeBankAccountDetailsSet) {
+			Set<BankAccountDetails> nomineeBankAccountDetailsSet,
+			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet,
+			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet)
+			throws Exception {
 		if (isDsrUser)
 			retailer.setUserType(UserType.DISTRIBUTORS.name());
 		else
 			retailer.setUserType(UserType.RETAILERS.name());
-		retailer.setAddressDetails(userAddressDetailsSet);
-		retailer.setBankAccountDetails(userBankAccountDetailsSet);
-		retailer.setBusinessDetails(businessDetailsSet);
-		retailer.setLiabilitiesDetails(liabilitiesDetails);
+		if (neitherNullNorEmpty(userAddressDetailsSet))
+			retailer.setAddressDetails(userAddressDetailsSet);
+		if (neitherNullNorEmpty(userBankAccountDetailsSet))
+			retailer.setBankAccountDetails(userBankAccountDetailsSet);
+		if (neitherNullNorEmpty(businessDetailsSet))
+			retailer.setBusinessDetails(businessDetailsSet);
+		if (neitherNullNorEmpty(liabilitiesDetails))
+			retailer.setLiabilitiesDetails(liabilitiesDetails);
+		if (neitherNullNorEmpty(workEducationDetailsSet))
+			retailer.setWorkEducationDetails(workEducationDetailsSet);
+		if (neitherNullNorEmpty(monthlyTransactionProfilesSet))
+			retailer.setMonthlyTransactionProfiles(monthlyTransactionProfilesSet);
+		if (neitherNullNorEmpty(introducerDetailsSet))
+			retailer.setIntroducerDetails(introducerDetailsSet);
 		retailer = userRepository.save(retailer);
 		if (nominees != null) {
 			nominees.setUserType(UserType.NOMINEES.name());
@@ -278,6 +292,10 @@ public class UserServiceImpl implements UserService {
 			persistUserRelationship(retailer, nominees, UserType.NOMINEES, isNew, nomineeRelationship);
 		}
 		return retailer;
+	}
+
+	private boolean neitherNullNorEmpty(Set<?> set) {
+		return set != null && !set.isEmpty();
 	}
 
 	private void persistUserRelationship(User retailer, User nominees, UserType nominees2, Boolean isNew,
