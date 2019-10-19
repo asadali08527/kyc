@@ -88,10 +88,10 @@ public class UserServiceImpl implements UserService {
 		User nominee = null;
 		Set<AddressDetails> userAddressDetailsSet = null;
 		Set<AddressDetails> nomineeAddressDetailsSet = null;
-		Set<AddressDetails> businessAddressDetailsSet = null;
+		Set<AddressDetails> businessAddressDetailsSet = new HashSet<AddressDetails>();
 		Set<BankAccountDetails> userBankAccountDetailsSet = null;
 		Set<BankAccountDetails> nomineeBankAccountDetailsSet = null;
-		Set<BankAccountDetails> businessBankAccountDetailsSet = null;
+		Set<BankAccountDetails> businessBankAccountDetailsSet = new HashSet<BankAccountDetails>();
 		/*
 		 * Set<LiabilitiesDetails> liabilitiesDetailsSet = null;
 		 * Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet = null;
@@ -159,8 +159,8 @@ public class UserServiceImpl implements UserService {
 			User nominees = null;
 			Set<AddressDetails> userAddressDetailsSet = null;
 			Set<AddressDetails> nomineeAddressDetailsSet = null;
-			Set<AddressDetails> businessAddressDetailsSet = null;
-			Set<BankAccountDetails> userBankAccountDetailsSet = null;
+			Set<AddressDetails> businessAddressDetailsSet = new HashSet<AddressDetails>();
+			Set<BankAccountDetails> userBankAccountDetailsSet = new HashSet<BankAccountDetails>();
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet = null;
 			Set<BankAccountDetails> businessBankAccountDetailsSet = null;
 			Set<BusinessDetails> businessDetailsSet = null;
