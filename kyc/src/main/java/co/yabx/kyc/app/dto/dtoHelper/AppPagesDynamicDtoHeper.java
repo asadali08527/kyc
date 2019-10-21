@@ -686,8 +686,7 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 					dynamicFields.setSavedData(retailers.getId() + "");
 				} else if (dynamicFields.getFieldId().equals("msisdn")) {
 					dynamicFields.setSavedData(retailers.getMsisdn());
-				} else if (dynamicFields.getFieldId().equals("sisterConcernedOrAllied")
-						&& filter.filter(dynamicFields.getFieldId())) {
+				} else if (dynamicFields.getFieldId().equals("sisterConcernedOrAllied")) {
 					dynamicFields.setSavedData(retailers.getSisterConcernedOrAllied());
 				} else if (dynamicFields.getFieldId().equals("taxIdentificationNumber")) {
 					dynamicFields.setSavedData(retailers.getTaxIdentificationNumber());
