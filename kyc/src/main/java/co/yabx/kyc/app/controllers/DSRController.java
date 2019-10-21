@@ -1,5 +1,10 @@
 package co.yabx.kyc.app.controllers;
 
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import co.yabx.kyc.app.dto.DsrProfileDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.VerifyOtpDTO;
+import co.yabx.kyc.app.entities.AuthInfo;
 import co.yabx.kyc.app.service.AppConfigService;
+import co.yabx.kyc.app.service.AuthInfoService;
 import co.yabx.kyc.app.service.DSRService;
 
 /**
@@ -30,7 +37,7 @@ import co.yabx.kyc.app.service.DSRService;
 public class DSRController {
 
 	@Autowired
-	private AppConfigService appConfigService;
+	private AuthInfoService authInfoService;
 
 	@Autowired
 	private DSRService dsrService;
@@ -39,42 +46,64 @@ public class DSRController {
 
 	@RequestMapping(value = "/dsr/profile", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> submitDSRProfile(@RequestBody DsrProfileDTO dsrProfileDTO) {
-		ResponseDTO loginDTO = dsrService.submitDsrProfile(dsrProfileDTO);
-		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+	public ResponseEntity<?> submitDSRProfile(@RequestBody DsrProfileDTO dsrProfileDTO,
+			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+		if (authInfoService.isAuthorized(dsrProfileDTO != null ? dsrProfileDTO.getDsrMSISDN() : null,
+				httpServletRequest, httpServletResponse)) {
+			ResponseDTO loginDTO = dsrService.submitDsrProfile(dsrProfileDTO);
+			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 
 	}
 
 	@RequestMapping(value = "/dsr/profile/{dsrMsisdn}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<?> fetchDSRProfile(@PathVariable String dsrMsisdn) {
-		ResponseDTO loginDTO = dsrService.getDsrProfile(dsrMsisdn);
-		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+	public ResponseEntity<?> fetchDSRProfile(@PathVariable String dsrMsisdn, HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse) {
+		if (authInfoService.isAuthorized(dsrMsisdn, httpServletRequest, httpServletResponse)) {
+			ResponseDTO loginDTO = dsrService.getDsrProfile(dsrMsisdn);
+			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
 	}
 
 	@RequestMapping(value = "/dsr/logout/{msisdn}", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> logout(@PathVariable String msisdn) {
-		ResponseDTO loginDTO = dsrService.logout(msisdn);
-		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+	public ResponseEntity<?> logout(@PathVariable String msisdn, HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse) {
+		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
+			ResponseDTO loginDTO = dsrService.logout(msisdn);
+			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
 	}
 
 	@RequestMapping(value = "/dsr/verify/otp", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> verifyMail(@RequestBody VerifyOtpDTO verifyOtpDTO) {
-		ResponseDTO loginDTO = dsrService.verifyMail(verifyOtpDTO);
-		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
-
+	public ResponseEntity<?> verifyMail(@RequestBody VerifyOtpDTO verifyOtpDTO, HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse) {
+		if (authInfoService.isAuthorized(verifyOtpDTO != null ? verifyOtpDTO.getDsrMSISDN() : null, httpServletRequest,
+				httpServletResponse)) {
+			ResponseDTO loginDTO = dsrService.verifyMail(verifyOtpDTO);
+			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
 
 	@RequestMapping(value = "/dsr/verify/mail", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> generateOTP(@RequestBody VerifyOtpDTO verifyOtpDTO) {
-		ResponseDTO loginDTO = dsrService.generateMailOTP(verifyOtpDTO.getEmail());
-		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
-
+	public ResponseEntity<?> generateOTP(@RequestBody VerifyOtpDTO verifyOtpDTO, HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse) {
+		if (authInfoService.isAuthorized(verifyOtpDTO != null ? verifyOtpDTO.getDsrMSISDN() : null, httpServletRequest,
+				httpServletResponse)) {
+			ResponseDTO loginDTO = dsrService.generateMailOTP(verifyOtpDTO.getEmail());
+			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
 
 }

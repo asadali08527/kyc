@@ -1,5 +1,8 @@
 package co.yabx.kyc.app.controllers;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,7 @@ import co.yabx.kyc.app.dto.RetailersDTO;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
-import co.yabx.kyc.app.service.AppConfigService;
+import co.yabx.kyc.app.service.AuthInfoService;
 import co.yabx.kyc.app.service.RetailerService;
 
 /**
@@ -35,7 +38,7 @@ import co.yabx.kyc.app.service.RetailerService;
 public class RetailerController {
 
 	@Autowired
-	private AppConfigService appConfigService;
+	private AuthInfoService authInfoService;
 
 	@Autowired
 	private RetailerService retailerService;
@@ -45,25 +48,40 @@ public class RetailerController {
 	@RequestMapping(value = "/retailer/summary", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<?> fetchRetailersSummary(@RequestParam("dsrMSISDN") String dsrMSISDN,
-			@RequestParam("startIndex") Integer startIndex, @RequestParam("endIndex") Integer endIndex) {
-		ResponseDTO loginDTO = retailerService.getSummaries(dsrMSISDN, startIndex, endIndex);
-		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+			@RequestParam("startIndex") Integer startIndex, @RequestParam("endIndex") Integer endIndex,
+			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+		if (authInfoService.isAuthorized(dsrMSISDN, httpServletRequest, httpServletResponse)) {
+			ResponseDTO loginDTO = retailerService.getSummaries(dsrMSISDN, startIndex, endIndex);
+			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+		}
 
 	}
 
 	@RequestMapping(value = "/retailer/{dsrMsisdn}/{retailerId}", method = RequestMethod.GET)
 	public ResponseEntity<ResponseDTO> fetchRetailerDetails(@PathVariable String dsrMsisdn,
-			@PathVariable Long retailerId) {
-		ResponseDTO loginDTO = retailerService.retailerDetails(dsrMsisdn, retailerId);
-		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+			@PathVariable Long retailerId, HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse) {
+		if (authInfoService.isAuthorized(dsrMsisdn, httpServletRequest, httpServletResponse)) {
+			ResponseDTO loginDTO = retailerService.retailerDetails(dsrMsisdn, retailerId);
+			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
 	}
 
 	@RequestMapping(value = "/retailer/personal-information", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> submitRetailerProfile(@RequestBody RetailerRequestDTO retailerRequestDTO) {
-		ResponseDTO loginDTO = retailerService.submitRetailerProfile(retailerRequestDTO);
-		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+	public ResponseEntity<?> submitRetailerProfile(@RequestBody RetailerRequestDTO retailerRequestDTO,
+			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+		if (authInfoService.isAuthorized(retailerRequestDTO != null ? retailerRequestDTO.getDsrMSISDN() : null,
+				httpServletRequest, httpServletResponse)) {
+			ResponseDTO loginDTO = retailerService.submitRetailerProfile(retailerRequestDTO);
+			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
 	}
 

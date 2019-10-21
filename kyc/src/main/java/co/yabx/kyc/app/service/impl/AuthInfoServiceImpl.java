@@ -2,6 +2,9 @@ package co.yabx.kyc.app.service.impl;
 
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +56,21 @@ public class AuthInfoServiceImpl implements AuthInfoService {
 		}
 		return Optional.empty();
 
+	}
+
+	@Override
+	public AuthInfo findByYabxToken(String token) {
+		String decryptedToken = SecurityUtils.decript(token);
+		return authInfoRepository.findByYabxToken(decryptedToken);
+
+	}
+
+	@Override
+	public boolean isAuthorized(String dsrMSISDN, HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse) {
+		String token = httpServletRequest.getHeader("YABX_ACCESS_TOKEN");
+		AuthInfo authInfo = findByYabxToken(token);
+		return authInfo != null && authInfo.getMsisdn().equals(dsrMSISDN);
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package co.yabx.kyc.app.security;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -25,7 +24,7 @@ public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse) throws AuthenticationException, IOException, ServletException {
-		Optional tokenParam = Optional.ofNullable(httpServletRequest.getHeader("YABX_ACCESS_TOKEN")); // Authorization:
+//		Optional tokenParam = Optional.ofNullable(httpServletRequest.getHeader("YABX_ACCESS_TOKEN")); // Authorization:
 		String token = httpServletRequest.getHeader("YABX_ACCESS_TOKEN");
 		token = StringUtils.removeStart(token, "Bearer").trim();
 		Authentication requestAuthentication = new UsernamePasswordAuthenticationToken(token, token);
