@@ -2,7 +2,9 @@ package co.yabx.kyc.app.entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,9 +14,12 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+
+import co.yabx.kyc.app.entities.filter.Filters;
 
 @Entity
 @Table(name = "section_group_relationships", indexes = { @Index(name = "section_id", columnList = "section_id") })
@@ -44,6 +49,20 @@ public class SectionGroupRelationship implements Serializable {
 
 	@Column(name = "updated_at")
 	private Date updatedAt;
+
+	@Column(name = "active", columnDefinition = "boolean default true")
+	private boolean active;
+
+	@OneToMany(mappedBy = "sectionGroupRelationship", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	private Set<Filters> filters;
+
+	public Set<Filters> getFilters() {
+		return filters;
+	}
+
+	public void setFilters(Set<Filters> filters) {
+		this.filters = filters;
+	}
 
 	@PrePersist
 	private void prePersist() {
@@ -113,6 +132,14 @@ public class SectionGroupRelationship implements Serializable {
 
 	public void setMultipleTitlle(String multipleTitlle) {
 		this.multipleTitlle = multipleTitlle;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	@Override
