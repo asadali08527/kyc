@@ -222,7 +222,8 @@ public class DSRServiceImpl implements DSRService {
 	public ResponseDTO getDsrProfile(String msisdn) {
 		DSRUser dsrUser = dsrUserRepository.findByMsisdn(msisdn);
 		if (dsrUser != null) {
-			ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
+			ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200",
+					DsrProfileStatus.ACTIVE);
 			responseDTO.setDsrInfo(userService.getUserDetails(dsrUser, UserType.DISTRIBUTORS.name()));
 			return responseDTO;
 		} else {
