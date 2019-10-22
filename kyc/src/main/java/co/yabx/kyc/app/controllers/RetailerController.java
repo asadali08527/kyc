@@ -78,6 +78,8 @@ public class RetailerController {
 			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		if (authInfoService.isAuthorized(retailerRequestDTO != null ? retailerRequestDTO.getDsrMSISDN() : null,
 				httpServletRequest, httpServletResponse)) {
+			LOGGER.info("/retailer/personal-information request received with retailerRequestDTO={}",
+					retailerRequestDTO);
 			ResponseDTO loginDTO = retailerService.submitRetailerProfile(retailerRequestDTO);
 			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 		}

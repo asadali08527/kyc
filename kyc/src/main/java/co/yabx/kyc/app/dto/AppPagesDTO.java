@@ -132,12 +132,6 @@ public class AppPagesDTO implements Serializable {
 		this.sections = sections;
 	}
 
-	@Override
-	public String toString() {
-		return "AppPagesDTO [pageId=" + pageId + ", pageName=" + pageName + ", pageTitle=" + pageTitle + ", createdAt="
-				+ createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable + ", sections=" + sections + "]";
-	}
-
 	public String getPageCompletion() {
 		return pageCompletion;
 	}
@@ -168,6 +162,15 @@ public class AppPagesDTO implements Serializable {
 
 	public void setAction(ActionDTO action) {
 		this.action = action;
+	}
+
+	@Override
+	public String toString() {
+		return "AppPagesDTO [pageId=" + pageId + ", pageName=" + pageName + ", pageTitle=" + pageTitle + ", createdAt="
+				+ createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable + ", pageType=" + pageType + ", icon="
+				+ icon + ", filledFields=" + filledFields + ", totalFields=" + totalFields + ", sections=" + sections
+				+ ", pageCompletion=" + pageCompletion + ", retailerId=" + retailerId + ", dsrId=" + dsrId + ", action="
+				+ action + "]";
 	}
 
 }

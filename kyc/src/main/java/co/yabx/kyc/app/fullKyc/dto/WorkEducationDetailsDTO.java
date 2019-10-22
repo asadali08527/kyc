@@ -112,20 +112,20 @@ public class WorkEducationDetailsDTO implements Serializable {
 		this.educationalQualification = educationalQualification;
 	}
 
-	@Override
-	public String toString() {
-		return "WorkEducationDetailsDTO [id=" + id + ", occupation=" + occupation + ", designation=" + designation
-				+ ", employer=" + employer + ", educationalQualification=" + educationalQualification + ", createdAt="
-				+ createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
-				+ ", user=" + user + "]";
-	}
-
 	public Integer getExperience() {
 		return experience;
 	}
 
 	public void setExperience(Integer experience) {
 		this.experience = experience;
+	}
+
+	@Override
+	public String toString() {
+		return "WorkEducationDetailsDTO [id=" + id + ", occupation=" + occupation + ", designation=" + designation
+				+ ", employer=" + employer + ", educationalQualification=" + educationalQualification + ", createdAt="
+				+ createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
+				+ ", user=" + user + ", experience=" + experience + "]";
 	}
 
 }

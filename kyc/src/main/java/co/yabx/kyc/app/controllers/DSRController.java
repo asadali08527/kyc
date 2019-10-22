@@ -46,6 +46,7 @@ public class DSRController {
 			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		if (authInfoService.isAuthorized(dsrProfileDTO != null ? dsrProfileDTO.getDsrMSISDN() : null,
 				httpServletRequest, httpServletResponse)) {
+			LOGGER.info("/dsr/profile request received with dsrProfileDTO={}", dsrProfileDTO);
 			ResponseDTO loginDTO = dsrService.submitDsrProfile(dsrProfileDTO);
 			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 		} else {

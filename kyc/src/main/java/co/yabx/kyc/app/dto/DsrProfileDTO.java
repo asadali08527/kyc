@@ -84,4 +84,11 @@ public class DsrProfileDTO implements Serializable {
 		this.endIndex = endIndex;
 	}
 
+	@Override
+	public String toString() {
+		return "DsrProfileDTO [kycStatus=" + kycStatus + ", retailerId=" + retailerId + ", startIndex=" + startIndex
+				+ ", endIndex=" + endIndex + ", dsrMSISDN=" + dsrMSISDN + ", addressDetailsDTO=" + addressDetailsDTO
+				+ ", workEducationDetailsDTO=" + workEducationDetailsDTO + ", pageResponse=" + pageResponse + "]";
+	}
+
 }

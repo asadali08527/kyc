@@ -153,20 +153,21 @@ public class AddressDetailsDTO implements Serializable {
 		this.addressType = addressType;
 	}
 
-	@Override
-	public String toString() {
-		return "AddressDetails [id=" + id + ", msisdn=" + msisdn + ", houseNumberOrStreetName="
-				+ houseNumberOrStreetName + ", area=" + area + ", city=" + city + ", region=" + region + ", zipCode="
-				+ zipCode + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy
-				+ ", updatedBy=" + updatedBy + ", addressType=" + addressType + "]";
-	}
-
 	public String getAddress() {
 		return address;
 	}
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	@Override
+	public String toString() {
+		return "AddressDetailsDTO [id=" + id + ", msisdn=" + msisdn + ", houseNumberOrStreetName="
+				+ houseNumberOrStreetName + ", area=" + area + ", city=" + city + ", region=" + region + ", zipCode="
+				+ zipCode + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy
+				+ ", updatedBy=" + updatedBy + ", addressType=" + addressType + ", user=" + user + ", businessDetails="
+				+ businessDetails + ", address=" + address + "]";
 	}
 
 }
