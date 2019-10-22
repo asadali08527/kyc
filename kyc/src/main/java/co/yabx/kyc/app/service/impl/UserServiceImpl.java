@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService {
 			Set<AddressDetails> businessAddressDetailsSet = new HashSet<AddressDetails>();
 			Set<BankAccountDetails> userBankAccountDetailsSet = new HashSet<BankAccountDetails>();
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet = null;
-			Set<BankAccountDetails> businessBankAccountDetailsSet = null;
+			Set<BankAccountDetails> businessBankAccountDetailsSet = new HashSet<BankAccountDetails>();
 			Set<BusinessDetails> businessDetailsSet = null;
 			Set<LiabilitiesDetails> liabilitiesDetailsSet = null;
 			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet = null;
