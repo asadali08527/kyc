@@ -88,6 +88,8 @@ public class DSRServiceImpl implements DSRService {
 				if (dsrUser != null) {
 					ResponseDTO responseDTO = DsrDtoHelper.getLoginDTO("", "SUCCESS", "200", DsrProfileStatus.NEW);
 					responseDTO.setAuthInfo(adminService.prepareTokenAndKey(dsrUser, verifyOtpDTO.getDsrMSISDN()));
+					responseDTO.setName(dsrUser.getFirstName());
+					responseDTO.setEmail(dsrUser.getEmail());
 					return responseDTO;
 				} else {
 					return DsrDtoHelper.getLoginDTO("", "Incorrect OTP or OTP Expired", "403", null);

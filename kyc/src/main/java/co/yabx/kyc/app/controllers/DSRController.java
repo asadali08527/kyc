@@ -1,7 +1,5 @@
 package co.yabx.kyc.app.controllers;
 
-import java.util.Optional;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,8 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import co.yabx.kyc.app.dto.DsrProfileDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.VerifyOtpDTO;
-import co.yabx.kyc.app.entities.AuthInfo;
-import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.AuthInfoService;
 import co.yabx.kyc.app.service.DSRService;
 
