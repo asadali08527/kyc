@@ -12,7 +12,7 @@ public interface RetailerService {
 
 	ResponseDTO retailerDetails(String dsrMsisdn, Long retailerId);
 
-	ResponseDTO submitRetailerProfile(RetailerRequestDTO retailerRequestDTO);
+	ResponseDTO submitRetailerProfile(RetailerRequestDTO retailerRequestDTO) throws Exception;
 
 	ResponseDTO submitRetailerNomineeProfile(UserDTO userDTO);
 

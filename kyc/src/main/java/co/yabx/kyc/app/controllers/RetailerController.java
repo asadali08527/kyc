@@ -75,7 +75,7 @@ public class RetailerController {
 	@RequestMapping(value = "/retailer/personal-information", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> submitRetailerProfile(@RequestBody RetailerRequestDTO retailerRequestDTO,
-			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
 		if (authInfoService.isAuthorized(retailerRequestDTO != null ? retailerRequestDTO.getDsrMSISDN() : null,
 				httpServletRequest, httpServletResponse)) {
 			LOGGER.info("/retailer/personal-information request received with retailerRequestDTO={}",

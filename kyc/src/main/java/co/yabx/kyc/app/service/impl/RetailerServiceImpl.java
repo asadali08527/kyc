@@ -174,7 +174,7 @@ public class RetailerServiceImpl implements RetailerService {
 	}
 
 	@Override
-	public ResponseDTO submitRetailerProfile(RetailerRequestDTO retailerRequestDTO) {
+	public ResponseDTO submitRetailerProfile(RetailerRequestDTO retailerRequestDTO) throws Exception {
 		if (retailerRequestDTO != null) {
 			String dsrMsisdn = retailerRequestDTO.getDsrMSISDN();
 			DSRUser dsrUser = userService.getDSRByMsisdn(dsrMsisdn);
@@ -187,16 +187,18 @@ public class RetailerServiceImpl implements RetailerService {
 				if (retailers == null)
 					return RetailersDtoHelper.getResponseDTO(null, "Retailer not found", "404", null);
 			}
-			try {
+			
 				userService.persistOrUpdateUserInfo(retailerRequestDTO.getPageResponse(), dsrUser, retailers);
 				return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
-			} catch (Exception e) {
-				e.printStackTrace();
-				LOGGER.error("Something went wrong while persisting user={} info={}, error={}", retailers.getMsisdn(),
-						retailerRequestDTO, e.getMessage());
-				return RetailersDtoHelper.getResponseDTO(null, "Internal Server Error", "500", null);
-
-			}
+			/*
+			 * } catch (Exception e) { e.printStackTrace(); LOGGER.
+			 * error("Something went wrong while persisting user={} info={}, error={}",
+			 * retailers.getMsisdn(), retailerRequestDTO, e.getMessage()); return
+			 * RetailersDtoHelper.getResponseDTO(null, "Internal Server Error", "500",
+			 * null);
+			 * 
+			 * }
+			 */
 		}
 		return null;
 	}
