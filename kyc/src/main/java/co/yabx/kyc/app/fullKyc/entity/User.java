@@ -49,7 +49,7 @@ public abstract class User implements Serializable {
 	@Column(name = "user_type", insertable = false, updatable = false)
 	private String userType;
 
-	@Column(name = "user_status", length = 100, nullable = false, columnDefinition = "varchar(32) ")
+	@Column(name = "user_status", length = 100, nullable = false, columnDefinition = "varchar(32) default 'NEW' ")
 	@Enumerated(value = EnumType.STRING)
 	private UserStatus userStatus;
 
