@@ -18,9 +18,9 @@ import co.yabx.kyc.app.dto.dtoHelper.DsrDtoHelper;
 import co.yabx.kyc.app.dto.dtoHelper.RetailersDtoHelper;
 import co.yabx.kyc.app.entities.AuthInfo;
 import co.yabx.kyc.app.entities.OTP;
-import co.yabx.kyc.app.enums.DsrProfileStatus;
 import co.yabx.kyc.app.enums.OtpGroup;
 import co.yabx.kyc.app.enums.OtpType;
+import co.yabx.kyc.app.enums.UserStatus;
 import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
@@ -86,7 +86,7 @@ public class DSRServiceImpl implements DSRService {
 				DSRUser dsrUser = dsrUserRepository.findByMsisdn(verifyOtpDTO.getDsrMSISDN());
 				dsrUser = otpService.verifyOtp(dsrUser, verifyOtpDTO.getOtp(), OtpType.SMS);
 				if (dsrUser != null) {
-					ResponseDTO responseDTO = DsrDtoHelper.getLoginDTO("", "SUCCESS", "200", DsrProfileStatus.NEW);
+					ResponseDTO responseDTO = DsrDtoHelper.getLoginDTO("", "SUCCESS", "200", dsrUser.getUserStatus());
 					responseDTO.setAuthInfo(adminService.prepareTokenAndKey(dsrUser, verifyOtpDTO.getDsrMSISDN()));
 					responseDTO.setName(dsrUser.getFirstName());
 					responseDTO.setEmail(dsrUser.getEmail());
@@ -110,7 +110,7 @@ public class DSRServiceImpl implements DSRService {
 				DSRUser dsrUser = dsrUserRepository.findByMsisdn(dsrProfileDTO.getDsrMSISDN());
 				if (dsrUser != null) {
 					userService.persistOrUpdateUserInfo(dsrProfileDTO.getPageResponse(), dsrUser, null);
-					return DsrDtoHelper.getLoginDTO(null, "SUCCESS", "200", DsrProfileStatus.ACTIVE);
+					return DsrDtoHelper.getLoginDTO(null, "SUCCESS", "200", UserStatus.ACTIVE);
 				} else {
 					return DsrDtoHelper.getLoginDTO(null, "NO DSR Found", "404", null);
 
@@ -127,9 +127,9 @@ public class DSRServiceImpl implements DSRService {
 	}
 
 	@Transactional
-	private DSRUser persistDSRUser(DsrProfileDTO dsrProfileDTO, DsrProfileStatus dsrStatus) {
+	private DSRUser persistDSRUser(DsrProfileDTO dsrProfileDTO, UserStatus dsrStatus) {
 		DSRUser dsrUser = new DSRUser();
-		dsrUser.setDsrStatus(dsrStatus);
+		dsrUser.setUserStatus(dsrStatus);
 		dsrUser.setMsisdn(dsrProfileDTO.getDsrMSISDN());
 		dsrUser.setWorkEducationDetails(prepareWorkEducationdetails(dsrProfileDTO));
 		dsrUser.setAddressDetails(prepareAddress(dsrProfileDTO));
@@ -223,7 +223,7 @@ public class DSRServiceImpl implements DSRService {
 		DSRUser dsrUser = dsrUserRepository.findByMsisdn(msisdn);
 		if (dsrUser != null) {
 			ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200",
-					DsrProfileStatus.ACTIVE);
+					dsrUser.getUserStatus());
 			responseDTO.setDsrInfo(userService.getUserDetails(dsrUser, UserType.DISTRIBUTORS.name()));
 			return responseDTO;
 		} else {

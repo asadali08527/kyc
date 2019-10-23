@@ -9,6 +9,8 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,6 +30,7 @@ import co.yabx.kyc.app.enums.Gender;
 import co.yabx.kyc.app.enums.MaritalStatuses;
 import co.yabx.kyc.app.enums.Nationality;
 import co.yabx.kyc.app.enums.ResidentStatus;
+import co.yabx.kyc.app.enums.UserStatus;
 
 @Entity
 @Table(name = "users", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
@@ -45,6 +48,10 @@ public abstract class User implements Serializable {
 
 	@Column(name = "user_type", insertable = false, updatable = false)
 	private String userType;
+
+	@Column(name = "user_status", length = 100, nullable = false, columnDefinition = "varchar(32) ")
+	@Enumerated(value = EnumType.STRING)
+	private UserStatus userStatus;
 
 	@Column(name = "msisdn")
 	private String msisdn;
@@ -524,6 +531,14 @@ public abstract class User implements Serializable {
 			monthlyTransactionProfile.setUser(this);
 		}
 		this.monthlyTransactionProfiles = monthlyTransactionProfilesSet;
+	}
+
+	public UserStatus getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(UserStatus userStatus) {
+		this.userStatus = userStatus;
 	}
 
 }

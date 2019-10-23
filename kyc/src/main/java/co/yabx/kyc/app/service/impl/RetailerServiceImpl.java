@@ -61,12 +61,18 @@ public class RetailerServiceImpl implements RetailerService {
 	@Override
 	public ResponseDTO getSummaries(String dsrMSISDN, Integer startIndex, Integer endIndex) {
 		if (dsrMSISDN != null && !dsrMSISDN.isEmpty()) {
-			List<UserRelationships> dsrRetailersRelationships = userRelationshipsRepository.findByMsisdn(dsrMSISDN);
-			if (dsrRetailersRelationships != null && !dsrRetailersRelationships.isEmpty()) {
-				List<User> retailers = dsrRetailersRelationships.stream()
-						.filter(f -> Relationship.RETAILER.equals(f.getRelationship())).map(f -> f.getRelative())
-						.collect(Collectors.toList());
-				return RetailersDtoHelper.getSummary(retailers);
+			User dsr = userRepository.findBymsisdn(dsrMSISDN);
+			if (dsr != null) {
+				List<UserRelationships> dsrRetailersRelationships = userRelationshipsRepository.findByMsisdn(dsrMSISDN);
+				if (dsrRetailersRelationships != null && !dsrRetailersRelationships.isEmpty()) {
+					List<User> retailers = dsrRetailersRelationships.stream()
+							.filter(f -> Relationship.RETAILER.equals(f.getRelationship())).map(f -> f.getRelative())
+							.collect(Collectors.toList());
+					ResponseDTO responseDTO = RetailersDtoHelper.getSummary(retailers);
+					responseDTO.setName(dsr.getFirstName());
+					responseDTO.setEmail(dsr.getEmail());
+					return responseDTO;
+				}
 			} else {
 				ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "No Retailers Found for the DSR",
 						"404", null);
@@ -187,9 +193,9 @@ public class RetailerServiceImpl implements RetailerService {
 				if (retailers == null)
 					return RetailersDtoHelper.getResponseDTO(null, "Retailer not found", "404", null);
 			}
-			
-				userService.persistOrUpdateUserInfo(retailerRequestDTO.getPageResponse(), dsrUser, retailers);
-				return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
+
+			userService.persistOrUpdateUserInfo(retailerRequestDTO.getPageResponse(), dsrUser, retailers);
+			return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
 			/*
 			 * } catch (Exception e) { e.printStackTrace(); LOGGER.
 			 * error("Something went wrong while persisting user={} info={}, error={}",

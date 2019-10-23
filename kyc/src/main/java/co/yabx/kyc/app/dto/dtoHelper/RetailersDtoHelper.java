@@ -1,43 +1,16 @@
 package co.yabx.kyc.app.dto.dtoHelper;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import co.yabx.kyc.app.dto.ActionDTO;
-import co.yabx.kyc.app.dto.AppDynamicFieldsDTO;
-import co.yabx.kyc.app.dto.AppPagesDTO;
-import co.yabx.kyc.app.dto.AppPagesSectionGroupsDTO;
-import co.yabx.kyc.app.dto.AppPagesSectionsDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.RetailersDTO;
-import co.yabx.kyc.app.entities.AppDynamicFields;
-import co.yabx.kyc.app.entities.AppPages;
-import co.yabx.kyc.app.entities.AppPagesSectionGroups;
-import co.yabx.kyc.app.entities.AppPagesSections;
-import co.yabx.kyc.app.entities.SectionGroupRelationship;
 import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.BankAccountIdentifier;
 import co.yabx.kyc.app.enums.BankAccountType;
-import co.yabx.kyc.app.enums.Currency;
-import co.yabx.kyc.app.enums.DsrProfileStatus;
 import co.yabx.kyc.app.enums.Gender;
 import co.yabx.kyc.app.enums.KycStatus;
 import co.yabx.kyc.app.enums.LiabilityType;
@@ -46,6 +19,7 @@ import co.yabx.kyc.app.enums.MaritalStatuses;
 import co.yabx.kyc.app.enums.Nationality;
 import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.ResidentStatus;
+import co.yabx.kyc.app.enums.UserStatus;
 import co.yabx.kyc.app.fullKyc.dto.AddressDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.BankAccountDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
@@ -55,19 +29,8 @@ import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LicenseDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
-import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
-import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
-import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
-import co.yabx.kyc.app.fullKyc.entity.LiabilitiesDetails;
-import co.yabx.kyc.app.fullKyc.entity.LicenseDetails;
-import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
-import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
-import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
 import co.yabx.kyc.app.repositories.AppPagesRepository;
-import co.yabx.kyc.app.repositories.SectionGroupRelationshipRepository;
-import co.yabx.kyc.app.util.DTOConverter;
-import co.yabx.kyc.app.util.SpringUtil;
 
 public class RetailersDtoHelper implements Serializable {
 
@@ -75,7 +38,7 @@ public class RetailersDtoHelper implements Serializable {
 	private AppPagesRepository appPagesRepository;
 
 	public static ResponseDTO getResponseDTO(String msisdn, String status, String statusCode,
-			DsrProfileStatus dsrProfileStatus) {
+			UserStatus dsrProfileStatus) {
 		ResponseDTO loginDTO = new ResponseDTO();
 		loginDTO.setMessage(status);
 		loginDTO.setStatusCode(statusCode);

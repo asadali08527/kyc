@@ -6,13 +6,13 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import co.yabx.kyc.app.enums.DsrProfileStatus;
+import co.yabx.kyc.app.enums.UserStatus;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseDTO implements Serializable {
 	private String message;
 	private String statusCode;
-	private DsrProfileStatus dsrProfileStatus;
+	private UserStatus dsrProfileStatus;
 	private List<RetailersDTO> retailers;
 	private List<AppPagesDTO> retailerInfo;
 	private List<AppPagesDTO> dsrInfo;
@@ -49,11 +49,11 @@ public class ResponseDTO implements Serializable {
 		this.statusCode = statusCode;
 	}
 
-	public DsrProfileStatus getDsrProfileStatus() {
+	public UserStatus getDsrProfileStatus() {
 		return dsrProfileStatus;
 	}
 
-	public void setDsrProfileStatus(DsrProfileStatus dsrProfileStatus) {
+	public void setDsrProfileStatus(UserStatus dsrProfileStatus) {
 		this.dsrProfileStatus = dsrProfileStatus;
 	}
 
