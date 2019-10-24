@@ -35,8 +35,8 @@ public class SectionGroupRelationship implements Serializable {
 	private Long sectionId;
 
 	@JoinColumn(name = "group_id")
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = AppPagesSectionGroups.class)
-	private AppPagesSectionGroups appPagesSectionGroups;
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Groups.class)
+	private Groups appPagesSectionGroups;
 
 	@Column(name = "is_multiple", columnDefinition = "boolean default false")
 	private boolean multiple;
@@ -110,11 +110,11 @@ public class SectionGroupRelationship implements Serializable {
 		this.sectionId = sectionId;
 	}
 
-	public AppPagesSectionGroups getAppPagesSectionGroups() {
+	public Groups getAppPagesSectionGroups() {
 		return appPagesSectionGroups;
 	}
 
-	public void setAppPagesSectionGroups(AppPagesSectionGroups appPagesSectionGroups) {
+	public void setAppPagesSectionGroups(Groups appPagesSectionGroups) {
 		this.appPagesSectionGroups = appPagesSectionGroups;
 	}
 

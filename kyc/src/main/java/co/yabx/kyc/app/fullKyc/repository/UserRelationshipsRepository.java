@@ -19,5 +19,5 @@ public interface UserRelationshipsRepository extends CrudRepository<UserRelation
 
 	UserRelationships findByMsisdnAndRelative(String dsrMsisdn, Retailers retailers);
 
-	UserRelationships findByMsisdnAndRelationship(String msisdn, Relationship relationship);
+	List<UserRelationships> findByMsisdnAndRelationship(String msisdn, Relationship relationship);
 }

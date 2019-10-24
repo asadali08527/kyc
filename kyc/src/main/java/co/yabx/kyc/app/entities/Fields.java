@@ -28,8 +28,8 @@ import co.yabx.kyc.app.enums.DataType;
 @Entity
 @Table(name = "fields", indexes = { @Index(name = "field_id", columnList = "field_id"),
 		@Index(name = "field_name", columnList = "field_name") })
-@NamedQuery(name = "AppDynamicFields.findAll", query = "SELECT q FROM AppDynamicFields q")
-public class AppDynamicFields implements Serializable {
+@NamedQuery(name = "Fields.findAll", query = "SELECT f FROM Fields f")
+public class Fields implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -60,6 +60,9 @@ public class AppDynamicFields implements Serializable {
 	@Column(name = "validation")
 	private String validation;
 
+	@Column(name = "default_value")
+	private String defaultValue;
+
 	@Column(name = "created_at")
 	private Date createdAt;
 
@@ -87,8 +90,8 @@ public class AppDynamicFields implements Serializable {
 	@Transient
 	private List<String> options;
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = AppPagesSectionGroups.class)
-	private AppPagesSectionGroups groups;
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Groups.class)
+	private Groups groups;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -210,11 +213,11 @@ public class AppDynamicFields implements Serializable {
 		this.validation = validation;
 	}
 
-	public AppPagesSectionGroups getGroups() {
+	public Groups getGroups() {
 		return groups;
 	}
 
-	public void setGroups(AppPagesSectionGroups groups) {
+	public void setGroups(Groups groups) {
 		this.groups = groups;
 	}
 
@@ -224,6 +227,14 @@ public class AppDynamicFields implements Serializable {
 
 	public void setDisplayOrder(Integer displayOrder) {
 		this.displayOrder = displayOrder;
+	}
+
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 
 	@Override

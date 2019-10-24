@@ -3,7 +3,7 @@ package co.yabx.kyc.app.service;
 import java.util.List;
 import java.util.Set;
 
-import co.yabx.kyc.app.dto.AppPagesSectionsDTO;
+import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
@@ -20,7 +20,7 @@ import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
  */
 public interface AppPagesSectionService {
 
-	void prepareUserDetails(List<AppPagesSectionsDTO> appPagesSectionsDTOList, User retailer, User nominees,
+	void prepareUserDetails(List<SectionsDTO> appPagesSectionsDTOList, User retailer, User nominees,
 			Set<AddressDetails> userAddressDetailsSet, Set<BankAccountDetails> userBankAccountDetailsSet,
 			Set<AddressDetails> nomineeAddressDetailsSet, Set<BankAccountDetails> nomineeBankAccountDetailsSet,
 			Set<BusinessDetails> businessDetailsSet, Set<AddressDetails> businessAddressDetailsSet,

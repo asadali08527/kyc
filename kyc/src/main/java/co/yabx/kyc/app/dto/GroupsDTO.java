@@ -7,7 +7,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AppPagesSectionGroupsDTO implements Serializable {
+public class GroupsDTO implements Serializable {
 	private static final long serialVersionUID = 214321L;
 
 	private Long groupId;
@@ -26,7 +26,7 @@ public class AppPagesSectionGroupsDTO implements Serializable {
 
 	private Integer filledFields;
 
-	private List<AppDynamicFieldsDTO> fields;
+	private List<FieldsDTO> fields;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -76,11 +76,11 @@ public class AppPagesSectionGroupsDTO implements Serializable {
 		this.groupId = groupId;
 	}
 
-	public List<AppDynamicFieldsDTO> getFields() {
+	public List<FieldsDTO> getFields() {
 		return fields;
 	}
 
-	public void setFields(List<AppDynamicFieldsDTO> fields) {
+	public void setFields(List<FieldsDTO> fields) {
 		this.fields = fields;
 	}
 

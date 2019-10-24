@@ -12,7 +12,7 @@ import co.yabx.kyc.app.enums.ControlType;
 import co.yabx.kyc.app.enums.DataType;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AppDynamicFieldsDTO implements Serializable {
+public class FieldsDTO implements Serializable {
 	private static final long serialVersionUID = 1588962L;
 
 	private Long id;
@@ -44,6 +44,8 @@ public class AppDynamicFieldsDTO implements Serializable {
 	private Integer order;
 
 	private String response;
+
+	private String defaultValue;
 
 	/**
 	 * options field is non persistent field, and will be used only while returning
@@ -187,6 +189,14 @@ public class AppDynamicFieldsDTO implements Serializable {
 				+ ", validation=" + validation + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", camera="
 				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", order=" + order + ", response="
 				+ response + ", options=" + options + "]";
+	}
+
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	public void setDefaultValue(String defaultValue) {
+		this.defaultValue = defaultValue;
 	}
 
 }

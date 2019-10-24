@@ -14,20 +14,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import co.yabx.kyc.app.dto.ActionDTO;
-import co.yabx.kyc.app.dto.AppDynamicFieldsDTO;
-import co.yabx.kyc.app.dto.AppPagesDTO;
-import co.yabx.kyc.app.dto.AppPagesSectionGroupsDTO;
-import co.yabx.kyc.app.dto.AppPagesSectionsDTO;
-import co.yabx.kyc.app.entities.AppDynamicFields;
-import co.yabx.kyc.app.entities.AppPages;
-import co.yabx.kyc.app.entities.AppPagesSectionGroups;
-import co.yabx.kyc.app.entities.AppPagesSections;
+import co.yabx.kyc.app.dto.FieldsDTO;
+import co.yabx.kyc.app.dto.PagesDTO;
+import co.yabx.kyc.app.dto.GroupsDTO;
+import co.yabx.kyc.app.dto.SectionsDTO;
+import co.yabx.kyc.app.entities.Fields;
+import co.yabx.kyc.app.entities.Pages;
+import co.yabx.kyc.app.entities.Groups;
+import co.yabx.kyc.app.entities.Sections;
 import co.yabx.kyc.app.entities.SectionGroupRelationship;
 import co.yabx.kyc.app.entities.filter.Filters;
+import co.yabx.kyc.app.enums.AddressProof;
 import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.BankAccountType;
 import co.yabx.kyc.app.enums.Currency;
 import co.yabx.kyc.app.enums.Gender;
+import co.yabx.kyc.app.enums.IdentityProof;
 import co.yabx.kyc.app.enums.LiabilityType;
 import co.yabx.kyc.app.enums.LicenseType;
 import co.yabx.kyc.app.enums.MaritalStatuses;
@@ -52,22 +54,22 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppPagesDynamicDtoHeper.class);
 
-	public static AppPagesDTO prepareAppPagesDto(AppPages pages, User retailers, User nominee,
+	public static PagesDTO prepareAppPagesDto(Pages pages, User retailers, User nominee,
 			Set<AddressDetails> userAddressDetailsSet, Set<AddressDetails> nomineeAddressDetailsSet,
 			Set<AddressDetails> businessAddressDetailsSet, Set<BankAccountDetails> userBankAccountDetailsSet,
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet, Set<BankAccountDetails> businessBankAccountDetailsSet,
 			String type) {
-		AppPagesDTO appPagesDTO = new AppPagesDTO();
+		PagesDTO appPagesDTO = new PagesDTO();
 		Map<String, Integer> filledVsUnfilled = new HashMap<String, Integer>();
 		filledVsUnfilled.put("filledFields", 0);
 		filledVsUnfilled.put("totalFields", 0);
-		Set<AppPagesSections> appPagesSectionsSet = pages.getAppPagesSections();
+		Set<Sections> appPagesSectionsSet = pages.getAppPagesSections();
 		if (appPagesSectionsSet != null && !appPagesSectionsSet.isEmpty()) {
-			List<AppPagesSectionsDTO> appPagesSectionSet = getSections(appPagesSectionsSet, retailers, filledVsUnfilled,
+			List<SectionsDTO> appPagesSectionSet = getSections(appPagesSectionsSet, retailers, filledVsUnfilled,
 					nominee, userAddressDetailsSet, nomineeAddressDetailsSet, businessAddressDetailsSet,
 					userBankAccountDetailsSet, nomineeBankAccountDetailsSet, businessBankAccountDetailsSet);
 			appPagesDTO.setSections(appPagesSectionSet.stream()
-					.sorted(Comparator.comparing(AppPagesSectionsDTO::getSectionId)).collect(Collectors.toList()));
+					.sorted(Comparator.comparing(SectionsDTO::getSectionId)).collect(Collectors.toList()));
 			appPagesDTO.setEnable(pages.isEnable());
 			appPagesDTO.setPageId(pages.getPageId());
 			// appPagesDTO.setPageName(pages.getPageName());
@@ -86,23 +88,23 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 		return appPagesDTO;
 	}
 
-	private static List<AppPagesSectionsDTO> getSections(Set<AppPagesSections> appPagesSectionsSet, User retailers,
+	private static List<SectionsDTO> getSections(Set<Sections> appPagesSectionsSet, User retailers,
 			Map<String, Integer> filledVsUnfilled, User nominee, Set<AddressDetails> userAddressDetailsSet,
 			Set<AddressDetails> nomineeAddressDetailsSet, Set<AddressDetails> businessAddressDetailsSet,
 			Set<BankAccountDetails> userBankAccountDetailsSet, Set<BankAccountDetails> nomineeBankAccountDetailsSet,
 			Set<BankAccountDetails> businessBankAccountDetailsSet) {
-		List<AppPagesSectionsDTO> appPagesSectionDTOSet = new ArrayList<AppPagesSectionsDTO>();
-		for (AppPagesSections appPagesSections : appPagesSectionsSet) {
+		List<SectionsDTO> appPagesSectionDTOSet = new ArrayList<SectionsDTO>();
+		for (Sections appPagesSections : appPagesSectionsSet) {
 			Map<String, Integer> section = new HashMap<String, Integer>();
 			section.put("filledFields", 0);
 			section.put("totalFields", 0);
-			AppPagesSectionsDTO appPagesSectionsDTO = new AppPagesSectionsDTO();
+			SectionsDTO appPagesSectionsDTO = new SectionsDTO();
 
-			List<AppPagesSectionGroupsDTO> appPagesSectionGroupSet = getGroups(retailers, section, appPagesSections,
+			List<GroupsDTO> appPagesSectionGroupSet = getGroups(retailers, section, appPagesSections,
 					nominee, userAddressDetailsSet, nomineeAddressDetailsSet, businessAddressDetailsSet,
 					userBankAccountDetailsSet, nomineeBankAccountDetailsSet, businessBankAccountDetailsSet);
 			appPagesSectionsDTO.setGroups(appPagesSectionGroupSet.stream()
-					.sorted(Comparator.comparing(AppPagesSectionGroupsDTO::getGroupId)).collect(Collectors.toList()));
+					.sorted(Comparator.comparing(GroupsDTO::getGroupId)).collect(Collectors.toList()));
 			appPagesSectionsDTO.setEnable(appPagesSections.isEnable());
 			appPagesSectionsDTO.setSectionId(appPagesSections.getSectionId());
 			appPagesSectionsDTO.setSectionName(appPagesSections.getSectionName());
@@ -121,17 +123,17 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 
 	}
 
-	private static List<AppPagesSectionGroupsDTO> getGroups(User retailers, Map<String, Integer> filledVsUnfilled,
-			AppPagesSections appPagesSections, User nominee, Set<AddressDetails> userAddressDetailsSet,
+	private static List<GroupsDTO> getGroups(User retailers, Map<String, Integer> filledVsUnfilled,
+			Sections appPagesSections, User nominee, Set<AddressDetails> userAddressDetailsSet,
 			Set<AddressDetails> nomineeAddressDetailsSet, Set<AddressDetails> businessAddressDetailsSet,
 			Set<BankAccountDetails> userBankAccountDetailsSet, Set<BankAccountDetails> nomineeBankAccountDetailsSet,
 			Set<BankAccountDetails> businessBankAccountDetailsSet) {
 		List<SectionGroupRelationship> sectionGroupRelationships = SpringUtil
 				.bean(SectionGroupRelationshipRepository.class).findBySectionId(appPagesSections.getSectionId());
-		List<AppPagesSectionGroupsDTO> appPagesSectionGroupSet = new ArrayList<AppPagesSectionGroupsDTO>();
+		List<GroupsDTO> appPagesSectionGroupSet = new ArrayList<GroupsDTO>();
 		for (SectionGroupRelationship sectionGroupRelationship : sectionGroupRelationships) {
 			if (sectionGroupRelationship.isActive()) {
-				AppPagesSectionGroups appPagesSectionGroups = sectionGroupRelationship.getAppPagesSectionGroups();
+				Groups appPagesSectionGroups = sectionGroupRelationship.getAppPagesSectionGroups();
 				Set<Filters> filters = sectionGroupRelationship.getFilters();
 				if (sectionGroupRelationship.isMultiple()) {
 					String[] titles = sectionGroupRelationship.getMultipleTitlle() != null
@@ -156,29 +158,29 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 
 	}
 
-	private static void prepareGroups(String title, User retailers, AppPagesSections appPagesSections, User nominee,
+	private static void prepareGroups(String title, User retailers, Sections appPagesSections, User nominee,
 			Set<AddressDetails> userAddressDetailsSet, Set<AddressDetails> nomineeAddressDetailsSet,
 			Set<AddressDetails> businessAddressDetailsSet, Set<BankAccountDetails> userBankAccountDetailsSet,
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet, Set<BankAccountDetails> businessBankAccountDetailsSet,
-			AppPagesSectionGroups appPagesSectionGroups, List<AppPagesSectionGroupsDTO> appPagesSectionGroupSet,
+			Groups appPagesSectionGroups, List<GroupsDTO> appPagesSectionGroupSet,
 			Map<String, Integer> filledVsUnfilled, Set<Filters> filters) {
 
 		if (appPagesSectionGroups != null) {
 			Map<String, Integer> groups = new HashMap<String, Integer>();
 			groups.put("filledFields", 0);
 			groups.put("totalFields", 0);
-			AppPagesSectionGroupsDTO appPagesSectionGroupsDTO = new AppPagesSectionGroupsDTO();
-			Set<AppDynamicFields> appDynamicFieldsSet = appPagesSectionGroups.getAppDynamicFields();
+			GroupsDTO appPagesSectionGroupsDTO = new GroupsDTO();
+			Set<Fields> appDynamicFieldsSet = appPagesSectionGroups.getAppDynamicFields();
 			Filters filter = fieldsTobeFiltered(filters, appPagesSectionGroups.getGroupName());
 			if (appDynamicFieldsSet != null && !appDynamicFieldsSet.isEmpty()) {
-				List<AppDynamicFieldsDTO> fields = getFields(appDynamicFieldsSet, retailers, groups, appPagesSections,
+				List<FieldsDTO> fields = getFields(appDynamicFieldsSet, retailers, groups, appPagesSections,
 						nominee, userAddressDetailsSet, nomineeAddressDetailsSet, businessAddressDetailsSet,
 						userBankAccountDetailsSet, nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, title,
 						filter);
-				Set<AppDynamicFieldsDTO> appDynamicFieldsDTOs = fields.stream()
-						.sorted(Comparator.comparing(AppDynamicFieldsDTO::getId)).collect(Collectors.toSet());
+				Set<FieldsDTO> appDynamicFieldsDTOs = fields.stream()
+						.sorted(Comparator.comparing(FieldsDTO::getId)).collect(Collectors.toSet());
 				appPagesSectionGroupsDTO.setFields(appDynamicFieldsDTOs.stream()
-						.sorted(Comparator.comparing(AppDynamicFieldsDTO::getId)).collect(Collectors.toList()));
+						.sorted(Comparator.comparing(FieldsDTO::getId)).collect(Collectors.toList()));
 				appPagesSectionGroupsDTO.setEnable(appPagesSectionGroups.isEnable());
 				appPagesSectionGroupsDTO.setGroupId(appPagesSectionGroups.getGroupId());
 				appPagesSectionGroupsDTO.setGroupName(appPagesSectionGroups.getGroupName());
@@ -210,16 +212,16 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 		return actionDTO;
 	}
 
-	private static List<AppDynamicFieldsDTO> getFields(Set<AppDynamicFields> appDynamicFieldsSet, User retailers,
-			Map<String, Integer> filledVsUnfilled, AppPagesSections appPagesSections, User nominee,
+	private static List<FieldsDTO> getFields(Set<Fields> appDynamicFieldsSet, User retailers,
+			Map<String, Integer> filledVsUnfilled, Sections appPagesSections, User nominee,
 			Set<AddressDetails> userAddressDetailsSet, Set<AddressDetails> nomineeAddressDetailsSet,
 			Set<AddressDetails> businessAddressDetailsSet, Set<BankAccountDetails> userBankAccountDetailsSet,
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet, Set<BankAccountDetails> businessBankAccountDetailsSet,
 			String title, Filters filter) {
 		Integer totalFields = 0;
 		Integer filledFields = 0;
-		List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet = new ArrayList<AppDynamicFieldsDTO>();
-		for (AppDynamicFields dynamicFields : appDynamicFieldsSet) {
+		List<FieldsDTO> appDynamicFieldsDTOSet = new ArrayList<FieldsDTO>();
+		for (Fields dynamicFields : appDynamicFieldsSet) {
 			totalFields++;
 			if (dynamicFields.getGroups().getGroupId() == 1
 					&& (appPagesSections.getSectionId() == 1 || appPagesSections.getSectionId() == 3)) {
@@ -266,6 +268,9 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 			} else if (dynamicFields.getGroups().getGroupId() == 9) {
 				// Introducer Detaiils
 				prepareIntroducerDetails(dynamicFields, retailers, appDynamicFieldsDTOSet);
+			} else if (dynamicFields.getGroups().getGroupId() == 10) {
+				// Attachment Detaiils
+				prepareAttachmentDetails(dynamicFields, retailers, appDynamicFieldsDTOSet);
 			}
 
 			if (dynamicFields.getSavedData() != null && !dynamicFields.getSavedData().isEmpty())
@@ -274,13 +279,70 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 		filledVsUnfilled.put("filledFields", filledFields);
 		filledVsUnfilled.put("totalFields", totalFields);
 		appDynamicFieldsDTOSet
-				.add(appDynamicFieldsDTOSet.stream().max(Comparator.comparing(AppDynamicFieldsDTO::getId)).get());
+				.add(appDynamicFieldsDTOSet.stream().max(Comparator.comparing(FieldsDTO::getId)).get());
 		return appDynamicFieldsDTOSet;
 
 	}
 
-	private static void prepareIntroducerDetails(AppDynamicFields dynamicFields, User retailers,
-			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+	private static void prepareAttachmentDetails(Fields dynamicFields, User retailers,
+			List<FieldsDTO> appDynamicFieldsDTOSet) {
+
+		if (retailers == null || retailers.getAttachmentDetails() == null
+				|| retailers.getAttachmentDetails().isEmpty()) {
+			if (dynamicFields.getFieldId().equals("idProof")) {
+				List<String> options = new ArrayList<String>();
+				IdentityProof[] idProof = IdentityProof.values();
+				for (IdentityProof proof : idProof) {
+					options.add(proof.name());
+				}
+				dynamicFields.setOptions(options);
+
+			} else if (dynamicFields.getFieldId().equals("addressProof")) {
+				AddressProof[] addressProofs = AddressProof.values();
+				List<String> options = new ArrayList<String>();
+				for (AddressProof proof : addressProofs) {
+					options.add(proof.name());
+				}
+				dynamicFields.setOptions(options);
+
+			}
+			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+		} else {
+			Set<AttachmentDetails> attachmentDetailsSet = retailers.getAttachmentDetails();
+			for (AttachmentDetails attachmentDetails : attachmentDetailsSet) {
+				if (dynamicFields.getFieldId().equals("idProof")) {
+					List<String> options = new ArrayList<String>();
+					IdentityProof[] idProof = IdentityProof.values();
+					for (IdentityProof proof : idProof) {
+						options.add(proof.name());
+					}
+					dynamicFields.setOptions(options);
+				} else if (dynamicFields.getFieldId().equals("addressProof")) {
+					AddressProof[] addressProofs = AddressProof.values();
+					List<String> options = new ArrayList<String>();
+					for (AddressProof proof : addressProofs) {
+						options.add(proof.name());
+					}
+					dynamicFields.setOptions(options);
+
+				} else if (dynamicFields.getFieldId().equals("tinCertificates")) {
+
+				} else if (dynamicFields.getFieldId().equals("tradeLicense")) {
+
+				} else if (dynamicFields.getFieldId().equals("nomineePhoto")) {
+
+				} else if (dynamicFields.getFieldId().equals("signature")) {
+
+				}
+				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+			}
+
+		}
+
+	}
+
+	private static void prepareIntroducerDetails(Fields dynamicFields, User retailers,
+			List<FieldsDTO> appDynamicFieldsDTOSet) {
 
 		if (retailers == null || retailers.getIntroducerDetails() == null
 				|| retailers.getIntroducerDetails().isEmpty()) {
@@ -322,8 +384,8 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 
 	}
 
-	private static void prepareWorkEducationDetails(AppDynamicFields dynamicFields, User retailers,
-			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+	private static void prepareWorkEducationDetails(Fields dynamicFields, User retailers,
+			List<FieldsDTO> appDynamicFieldsDTOSet) {
 
 		if (retailers == null || retailers.getWorkEducationDetails() == null
 				|| retailers.getWorkEducationDetails().isEmpty()) {
@@ -356,8 +418,8 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 
 	}
 
-	private static void prepareMonthlyTransactionProfile(AppDynamicFields dynamicFields, User retailers,
-			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+	private static void prepareMonthlyTransactionProfile(Fields dynamicFields, User retailers,
+			List<FieldsDTO> appDynamicFieldsDTOSet) {
 		if (retailers == null || retailers.getMonthlyTransactionProfiles() == null
 				|| retailers.getMonthlyTransactionProfiles().isEmpty()) {
 
@@ -382,8 +444,8 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 
 	}
 
-	private static void prepareLicenseDetails(AppDynamicFields dynamicFields, User retailers,
-			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+	private static void prepareLicenseDetails(Fields dynamicFields, User retailers,
+			List<FieldsDTO> appDynamicFieldsDTOSet) {
 		if (retailers == null || retailers.getBusinessDetails() == null || retailers.getBusinessDetails().isEmpty()) {
 			if (dynamicFields.getFieldId().equals("licenseType")) {
 				List<String> options = new ArrayList<String>();
@@ -421,8 +483,8 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 
 	}
 
-	private static void prepareBusinessInformation(AppDynamicFields dynamicFields, User retailers,
-			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+	private static void prepareBusinessInformation(Fields dynamicFields, User retailers,
+			List<FieldsDTO> appDynamicFieldsDTOSet) {
 
 		if (retailers == null || retailers.getBusinessDetails() == null || retailers.getBusinessDetails().isEmpty()) {
 			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
@@ -491,8 +553,8 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 
 	}
 
-	private static void prepareLiabilitiesDetails(AppDynamicFields dynamicFields, User retailers,
-			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+	private static void prepareLiabilitiesDetails(Fields dynamicFields, User retailers,
+			List<FieldsDTO> appDynamicFieldsDTOSet) {
 		if (retailers == null || retailers.getLiabilitiesDetails() == null
 				|| retailers.getLiabilitiesDetails().isEmpty()) {
 			if (dynamicFields.getFieldId().equals("typeOfLiablity")) {
@@ -531,8 +593,8 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 
 	}
 
-	private static void prepareAccountInformations(AppDynamicFields dynamicFields,
-			Set<BankAccountDetails> bankAccountDetailsSet, List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet) {
+	private static void prepareAccountInformations(Fields dynamicFields, Set<BankAccountDetails> bankAccountDetailsSet,
+			List<FieldsDTO> appDynamicFieldsDTOSet) {
 		if (bankAccountDetailsSet == null || bankAccountDetailsSet.isEmpty()) {
 			if (dynamicFields.getFieldId().equals("bankAccountType")) {
 				List<String> options = new ArrayList<String>();
@@ -591,8 +653,8 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 
 	}
 
-	private static void prepareAddress(AppDynamicFields dynamicFields, Set<AddressDetails> addressDetailsSet,
-			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet, String title) {
+	private static void prepareAddress(Fields dynamicFields, Set<AddressDetails> addressDetailsSet,
+			List<FieldsDTO> appDynamicFieldsDTOSet, String title) {
 		if (addressDetailsSet == null || addressDetailsSet.isEmpty()) {
 			if (dynamicFields.getFieldId().equals("addressType")) {
 				List<String> options = new ArrayList<String>();
@@ -632,8 +694,8 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 
 	}
 
-	private static void prepareProfileInformation(AppDynamicFields dynamicFields, User retailers,
-			List<AppDynamicFieldsDTO> appDynamicFieldsDTOSet, Filters filter) {
+	private static void prepareProfileInformation(Fields dynamicFields, User retailers,
+			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter) {
 		if (retailers != null) {
 			if (checkFilterCriteria(filter, dynamicFields.getFieldId())) {
 				if (dynamicFields.getFieldId().equals("firstName")) {
@@ -765,8 +827,8 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 		return true;
 	}
 
-	private static AppDynamicFieldsDTO getAppDynamicFieldDTO(AppDynamicFields dynamicFields) {
-		AppDynamicFieldsDTO appDynamicFieldsDTO = new AppDynamicFieldsDTO();
+	private static FieldsDTO getAppDynamicFieldDTO(Fields dynamicFields) {
+		FieldsDTO appDynamicFieldsDTO = new FieldsDTO();
 		appDynamicFieldsDTO.setCamera(dynamicFields.isCamera());
 		appDynamicFieldsDTO.setDataType(dynamicFields.getDataType());
 		appDynamicFieldsDTO.setEditable(dynamicFields.isEditable());

@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * 
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AppPagesDTO implements Serializable {
+public class PagesDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long pageId;
@@ -34,7 +34,7 @@ public class AppPagesDTO implements Serializable {
 
 	private Integer totalFields;
 
-	private List<AppPagesSectionsDTO> sections;
+	private List<SectionsDTO> sections;
 
 	private String pageCompletion;
 
@@ -124,11 +124,11 @@ public class AppPagesDTO implements Serializable {
 		this.pageId = pageId;
 	}
 
-	public List<AppPagesSectionsDTO> getSections() {
+	public List<SectionsDTO> getSections() {
 		return sections;
 	}
 
-	public void setSections(List<AppPagesSectionsDTO> sections) {
+	public void setSections(List<SectionsDTO> sections) {
 		this.sections = sections;
 	}
 

@@ -21,7 +21,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "groups", indexes = { @Index(name = "group_name", columnList = "group_name") })
-public class AppPagesSectionGroups implements Serializable {
+public class Groups implements Serializable {
 	private static final long serialVersionUID = 214321L;
 
 	@Id
@@ -48,7 +48,7 @@ public class AppPagesSectionGroups implements Serializable {
 	private Integer totalFields;
 
 	@OneToMany(mappedBy = "groups", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-	private Set<AppDynamicFields> appDynamicFields;
+	private Set<Fields> appDynamicFields;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -98,11 +98,11 @@ public class AppPagesSectionGroups implements Serializable {
 		this.groupId = groupId;
 	}
 
-	public Set<AppDynamicFields> getAppDynamicFields() {
+	public Set<Fields> getAppDynamicFields() {
 		return appDynamicFields;
 	}
 
-	public void setAppDynamicFields(Set<AppDynamicFields> appDynamicFields) {
+	public void setAppDynamicFields(Set<Fields> appDynamicFields) {
 		this.appDynamicFields = appDynamicFields;
 	}
 

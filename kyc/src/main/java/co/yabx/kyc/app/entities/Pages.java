@@ -22,7 +22,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "pages", indexes = { @Index(name = "page_name", columnList = "page_name"),
 		@Index(name = "page_type", columnList = "page_type") })
-public class AppPages implements Serializable {
+public class Pages implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -52,7 +52,7 @@ public class AppPages implements Serializable {
 	private boolean enable;
 
 	@OneToMany(mappedBy = "appPages", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-	private Set<AppPagesSections> appPagesSections;
+	private Set<Sections> appPagesSections;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -94,11 +94,11 @@ public class AppPages implements Serializable {
 		this.enable = enable;
 	}
 
-	public Set<AppPagesSections> getAppPagesSections() {
+	public Set<Sections> getAppPagesSections() {
 		return appPagesSections;
 	}
 
-	public void setAppPagesSections(Set<AppPagesSections> appPagesSections) {
+	public void setAppPagesSections(Set<Sections> appPagesSections) {
 		this.appPagesSections = appPagesSections;
 	}
 

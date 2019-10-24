@@ -16,6 +16,7 @@ import co.yabx.kyc.app.dto.RetailersDTO;
 import co.yabx.kyc.app.dto.dtoHelper.QuestionAnswerDTOHelper;
 import co.yabx.kyc.app.dto.dtoHelper.RetailersDtoHelper;
 import co.yabx.kyc.app.enums.Relationship;
+import co.yabx.kyc.app.enums.UserStatus;
 import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
@@ -140,8 +141,24 @@ public class RetailerServiceImpl implements RetailerService {
 
 	@Override
 	public ResponseDTO submitKyc(RetailersDTO retailersDTO) {
-		// TODO Auto-generated method stub
-		return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
+		if (retailersDTO != null && retailersDTO.getDsrMsisdn() != null && !retailersDTO.getDsrMsisdn().isEmpty()) {
+
+			List<UserRelationships> userRelationshipsList = userRelationshipsRepository
+					.findByMsisdnAndRelationship(retailersDTO.getDsrMsisdn(), Relationship.RETAILER);
+			if (userRelationshipsList != null && !userRelationshipsList.isEmpty()) {
+				Optional<UserRelationships> retailer = userRelationshipsList.stream()
+						.filter(f -> f.getRelative().getId().equals(retailersDTO.getRetailerId())).findFirst();
+				if (retailer.isPresent()) {
+					User user = retailer.get().getRelative();
+					user.setUserStatus(UserStatus.INPROGRESS);
+					userRepository.save(user);
+					return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
+				}
+			}
+			return RetailersDtoHelper.getResponseDTO(null, "No DSR and retailer mapping found", "404", null);
+
+		}
+		return RetailersDtoHelper.getResponseDTO(null, "Either DSR msisdn or retailers id is missing", "403", null);
 	}
 
 	@Override

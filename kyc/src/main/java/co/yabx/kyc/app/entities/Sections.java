@@ -19,7 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "pages_sections", indexes = { @Index(name = "section_name", columnList = "section_name") })
-public class AppPagesSections implements Serializable {
+public class Sections implements Serializable {
 	private static final long serialVersionUID = 1547547L;
 
 	@Id
@@ -48,8 +48,8 @@ public class AppPagesSections implements Serializable {
 	@Column(name = "enable", columnDefinition = "boolean default true")
 	private boolean enable;
 
-	@ManyToOne(fetch = FetchType.EAGER, targetEntity = AppPages.class)
-	AppPages appPages;
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Pages.class)
+	Pages appPages;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -99,11 +99,11 @@ public class AppPagesSections implements Serializable {
 		this.sectionId = sectionId;
 	}
 
-	public AppPages getAppPages() {
+	public Pages getAppPages() {
 		return appPages;
 	}
 
-	public void setAppPages(AppPages appPages) {
+	public void setAppPages(Pages appPages) {
 		this.appPages = appPages;
 	}
 

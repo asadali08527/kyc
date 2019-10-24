@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.yabx.kyc.app.dto.AppPagesSectionGroupsDTO;
-import co.yabx.kyc.app.dto.AppPagesSectionsDTO;
+import co.yabx.kyc.app.dto.GroupsDTO;
+import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
@@ -34,17 +34,17 @@ public class AppPagesSectionServiceImpl implements AppPagesSectionService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppPagesSectionServiceImpl.class);
 
 	@Override
-	public void prepareUserDetails(List<AppPagesSectionsDTO> appPagesSectionsDTOList, User retailer, User nominees,
+	public void prepareUserDetails(List<SectionsDTO> appPagesSectionsDTOList, User retailer, User nominees,
 			Set<AddressDetails> userAddressDetailsSet, Set<BankAccountDetails> userBankAccountDetailsSet,
 			Set<AddressDetails> nomineeAddressDetailsSet, Set<BankAccountDetails> nomineeBankAccountDetailsSet,
 			Set<BusinessDetails> businessDetailsSet, Set<AddressDetails> businessAddressDetailsSet,
 			Set<BankAccountDetails> businessBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetailsSet,
 			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet,
 			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet) {
-		for (AppPagesSectionsDTO appPagesSectionsDTO : appPagesSectionsDTOList) {
-			List<AppPagesSectionGroupsDTO> appPagesSectionGroupsDTOList = appPagesSectionsDTO.getGroups();
+		for (SectionsDTO appPagesSectionsDTO : appPagesSectionsDTOList) {
+			List<GroupsDTO> appPagesSectionGroupsDTOList = appPagesSectionsDTO.getGroups();
 			if (appPagesSectionGroupsDTOList != null && !appPagesSectionGroupsDTOList.isEmpty()) {
-				for (AppPagesSectionGroupsDTO appPagesSectionGroupsDTO : appPagesSectionGroupsDTOList) {
+				for (GroupsDTO appPagesSectionGroupsDTO : appPagesSectionGroupsDTOList) {
 					dynamicFieldService.prepareFields(retailer, nominees, appPagesSectionGroupsDTO,
 							userAddressDetailsSet, userBankAccountDetailsSet, nomineeAddressDetailsSet,
 							nomineeBankAccountDetailsSet, businessDetailsSet, businessAddressDetailsSet,

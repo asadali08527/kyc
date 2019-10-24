@@ -30,12 +30,12 @@ import co.yabx.kyc.app.fullKyc.dto.LicenseDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
 import co.yabx.kyc.app.fullKyc.entity.User;
-import co.yabx.kyc.app.repositories.AppPagesRepository;
+import co.yabx.kyc.app.repositories.PagesRepository;
 
 public class RetailersDtoHelper implements Serializable {
 
 	@Autowired
-	private AppPagesRepository appPagesRepository;
+	private PagesRepository appPagesRepository;
 
 	public static ResponseDTO getResponseDTO(String msisdn, String status, String statusCode,
 			UserStatus dsrProfileStatus) {

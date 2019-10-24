@@ -113,9 +113,17 @@ public class RetailerController {
 
 	@RequestMapping(value = "/retailer/kyc-submit", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> submitKyc(@RequestBody RetailersDTO RetailersDTO) {
-		ResponseDTO loginDTO = retailerService.submitKyc(RetailersDTO);
-		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+	public ResponseEntity<?> submitKyc(@RequestBody RetailersDTO retailersDTO, HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse) {
+		if (authInfoService.isAuthorized(retailersDTO.getDsrMsisdn() != null && !retailersDTO.getDsrMsisdn().isEmpty()
+				? retailersDTO.getDsrMsisdn()
+				: null, httpServletRequest, httpServletResponse)) {
+			ResponseDTO loginDTO = retailerService.submitKyc(retailersDTO);
+			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+		}
 
 	}
 

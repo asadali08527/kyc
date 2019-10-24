@@ -13,10 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.yabx.kyc.app.dto.AppPagesDTO;
-import co.yabx.kyc.app.dto.AppPagesSectionsDTO;
+import co.yabx.kyc.app.dto.PagesDTO;
+import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.dto.dtoHelper.AppPagesDynamicDtoHeper;
-import co.yabx.kyc.app.entities.AppPages;
+import co.yabx.kyc.app.entities.Pages;
 import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.UserStatus;
 import co.yabx.kyc.app.enums.UserType;
@@ -36,7 +36,7 @@ import co.yabx.kyc.app.fullKyc.repository.DSRUserRepository;
 import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
-import co.yabx.kyc.app.repositories.AppPagesRepository;
+import co.yabx.kyc.app.repositories.PagesRepository;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.AppPagesSectionService;
 import co.yabx.kyc.app.service.UserService;
@@ -79,9 +79,9 @@ public class UserServiceImpl implements UserService {
 		 */}
 
 	@Override
-	public List<AppPagesDTO> getUserDetails(User user, String type) {
+	public List<PagesDTO> getUserDetails(User user, String type) {
 
-		List<AppPages> appPages = SpringUtil.bean(AppPagesRepository.class).findByPageType(type);
+		List<Pages> appPages = SpringUtil.bean(PagesRepository.class).findByPageType(type);
 		if (appPages == null)
 			return null;
 
@@ -99,11 +99,12 @@ public class UserServiceImpl implements UserService {
 		 * Set<WorkEducationDetails> workEducationDetailsSet = null;
 		 * Set<IntroducerDetails> introducerDetailsSet = null;
 		 */
-		List<AppPagesDTO> appPagesDTOList = new ArrayList<AppPagesDTO>();
+		List<PagesDTO> appPagesDTOList = new ArrayList<PagesDTO>();
 		if (user != null) {
-			UserRelationships userRelationships = userRelationshipsRepository
+			List<UserRelationships> userRelationships = userRelationshipsRepository
 					.findByMsisdnAndRelationship(user.getMsisdn(), Relationship.NOMINEE);
-			nominee = userRelationships != null ? userRelationships.getRelative() : null;
+			nominee = userRelationships != null && !userRelationships.isEmpty() ? userRelationships.get(0).getRelative()
+					: null;
 			userAddressDetailsSet = user.getAddressDetails();
 			nomineeAddressDetailsSet = nominee != null ? nominee.getAddressDetails() : null;
 			userBankAccountDetailsSet = user.getBankAccountDetails();
@@ -123,7 +124,7 @@ public class UserServiceImpl implements UserService {
 				});
 			}
 		}
-		for (AppPages pages : appPages) {
+		for (Pages pages : appPages) {
 			appPagesDTOList.add(AppPagesDynamicDtoHeper.prepareAppPagesDto(pages, user, nominee, userAddressDetailsSet,
 					nomineeAddressDetailsSet, businessAddressDetailsSet, userBankAccountDetailsSet,
 					nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, type));
@@ -152,7 +153,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User persistOrUpdateUserInfo(AppPagesDTO appPagesDTO, User dsrUser, User retailer) throws Exception {
+	public User persistOrUpdateUserInfo(PagesDTO appPagesDTO, User dsrUser, User retailer) throws Exception {
 
 		if (appPagesDTO != null && dsrUser != null) {
 			Boolean isNew = false;
@@ -169,7 +170,7 @@ public class UserServiceImpl implements UserService {
 			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet = null;
 			Set<WorkEducationDetails> workEducationDetailsSet = null;
 			Set<IntroducerDetails> introducerDetailsSet = null;
-			UserRelationships nomineeRelationship = null;
+			List<UserRelationships> nomineeRelationship = null;
 
 			if (retailer == null) {
 				// It means DSR profile need to be persisted
@@ -185,7 +186,9 @@ public class UserServiceImpl implements UserService {
 						: new HashSet<BankAccountDetails>();
 				nomineeRelationship = userRelationshipsRepository.findByMsisdnAndRelationship(dsrUser.getMsisdn(),
 						Relationship.NOMINEE);
-				nominees = nomineeRelationship != null ? nomineeRelationship.getRelative() : null;
+				nominees = nomineeRelationship != null && !nomineeRelationship.isEmpty()
+						? nomineeRelationship.get(0).getRelative()
+						: null;
 				if (nominees != null) {
 					nomineeAddressDetailsSet = nominees.getAddressDetails() != null ? nominees.getAddressDetails()
 							: new HashSet<AddressDetails>();
@@ -222,7 +225,9 @@ public class UserServiceImpl implements UserService {
 						: new HashSet<LiabilitiesDetails>();
 				nomineeRelationship = userRelationshipsRepository.findByMsisdnAndRelationship(retailer.getMsisdn(),
 						Relationship.NOMINEE);
-				nominees = nomineeRelationship != null ? nomineeRelationship.getRelative() : null;
+				nominees = nomineeRelationship != null && !nomineeRelationship.isEmpty()
+						? nomineeRelationship.get(0).getRelative()
+						: null;
 				if (nominees != null) {
 					nomineeAddressDetailsSet = nominees.getAddressDetails() != null ? nominees.getAddressDetails()
 							: new HashSet<AddressDetails>();
@@ -250,7 +255,7 @@ public class UserServiceImpl implements UserService {
 				introducerDetailsSet = retailer.getIntroducerDetails();
 
 			}
-			List<AppPagesSectionsDTO> appPagesSectionsDTOList = appPagesDTO.getSections();
+			List<SectionsDTO> appPagesSectionsDTOList = appPagesDTO.getSections();
 			if (appPagesSectionsDTOList != null && !appPagesSectionsDTOList.isEmpty()) {
 				appPagesSectionService.prepareUserDetails(appPagesSectionsDTOList, retailer, nominees,
 						userAddressDetailsSet, userBankAccountDetailsSet, nomineeAddressDetailsSet,
@@ -270,7 +275,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	private User persistUser(User user, User nominees, Set<AddressDetails> userAddressDetailsSet,
 			Set<BankAccountDetails> userBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetails,
-			Boolean isNew, UserRelationships nomineeRelationship, Set<AddressDetails> nomineeAddressDetailsSet,
+			Boolean isNew, List<UserRelationships> nomineeRelationship, Set<AddressDetails> nomineeAddressDetailsSet,
 			Boolean isDsrUser, Set<BusinessDetails> businessDetailsSet,
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet,
 			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet,
@@ -313,13 +318,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private void persistUserRelationship(User retailer, User nominees, UserType nominees2, Boolean isNew,
-			UserRelationships nomineeRelationship) {
-		if (isNew)
-			nomineeRelationship = new UserRelationships();
-		nomineeRelationship.setMsisdn(retailer.getMsisdn());
-		nomineeRelationship.setRelative(nominees);
-		nomineeRelationship.setRelationship(Relationship.NOMINEE);
-		userRelationshipsRepository.save(nomineeRelationship);
+			List<UserRelationships> nomineeRelationship) {
+		UserRelationships userRelationships = null;
+		if (isNew) {
+			userRelationships = new UserRelationships();
+		} else {
+			userRelationships = nomineeRelationship.get(0);
+		}
+		userRelationships.setMsisdn(retailer.getMsisdn());
+		userRelationships.setRelative(nominees);
+		userRelationships.setRelationship(Relationship.NOMINEE);
+		userRelationshipsRepository.save(userRelationships);
 	}
 
 }

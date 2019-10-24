@@ -14,8 +14,8 @@ public class ResponseDTO implements Serializable {
 	private String statusCode;
 	private UserStatus dsrProfileStatus;
 	private List<RetailersDTO> retailers;
-	private List<AppPagesDTO> retailerInfo;
-	private List<AppPagesDTO> dsrInfo;
+	private List<PagesDTO> retailerInfo;
+	private List<PagesDTO> dsrInfo;
 	private Map<String, String> authInfo;
 	private Integer totalCount;
 	private QuestionAnswerDTO questionAnswerDTO;
@@ -95,19 +95,19 @@ public class ResponseDTO implements Serializable {
 		this.questionAnswerDTO = questionAnswerDTO;
 	}
 
-	public List<AppPagesDTO> getRetailerInfo() {
+	public List<PagesDTO> getRetailerInfo() {
 		return retailerInfo;
 	}
 
-	public void setRetailerInfo(List<AppPagesDTO> retailerInfo) {
+	public void setRetailerInfo(List<PagesDTO> retailerInfo) {
 		this.retailerInfo = retailerInfo;
 	}
 
-	public List<AppPagesDTO> getDsrInfo() {
+	public List<PagesDTO> getDsrInfo() {
 		return dsrInfo;
 	}
 
-	public void setDsrInfo(List<AppPagesDTO> dsrInfo) {
+	public void setDsrInfo(List<PagesDTO> dsrInfo) {
 		this.dsrInfo = dsrInfo;
 	}
 

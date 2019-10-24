@@ -13,7 +13,7 @@ public class RetailerRequestDTO implements Serializable {
 	private Long retailerId;
 	private int startIndex;
 	private int endIndex;
-	private AppPagesDTO pageResponse;
+	private PagesDTO pageResponse;
 
 	public Long getRetailerId() {
 		return retailerId;
@@ -23,11 +23,11 @@ public class RetailerRequestDTO implements Serializable {
 		this.retailerId = retailerId;
 	}
 
-	public AppPagesDTO getPageResponse() {
+	public PagesDTO getPageResponse() {
 		return pageResponse;
 	}
 
-	public void setPageResponse(AppPagesDTO pageResponse) {
+	public void setPageResponse(PagesDTO pageResponse) {
 		this.pageResponse = pageResponse;
 	}
 

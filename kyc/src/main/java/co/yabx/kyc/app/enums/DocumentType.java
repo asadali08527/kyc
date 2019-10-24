@@ -1,16 +1,16 @@
 package co.yabx.kyc.app.enums;
 
 public enum DocumentType {
-	SIGNATURE, SELFIE, DRIVING_LICENSE, NATIONAL_IDENTIFICATION_NUMBER, PASSPORT, TAX_IDENTIFICATION_NUMBER,
-	VAT_REGISTRATION_NUMBER, BIRTH_CERTIFICATE, INCOME_TAX_RETURN, TRADE_LICENSE;
+	SIGNATURE, SELFIE, DRIVING_LICENSE, NATIONAL_IDENTIFICATION_NUMBER, PASSPORT, TIN_CERTIFICATE,
+	VAT_REGISTRATION_NUMBER, BIRTH_CERTIFICATE, INCOME_TAX_RETURN, TRADE_LICENSE, PHOTO, NOMINEE_PHOTO;
 
 	public static DocumentType getAddressType(String value) {
 		if (value.equalsIgnoreCase("DRIVING LICENSE")) {
 			return DocumentType.DRIVING_LICENSE;
 		} else if (value.equalsIgnoreCase("NATIONAL IDENTIFICATION NUMBER")) {
 			return DocumentType.NATIONAL_IDENTIFICATION_NUMBER;
-		} else if (value.equalsIgnoreCase("TAX IDENTIFICATION NUMBER")) {
-			return DocumentType.TAX_IDENTIFICATION_NUMBER;
+		} else if (value.equalsIgnoreCase("TIN CERTIFICATE")) {
+			return DocumentType.TIN_CERTIFICATE;
 		} else if (value.equalsIgnoreCase("VAT REGISTRATION NUMBER")) {
 			return DocumentType.VAT_REGISTRATION_NUMBER;
 		} else if (value.equalsIgnoreCase("BIRTH CERTIFICATE")) {
@@ -19,6 +19,8 @@ public enum DocumentType {
 			return DocumentType.INCOME_TAX_RETURN;
 		} else if (value.equalsIgnoreCase("TRADE LICENSE")) {
 			return DocumentType.TRADE_LICENSE;
+		}else if (value.equalsIgnoreCase("NOMINEE PHOTOE")) {
+			return DocumentType.NOMINEE_PHOTO;
 		} else {
 			return DocumentType.valueOf(value);
 		}

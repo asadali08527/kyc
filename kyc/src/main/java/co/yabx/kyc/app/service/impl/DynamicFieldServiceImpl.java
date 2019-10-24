@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import co.yabx.kyc.app.dto.AppDynamicFieldsDTO;
-import co.yabx.kyc.app.dto.AppPagesSectionGroupsDTO;
-import co.yabx.kyc.app.dto.AppPagesSectionsDTO;
+import co.yabx.kyc.app.dto.FieldsDTO;
+import co.yabx.kyc.app.dto.GroupsDTO;
+import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.BankAccountType;
 import co.yabx.kyc.app.enums.Currency;
@@ -59,15 +59,15 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DynamicFieldServiceImpl.class);
 
 	@Override
-	public void prepareFields(User retailerOrDsrUser, User nominees, AppPagesSectionGroupsDTO appPagesSectionGroupsDTO,
+	public void prepareFields(User retailerOrDsrUser, User nominees, GroupsDTO appPagesSectionGroupsDTO,
 			Set<AddressDetails> userAddressDetailsSet, Set<BankAccountDetails> userBankAccountDetailsSet,
 			Set<AddressDetails> nomineeAddressDetailsSet, Set<BankAccountDetails> nomineeBankAccountDetailsSet,
 			Set<BusinessDetails> businessDetailsSet, Set<AddressDetails> businessAddressDetailsSet,
 			Set<BankAccountDetails> businessBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetailsSet,
-			AppPagesSectionsDTO appPagesSectionsDTO, Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet,
+			SectionsDTO appPagesSectionsDTO, Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet,
 			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet) {
 
-		List<AppDynamicFieldsDTO> appDynamicFieldsDTOList = appPagesSectionGroupsDTO.getFields();
+		List<FieldsDTO> appDynamicFieldsDTOList = appPagesSectionGroupsDTO.getFields();
 		AddressDetails addressDetails = null;
 		BankAccountDetails bankAccountDetails = null;
 		LiabilitiesDetails liabilitiesDetails = null;
@@ -226,7 +226,7 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 			}
 			return;
 		}
-		for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+		for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 			if (appPagesSectionGroupsDTO.getGroupId() == 1
 					&& (appPagesSectionsDTO.getSectionId() == 1 || appPagesSectionsDTO.getSectionId() == 3)) {
 				// User personal Info
@@ -242,11 +242,11 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 
 	}
 
-	private IntroducerDetails prepareIntroducerDetails(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
+	private IntroducerDetails prepareIntroducerDetails(List<FieldsDTO> appDynamicFieldsDTOList,
 			IntroducerDetails introducerDetails) {
 		if (appDynamicFieldsDTOList != null && !appDynamicFieldsDTOList.isEmpty()) {
 			introducerDetails = new IntroducerDetails();
-			for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+			for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 				if (appDynamicFieldsDTO.getFieldId().equals("accountNumber")) {
 					try {
 						Long accountNumber = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
@@ -287,11 +287,11 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 
 	}
 
-	private WorkEducationDetails prepareWorkEducationDetails(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
+	private WorkEducationDetails prepareWorkEducationDetails(List<FieldsDTO> appDynamicFieldsDTOList,
 			WorkEducationDetails workEducationDetails) {
 		if (appDynamicFieldsDTOList != null && !appDynamicFieldsDTOList.isEmpty()) {
 			workEducationDetails = new WorkEducationDetails();
-			for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+			for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 				if (appDynamicFieldsDTO.getFieldId().equals("experience")) {
 					try {
 						Integer experience = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
@@ -317,11 +317,11 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 
 	}
 
-	private MonthlyTransactionProfiles prepareMonthlyTxnProfiles(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
+	private MonthlyTransactionProfiles prepareMonthlyTxnProfiles(List<FieldsDTO> appDynamicFieldsDTOList,
 			MonthlyTransactionProfiles monthlyTransactionProfiles) {
 		if (appDynamicFieldsDTOList != null) {
 			monthlyTransactionProfiles = new MonthlyTransactionProfiles();
-			for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+			for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 				if (appDynamicFieldsDTO.getFieldId().equals("monthlyTurnOver")) {
 					try {
 						double monthlyTurnOver = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
@@ -369,11 +369,11 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 
 	}
 
-	private LiabilitiesDetails prepareLiabilities(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
+	private LiabilitiesDetails prepareLiabilities(List<FieldsDTO> appDynamicFieldsDTOList,
 			LiabilitiesDetails liabilitiesDetails) {
 		if (appDynamicFieldsDTOList != null && !appDynamicFieldsDTOList.isEmpty()) {
 			liabilitiesDetails = new LiabilitiesDetails();
-			for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+			for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 				if (appDynamicFieldsDTO.getFieldId().equals("loanAmount")) {
 					try {
 						double loanAmount = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
@@ -404,9 +404,9 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 		return liabilitiesDetails;
 	}
 
-	private BankAccountDetails preparebankAccounts(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
+	private BankAccountDetails preparebankAccounts(List<FieldsDTO> appDynamicFieldsDTOList,
 			BankAccountDetails bankAccountDetails) {
-		for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+		for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 			if (appDynamicFieldsDTO != null) {
 				if (appDynamicFieldsDTO.getFieldId().equals("accountTitle")) {
 					bankAccountDetails.setAccountTitle(appDynamicFieldsDTO.getResponse());
@@ -455,9 +455,9 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 		return bankAccountDetails;
 	}
 
-	private AddressDetails prepareAddress(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
+	private AddressDetails prepareAddress(List<FieldsDTO> appDynamicFieldsDTOList,
 			AddressDetails addressDetails) {
-		for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+		for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 			if (appDynamicFieldsDTO != null) {
 				if (appDynamicFieldsDTO.getFieldId().equals("houseNumberOrStreetName")) {
 					addressDetails.setHouseNumberOrStreetName(appDynamicFieldsDTO.getResponse());
@@ -497,10 +497,10 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 		return addressDetails;
 	}
 
-	private BusinessDetails prepareBusinessInformation(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
+	private BusinessDetails prepareBusinessInformation(List<FieldsDTO> appDynamicFieldsDTOList,
 			BusinessDetails businessDetails) {
 		if (appDynamicFieldsDTOList != null && !appDynamicFieldsDTOList.isEmpty()) {
-			for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+			for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 				if (appDynamicFieldsDTO.getFieldId().equals("businessPhone")) {
 					businessDetails.setBusinessPhone(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("businessName")) {
@@ -649,11 +649,11 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 		return businessDetails;
 	}
 
-	private LicenseDetails prepareLicenseDetails(List<AppDynamicFieldsDTO> appDynamicFieldsDTOList,
+	private LicenseDetails prepareLicenseDetails(List<FieldsDTO> appDynamicFieldsDTOList,
 			LicenseDetails licenseDetails) {
 		if (appDynamicFieldsDTOList != null && !appDynamicFieldsDTOList.isEmpty()) {
 			licenseDetails = new LicenseDetails();
-			for (AppDynamicFieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+			for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 				if (appDynamicFieldsDTO.getFieldId().equals("licenseNumber")) {
 					licenseDetails.setLicenseNumber(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("licenseExpiryDate")) {
@@ -681,7 +681,7 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 		return response != null && !response.isEmpty();
 	}
 
-	private User prepareProfileInformation(AppDynamicFieldsDTO appDynamicFieldsDTO, User user) {
+	private User prepareProfileInformation(FieldsDTO appDynamicFieldsDTO, User user) {
 		if (appDynamicFieldsDTO != null && user != null) {
 			if (appDynamicFieldsDTO.getFieldId().equals("firstName")) {
 				user.setFirstName(appDynamicFieldsDTO.getResponse());
