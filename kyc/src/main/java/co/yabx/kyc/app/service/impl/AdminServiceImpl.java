@@ -3,6 +3,7 @@ package co.yabx.kyc.app.service.impl;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,8 +17,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import co.yabx.kyc.app.dto.DsrRetailerRegistrationDto;
+import co.yabx.kyc.app.dto.UserDto;
 import co.yabx.kyc.app.entities.AuthInfo;
+import co.yabx.kyc.app.enums.Relationship;
+import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.entity.DSRUser;
+import co.yabx.kyc.app.fullKyc.entity.Retailers;
+import co.yabx.kyc.app.fullKyc.entity.User;
+import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
+import co.yabx.kyc.app.fullKyc.repository.DSRUserRepository;
+import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
+import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.repositories.AuthInfoRepository;
 import co.yabx.kyc.app.security.SecurityUtils;
 import co.yabx.kyc.app.service.AdminService;
@@ -41,7 +52,10 @@ public class AdminServiceImpl implements AdminService {
 	private AuthInfoRepository authInfoRepository;
 
 	@Autowired
-	private AppConfigService appConfigService;
+	private UserRepository userRepository;
+
+	@Autowired
+	private UserRelationshipsRepository userRelationshipsRepository;
 
 	@Autowired
 	private DSRService dsrService;
@@ -124,6 +138,55 @@ public class AdminServiceImpl implements AdminService {
 			authInfo.setAccountNonExpired(false);
 			authInfo.setEnabled(false);
 			authInfoRepository.save(authInfo);
+		}
+	}
+
+	@Override
+	public void registerDSR(DsrRetailerRegistrationDto dsrRetailerRegistrationDto) {
+		if (dsrRetailerRegistrationDto != null) {
+			List<UserDto> dsrList = dsrRetailerRegistrationDto.getDsr();
+			for (UserDto userDto : dsrList) {
+				String dsrMSISDN = userDto.getMsisdn();
+				String dsrName = userDto.getName();
+				List<UserDto> retailersList = userDto.getRetailer();
+				User dsrUser = userRepository.findBymsisdnAndUserType(dsrMSISDN, UserType.DISTRIBUTORS.name());
+				if (dsrUser != null) {
+
+				} else {
+					dsrUser = new DSRUser();
+					dsrUser.setFirstName(dsrName);
+					dsrUser.setMsisdn(dsrMSISDN);
+					dsrUser = userRepository.save(dsrUser);
+				}
+				if (retailersList != null) {
+					for (UserDto retailers : retailersList) {
+						String retailerMSISDN = retailers.getMsisdn();
+						String retailersName = retailers.getName();
+						User retailerUser = userRepository.findBymsisdnAndUserType(retailerMSISDN,
+								UserType.RETAILERS.name());
+						if (retailerUser != null) {
+
+						} else {
+							retailerUser = new Retailers();
+							retailerUser.setFirstName(retailersName);
+							retailerUser.setMsisdn(retailerMSISDN);
+							retailerUser = userRepository.save(retailerUser);
+						}
+						UserRelationships userRelationships = userRelationshipsRepository
+								.findByMsisdnAndRelationshipAndRelative(dsrMSISDN, Relationship.RETAILER,
+										retailerUser);
+						if (userRelationships != null) {
+
+						} else {
+							userRelationships = new UserRelationships();
+							userRelationships.setMsisdn(dsrMSISDN);
+							userRelationships.setRelationship(Relationship.RETAILER);
+							userRelationships.setRelative(retailerUser);
+							userRelationshipsRepository.save(userRelationships);
+						}
+					}
+				}
+			}
 		}
 	}
 

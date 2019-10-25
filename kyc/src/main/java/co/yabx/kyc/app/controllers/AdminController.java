@@ -16,11 +16,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import co.yabx.kyc.app.dto.DsrRetailerRegistrationDto;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.security.SecurityUtils;
 import co.yabx.kyc.app.service.AdminService;
@@ -82,6 +84,17 @@ public class AdminController {
 			Map<String, String> jsonResponse = new HashMap<String, String>();
 			jsonResponse.put("OTP", otpService.findOtpByMsisdn(msisdn));
 			return new ResponseEntity<>(jsonResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity<>("Invalid secret key", HttpStatus.UNAUTHORIZED);
+
+	}
+
+	@RequestMapping(value = "/create/dsr", method = RequestMethod.POST)
+	public ResponseEntity<?> createDSR(@RequestBody DsrRetailerRegistrationDto dsrRetailerRegistrationDto,
+			@RequestParam(value = "secret_key", required = true) String secret_key) {
+		if (secret_key.equals(appConfigService.getProperty("REGISTER_DSR_RETAILER_API_PASSWORD", "magic@yabx"))) {
+			adminService.registerDSR(dsrRetailerRegistrationDto);
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		return new ResponseEntity<>("Invalid secret key", HttpStatus.UNAUTHORIZED);
 
