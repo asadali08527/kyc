@@ -32,7 +32,7 @@ public class AccountStatuses implements Serializable {
 	@Column(name = "msisdn", unique = true, nullable = false)
 	private String msisdn;
 
-	@Column(name = "is_kyc_available")
+	@Column(name = "is_kyc_available", nullable = false, columnDefinition = "boolean default false")
 	private boolean isKycAvailable;
 
 	@Column(name = "kyc_verified", nullable = false, columnDefinition = "varchar(32) default 'NO'")
