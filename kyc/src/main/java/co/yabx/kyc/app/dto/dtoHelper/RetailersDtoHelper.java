@@ -30,7 +30,10 @@ import co.yabx.kyc.app.fullKyc.dto.LicenseDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
 import co.yabx.kyc.app.fullKyc.entity.User;
+import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
+import co.yabx.kyc.app.miniKyc.repository.AccountStatusesRepository;
 import co.yabx.kyc.app.repositories.PagesRepository;
+import co.yabx.kyc.app.util.SpringUtil;
 
 public class RetailersDtoHelper implements Serializable {
 
@@ -54,30 +57,21 @@ public class RetailersDtoHelper implements Serializable {
 				RetailersDTO retailersDTO = new RetailersDTO();
 				retailersDTO.setRetailerId(retailers.getId());
 				retailersDTO.setRetailerName(retailers.getFirstName());
-				retailersDTO.setKycStatus(KycStatus.NEW);
+				AccountStatuses accountStatuses = retailers.getMsisdn() != null
+						? SpringUtil.bean(AccountStatusesRepository.class).findByMsisdn(retailers.getMsisdn())
+						: null;
+				if (accountStatuses != null)
+					retailersDTO.setKycStatus(accountStatuses.getKycVerified());
+				else
+					retailersDTO.setKycStatus(KycStatus.NEW);
 				retailersDTO.setComments("n/a");
 				retailersList.add(retailersDTO);
 			}
 			loginDTO.setRetailers(retailersList);
 			loginDTO.setTotalCount(retailersList.size());
 			return loginDTO;
-		} else {
-			RetailersDTO retailersDTO = new RetailersDTO();
-			retailersDTO.setRetailerId(123l);
-			retailersDTO.setRetailerName("abc");
-			retailersDTO.setKycStatus(KycStatus.NEW);
-			retailersDTO.setComments("n/a");
-			retailersList.add(retailersDTO);
-			RetailersDTO retailersDTO2 = new RetailersDTO();
-			retailersDTO2.setRetailerId(2343l);
-			retailersDTO2.setRetailerName("adocbc");
-			retailersDTO2.setKycStatus(KycStatus.APPROVED);
-			retailersDTO2.setComments("all ok");
-			retailersList.add(retailersDTO2);
-			loginDTO.setRetailers(retailersList);
-			loginDTO.setTotalCount(2);
-			return loginDTO;
 		}
+		return loginDTO;
 	}
 
 	public static ResponseDTO getCompletRetailerInfo(String dsrMsisdn, Long retailerId) {
