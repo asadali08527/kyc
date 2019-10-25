@@ -18,12 +18,14 @@ import co.yabx.kyc.app.dto.FieldsDTO;
 import co.yabx.kyc.app.dto.PagesDTO;
 import co.yabx.kyc.app.dto.GroupsDTO;
 import co.yabx.kyc.app.dto.SectionsDTO;
+import co.yabx.kyc.app.dto.SubFieldsDTO;
 import co.yabx.kyc.app.entities.Fields;
 import co.yabx.kyc.app.entities.Pages;
 import co.yabx.kyc.app.entities.Groups;
 import co.yabx.kyc.app.entities.Sections;
 import co.yabx.kyc.app.entities.SectionGroupRelationship;
 import co.yabx.kyc.app.entities.filter.Filters;
+import co.yabx.kyc.app.entities.filter.SubFields;
 import co.yabx.kyc.app.enums.AddressProof;
 import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.BankAccountType;
@@ -68,8 +70,8 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 			List<SectionsDTO> appPagesSectionSet = getSections(appPagesSectionsSet, retailers, filledVsUnfilled,
 					nominee, userAddressDetailsSet, nomineeAddressDetailsSet, businessAddressDetailsSet,
 					userBankAccountDetailsSet, nomineeBankAccountDetailsSet, businessBankAccountDetailsSet);
-			appPagesDTO.setSections(appPagesSectionSet.stream()
-					.sorted(Comparator.comparing(SectionsDTO::getSectionId)).collect(Collectors.toList()));
+			appPagesDTO.setSections(appPagesSectionSet.stream().sorted(Comparator.comparing(SectionsDTO::getSectionId))
+					.collect(Collectors.toList()));
 			appPagesDTO.setEnable(pages.isEnable());
 			appPagesDTO.setPageId(pages.getPageId());
 			// appPagesDTO.setPageName(pages.getPageName());
@@ -100,8 +102,8 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 			section.put("totalFields", 0);
 			SectionsDTO appPagesSectionsDTO = new SectionsDTO();
 
-			List<GroupsDTO> appPagesSectionGroupSet = getGroups(retailers, section, appPagesSections,
-					nominee, userAddressDetailsSet, nomineeAddressDetailsSet, businessAddressDetailsSet,
+			List<GroupsDTO> appPagesSectionGroupSet = getGroups(retailers, section, appPagesSections, nominee,
+					userAddressDetailsSet, nomineeAddressDetailsSet, businessAddressDetailsSet,
 					userBankAccountDetailsSet, nomineeBankAccountDetailsSet, businessBankAccountDetailsSet);
 			appPagesSectionsDTO.setGroups(appPagesSectionGroupSet.stream()
 					.sorted(Comparator.comparing(GroupsDTO::getGroupId)).collect(Collectors.toList()));
@@ -173,12 +175,12 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 			Set<Fields> appDynamicFieldsSet = appPagesSectionGroups.getAppDynamicFields();
 			Filters filter = fieldsTobeFiltered(filters, appPagesSectionGroups.getGroupName());
 			if (appDynamicFieldsSet != null && !appDynamicFieldsSet.isEmpty()) {
-				List<FieldsDTO> fields = getFields(appDynamicFieldsSet, retailers, groups, appPagesSections,
-						nominee, userAddressDetailsSet, nomineeAddressDetailsSet, businessAddressDetailsSet,
+				List<FieldsDTO> fields = getFields(appDynamicFieldsSet, retailers, groups, appPagesSections, nominee,
+						userAddressDetailsSet, nomineeAddressDetailsSet, businessAddressDetailsSet,
 						userBankAccountDetailsSet, nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, title,
 						filter);
-				Set<FieldsDTO> appDynamicFieldsDTOs = fields.stream()
-						.sorted(Comparator.comparing(FieldsDTO::getId)).collect(Collectors.toSet());
+				Set<FieldsDTO> appDynamicFieldsDTOs = fields.stream().sorted(Comparator.comparing(FieldsDTO::getId))
+						.collect(Collectors.toSet());
 				appPagesSectionGroupsDTO.setFields(appDynamicFieldsDTOs.stream()
 						.sorted(Comparator.comparing(FieldsDTO::getId)).collect(Collectors.toList()));
 				appPagesSectionGroupsDTO.setEnable(appPagesSectionGroups.isEnable());
@@ -278,8 +280,7 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 		}
 		filledVsUnfilled.put("filledFields", filledFields);
 		filledVsUnfilled.put("totalFields", totalFields);
-		appDynamicFieldsDTOSet
-				.add(appDynamicFieldsDTOSet.stream().max(Comparator.comparing(FieldsDTO::getId)).get());
+		appDynamicFieldsDTOSet.add(appDynamicFieldsDTOSet.stream().max(Comparator.comparing(FieldsDTO::getId)).get());
 		return appDynamicFieldsDTOSet;
 
 	}
@@ -304,9 +305,10 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 					options.add(proof.name());
 				}
 				dynamicFields.setOptions(options);
-
 			}
-			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields);
+			fieldsDTO.setSubFields(getSubFileds(dynamicFields));
+			appDynamicFieldsDTOSet.add(fieldsDTO);
 		} else {
 			Set<AttachmentDetails> attachmentDetailsSet = retailers.getAttachmentDetails();
 			for (AttachmentDetails attachmentDetails : attachmentDetailsSet) {
@@ -334,11 +336,29 @@ public class AppPagesDynamicDtoHeper implements Serializable {
 				} else if (dynamicFields.getFieldId().equals("signature")) {
 
 				}
-				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+				FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields);
+				fieldsDTO.setSubFields(getSubFileds(dynamicFields));
+				appDynamicFieldsDTOSet.add(fieldsDTO);
 			}
 
 		}
 
+	}
+
+	private static List<SubFieldsDTO> getSubFileds(Fields dynamicFields) {
+		Set<SubFields> subFieldsSet = dynamicFields.getSubFields();
+		if (subFieldsSet != null && !subFieldsSet.isEmpty()) {
+			List<SubFieldsDTO> subFieldsDTOs = new ArrayList<SubFieldsDTO>();
+			for (SubFields subFields : subFieldsSet) {
+				SubFieldsDTO subFieldsDTO = new SubFieldsDTO();
+				Fields subChildField = subFields.getChild();
+				subFieldsDTO.setFields(getAppDynamicFieldDTO(subChildField));
+				subFieldsDTO.setId(subFields.getId());
+				subFieldsDTOs.add(subFieldsDTO);
+			}
+			return subFieldsDTOs;
+		}
+		return null;
 	}
 
 	private static void prepareIntroducerDetails(Fields dynamicFields, User retailers,

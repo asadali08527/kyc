@@ -47,12 +47,9 @@ public class FieldsDTO implements Serializable {
 
 	private String defaultValue;
 
-	/**
-	 * options field is non persistent field, and will be used only while returning
-	 * options of a radio or check box input types.
-	 */
-	@Transient
 	private List<String> options;
+
+	private List<SubFieldsDTO> subFields;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -197,6 +194,14 @@ public class FieldsDTO implements Serializable {
 
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
+	}
+
+	public List<SubFieldsDTO> getSubFields() {
+		return subFields;
+	}
+
+	public void setSubFields(List<SubFieldsDTO> subFields) {
+		this.subFields = subFields;
 	}
 
 }

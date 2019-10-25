@@ -3,7 +3,9 @@ package co.yabx.kyc.app.entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,9 +17,11 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import co.yabx.kyc.app.entities.filter.SubFields;
 import co.yabx.kyc.app.enums.ControlType;
 import co.yabx.kyc.app.enums.DataType;
 
@@ -92,6 +96,9 @@ public class Fields implements Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Groups.class)
 	private Groups groups;
+
+	@OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	private Set<SubFields> subFields;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -235,6 +242,14 @@ public class Fields implements Serializable {
 
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
+	}
+
+	public Set<SubFields> getSubFields() {
+		return subFields;
+	}
+
+	public void setSubFields(Set<SubFields> subFields) {
+		this.subFields = subFields;
 	}
 
 	@Override
