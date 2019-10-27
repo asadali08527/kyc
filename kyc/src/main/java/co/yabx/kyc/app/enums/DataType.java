@@ -1,5 +1,5 @@
 package co.yabx.kyc.app.enums;
 
 public enum DataType {
-	STRING, JSON, INTEGER, ARRAY, DATE, DECIMAL, ATTACHMENT
+	STRING, JSON, INTEGER, ARRAY, DATE, DECIMAL, ATTACHMENT, BOOLEAN
 }

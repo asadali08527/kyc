@@ -13,18 +13,28 @@ import org.springframework.stereotype.Service;
 import co.yabx.kyc.app.dto.FieldsDTO;
 import co.yabx.kyc.app.dto.GroupsDTO;
 import co.yabx.kyc.app.dto.SectionsDTO;
+import co.yabx.kyc.app.dto.SubFieldsDTO;
+import co.yabx.kyc.app.entities.Fields;
+import co.yabx.kyc.app.enums.AddressProof;
 import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.BankAccountType;
 import co.yabx.kyc.app.enums.Currency;
+import co.yabx.kyc.app.enums.DocumentSide;
+import co.yabx.kyc.app.enums.DocumentType;
+import co.yabx.kyc.app.enums.EducationalQualification;
 import co.yabx.kyc.app.enums.Gender;
+import co.yabx.kyc.app.enums.IdentityProof;
 import co.yabx.kyc.app.enums.LiabilityType;
 import co.yabx.kyc.app.enums.LicenseType;
 import co.yabx.kyc.app.enums.MaritalStatuses;
+import co.yabx.kyc.app.enums.ModeOfOperation;
 import co.yabx.kyc.app.enums.Nationality;
 import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.ResidentStatus;
+import co.yabx.kyc.app.enums.TypeOfConcern;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
+import co.yabx.kyc.app.fullKyc.entity.Attachments;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
 import co.yabx.kyc.app.fullKyc.entity.IntroducerDetails;
@@ -37,7 +47,7 @@ import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.repositories.AuthInfoRepository;
 import co.yabx.kyc.app.service.AppConfigService;
-import co.yabx.kyc.app.service.DynamicFieldService;
+import co.yabx.kyc.app.service.FieldService;
 
 /**
  * 
@@ -45,7 +55,7 @@ import co.yabx.kyc.app.service.DynamicFieldService;
  *
  */
 @Service
-public class DynamicFieldServiceImpl implements DynamicFieldService {
+public class FieldServiceImpl implements FieldService {
 
 	@Autowired
 	private AuthInfoRepository authInfoRepository;
@@ -56,7 +66,7 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 	@Autowired
 	private AppConfigService appConfigService;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DynamicFieldServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FieldServiceImpl.class);
 
 	@Override
 	public void prepareFields(User retailerOrDsrUser, User nominees, GroupsDTO appPagesSectionGroupsDTO,
@@ -65,7 +75,8 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 			Set<BusinessDetails> businessDetailsSet, Set<AddressDetails> businessAddressDetailsSet,
 			Set<BankAccountDetails> businessBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetailsSet,
 			SectionsDTO appPagesSectionsDTO, Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet,
-			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet) {
+			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet,
+			Set<AttachmentDetails> attachmentDetailsSet) {
 
 		List<FieldsDTO> appDynamicFieldsDTOList = appPagesSectionGroupsDTO.getFields();
 		AddressDetails addressDetails = null;
@@ -138,7 +149,8 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 			businessBankAccountDetailsSet.clear();
 			businessBankAccountDetailsSet.add(bankAccountDetails);
 			return;
-		} else if (appPagesSectionGroupsDTO.getGroupId() == 4) {
+		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
+				.getLongProperty("GROUP_ID_FOR_LIABILITIES_DETAILS", 4l)) {
 			liabilitiesDetails = prepareLiabilities(appDynamicFieldsDTOList, liabilitiesDetails);
 			if (liabilitiesDetailsSet == null) {
 				liabilitiesDetailsSet = new HashSet<LiabilitiesDetails>();
@@ -146,7 +158,8 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 			liabilitiesDetailsSet.clear();
 			liabilitiesDetailsSet.add(liabilitiesDetails);
 			return;
-		} else if (appPagesSectionGroupsDTO.getGroupId() == 5) {
+		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
+				.getLongProperty("GROUP_ID_FOR_BUSINESS_DETAILS", 5l)) {
 			BusinessDetails businessDetails = null;
 			if (businessDetailsSet == null || businessDetailsSet.isEmpty()) {
 				businessDetails = new BusinessDetails();
@@ -166,7 +179,8 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 				businessDetailsSet.add(businessDetails);
 			}
 			return;
-		} else if (appPagesSectionGroupsDTO.getGroupId() == 6) {
+		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
+				.getLongProperty("GROUP_ID_FOR_BUSINESS_LICENSE_DETAILS", 6l)) {
 			LicenseDetails licenseDetails = null;
 			licenseDetails = prepareLicenseDetails(appDynamicFieldsDTOList, licenseDetails);
 			if (licenseDetails != null) {
@@ -187,7 +201,8 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 				}
 			}
 			return;
-		} else if (appPagesSectionGroupsDTO.getGroupId() == 7) {
+		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
+				.getLongProperty("GROUP_ID_FOR_MONTHLY_TRANSACTION_PROFILE", 7l)) {
 			MonthlyTransactionProfiles monthlyTransactionProfiles = null;
 			monthlyTransactionProfiles = prepareMonthlyTxnProfiles(appDynamicFieldsDTOList, monthlyTransactionProfiles);
 			if (monthlyTransactionProfiles != null) {
@@ -199,7 +214,8 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 				monthlyTransactionProfilesSet.add(monthlyTransactionProfiles);
 			}
 			return;
-		} else if (appPagesSectionGroupsDTO.getGroupId() == 8) {
+		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
+				.getLongProperty("GROUP_ID_FOR_WORK_EDUCATION_DETAILS", 8l)) {
 			WorkEducationDetails workEducationDetails = null;
 			workEducationDetails = prepareWorkEducationDetails(appDynamicFieldsDTOList, workEducationDetails);
 			if (workEducationDetails != null) {
@@ -212,7 +228,8 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 				}
 			}
 			return;
-		} else if (appPagesSectionGroupsDTO.getGroupId() == 9) {
+		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
+				.getLongProperty("GROUP_ID_FOR_INTRODUCER_DETAILS", 9l)) {
 			IntroducerDetails introducerDetails = null;
 			introducerDetails = prepareIntroducerDetails(appDynamicFieldsDTOList, introducerDetails);
 			if (introducerDetails != null) {
@@ -225,6 +242,11 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 				}
 			}
 			return;
+		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService.getLongProperty("GROUP_ID_FOR_ATTACHMENT",
+				10l)) {
+			prepareAttachmentDetails(appDynamicFieldsDTOList, attachmentDetailsSet);
+			return;
+
 		}
 		for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 			if (appPagesSectionGroupsDTO.getGroupId() == 1
@@ -240,6 +262,134 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 
 		}
 
+	}
+
+	/**
+	 * 
+	 * @param appDynamicFieldsDTOList
+	 * @param attachmentDetailsSet
+	 * @return
+	 */
+	private Set<AttachmentDetails> prepareAttachmentDetails(List<FieldsDTO> appDynamicFieldsDTOList,
+			Set<AttachmentDetails> attachmentDetailsSet) {
+		if (appDynamicFieldsDTOList != null && !appDynamicFieldsDTOList.isEmpty()) {
+			if (attachmentDetailsSet == null)
+				attachmentDetailsSet = new HashSet<AttachmentDetails>();
+			else
+				attachmentDetailsSet.clear();
+			for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
+				AttachmentDetails attachmentDetails = new AttachmentDetails();
+				if (appDynamicFieldsDTO.getFieldId().equals("idProof")) {
+					String idProof = appDynamicFieldsDTO.getResponse();
+					try {
+						IdentityProof identityProof = idProof != null && !idProof.isEmpty()
+								? IdentityProof.valueOf(idProof)
+								: null;
+						addBothSideAttachmentDetails(identityProof != null ? identityProof.name() : null,
+								appDynamicFieldsDTO, attachmentDetails, attachmentDetailsSet);
+					} catch (Exception e) {
+						e.printStackTrace();
+						LOGGER.error("Exception raised while perapring Identity proof={}, error={}", idProof,
+								e.getMessage());
+					}
+				} else if (appDynamicFieldsDTO.getFieldId().equals("addressProof")) {
+
+					String adProof = appDynamicFieldsDTO.getResponse();
+					try {
+						AddressProof addressProof = adProof != null && !adProof.isEmpty()
+								? AddressProof.valueOf(adProof)
+								: null;
+						addBothSideAttachmentDetails(addressProof != null ? addressProof.name() : null,
+								appDynamicFieldsDTO, attachmentDetails, attachmentDetailsSet);
+					} catch (Exception e) {
+						e.printStackTrace();
+						LOGGER.error("Exception raised while perapring address proof={}, error={}", adProof,
+								e.getMessage());
+					}
+
+				} else if (appDynamicFieldsDTO.getFieldId().equals("tinCertificates")) {
+					try {
+						DocumentType documentType = DocumentType.TIN_CERTIFICATE;
+						addSingleSideAttachments(documentType, attachmentDetails, appDynamicFieldsDTO);
+					} catch (Exception e) {
+						LOGGER.error("Exception while preparing tinCertificates ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				} else if (appDynamicFieldsDTO.getFieldId().equals("tradeLicense")) {
+					try {
+						DocumentType documentType = DocumentType.TRADE_LICENSE;
+						addSingleSideAttachments(documentType, attachmentDetails, appDynamicFieldsDTO);
+					} catch (Exception e) {
+						LOGGER.error("Exception while preparing tradeLicense ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				} else if (appDynamicFieldsDTO.getFieldId().equals("nomineePhoto")) {
+					try {
+						DocumentType documentType = DocumentType.NOMINEE_PHOTO;
+						addSingleSideAttachments(documentType, attachmentDetails, appDynamicFieldsDTO);
+					} catch (Exception e) {
+						LOGGER.error("Exception while preparing nomineePhoto ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				} else if (appDynamicFieldsDTO.getFieldId().equals("signature")) {
+					try {
+						DocumentType documentType = DocumentType.SIGNATURE;
+						addSingleSideAttachments(documentType, attachmentDetails, appDynamicFieldsDTO);
+					} catch (Exception e) {
+						LOGGER.error("Exception while preparing signature ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
+				}
+				attachmentDetailsSet.add(attachmentDetails);
+			}
+		}
+		return attachmentDetailsSet;
+
+	}
+
+	private void addSingleSideAttachments(DocumentType documentType, AttachmentDetails attachmentDetails,
+			FieldsDTO appDynamicFieldsDTO) {
+		Set<Attachments> attachmentsSet = new HashSet<Attachments>();
+		addAttachement(null, appDynamicFieldsDTO.getResponse(), attachmentsSet);
+		attachmentDetails.setDocumentType(documentType);
+		attachmentDetails.setAttachments(attachmentsSet);
+	}
+
+	private void addBothSideAttachmentDetails(String proof, FieldsDTO appDynamicFieldsDTO,
+			AttachmentDetails attachmentDetails, Set<AttachmentDetails> attachmentDetailsSet) {
+		DocumentType documentType = proof != null ? DocumentType.valueOf(proof) : null;
+		if (documentType != null) {
+			List<SubFieldsDTO> subFieldsDTOList = appDynamicFieldsDTO.getSubFields();
+			attachmentDetails.setAttachments(getAttachmentsSet(subFieldsDTOList));
+			attachmentDetails.setDocumentType(documentType);
+			attachmentDetailsSet.add(attachmentDetails);
+		}
+	}
+
+	private Set<Attachments> getAttachmentsSet(List<SubFieldsDTO> subFieldsDTOList) {
+		Set<Attachments> attachmentsSet = new HashSet<Attachments>();
+		for (SubFieldsDTO subFieldsDTO : subFieldsDTOList) {
+			FieldsDTO fieldsDTO = subFieldsDTO.getFields();
+			try {
+				DocumentSide documentSide = fieldsDTO.getFieldId() != null && !fieldsDTO.getFieldId().isEmpty()
+						? DocumentSide.valueOf(fieldsDTO.getFieldId().toUpperCase())
+						: null;
+				String image = fieldsDTO.getResponse() != null ? fieldsDTO.getResponse() : null;
+				addAttachement(documentSide, image, attachmentsSet);
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOGGER.error("Exception while retrieving fieldId={} for attcahment, error={}", fieldsDTO.getFieldId(),
+						e.getMessage());
+			}
+		}
+		return attachmentsSet;
+	}
+
+	private void addAttachement(DocumentSide documentSide, String url, Set<Attachments> attachmentsSet) {
+		Attachments attachments = new Attachments();
+		attachments.setDocumentSide(documentSide);
+		attachments.setDocumentUrl(url);
+		attachmentsSet.add(attachments);
 	}
 
 	private IntroducerDetails prepareIntroducerDetails(List<FieldsDTO> appDynamicFieldsDTOList,
@@ -309,7 +459,17 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 				} else if (appDynamicFieldsDTO.getFieldId().equals("employer")) {
 					workEducationDetails.setEmployer(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("educationalQualification")) {
-					workEducationDetails.setEducationalQualification(appDynamicFieldsDTO.getResponse());
+
+					try {
+						EducationalQualification educationalQualification = EducationalQualification
+								.valueOf(appDynamicFieldsDTO.getResponse());
+						workEducationDetails.setEducationalQualification(educationalQualification);
+
+					} catch (Exception e) {
+						e.printStackTrace();
+						LOGGER.error("Exception raised while preapring educationalQualification={},error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
 				}
 			}
 		}
@@ -411,7 +571,14 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 				if (appDynamicFieldsDTO.getFieldId().equals("accountTitle")) {
 					bankAccountDetails.setAccountTitle(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("typeOfConcern")) {
-					bankAccountDetails.setTypeOfConcern(appDynamicFieldsDTO.getResponse());
+					try {
+						TypeOfConcern typeOfConcern = TypeOfConcern.valueOf(appDynamicFieldsDTO.getResponse());
+						bankAccountDetails.setTypeOfConcern(typeOfConcern);
+					} catch (Exception e) {
+						e.printStackTrace();
+						LOGGER.error("Exception raised while preapring typeOfConcern={},error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
 				} else if (appDynamicFieldsDTO.getFieldId().equals("bankName")) {
 					bankAccountDetails.setBankName(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("accountNumber")) {
@@ -427,7 +594,15 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 				} else if (appDynamicFieldsDTO.getFieldId().equals("branch")) {
 					bankAccountDetails.setBranch(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("modeOfOperation")) {
-					bankAccountDetails.setModeOfOperation(appDynamicFieldsDTO.getResponse());
+					try {
+						ModeOfOperation mop = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? ModeOfOperation.valueOf(appDynamicFieldsDTO.getResponse())
+								: null;
+						bankAccountDetails.setModeOfOperation(mop);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating modeOfOperation ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
 				} else if (appDynamicFieldsDTO.getFieldId().equals("currency")) {
 					try {
 						Currency currency = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
@@ -455,18 +630,17 @@ public class DynamicFieldServiceImpl implements DynamicFieldService {
 		return bankAccountDetails;
 	}
 
-	private AddressDetails prepareAddress(List<FieldsDTO> appDynamicFieldsDTOList,
-			AddressDetails addressDetails) {
+	private AddressDetails prepareAddress(List<FieldsDTO> appDynamicFieldsDTOList, AddressDetails addressDetails) {
 		for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 			if (appDynamicFieldsDTO != null) {
 				if (appDynamicFieldsDTO.getFieldId().equals("houseNumberOrStreetName")) {
-					addressDetails.setHouseNumberOrStreetName(appDynamicFieldsDTO.getResponse());
+					addressDetails.setAddress(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("area")) {
-					addressDetails.setArea(appDynamicFieldsDTO.getResponse());
+					addressDetails.setUpazilaThana(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("city")) {
-					addressDetails.setCity(appDynamicFieldsDTO.getResponse());
+					addressDetails.setCityDsitrict(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("region")) {
-					addressDetails.setRegion(appDynamicFieldsDTO.getResponse());
+					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("zipCode")) {
 					try {
 						Integer zipCode = appDynamicFieldsDTO.getResponse() != null

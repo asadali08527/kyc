@@ -20,6 +20,8 @@ import javax.persistence.Table;
 import co.yabx.kyc.app.enums.BankAccountIdentifier;
 import co.yabx.kyc.app.enums.BankAccountType;
 import co.yabx.kyc.app.enums.Currency;
+import co.yabx.kyc.app.enums.ModeOfOperation;
+import co.yabx.kyc.app.enums.TypeOfConcern;
 
 @Entity
 @Table(name = "bank_account_details", indexes = { @Index(name = "bank_name", columnList = "bank_name"),
@@ -36,8 +38,9 @@ public class BankAccountDetails implements Serializable {
 	@Column(name = "account_title")
 	private String accountTitle;
 
-	@Column(name = "concern_type")
-	private String typeOfConcern;
+	@Column(name = "concern_type", length = 100, nullable = false, columnDefinition = "varchar(32) default 'Proprietorship' ")
+	@Enumerated(value = EnumType.STRING)
+	private TypeOfConcern typeOfConcern;
 
 	@Column(name = "bank_name")
 	private String bankName;
@@ -48,14 +51,17 @@ public class BankAccountDetails implements Serializable {
 	@Column(name = "branch")
 	private String branch;
 
-	@Column(name = "currency", length = 100, nullable = false, columnDefinition = "varchar(32) ")
+	@Column(name = "purpose_of_account", length = 100, nullable = false, columnDefinition = "varchar(32) default 'Business'")
+	private String accountPurpose;
+
+	@Column(name = "currency", length = 100, nullable = false, columnDefinition = "varchar(32) default 'BDT'")
 	@Enumerated(value = EnumType.STRING)
 	private Currency currency;
 
-	@Column(name = "operation_mode")
-	private String modeOfOperation;
+	@Column(name = "operation_mode", length = 100, nullable = false, columnDefinition = "varchar(32) default 'Single'")
+	private ModeOfOperation modeOfOperation;
 
-	@Column(name = "account_type", length = 100, nullable = false, columnDefinition = "varchar(32) ")
+	@Column(name = "account_type", length = 100, nullable = false, columnDefinition = "varchar(32) default 'CURRENT'")
 	@Enumerated(value = EnumType.STRING)
 	private BankAccountType bankAccountType;
 
@@ -209,11 +215,11 @@ public class BankAccountDetails implements Serializable {
 		this.accountTitle = accountTitle;
 	}
 
-	public String getTypeOfConcern() {
+	public TypeOfConcern getTypeOfConcern() {
 		return typeOfConcern;
 	}
 
-	public void setTypeOfConcern(String typeOfConcern) {
+	public void setTypeOfConcern(TypeOfConcern typeOfConcern) {
 		this.typeOfConcern = typeOfConcern;
 	}
 
@@ -225,11 +231,11 @@ public class BankAccountDetails implements Serializable {
 		this.currency = currency;
 	}
 
-	public String getModeOfOperation() {
+	public ModeOfOperation getModeOfOperation() {
 		return modeOfOperation;
 	}
 
-	public void setModeOfOperation(String modeOfOperation) {
+	public void setModeOfOperation(ModeOfOperation modeOfOperation) {
 		this.modeOfOperation = modeOfOperation;
 	}
 

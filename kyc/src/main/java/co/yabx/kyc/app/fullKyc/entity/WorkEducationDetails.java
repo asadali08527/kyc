@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,18 +17,18 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-import co.yabx.kyc.app.enums.AddressType;
+import co.yabx.kyc.app.enums.EducationalQualification;
 
 @Entity
 @Table(name = "work_education_details", indexes = { @Index(name = "occupation", columnList = "occupation"),
-		@Index(name = "qualification", columnList = "qualification") })
+		@Index(name = "highest_qualification", columnList = "highest_qualification") })
 public class WorkEducationDetails implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "occupation")
+	@Column(name = "occupation", length = 100, columnDefinition = "varchar(32) ")
 	private String occupation;
 
 	@Column(name = "designation")
@@ -35,8 +37,9 @@ public class WorkEducationDetails implements Serializable {
 	@Column(name = "employer")
 	private String employer;
 
-	@Column(name = "qualification")
-	private String educationalQualification;
+	@Column(name = "highest_qualification", length = 100, columnDefinition = "varchar(32) ")
+	@Enumerated(value = EnumType.STRING)
+	private EducationalQualification educationalQualification;
 
 	@Column(name = "created_at")
 	private Date createdAt;
@@ -142,11 +145,11 @@ public class WorkEducationDetails implements Serializable {
 		this.employer = employer;
 	}
 
-	public String getEducationalQualification() {
+	public EducationalQualification getEducationalQualification() {
 		return educationalQualification;
 	}
 
-	public void setEducationalQualification(String educationalQualification) {
+	public void setEducationalQualification(EducationalQualification educationalQualification) {
 		this.educationalQualification = educationalQualification;
 	}
 

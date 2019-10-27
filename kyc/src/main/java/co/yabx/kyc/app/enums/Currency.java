@@ -1,5 +1,5 @@
 package co.yabx.kyc.app.enums;
 
 public enum Currency {
-	Taka, INR
+	BDT, INR, USD, EURO, POUND, Others
 }

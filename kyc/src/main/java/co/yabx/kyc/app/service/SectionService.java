@@ -5,6 +5,7 @@ import java.util.Set;
 
 import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
+import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
 import co.yabx.kyc.app.fullKyc.entity.IntroducerDetails;
@@ -18,7 +19,7 @@ import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
  * @author Asad.ali
  *
  */
-public interface AppPagesSectionService {
+public interface SectionService {
 
 	void prepareUserDetails(List<SectionsDTO> appPagesSectionsDTOList, User retailer, User nominees,
 			Set<AddressDetails> userAddressDetailsSet, Set<BankAccountDetails> userBankAccountDetailsSet,
@@ -26,6 +27,6 @@ public interface AppPagesSectionService {
 			Set<BusinessDetails> businessDetailsSet, Set<AddressDetails> businessAddressDetailsSet,
 			Set<BankAccountDetails> businessBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetailsSet,
 			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet,
-			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet);
+			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet, Set<AttachmentDetails> attachmentDetailsSet);
 
 }

@@ -32,10 +32,10 @@ public class UserWrapper {
 		for (AddressDetailsDTO detailsDTO : addressDetailsDTO) {
 			AddressDetails addressDetail = new AddressDetails();
 			addressDetail.setAddressType(detailsDTO.getAddressType());
-			addressDetail.setArea(detailsDTO.getArea());
-			addressDetail.setCity(detailsDTO.getCity());
-			addressDetail.setHouseNumberOrStreetName(detailsDTO.getHouseNumberOrStreetName());
-			addressDetail.setRegion(detailsDTO.getRegion());
+			addressDetail.setUpazilaThana(detailsDTO.getArea());
+			addressDetail.setCityDsitrict(detailsDTO.getCity());
+			addressDetail.setAddress(detailsDTO.getHouseNumberOrStreetName());
+			addressDetail.setDivision(detailsDTO.getRegion());
 			addressDetail.setZipCode(detailsDTO.getZipCode());
 			addressDetails.add(addressDetail);
 		}

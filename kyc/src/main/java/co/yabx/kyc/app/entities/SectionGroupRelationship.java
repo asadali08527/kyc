@@ -20,6 +20,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import co.yabx.kyc.app.entities.filter.Filters;
+import co.yabx.kyc.app.entities.filter.SubGroups;
 
 @Entity
 @Table(name = "section_group_relationships", indexes = { @Index(name = "section_id", columnList = "section_id") })
@@ -55,6 +56,9 @@ public class SectionGroupRelationship implements Serializable {
 
 	@OneToMany(mappedBy = "sectionGroupRelationship", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private Set<Filters> filters;
+
+	@OneToMany(mappedBy = "sectionGroupRelationship", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	private Set<SubGroups> subGroups;
 
 	public Set<Filters> getFilters() {
 		return filters;
@@ -142,10 +146,20 @@ public class SectionGroupRelationship implements Serializable {
 		this.active = active;
 	}
 
+	public Set<SubGroups> getSubGroups() {
+		return subGroups;
+	}
+
+	public void setSubGroups(Set<SubGroups> subGroups) {
+		this.subGroups = subGroups;
+	}
+
 	@Override
 	public String toString() {
 		return "SectionGroupRelationship [id=" + id + ", sectionId=" + sectionId + ", appPagesSectionGroups="
-				+ appPagesSectionGroups + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
+				+ appPagesSectionGroups + ", multiple=" + multiple + ", multipleTitlle=" + multipleTitlle
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", active=" + active + ", filters="
+				+ filters + "]";
 	}
 
 }

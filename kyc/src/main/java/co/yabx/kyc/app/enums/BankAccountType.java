@@ -1,5 +1,5 @@
 package co.yabx.kyc.app.enums;
 
 public enum BankAccountType {
-	SHAHDHIN, BUSINESS, CURRENT
+	SAVING, CURRENT, SND, FC, BUSINESS, OTHERS
 }

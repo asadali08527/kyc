@@ -39,7 +39,7 @@ public class IntroducerDetails implements Serializable {
 	private Long accountNumber;
 
 	@Column(name = "relationship")
-	private Relationship relationship;
+	private String relationship;
 
 	@Column(name = "signature_verified", nullable = false, columnDefinition = "boolean default false")
 	private boolean isSignatureVerified;

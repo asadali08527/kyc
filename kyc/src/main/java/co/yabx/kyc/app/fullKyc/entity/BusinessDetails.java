@@ -20,6 +20,11 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import co.yabx.kyc.app.enums.BusinessSector;
+import co.yabx.kyc.app.enums.BusinessType;
+import co.yabx.kyc.app.enums.FacilityDetails;
+import co.yabx.kyc.app.enums.FacilityType;
+
 @Entity
 @Table(name = "business_details", indexes = { @Index(name = "business_type", columnList = "business_type"),
 		@Index(name = "business_name", columnList = "business_name"),
@@ -42,11 +47,11 @@ public class BusinessDetails implements Serializable {
 	@Column(name = "partner_or_director_name")
 	private String directorOrPartnerName;
 
-	@Column(name = "facility_details")
-	private String facilityDetails;
+	@Column(name = "facility_details", columnDefinition = "varchar(32) ")
+	private FacilityDetails facilityDetails;
 
-	@Column(name = "facility_type")
-	private String facilityType;
+	@Column(name = "facility_type", columnDefinition = "varchar(32) ")
+	private FacilityType facilityType;
 
 	@Column(name = "fixed_asset_purchase")
 	private String fixedAssetPurchase;
@@ -63,19 +68,19 @@ public class BusinessDetails implements Serializable {
 	@Column(name = "proposed_collateral")
 	private String proposedCollateral;
 
-	@Column(name = "business_type")
-	private String businessType;
+	@Column(name = "business_type", length = 100, nullable = false, columnDefinition = "varchar(32) default 'Proprietorship'")
+	private BusinessType businessType;
 
-	@Column(name = "sector")
-	private String sector;
+	@Column(name = "sector", length = 100, columnDefinition = "varchar(32) ")
+	private BusinessSector sector;
 
-	@Column(name = "detail_of_busness")
+	@Column(name = "detail_of_busness", length = 100, columnDefinition = "varchar(32) default 'Telecom Retailer'")
 	private String detailOfBusness;
 
 	@Column(name = "initial_capital")
 	private double initialCapital;
 
-	@Column(name = "fund_source")
+	@Column(name = "fund_source", length = 100, columnDefinition = "varchar(32) default 'Business'")
 	private String fundSource;
 
 	@Column(name = "vat_registration_number")

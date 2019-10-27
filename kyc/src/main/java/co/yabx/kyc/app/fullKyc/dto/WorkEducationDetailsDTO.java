@@ -7,6 +7,8 @@ import javax.persistence.Column;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import co.yabx.kyc.app.enums.EducationalQualification;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WorkEducationDetailsDTO implements Serializable {
 
@@ -18,7 +20,7 @@ public class WorkEducationDetailsDTO implements Serializable {
 
 	private String employer;
 
-	private String educationalQualification;
+	private EducationalQualification educationalQualification;
 
 	private Date createdAt;
 
@@ -104,11 +106,11 @@ public class WorkEducationDetailsDTO implements Serializable {
 		this.employer = employer;
 	}
 
-	public String getEducationalQualification() {
+	public EducationalQualification getEducationalQualification() {
 		return educationalQualification;
 	}
 
-	public void setEducationalQualification(String educationalQualification) {
+	public void setEducationalQualification(EducationalQualification educationalQualification) {
 		this.educationalQualification = educationalQualification;
 	}
 

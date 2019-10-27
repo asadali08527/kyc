@@ -18,7 +18,7 @@ import javax.persistence.Table;
 import co.yabx.kyc.app.enums.AddressType;
 
 @Entity
-@Table(name = "address_details", indexes = { @Index(name = "city", columnList = "city"),
+@Table(name = "address_details", indexes = { @Index(name = "division", columnList = "division"),
 		@Index(name = "address_type", columnList = "address_type") })
 public class AddressDetails implements Serializable {
 
@@ -26,38 +26,44 @@ public class AddressDetails implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(name = "msisdn")
-	private String msisdn;
+	@Column(name = "mobile_no")
+	private String mobileNumber;
 
-	@Column(name = "house_number_or_street_name")
-	private String houseNumberOrStreetName;
+	@Column(name = "phone_no")
+	private String phoneNumber;
 
-	@Column(name = "area")
-	private String area;
+	@Column(name = "address")
+	private String address;
 
-	@Column(name = "city")
-	private String city;
+	@Column(name = "upazila_thana")
+	private String upazilaThana;
 
-	@Column(name = "region")
-	private String region;
+	@Column(name = "city_district")
+	private String cityDsitrict;
 
-	@Column(name = "zip_code")
+	@Column(name = "division")
+	private String division;
+
+	@Column(name = "postal_code")
 	private Integer zipCode;
+
+	@Column(name = "landmark")
+	private String landmark;
+
+	@Column(name = "email")
+	private String email;
+
+	@Column(name = "country")
+	private String country;
+
+	@Column(name = "address_type")
+	private AddressType addressType;
 
 	@Column(name = "created_at")
 	private Date createdAt;
 
 	@Column(name = "updated_at")
 	private Date updatedAt;
-
-	@Column(name = "created_by")
-	private String createdBy;
-
-	@Column(name = "update_by")
-	private String updatedBy;
-
-	@Column(name = "address_type")
-	private AddressType addressType;
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
 	User user;
@@ -92,46 +98,6 @@ public class AddressDetails implements Serializable {
 		this.id = id;
 	}
 
-	public String getMsisdn() {
-		return msisdn;
-	}
-
-	public void setMsisdn(String msisdn) {
-		this.msisdn = msisdn;
-	}
-
-	public String getHouseNumberOrStreetName() {
-		return houseNumberOrStreetName;
-	}
-
-	public void setHouseNumberOrStreetName(String houseNumberOrStreetName) {
-		this.houseNumberOrStreetName = houseNumberOrStreetName;
-	}
-
-	public String getArea() {
-		return area;
-	}
-
-	public void setArea(String area) {
-		this.area = area;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getRegion() {
-		return region;
-	}
-
-	public void setRegion(String region) {
-		this.region = region;
-	}
-
 	public Integer getZipCode() {
 		return zipCode;
 	}
@@ -156,22 +122,6 @@ public class AddressDetails implements Serializable {
 		this.updatedAt = updatedAt;
 	}
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
 	public AddressType getAddressType() {
 		return addressType;
 	}
@@ -194,12 +144,94 @@ public class AddressDetails implements Serializable {
 
 	}
 
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getUpazilaThana() {
+		return upazilaThana;
+	}
+
+	public void setUpazilaThana(String upazilaThana) {
+		this.upazilaThana = upazilaThana;
+	}
+
+	public String getCityDsitrict() {
+		return cityDsitrict;
+	}
+
+	public void setCityDsitrict(String cityDsitrict) {
+		this.cityDsitrict = cityDsitrict;
+	}
+
+	public String getDivision() {
+		return division;
+	}
+
+	public void setDivision(String division) {
+		this.division = division;
+	}
+
+	public String getLandmark() {
+		return landmark;
+	}
+
+	public void setLandmark(String landmark) {
+		this.landmark = landmark;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public CustomerInformations getCustomerInformations() {
+		return customerInformations;
+	}
+
+	public void setCustomerInformations(CustomerInformations customerInformations) {
+		this.customerInformations = customerInformations;
+	}
+
 	@Override
 	public String toString() {
-		return "AddressDetails [id=" + id + ", msisdn=" + msisdn + ", houseNumberOrStreetName="
-				+ houseNumberOrStreetName + ", area=" + area + ", city=" + city + ", region=" + region + ", zipCode="
-				+ zipCode + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy
-				+ ", updatedBy=" + updatedBy + ", addressType=" + addressType + "]";
+		return "AddressDetails [id=" + id + ", mobileNumber=" + mobileNumber + ", phoneNumber=" + phoneNumber
+				+ ", address=" + address + ", upazilaThana=" + upazilaThana + ", cityDsitrict=" + cityDsitrict
+				+ ", division=" + division + ", zipCode=" + zipCode + ", landmark=" + landmark + ", email=" + email
+				+ ", country=" + country + ", addressType=" + addressType + ", createdAt=" + createdAt + ", updatedAt="
+				+ updatedAt + ", user=" + user + ", businessDetails=" + businessDetails + ", customerInformations="
+				+ customerInformations + "]";
 	}
 
 }

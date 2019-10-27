@@ -15,12 +15,13 @@ import org.springframework.stereotype.Service;
 
 import co.yabx.kyc.app.dto.PagesDTO;
 import co.yabx.kyc.app.dto.SectionsDTO;
-import co.yabx.kyc.app.dto.dtoHelper.AppPagesDynamicDtoHeper;
+import co.yabx.kyc.app.dto.dtoHelper.PagesDTOHeper;
 import co.yabx.kyc.app.entities.Pages;
 import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.UserStatus;
 import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
+import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
 import co.yabx.kyc.app.fullKyc.entity.DSRUser;
@@ -38,7 +39,7 @@ import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.repositories.PagesRepository;
 import co.yabx.kyc.app.service.AppConfigService;
-import co.yabx.kyc.app.service.AppPagesSectionService;
+import co.yabx.kyc.app.service.SectionService;
 import co.yabx.kyc.app.service.UserService;
 import co.yabx.kyc.app.util.SpringUtil;
 
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
 	private DSRUserRepository dsrUserRepository;
 
 	@Autowired
-	private AppPagesSectionService appPagesSectionService;
+	private SectionService appPagesSectionService;
 
 	@Autowired
 	private UserRelationshipsRepository userRelationshipsRepository;
@@ -125,7 +126,7 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		for (Pages pages : appPages) {
-			appPagesDTOList.add(AppPagesDynamicDtoHeper.prepareAppPagesDto(pages, user, nominee, userAddressDetailsSet,
+			appPagesDTOList.add(PagesDTOHeper.prepareAppPagesDto(pages, user, nominee, userAddressDetailsSet,
 					nomineeAddressDetailsSet, businessAddressDetailsSet, userBankAccountDetailsSet,
 					nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, type));
 
@@ -171,7 +172,7 @@ public class UserServiceImpl implements UserService {
 			Set<WorkEducationDetails> workEducationDetailsSet = null;
 			Set<IntroducerDetails> introducerDetailsSet = null;
 			List<UserRelationships> nomineeRelationship = null;
-
+			Set<AttachmentDetails> attachmentDetailsSet = new HashSet<AttachmentDetails>();
 			if (retailer == null) {
 				// It means DSR profile need to be persisted
 				retailer = dsrUser;
@@ -253,6 +254,7 @@ public class UserServiceImpl implements UserService {
 				monthlyTransactionProfilesSet = retailer.getMonthlyTransactionProfiles();
 				workEducationDetailsSet = retailer.getWorkEducationDetails();
 				introducerDetailsSet = retailer.getIntroducerDetails();
+				attachmentDetailsSet = retailer.getAttachmentDetails();
 
 			}
 			List<SectionsDTO> appPagesSectionsDTOList = appPagesDTO.getSections();
@@ -261,11 +263,11 @@ public class UserServiceImpl implements UserService {
 						userAddressDetailsSet, userBankAccountDetailsSet, nomineeAddressDetailsSet,
 						nomineeBankAccountDetailsSet, businessDetailsSet, businessAddressDetailsSet,
 						businessBankAccountDetailsSet, liabilitiesDetailsSet, workEducationDetailsSet,
-						introducerDetailsSet, monthlyTransactionProfilesSet);
+						introducerDetailsSet, monthlyTransactionProfilesSet,attachmentDetailsSet);
 				return persistUser(retailer, nominees, userAddressDetailsSet, userBankAccountDetailsSet,
 						liabilitiesDetailsSet, isNew, nomineeRelationship, nomineeAddressDetailsSet, isDsrUser,
 						businessDetailsSet, nomineeBankAccountDetailsSet, monthlyTransactionProfilesSet,
-						workEducationDetailsSet, introducerDetailsSet);
+						workEducationDetailsSet, introducerDetailsSet, attachmentDetailsSet);
 			}
 		}
 		return dsrUser;
@@ -279,8 +281,8 @@ public class UserServiceImpl implements UserService {
 			Boolean isDsrUser, Set<BusinessDetails> businessDetailsSet,
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet,
 			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet,
-			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet)
-			throws Exception {
+			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet,
+			Set<AttachmentDetails> attachmentDetailsSet) throws Exception {
 		if (isDsrUser) {
 			user.setUserType(UserType.DISTRIBUTORS.name());
 			user.setUserStatus(UserStatus.ACTIVE);
@@ -300,6 +302,8 @@ public class UserServiceImpl implements UserService {
 			user.setMonthlyTransactionProfiles(monthlyTransactionProfilesSet);
 		if (neitherNullNorEmpty(introducerDetailsSet))
 			user.setIntroducerDetails(introducerDetailsSet);
+		if (neitherNullNorEmpty(attachmentDetailsSet))
+			user.setAttachmentDetails(attachmentDetailsSet);
 		user = userRepository.save(user);
 		if (nominees != null) {
 			nominees.setUserType(UserType.NOMINEES.name());

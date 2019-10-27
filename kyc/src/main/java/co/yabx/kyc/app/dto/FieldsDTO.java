@@ -50,6 +50,8 @@ public class FieldsDTO implements Serializable {
 	private List<String> options;
 
 	private List<SubFieldsDTO> subFields;
+	
+	private Functionality functionality;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -202,6 +204,14 @@ public class FieldsDTO implements Serializable {
 
 	public void setSubFields(List<SubFieldsDTO> subFields) {
 		this.subFields = subFields;
+	}
+
+	public Functionality getFunctionality() {
+		return functionality;
+	}
+
+	public void setFunctionality(Functionality functionality) {
+		this.functionality = functionality;
 	}
 
 }

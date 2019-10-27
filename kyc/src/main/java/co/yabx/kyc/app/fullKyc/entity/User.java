@@ -108,16 +108,16 @@ public abstract class User implements Serializable {
 	@Column(name = "marital_status")
 	private MaritalStatuses maritalStatus;
 
-	@Column(name = "dependents")
+	@Column(name = "dependents", length = 2, nullable = false, columnDefinition = "int(11) default 0 ")
 	private Integer numberOfDependents;
 
 	@Column(name = "sister_concerned_or_allied")
 	private String sisterConcernedOrAllied;
 
-	@Column(name = "nationality")
+	@Column(name = "nationality", length = 100, nullable = false, columnDefinition = "varchar(32) default 'Bangladeshi' ")
 	private Nationality nationality;
 
-	@Column(name = "resident_status")
+	@Column(name = "resident_status", length = 100, nullable = false, columnDefinition = "varchar(32) default 'Resident' ")
 	private ResidentStatus residentialStatus;
 
 	@Column(name = "tax_identification_number")

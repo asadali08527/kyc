@@ -5,6 +5,7 @@ import java.util.Set;
 import co.yabx.kyc.app.dto.GroupsDTO;
 import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
+import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
 import co.yabx.kyc.app.fullKyc.entity.IntroducerDetails;
@@ -18,7 +19,7 @@ import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
  * @author Asad.ali
  *
  */
-public interface DynamicFieldService {
+public interface FieldService {
 
 	void prepareFields(User retailerOrDsrUser, User nominees, GroupsDTO appPagesSectionGroupsDTO,
 			Set<AddressDetails> userAddressDetailsSet, Set<BankAccountDetails> userBankAccountDetailsSet,
@@ -26,6 +27,7 @@ public interface DynamicFieldService {
 			Set<BusinessDetails> businessDetailsSet, Set<AddressDetails> businessAddressDetailsSet,
 			Set<BankAccountDetails> businessBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetailsSet,
 			SectionsDTO appPagesSectionsDTO, Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet,
-			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet);
+			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet,
+			Set<AttachmentDetails> attachmentDetailsSet);
 
 }

@@ -11,6 +11,7 @@ import co.yabx.kyc.app.dto.RetailersDTO;
 import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.BankAccountIdentifier;
 import co.yabx.kyc.app.enums.BankAccountType;
+import co.yabx.kyc.app.enums.EducationalQualification;
 import co.yabx.kyc.app.enums.Gender;
 import co.yabx.kyc.app.enums.KycStatus;
 import co.yabx.kyc.app.enums.LiabilityType;
@@ -95,7 +96,7 @@ public class RetailersDtoHelper implements Serializable {
 		userDto.setMsisdn("9789876543");
 		userDto.setSisterConcernedOrAllied("yes");
 		userDto.setTaxIdentificationNumber("ABC876L87");
-		userDto.setResidentialStatus(ResidentStatus.CITIZEN);
+		userDto.setResidentialStatus(ResidentStatus.Resident);
 		userDto.setPassportNumber("PB8765M");
 		userDto.setPassportExpiryDate("09/26/2023");
 		userDto.setNationality(Nationality.Bangladeshi);
@@ -105,7 +106,7 @@ public class RetailersDtoHelper implements Serializable {
 		List<BankAccountDetailsDTO> accountDetails = new ArrayList<BankAccountDetailsDTO>();
 		BankAccountDetailsDTO bankAccountDetails = new BankAccountDetailsDTO();
 		bankAccountDetails.setAccountNumber(12345l);
-		bankAccountDetails.setBankAccountType(BankAccountType.SHAHDHIN);
+		bankAccountDetails.setBankAccountType(BankAccountType.SAVING);
 		bankAccountDetails.setBankName("ICICI BAnk");
 		bankAccountDetails.setBranch("Bengaluru");
 		bankAccountDetails.setBankAccountIdentifier(BankAccountIdentifier.PRIMARY);
@@ -135,7 +136,7 @@ public class RetailersDtoHelper implements Serializable {
 		List<WorkEducationDetailsDTO> workEducationDetails = new ArrayList<WorkEducationDetailsDTO>();
 		WorkEducationDetailsDTO workEducationDetailsDTO = new WorkEducationDetailsDTO();
 		workEducationDetailsDTO.setDesignation("Lead executive");
-		workEducationDetailsDTO.setEducationalQualification("SSC");
+		workEducationDetailsDTO.setEducationalQualification(EducationalQualification.HIGH_SCHOOL);
 		workEducationDetailsDTO.setEmployer("ABC pvt ltd");
 		workEducationDetailsDTO.setOccupation("Salesman");
 		workEducationDetailsDTO.setExperience(5);
@@ -166,7 +167,7 @@ public class RetailersDtoHelper implements Serializable {
 		List<BankAccountDetailsDTO> businessAccountDetails = new ArrayList<BankAccountDetailsDTO>();
 		BankAccountDetailsDTO businessBankAccountDetails = new BankAccountDetailsDTO();
 		businessBankAccountDetails.setAccountNumber(12345l);
-		businessBankAccountDetails.setBankAccountType(BankAccountType.SHAHDHIN);
+		businessBankAccountDetails.setBankAccountType(BankAccountType.SAVING);
 		businessBankAccountDetails.setBankName("ICICI BAnk");
 		businessBankAccountDetails.setBranch("Bengaluru");
 		businessBankAccountDetails.setBankAccountIdentifier(BankAccountIdentifier.PRIMARY);

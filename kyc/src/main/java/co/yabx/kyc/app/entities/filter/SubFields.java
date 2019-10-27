@@ -17,7 +17,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import co.yabx.kyc.app.entities.Fields;
-import co.yabx.kyc.app.entities.SectionGroupRelationship;
 
 /**
  * 

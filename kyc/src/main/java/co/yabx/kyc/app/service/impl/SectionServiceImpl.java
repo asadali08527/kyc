@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import co.yabx.kyc.app.dto.GroupsDTO;
 import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
+import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
 import co.yabx.kyc.app.fullKyc.entity.IntroducerDetails;
@@ -19,19 +20,19 @@ import co.yabx.kyc.app.fullKyc.entity.MonthlyTransactionProfiles;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
 import co.yabx.kyc.app.service.AppConfigService;
-import co.yabx.kyc.app.service.AppPagesSectionService;
-import co.yabx.kyc.app.service.DynamicFieldService;
+import co.yabx.kyc.app.service.SectionService;
+import co.yabx.kyc.app.service.FieldService;
 
 @Service
-public class AppPagesSectionServiceImpl implements AppPagesSectionService {
+public class SectionServiceImpl implements SectionService {
 
 	@Autowired
 	private AppConfigService appConfigService;
 
 	@Autowired
-	private DynamicFieldService dynamicFieldService;
+	private FieldService dynamicFieldService;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AppPagesSectionServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SectionServiceImpl.class);
 
 	@Override
 	public void prepareUserDetails(List<SectionsDTO> appPagesSectionsDTOList, User retailer, User nominees,
@@ -40,7 +41,8 @@ public class AppPagesSectionServiceImpl implements AppPagesSectionService {
 			Set<BusinessDetails> businessDetailsSet, Set<AddressDetails> businessAddressDetailsSet,
 			Set<BankAccountDetails> businessBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetailsSet,
 			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet,
-			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet) {
+			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet,
+			Set<AttachmentDetails> attachmentDetailsSet) {
 		for (SectionsDTO appPagesSectionsDTO : appPagesSectionsDTOList) {
 			List<GroupsDTO> appPagesSectionGroupsDTOList = appPagesSectionsDTO.getGroups();
 			if (appPagesSectionGroupsDTOList != null && !appPagesSectionGroupsDTOList.isEmpty()) {
@@ -49,7 +51,8 @@ public class AppPagesSectionServiceImpl implements AppPagesSectionService {
 							userAddressDetailsSet, userBankAccountDetailsSet, nomineeAddressDetailsSet,
 							nomineeBankAccountDetailsSet, businessDetailsSet, businessAddressDetailsSet,
 							businessBankAccountDetailsSet, liabilitiesDetailsSet, appPagesSectionsDTO,
-							monthlyTransactionProfilesSet, workEducationDetailsSet, introducerDetailsSet);
+							monthlyTransactionProfilesSet, workEducationDetailsSet, introducerDetailsSet,
+							attachmentDetailsSet);
 				}
 			}
 

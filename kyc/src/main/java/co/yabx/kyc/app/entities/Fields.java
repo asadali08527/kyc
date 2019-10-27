@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import co.yabx.kyc.app.entities.filter.SubFields;
+import co.yabx.kyc.app.entities.filter.SubGroups;
 import co.yabx.kyc.app.enums.ControlType;
 import co.yabx.kyc.app.enums.DataType;
 
@@ -99,6 +100,9 @@ public class Fields implements Serializable {
 
 	@OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private Set<SubFields> subFields;
+
+	@OneToMany(mappedBy = "fields", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	private Set<SubGroups> subGroups;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -244,6 +248,15 @@ public class Fields implements Serializable {
 		this.defaultValue = defaultValue;
 	}
 
+	@Override
+	public String toString() {
+		return "AppDynamicFields [id=" + id + ", type=" + type + ", fieldId=" + fieldId + ", dataType=" + dataType
+				+ ", fieldName=" + fieldName + ", placeHolderText=" + placeHolderText + ", savedData=" + savedData
+				+ ", validation=" + validation + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", camera="
+				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", hash=" + hash + ", displayOrder="
+				+ displayOrder + ", options=" + options + ", groups=" + groups + "]";
+	}
+
 	public Set<SubFields> getSubFields() {
 		return subFields;
 	}
@@ -252,13 +265,12 @@ public class Fields implements Serializable {
 		this.subFields = subFields;
 	}
 
-	@Override
-	public String toString() {
-		return "AppDynamicFields [id=" + id + ", type=" + type + ", fieldId=" + fieldId + ", dataType=" + dataType
-				+ ", fieldName=" + fieldName + ", placeHolderText=" + placeHolderText + ", savedData=" + savedData
-				+ ", validation=" + validation + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", camera="
-				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", hash=" + hash + ", displayOrder="
-				+ displayOrder + ", options=" + options + ", groups=" + groups + "]";
+	public Set<SubGroups> getSubGroups() {
+		return subGroups;
+	}
+
+	public void setSubGroups(Set<SubGroups> subGroups) {
+		this.subGroups = subGroups;
 	}
 
 }

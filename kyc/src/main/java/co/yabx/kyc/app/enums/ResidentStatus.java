@@ -2,5 +2,22 @@ package co.yabx.kyc.app.enums;
 
 public enum ResidentStatus {
 
-	CITIZEN, PERMANENT
+	Resident, Non_Resident;
+
+	public static ResidentStatus getResidentStatus(String value) {
+		if (value.equalsIgnoreCase("Non-Resident")) {
+			return ResidentStatus.Non_Resident;
+		} else {
+			return ResidentStatus.valueOf(value);
+		}
+	}
+
+	@Override
+	public String toString() {
+		if (super.toString().equals("Non_Resident")) {
+			return "Non-Resident";
+		} else {
+			return super.toString();
+		}
+	}
 }
