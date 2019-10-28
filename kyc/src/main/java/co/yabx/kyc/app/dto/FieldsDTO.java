@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -41,8 +42,6 @@ public class FieldsDTO implements Serializable {
 
 	private boolean mandatory;
 
-	private Integer order;
-
 	private String response;
 
 	private String defaultValue;
@@ -50,8 +49,10 @@ public class FieldsDTO implements Serializable {
 	private List<String> options;
 
 	private List<SubFieldsDTO> subFields;
-	
+
 	private Functionality functionality;
+
+	private Integer displayOrder;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -173,23 +174,6 @@ public class FieldsDTO implements Serializable {
 		this.id = id;
 	}
 
-	public Integer getOrder() {
-		return order;
-	}
-
-	public void setOrder(Integer order) {
-		this.order = order;
-	}
-
-	@Override
-	public String toString() {
-		return "AppDynamicFieldsDTO [id=" + id + ", type=" + type + ", fieldId=" + fieldId + ", dataType=" + dataType
-				+ ", fieldName=" + fieldName + ", placeHolderText=" + placeHolderText + ", savedData=" + savedData
-				+ ", validation=" + validation + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", camera="
-				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", order=" + order + ", response="
-				+ response + ", options=" + options + "]";
-	}
-
 	public String getDefaultValue() {
 		return defaultValue;
 	}
@@ -212,6 +196,24 @@ public class FieldsDTO implements Serializable {
 
 	public void setFunctionality(Functionality functionality) {
 		this.functionality = functionality;
+	}
+
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
+	}
+
+	@Override
+	public String toString() {
+		return "FieldsDTO [id=" + id + ", type=" + type + ", fieldId=" + fieldId + ", dataType=" + dataType
+				+ ", fieldName=" + fieldName + ", placeHolderText=" + placeHolderText + ", savedData=" + savedData
+				+ ", validation=" + validation + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", camera="
+				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", response=" + response
+				+ ", defaultValue=" + defaultValue + ", options=" + options + ", subFields=" + subFields
+				+ ", functionality=" + functionality + ", displayOrder=" + displayOrder + "]";
 	}
 
 }

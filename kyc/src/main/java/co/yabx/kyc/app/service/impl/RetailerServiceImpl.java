@@ -15,6 +15,7 @@ import co.yabx.kyc.app.dto.RetailerRequestDTO;
 import co.yabx.kyc.app.dto.RetailersDTO;
 import co.yabx.kyc.app.dto.dtoHelper.QuestionAnswerDTOHelper;
 import co.yabx.kyc.app.dto.dtoHelper.RetailersDtoHelper;
+import co.yabx.kyc.app.enums.PageType;
 import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.UserStatus;
 import co.yabx.kyc.app.enums.UserType;
@@ -92,12 +93,12 @@ public class RetailerServiceImpl implements RetailerService {
 					user.get());
 			if (dsrRetailersRelationships != null) {
 				ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
-				responseDTO.setRetailerInfo(userService.getUserDetails(user.get(), UserType.RETAILERS.name()));
+				responseDTO.setRetailerInfo(userService.getUserDetails(user.get(), PageType.RETAILERS));
 				return responseDTO;
 			}
 		}
 		ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "Retailer Not Found", "404", null);
-		responseDTO.setRetailerInfo(userService.getUserDetails(null, UserType.RETAILERS.name()));
+		responseDTO.setRetailerInfo(userService.getUserDetails(null, PageType.RETAILERS));
 		return responseDTO;
 
 		// return RetailersDtoHelper.getCompletRetailerInfo(dsrMsisdn, retailerId);

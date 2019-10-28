@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -31,6 +33,8 @@ public class SectionsDTO implements Serializable {
 	private Integer totalFields;
 
 	private Long nomineeId;
+	
+	private Integer displayOrder;
 
 	public String getSectionType() {
 		return sectionType;
@@ -135,6 +139,14 @@ public class SectionsDTO implements Serializable {
 
 	public void setNomineeId(Long nomineeId) {
 		this.nomineeId = nomineeId;
+	}
+
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
 	}
 
 }

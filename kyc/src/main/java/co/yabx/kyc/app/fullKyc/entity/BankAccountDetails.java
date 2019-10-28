@@ -247,4 +247,12 @@ public class BankAccountDetails implements Serializable {
 		this.customerInformations = customerInformations;
 	}
 
+	public String getAccountPurpose() {
+		return accountPurpose;
+	}
+
+	public void setAccountPurpose(String accountPurpose) {
+		this.accountPurpose = accountPurpose;
+	}
+
 }

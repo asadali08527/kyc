@@ -37,13 +37,7 @@ public class SectionGroupRelationship implements Serializable {
 
 	@JoinColumn(name = "group_id")
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Groups.class)
-	private Groups appPagesSectionGroups;
-
-	@Column(name = "is_multiple", columnDefinition = "boolean default false")
-	private boolean multiple;
-
-	@Column(name = "multiple_title")
-	private String multipleTitlle;
+	private Groups groups;
 
 	@Column(name = "created_at")
 	private Date createdAt;
@@ -114,30 +108,6 @@ public class SectionGroupRelationship implements Serializable {
 		this.sectionId = sectionId;
 	}
 
-	public Groups getAppPagesSectionGroups() {
-		return appPagesSectionGroups;
-	}
-
-	public void setAppPagesSectionGroups(Groups appPagesSectionGroups) {
-		this.appPagesSectionGroups = appPagesSectionGroups;
-	}
-
-	public boolean isMultiple() {
-		return multiple;
-	}
-
-	public void setMultiple(boolean multiple) {
-		this.multiple = multiple;
-	}
-
-	public String getMultipleTitlle() {
-		return multipleTitlle;
-	}
-
-	public void setMultipleTitlle(String multipleTitlle) {
-		this.multipleTitlle = multipleTitlle;
-	}
-
 	public boolean isActive() {
 		return active;
 	}
@@ -154,12 +124,12 @@ public class SectionGroupRelationship implements Serializable {
 		this.subGroups = subGroups;
 	}
 
-	@Override
-	public String toString() {
-		return "SectionGroupRelationship [id=" + id + ", sectionId=" + sectionId + ", appPagesSectionGroups="
-				+ appPagesSectionGroups + ", multiple=" + multiple + ", multipleTitlle=" + multipleTitlle
-				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", active=" + active + ", filters="
-				+ filters + "]";
+	public Groups getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Groups groups) {
+		this.groups = groups;
 	}
 
 }

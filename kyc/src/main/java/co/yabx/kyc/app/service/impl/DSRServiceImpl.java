@@ -20,6 +20,7 @@ import co.yabx.kyc.app.entities.AuthInfo;
 import co.yabx.kyc.app.entities.OTP;
 import co.yabx.kyc.app.enums.OtpGroup;
 import co.yabx.kyc.app.enums.OtpType;
+import co.yabx.kyc.app.enums.PageType;
 import co.yabx.kyc.app.enums.UserStatus;
 import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.dto.WorkEducationDetailsDTO;
@@ -224,7 +225,7 @@ public class DSRServiceImpl implements DSRService {
 		if (dsrUser != null) {
 			ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200",
 					dsrUser.getUserStatus());
-			responseDTO.setDsrInfo(userService.getUserDetails(dsrUser, UserType.DISTRIBUTORS.name()));
+			responseDTO.setDsrInfo(userService.getUserDetails(dsrUser, PageType.DISTRIBUTORS));
 			return responseDTO;
 		} else {
 			ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "No DSR Found", "404", null);

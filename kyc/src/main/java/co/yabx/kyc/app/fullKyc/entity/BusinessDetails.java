@@ -141,11 +141,11 @@ public class BusinessDetails implements Serializable {
 	@Column(name = "updated_at")
 	private Date updatedAt;
 
-	@Column(name = "created_by")
-	private String createdBy;
+	@Column(name = "receivables")
+	private String receivables;
 
-	@Column(name = "update_by")
-	private String updatedBy;
+	@Column(name = "payables")
+	private String payables;
 
 	public Long getId() {
 		return id;
@@ -417,22 +417,6 @@ public class BusinessDetails implements Serializable {
 		this.updatedAt = updatedAt;
 	}
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
 	@PrePersist
 	private void prePersist() {
 		if (createdAt == null) {
@@ -465,6 +449,22 @@ public class BusinessDetails implements Serializable {
 
 	public void setBusinessStartDate(String businessStartDate) {
 		this.businessStartDate = businessStartDate;
+	}
+
+	public String getReceivables() {
+		return receivables;
+	}
+
+	public void setReceivables(String receivables) {
+		this.receivables = receivables;
+	}
+
+	public String getPayables() {
+		return payables;
+	}
+
+	public void setPayables(String payables) {
+		this.payables = payables;
 	}
 
 }

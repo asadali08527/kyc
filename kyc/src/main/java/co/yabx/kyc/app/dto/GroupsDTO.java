@@ -28,6 +28,8 @@ public class GroupsDTO implements Serializable {
 
 	private List<FieldsDTO> fields;
 
+	private Integer displayOrder;
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -105,6 +107,14 @@ public class GroupsDTO implements Serializable {
 		return "AppPagesSectionGroupsDTO [groupId=" + groupId + ", groupName=" + groupName + ", groupTitle="
 				+ groupTitle + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable
 				+ ", fields=" + fields + "]";
+	}
+
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
 	}
 
 }

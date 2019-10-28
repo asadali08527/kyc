@@ -161,11 +161,10 @@ public abstract class User implements Serializable {
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private Set<AttachmentDetails> attachmentDetails;
-	/*
-	 * @OneToMany(mappedBy = "relative", cascade = CascadeType.ALL, orphanRemoval =
-	 * true, fetch = FetchType.LAZY) private Set<UserRelationships>
-	 * userRelationships;
-	 */
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "user", referencedColumnName = "id")
+	private LoanPurposeDetails loanPurposeDetails;
 
 	@Column(name = "minor")
 	private String minor;

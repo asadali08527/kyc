@@ -44,6 +44,17 @@ public abstract class SubGroups implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Fields.class)
 	Fields fields;
 
+	@Column(name = "display_order")
+	private Integer displayOrder;
+
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
+	}
+
 	public Fields getFields() {
 		return fields;
 	}

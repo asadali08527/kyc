@@ -17,6 +17,7 @@ import co.yabx.kyc.app.dto.PagesDTO;
 import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.dto.dtoHelper.PagesDTOHeper;
 import co.yabx.kyc.app.entities.Pages;
+import co.yabx.kyc.app.enums.PageType;
 import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.UserStatus;
 import co.yabx.kyc.app.enums.UserType;
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService {
 		 */}
 
 	@Override
-	public List<PagesDTO> getUserDetails(User user, String type) {
+	public List<PagesDTO> getUserDetails(User user, PageType type) {
 
 		List<Pages> appPages = SpringUtil.bean(PagesRepository.class).findByPageType(type);
 		if (appPages == null)
@@ -128,7 +129,7 @@ public class UserServiceImpl implements UserService {
 		for (Pages pages : appPages) {
 			appPagesDTOList.add(PagesDTOHeper.prepareAppPagesDto(pages, user, nominee, userAddressDetailsSet,
 					nomineeAddressDetailsSet, businessAddressDetailsSet, userBankAccountDetailsSet,
-					nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, type));
+					nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, type.name()));
 
 		}
 
@@ -263,7 +264,7 @@ public class UserServiceImpl implements UserService {
 						userAddressDetailsSet, userBankAccountDetailsSet, nomineeAddressDetailsSet,
 						nomineeBankAccountDetailsSet, businessDetailsSet, businessAddressDetailsSet,
 						businessBankAccountDetailsSet, liabilitiesDetailsSet, workEducationDetailsSet,
-						introducerDetailsSet, monthlyTransactionProfilesSet,attachmentDetailsSet);
+						introducerDetailsSet, monthlyTransactionProfilesSet, attachmentDetailsSet);
 				return persistUser(retailer, nominees, userAddressDetailsSet, userBankAccountDetailsSet,
 						liabilitiesDetailsSet, isNew, nomineeRelationship, nomineeAddressDetailsSet, isDsrUser,
 						businessDetailsSet, nomineeBankAccountDetailsSet, monthlyTransactionProfilesSet,

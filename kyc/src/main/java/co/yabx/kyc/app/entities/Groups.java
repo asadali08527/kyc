@@ -52,6 +52,17 @@ public class Groups implements Serializable {
 	@OneToMany(mappedBy = "groups", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private Set<Fields> appDynamicFields;
 
+	@Column(name = "display_order")
+	private Integer displayOrder;
+
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
+	}
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}

@@ -43,6 +43,17 @@ public abstract class SubFields implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Fields.class)
 	Fields child;
 
+	@Column(name = "display_order")
+	private Integer displayOrder;
+
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
+	}
+
 	public Long getId() {
 		return id;
 	}

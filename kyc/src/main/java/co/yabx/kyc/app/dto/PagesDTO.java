@@ -44,6 +44,8 @@ public class PagesDTO implements Serializable {
 
 	private ActionDTO action;
 
+	private Integer displayOrder;
+
 	public String getPageType() {
 		return pageType;
 	}
@@ -171,6 +173,14 @@ public class PagesDTO implements Serializable {
 				+ icon + ", filledFields=" + filledFields + ", totalFields=" + totalFields + ", sections=" + sections
 				+ ", pageCompletion=" + pageCompletion + ", retailerId=" + retailerId + ", dsrId=" + dsrId + ", action="
 				+ action + "]";
+	}
+
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
 	}
 
 }

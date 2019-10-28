@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "pages_sections", indexes = { @Index(name = "section_name", columnList = "section_name") })
+@Table(name = "sections", indexes = { @Index(name = "section_name", columnList = "section_name") })
 public class Sections implements Serializable {
 	private static final long serialVersionUID = 1547547L;
 
@@ -48,8 +48,35 @@ public class Sections implements Serializable {
 	@Column(name = "enable", columnDefinition = "boolean default true")
 	private boolean enable;
 
+	@Column(name = "display_order")
+	private Integer displayOrder;
+
+	public String getSectionType() {
+		return sectionType;
+	}
+
+	public void setSectionType(String sectionType) {
+		this.sectionType = sectionType;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
+	}
+
 	@ManyToOne(fetch = FetchType.EAGER, targetEntity = Pages.class)
-	Pages appPages;
+	Pages pages;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -99,12 +126,12 @@ public class Sections implements Serializable {
 		this.sectionId = sectionId;
 	}
 
-	public Pages getAppPages() {
-		return appPages;
+	public Pages getPages() {
+		return pages;
 	}
 
-	public void setAppPages(Pages appPages) {
-		this.appPages = appPages;
+	public void setPages(Pages pages) {
+		this.pages = pages;
 	}
 
 }

@@ -56,6 +56,12 @@ public class AddressDetails implements Serializable {
 	@Column(name = "country")
 	private String country;
 
+	@Column(name = "area")
+	private String area;
+
+	@Column(name = "territory")
+	private String territory;
+
 	@Column(name = "address_type")
 	private AddressType addressType;
 
@@ -222,6 +228,22 @@ public class AddressDetails implements Serializable {
 
 	public void setCustomerInformations(CustomerInformations customerInformations) {
 		this.customerInformations = customerInformations;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
+	public String getTerritory() {
+		return territory;
+	}
+
+	public void setTerritory(String territory) {
+		this.territory = territory;
 	}
 
 	@Override
