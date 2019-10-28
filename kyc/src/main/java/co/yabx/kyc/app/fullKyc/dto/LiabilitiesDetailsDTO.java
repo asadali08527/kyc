@@ -19,9 +19,11 @@ public class LiabilitiesDetailsDTO implements Serializable {
 
 	private double loanAmount;
 
+	private double loanAmountFromOtherOrganization;
+
 	private String nameOfTheOrganization;
 
-	private String liabilityFrom;
+	private String liabilityFromOtherOrganization;
 
 	private LiabilityType typeOfLiablity;
 
@@ -99,14 +101,6 @@ public class LiabilitiesDetailsDTO implements Serializable {
 		this.nameOfTheOrganization = nameOfTheOrganization;
 	}
 
-	public String getLiabilityFrom() {
-		return liabilityFrom;
-	}
-
-	public void setLiabilityFrom(String liabilityFrom) {
-		this.liabilityFrom = liabilityFrom;
-	}
-
 	public LiabilityType getTypeOfLiablity() {
 		return typeOfLiablity;
 	}
@@ -129,6 +123,22 @@ public class LiabilitiesDetailsDTO implements Serializable {
 
 	public void setLiabilities(List<LiabilitiesDetailsDTO> liabilities) {
 		this.liabilities = liabilities;
+	}
+
+	public double getLoanAmountFromOtherOrganization() {
+		return loanAmountFromOtherOrganization;
+	}
+
+	public void setLoanAmountFromOtherOrganization(double loanAmountFromOtherOrganization) {
+		this.loanAmountFromOtherOrganization = loanAmountFromOtherOrganization;
+	}
+
+	public String getLiabilityFromOtherOrganization() {
+		return liabilityFromOtherOrganization;
+	}
+
+	public void setLiabilityFromOtherOrganization(String liabilityFromOtherOrganization) {
+		this.liabilityFromOtherOrganization = liabilityFromOtherOrganization;
 	}
 
 }

@@ -68,18 +68,14 @@ public class UserWrapper {
 			businessDetails.setVatRegistrationNumber(businessDetailsDTO.getVatRegistrationNumber());
 			businessDetails.setValueOfFixedAssets(businessDetailsDTO.getValueOfFixedAssets());
 			businessDetails.setStockValue(businessDetailsDTO.getStockValue());
-			businessDetails.setSector(businessDetailsDTO.getSector());
 			businessDetails.setProposedCollateral(businessDetailsDTO.getProposedCollateral());
 			businessDetails.setPrice(businessDetailsDTO.getPrice());
 			businessDetails.setOrigin(businessDetailsDTO.getOrigin());
 			businessDetails.setNumberOfEmployees(businessDetailsDTO.getNumberOfEmployees());
 			businessDetails.setMonthlyTurnOver(businessDetailsDTO.getMonthlyTurnOver());
-			businessDetails.setBusinessType(businessDetailsDTO.getBusinessType());
 			businessDetails.setDeposits(businessDetailsDTO.getDeposits());
 			businessDetails.setDetailOfBusness(businessDetailsDTO.getDetailOfBusness());
 			businessDetails.setDirectorOrPartnerName(businessDetailsDTO.getDirectorOrPartnerName());
-			businessDetails.setFacilityDetails(businessDetailsDTO.getFacilityDetails());
-			businessDetails.setFacilityType(businessDetailsDTO.getFacilityType());
 			businessDetails.setFixedAssetName(businessDetailsDTO.getFixedAssetName());
 			businessDetails.setFixedAssetPurchase(businessDetailsDTO.getFixedAssetPurchase());
 			businessDetails.setFundSource(businessDetailsDTO.getFundSource());
@@ -141,7 +137,6 @@ public class UserWrapper {
 			IntroducerDetails introducerDetails = new IntroducerDetails();
 			introducerDetails.setAccountNumber(introducerDetailsDTO.getAccountNumber());
 			introducerDetails.setName(introducerDetailsDTO.getName());
-			introducerDetails.setRelationship(introducerDetailsDTO.getRelationship());
 			introducerDetails.setSignatureVerified(introducerDetailsDTO.isSignatureVerified());
 			introducerDetailsSet.add(introducerDetails);
 		}
@@ -154,9 +149,12 @@ public class UserWrapper {
 		for (LiabilitiesDetailsDTO liabilitiesDetailsDTO : liabilitiesDetailsDTOList) {
 			LiabilitiesDetails liabilitiesDetails = new LiabilitiesDetails();
 			liabilitiesDetails.setBankOrNbfiName(liabilitiesDetailsDTO.getNameOfTheOrganization());
-			liabilitiesDetails.setLiabilityFrom(liabilitiesDetailsDTO.getLiabilityFrom());
+			liabilitiesDetails
+					.setLiabilityFromOtherOrganization(liabilitiesDetailsDTO.getLiabilityFromOtherOrganization());
 			liabilitiesDetails.setTypeOfLiablity(liabilitiesDetailsDTO.getTypeOfLiablity());
 			liabilitiesDetails.setLoanAmount(liabilitiesDetailsDTO.getLoanAmount());
+			liabilitiesDetails
+					.setLoanAmountFromOtherOrganization(liabilitiesDetailsDTO.getLoanAmountFromOtherOrganization());
 			liabilitiesDetailsSet.add(liabilitiesDetails);
 		}
 		return liabilitiesDetailsSet;

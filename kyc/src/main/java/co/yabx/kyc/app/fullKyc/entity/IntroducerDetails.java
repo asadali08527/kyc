@@ -95,11 +95,11 @@ public class IntroducerDetails implements Serializable {
 		this.accountNumber = accountNumber;
 	}
 
-	public Relationship getRelationship() {
+	public String getRelationship() {
 		return relationship;
 	}
 
-	public void setRelationship(Relationship relationship) {
+	public void setRelationship(String relationship) {
 		this.relationship = relationship;
 	}
 

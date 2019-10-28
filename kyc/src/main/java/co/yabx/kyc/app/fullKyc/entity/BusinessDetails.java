@@ -167,19 +167,19 @@ public class BusinessDetails implements Serializable {
 		this.directorOrPartnerName = directorOrPartnerName;
 	}
 
-	public String getFacilityDetails() {
+	public FacilityDetails getFacilityDetails() {
 		return facilityDetails;
 	}
 
-	public void setFacilityDetails(String facilityDetails) {
+	public void setFacilityDetails(FacilityDetails facilityDetails) {
 		this.facilityDetails = facilityDetails;
 	}
 
-	public String getFacilityType() {
+	public FacilityType getFacilityType() {
 		return facilityType;
 	}
 
-	public void setFacilityType(String facilityType) {
+	public void setFacilityType(FacilityType facilityType) {
 		this.facilityType = facilityType;
 	}
 
@@ -223,19 +223,19 @@ public class BusinessDetails implements Serializable {
 		this.proposedCollateral = proposedCollateral;
 	}
 
-	public String getBusinessType() {
+	public BusinessType getBusinessType() {
 		return businessType;
 	}
 
-	public void setBusinessType(String businessType) {
+	public void setBusinessType(BusinessType businessType) {
 		this.businessType = businessType;
 	}
 
-	public String getSector() {
+	public BusinessSector getSector() {
 		return sector;
 	}
 
-	public void setSector(String sector) {
+	public void setSector(BusinessSector sector) {
 		this.sector = sector;
 	}
 

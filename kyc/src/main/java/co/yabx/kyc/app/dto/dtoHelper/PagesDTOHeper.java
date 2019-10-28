@@ -30,14 +30,19 @@ import co.yabx.kyc.app.entities.filter.SubFields;
 import co.yabx.kyc.app.entities.filter.SubGroups;
 import co.yabx.kyc.app.enums.AddressProof;
 import co.yabx.kyc.app.enums.BankAccountType;
+import co.yabx.kyc.app.enums.BusinessSector;
+import co.yabx.kyc.app.enums.BusinessType;
 import co.yabx.kyc.app.enums.Currency;
 import co.yabx.kyc.app.enums.EducationalQualification;
+import co.yabx.kyc.app.enums.FacilityDetails;
+import co.yabx.kyc.app.enums.FacilityType;
 import co.yabx.kyc.app.enums.FunctionalityType;
 import co.yabx.kyc.app.enums.Gender;
 import co.yabx.kyc.app.enums.IdentityProof;
 import co.yabx.kyc.app.enums.LiabilityType;
 import co.yabx.kyc.app.enums.LicenseType;
 import co.yabx.kyc.app.enums.MaritalStatuses;
+import co.yabx.kyc.app.enums.ModeOfOperation;
 import co.yabx.kyc.app.enums.Nationality;
 import co.yabx.kyc.app.enums.ResidentStatus;
 import co.yabx.kyc.app.enums.TypeOfConcern;
@@ -82,9 +87,9 @@ public class PagesDTOHeper implements Serializable {
 			appPagesDTO.setPageTitle(pages.getPageTitle());
 			appPagesDTO.setTotalFields(filledVsUnfilled.get("totalFields"));
 			appPagesDTO.setFilledFields(filledVsUnfilled.get("filledFields"));
-			if (UserType.RETAILERS.name().equals(type))
+			if (UserType.RETAILERS.toString().equals(type))
 				appPagesDTO.setRetailerId(retailers != null ? retailers.getId() : null);
-			else if (UserType.DISTRIBUTORS.name().equals(type))
+			else if (UserType.DISTRIBUTORS.toString().equals(type))
 				appPagesDTO.setDsrId(retailers != null ? retailers.getId() : null);
 			appPagesDTO.setPageCompletion(appPagesDTO.getTotalFields() != 0
 					? ((appPagesDTO.getFilledFields() * 100) / appPagesDTO.getTotalFields()) + "%"
@@ -315,7 +320,7 @@ public class PagesDTOHeper implements Serializable {
 				List<String> options = new ArrayList<String>();
 				IdentityProof[] idProof = IdentityProof.values();
 				for (IdentityProof proof : idProof) {
-					options.add(proof.name());
+					options.add(proof.toString());
 				}
 				dynamicFields.setOptions(options);
 
@@ -323,7 +328,7 @@ public class PagesDTOHeper implements Serializable {
 				AddressProof[] addressProofs = AddressProof.values();
 				List<String> options = new ArrayList<String>();
 				for (AddressProof proof : addressProofs) {
-					options.add(proof.name());
+					options.add(proof.toString());
 				}
 				dynamicFields.setOptions(options);
 			}
@@ -337,14 +342,14 @@ public class PagesDTOHeper implements Serializable {
 					List<String> options = new ArrayList<String>();
 					IdentityProof[] idProof = IdentityProof.values();
 					for (IdentityProof proof : idProof) {
-						options.add(proof.name());
+						options.add(proof.toString());
 					}
 					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("addressProof")) {
 					AddressProof[] addressProofs = AddressProof.values();
 					List<String> options = new ArrayList<String>();
 					for (AddressProof proof : addressProofs) {
-						options.add(proof.name());
+						options.add(proof.toString());
 					}
 					dynamicFields.setOptions(options);
 
@@ -434,7 +439,7 @@ public class PagesDTOHeper implements Serializable {
 				List<String> options = new ArrayList<String>();
 				EducationalQualification[] accountTypes = EducationalQualification.values();
 				for (EducationalQualification statuses : accountTypes) {
-					options.add(statuses.name());
+					options.add(statuses.getName());
 				}
 				dynamicFields.setOptions(options);
 			}
@@ -449,11 +454,13 @@ public class PagesDTOHeper implements Serializable {
 				} else if (dynamicFields.getFieldId().equals("employer")) {
 					dynamicFields.setSavedData(workEducationDetails.getEmployer());
 				} else if (dynamicFields.getFieldId().equals("educationalQualification")) {
-					dynamicFields.setSavedData(workEducationDetails.getEducationalQualification().name());
+					dynamicFields.setSavedData(workEducationDetails.getEducationalQualification() != null
+							? workEducationDetails.getEducationalQualification().toString()
+							: null);
 					List<String> options = new ArrayList<String>();
 					EducationalQualification[] accountTypes = EducationalQualification.values();
 					for (EducationalQualification statuses : accountTypes) {
-						options.add(statuses.name());
+						options.add(statuses.getName());
 					}
 					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("experience")) {
@@ -506,7 +513,7 @@ public class PagesDTOHeper implements Serializable {
 				List<String> options = new ArrayList<String>();
 				LicenseType[] accountTypes = LicenseType.values();
 				for (LicenseType statuses : accountTypes) {
-					options.add(statuses.name());
+					options.add(statuses.toString());
 				}
 				dynamicFields.setOptions(options);
 			}
@@ -523,11 +530,12 @@ public class PagesDTOHeper implements Serializable {
 					dynamicFields.setSavedData(licenseDetails.getLicenseIssuingAuthority());
 				} else if (dynamicFields.getFieldId().equals("licenseType")) {
 					dynamicFields.setSavedData(
-							licenseDetails.getLicenseType() != null ? licenseDetails.getLicenseType().name() : null);
+							licenseDetails.getLicenseType() != null ? licenseDetails.getLicenseType().toString()
+									: null);
 					List<String> options = new ArrayList<String>();
 					LicenseType[] accountTypes = LicenseType.values();
 					for (LicenseType statuses : accountTypes) {
-						options.add(statuses.name());
+						options.add(statuses.toString());
 					}
 					dynamicFields.setOptions(options);
 				}
@@ -542,6 +550,35 @@ public class PagesDTOHeper implements Serializable {
 			List<FieldsDTO> appDynamicFieldsDTOSet) {
 
 		if (retailers == null || retailers.getBusinessDetails() == null || retailers.getBusinessDetails().isEmpty()) {
+			if (dynamicFields.getFieldId().equals("facilityDetails")) {
+				List<String> options = new ArrayList<String>();
+				FacilityDetails[] accountTypes = FacilityDetails.values();
+				for (FacilityDetails statuses : accountTypes) {
+					options.add(statuses.toString());
+				}
+				dynamicFields.setOptions(options);
+			} else if (dynamicFields.getFieldId().equals("facilityType")) {
+				List<String> options = new ArrayList<String>();
+				FacilityType[] accountTypes = FacilityType.values();
+				for (FacilityType statuses : accountTypes) {
+					options.add(statuses.toString());
+				}
+				dynamicFields.setOptions(options);
+			} else if (dynamicFields.getFieldId().equals("businessType")) {
+				List<String> options = new ArrayList<String>();
+				BusinessType[] accountTypes = BusinessType.values();
+				for (BusinessType statuses : accountTypes) {
+					options.add(statuses.toString());
+				}
+				dynamicFields.setOptions(options);
+			} else if (dynamicFields.getFieldId().equals("sector")) {
+				List<String> options = new ArrayList<String>();
+				BusinessSector[] accountTypes = BusinessSector.values();
+				for (BusinessSector statuses : accountTypes) {
+					options.add(statuses.toString());
+				}
+				dynamicFields.setOptions(options);
+			}
 			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 		} else {
 			Set<BusinessDetails> BusinessDetailsSet = retailers.getBusinessDetails();
@@ -553,9 +590,25 @@ public class PagesDTOHeper implements Serializable {
 				} else if (dynamicFields.getFieldId().equals("directorOrPartnerName")) {
 					dynamicFields.setSavedData(businessDetails.getDirectorOrPartnerName());
 				} else if (dynamicFields.getFieldId().equals("facilityDetails")) {
-					dynamicFields.setSavedData(businessDetails.getFacilityDetails());
+					dynamicFields.setSavedData(businessDetails.getFacilityDetails() != null
+							? businessDetails.getFacilityDetails().toString()
+							: null);
+					List<String> options = new ArrayList<String>();
+					FacilityDetails[] accountTypes = FacilityDetails.values();
+					for (FacilityDetails statuses : accountTypes) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("facilityType")) {
-					dynamicFields.setSavedData(businessDetails.getFacilityType());
+					dynamicFields.setSavedData(
+							businessDetails.getFacilityType() != null ? businessDetails.getFacilityType().toString()
+									: null);
+					List<String> options = new ArrayList<String>();
+					FacilityType[] accountTypes = FacilityType.values();
+					for (FacilityType statuses : accountTypes) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("fixedAssetPurchase")) {
 					dynamicFields.setSavedData(businessDetails.getFixedAssetPurchase());
 				} else if (dynamicFields.getFieldId().equals("fixedAssetName")) {
@@ -567,9 +620,24 @@ public class PagesDTOHeper implements Serializable {
 				} else if (dynamicFields.getFieldId().equals("proposedCollateral")) {
 					dynamicFields.setSavedData(businessDetails.getProposedCollateral());
 				} else if (dynamicFields.getFieldId().equals("businessType")) {
-					dynamicFields.setSavedData(businessDetails.getBusinessType());
+					dynamicFields.setSavedData(
+							businessDetails.getBusinessType() != null ? businessDetails.getBusinessType().toString()
+									: null);
+					List<String> options = new ArrayList<String>();
+					BusinessType[] accountTypes = BusinessType.values();
+					for (BusinessType statuses : accountTypes) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("sector")) {
-					dynamicFields.setSavedData(businessDetails.getSector());
+					dynamicFields.setSavedData(
+							businessDetails.getSector() != null ? businessDetails.getSector().toString() : null);
+					List<String> options = new ArrayList<String>();
+					BusinessSector[] accountTypes = BusinessSector.values();
+					for (BusinessSector statuses : accountTypes) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("detailOfBusness")) {
 					dynamicFields.setSavedData(businessDetails.getDetailOfBusness());
 				} else if (dynamicFields.getFieldId().equals("initialCapital")) {
@@ -612,14 +680,6 @@ public class PagesDTOHeper implements Serializable {
 			List<FieldsDTO> appDynamicFieldsDTOSet) {
 		if (retailers == null || retailers.getLiabilitiesDetails() == null
 				|| retailers.getLiabilitiesDetails().isEmpty()) {
-			if (dynamicFields.getFieldId().equals("typeOfLiablity")) {
-				List<String> options = new ArrayList<String>();
-				LiabilityType[] accountTypes = LiabilityType.values();
-				for (LiabilityType statuses : accountTypes) {
-					options.add(statuses.name());
-				}
-				dynamicFields.setOptions(options);
-			}
 			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 		} else {
 			Set<LiabilitiesDetails> LiabilitiesDetailsSet = retailers.getLiabilitiesDetails();
@@ -628,18 +688,10 @@ public class PagesDTOHeper implements Serializable {
 					dynamicFields.setSavedData(liabilitiesDetails.getLoanAmount() + "");
 				} else if (dynamicFields.getFieldId().equals("bankOrNbfiName")) {
 					dynamicFields.setSavedData(liabilitiesDetails.getBankOrNbfiName());
-				} else if (dynamicFields.getFieldId().equals("liabilityFrom")) {
-					dynamicFields.setSavedData(liabilitiesDetails.getLiabilityFrom());
-				} else if (dynamicFields.getFieldId().equals("typeOfLiablity")) {
-					dynamicFields.setSavedData(liabilitiesDetails.getTypeOfLiablity() != null
-							? liabilitiesDetails.getTypeOfLiablity().name()
-							: null);
-					List<String> options = new ArrayList<String>();
-					LiabilityType[] liabilityTypes = LiabilityType.values();
-					for (LiabilityType statuses : liabilityTypes) {
-						options.add(statuses.name());
-					}
-					dynamicFields.setOptions(options);
+				} else if (dynamicFields.getFieldId().equals("liabilityFromOtherOrganization")) {
+					dynamicFields.setSavedData(liabilitiesDetails.getLiabilityFromOtherOrganization());
+				} else if (dynamicFields.getFieldId().equals("loanAmountFromOtherOrganization")) {
+					dynamicFields.setSavedData(liabilitiesDetails.getLoanAmount() + "");
 				}
 				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 			}
@@ -655,21 +707,28 @@ public class PagesDTOHeper implements Serializable {
 				List<String> options = new ArrayList<String>();
 				BankAccountType[] accountTypes = BankAccountType.values();
 				for (BankAccountType statuses : accountTypes) {
-					options.add(statuses.name());
+					options.add(statuses.toString());
 				}
 				dynamicFields.setOptions(options);
 			} else if (dynamicFields.getFieldId().equals("currency")) {
 				List<String> options = new ArrayList<String>();
 				Currency[] currencies = Currency.values();
 				for (Currency statuses : currencies) {
-					options.add(statuses.name());
+					options.add(statuses.toString());
 				}
 				dynamicFields.setOptions(options);
 			} else if (dynamicFields.getFieldId().equals("typeOfConcern")) {
 				List<String> options = new ArrayList<String>();
 				TypeOfConcern[] concerns = TypeOfConcern.values();
 				for (TypeOfConcern concern : concerns) {
-					options.add(concern.name());
+					options.add(concern.toString());
+				}
+				dynamicFields.setOptions(options);
+			} else if (dynamicFields.getFieldId().equals("modeOfOperation")) {
+				List<String> options = new ArrayList<String>();
+				ModeOfOperation[] currencies = ModeOfOperation.values();
+				for (ModeOfOperation statuses : currencies) {
+					options.add(statuses.toString());
 				}
 				dynamicFields.setOptions(options);
 			}
@@ -679,11 +738,11 @@ public class PagesDTOHeper implements Serializable {
 				if (dynamicFields.getFieldId().equals("accountTitle")) {
 					dynamicFields.setSavedData(bankAccountDetails.getAccountTitle());
 				} else if (dynamicFields.getFieldId().equals("typeOfConcern")) {
-					dynamicFields.setSavedData(bankAccountDetails.getTypeOfConcern().name());
+					dynamicFields.setSavedData(bankAccountDetails.getTypeOfConcern().toString());
 					List<String> options = new ArrayList<String>();
 					TypeOfConcern[] concerns = TypeOfConcern.values();
 					for (TypeOfConcern concern : concerns) {
-						options.add(concern.name());
+						options.add(concern.toString());
 					}
 					dynamicFields.setOptions(options);
 
@@ -695,23 +754,30 @@ public class PagesDTOHeper implements Serializable {
 					dynamicFields.setSavedData(bankAccountDetails.getBranch() + "");
 				} else if (dynamicFields.getFieldId().equals("modeOfOperation")) {
 					dynamicFields.setSavedData(bankAccountDetails.getModeOfOperation() + "");
+					List<String> options = new ArrayList<String>();
+					ModeOfOperation[] currencies = ModeOfOperation.values();
+					for (ModeOfOperation statuses : currencies) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("currency")) {
 					dynamicFields.setSavedData(
-							bankAccountDetails.getCurrency() != null ? bankAccountDetails.getCurrency().name() : null);
+							bankAccountDetails.getCurrency() != null ? bankAccountDetails.getCurrency().toString()
+									: null);
 					List<String> options = new ArrayList<String>();
 					Currency[] currencies = Currency.values();
 					for (Currency statuses : currencies) {
-						options.add(statuses.name());
+						options.add(statuses.toString());
 					}
 					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("bankAccountType")) {
 					dynamicFields.setSavedData(bankAccountDetails.getBankAccountType() != null
-							? bankAccountDetails.getBankAccountType().name()
+							? bankAccountDetails.getBankAccountType().toString()
 							: null);
 					List<String> options = new ArrayList<String>();
 					BankAccountType[] accountTypes = BankAccountType.values();
 					for (BankAccountType statuses : accountTypes) {
-						options.add(statuses.name());
+						options.add(statuses.toString());
 					}
 					dynamicFields.setOptions(options);
 				}
@@ -766,11 +832,11 @@ public class PagesDTOHeper implements Serializable {
 					dynamicFields.setSavedData(retailers.getMothersName());
 				} else if (dynamicFields.getFieldId().equals("maritalStatus")) {
 					dynamicFields.setSavedData(
-							retailers.getMaritalStatus() != null ? retailers.getMaritalStatus().name() : null);
+							retailers.getMaritalStatus() != null ? retailers.getMaritalStatus().toString() : null);
 					List<String> options = new ArrayList<String>();
 					MaritalStatuses[] maritalStatuses = MaritalStatuses.values();
 					for (MaritalStatuses statuses : maritalStatuses) {
-						options.add(statuses.name());
+						options.add(statuses.toString());
 					}
 					dynamicFields.setOptions(options);
 
@@ -789,11 +855,11 @@ public class PagesDTOHeper implements Serializable {
 				} else if (dynamicFields.getFieldId().equals("email")) {
 					dynamicFields.setSavedData(retailers.getEmail());
 				} else if (dynamicFields.getFieldId().equals("gender")) {
-					dynamicFields.setSavedData(retailers.getGender() != null ? retailers.getGender().name() : null);
+					dynamicFields.setSavedData(retailers.getGender() != null ? retailers.getGender().toString() : null);
 					List<String> options = new ArrayList<String>();
 					Gender[] genders = Gender.values();
 					for (Gender statuses : genders) {
-						options.add(statuses.name());
+						options.add(statuses.toString());
 					}
 					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("id")) {
@@ -806,11 +872,12 @@ public class PagesDTOHeper implements Serializable {
 					dynamicFields.setSavedData(retailers.getTaxIdentificationNumber());
 				} else if (dynamicFields.getFieldId().equals("residentialStatus")) {
 					dynamicFields.setSavedData(
-							retailers.getResidentialStatus() != null ? retailers.getResidentialStatus().name() : null);
+							retailers.getResidentialStatus() != null ? retailers.getResidentialStatus().toString()
+									: null);
 					List<String> options = new ArrayList<String>();
 					ResidentStatus[] residentStatuses = ResidentStatus.values();
 					for (ResidentStatus statuses : residentStatuses) {
-						options.add(statuses.name());
+						options.add(statuses.toString());
 					}
 					dynamicFields.setOptions(options);
 
@@ -820,11 +887,11 @@ public class PagesDTOHeper implements Serializable {
 					dynamicFields.setSavedData(retailers.getPassportExpiryDate());
 				} else if (dynamicFields.getFieldId().equals("nationality")) {
 					dynamicFields.setSavedData(
-							retailers.getNationality() != null ? retailers.getNationality().name() : null);
+							retailers.getNationality() != null ? retailers.getNationality().toString() : null);
 					List<String> options = new ArrayList<String>();
 					Nationality[] nationalities = Nationality.values();
 					for (Nationality statuses : nationalities) {
-						options.add(statuses.name());
+						options.add(statuses.toString());
 					}
 					dynamicFields.setOptions(options);
 
@@ -839,7 +906,7 @@ public class PagesDTOHeper implements Serializable {
 					List<String> options = new ArrayList<String>();
 					Nationality[] nationalities = Nationality.values();
 					for (Nationality statuses : nationalities) {
-						options.add(statuses.name());
+						options.add(statuses.toString());
 					}
 					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("residentialStatus")) {
@@ -847,14 +914,14 @@ public class PagesDTOHeper implements Serializable {
 					List<String> options = new ArrayList<String>();
 					ResidentStatus[] residentStatuses = ResidentStatus.values();
 					for (ResidentStatus statuses : residentStatuses) {
-						options.add(statuses.name());
+						options.add(statuses.toString());
 					}
 					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("gender")) {
 					List<String> options = new ArrayList<String>();
 					Gender[] genders = Gender.values();
 					for (Gender statuses : genders) {
-						options.add(statuses.name());
+						options.add(statuses.toString());
 					}
 					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("maritalStatus")) {
@@ -862,7 +929,7 @@ public class PagesDTOHeper implements Serializable {
 					List<String> options = new ArrayList<String>();
 					MaritalStatuses[] maritalStatuses = MaritalStatuses.values();
 					for (MaritalStatuses statuses : maritalStatuses) {
-						options.add(statuses.name());
+						options.add(statuses.toString());
 					}
 					dynamicFields.setOptions(options);
 				}

@@ -18,10 +18,14 @@ import co.yabx.kyc.app.entities.Fields;
 import co.yabx.kyc.app.enums.AddressProof;
 import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.BankAccountType;
+import co.yabx.kyc.app.enums.BusinessSector;
+import co.yabx.kyc.app.enums.BusinessType;
 import co.yabx.kyc.app.enums.Currency;
 import co.yabx.kyc.app.enums.DocumentSide;
 import co.yabx.kyc.app.enums.DocumentType;
 import co.yabx.kyc.app.enums.EducationalQualification;
+import co.yabx.kyc.app.enums.FacilityDetails;
+import co.yabx.kyc.app.enums.FacilityType;
 import co.yabx.kyc.app.enums.Gender;
 import co.yabx.kyc.app.enums.IdentityProof;
 import co.yabx.kyc.app.enums.LiabilityType;
@@ -421,15 +425,7 @@ public class FieldServiceImpl implements FieldService {
 				} else if (appDynamicFieldsDTO.getFieldId().equals("signature")) {
 
 				} else if (appDynamicFieldsDTO.getFieldId().equals("relationship")) {
-					try {
-						Relationship relationship = appDynamicFieldsDTO.getResponse() != null
-								? Relationship.valueOf(appDynamicFieldsDTO.getResponse())
-								: null;
-						introducerDetails.setRelationship(relationship);
-					} catch (Exception e) {
-						LOGGER.error("Exception while evaluating relationship ={}, error={}",
-								appDynamicFieldsDTO.getResponse(), e.getMessage());
-					}
+					introducerDetails.setRelationship(appDynamicFieldsDTO.getResponse());
 				}
 			}
 		}
@@ -547,7 +543,7 @@ public class FieldServiceImpl implements FieldService {
 				} else if (appDynamicFieldsDTO.getFieldId().equals("bankOrNbfiName")) {
 					liabilitiesDetails.setBankOrNbfiName(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("liabilityFrom")) {
-					liabilitiesDetails.setLiabilityFrom(appDynamicFieldsDTO.getResponse());
+					liabilitiesDetails.setLiabilityFromOtherOrganization(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("typeOfLiablity")) {
 					try {
 						LiabilityType typeOfLiablity = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
@@ -682,9 +678,25 @@ public class FieldServiceImpl implements FieldService {
 				} else if (appDynamicFieldsDTO.getFieldId().equals("directorOrPartnerName")) {
 					businessDetails.setDirectorOrPartnerName(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("facilityDetails")) {
-					businessDetails.setFacilityDetails(appDynamicFieldsDTO.getResponse());
+					try {
+						FacilityDetails facilityDetails = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? FacilityDetails.valueOf(appDynamicFieldsDTO.getResponse())
+								: null;
+						businessDetails.setFacilityDetails(facilityDetails);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating facilityDetails ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
 				} else if (appDynamicFieldsDTO.getFieldId().equals("facilityType")) {
-					businessDetails.setFacilityType(appDynamicFieldsDTO.getResponse());
+					try {
+						FacilityType facilityType = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? FacilityType.valueOf(appDynamicFieldsDTO.getResponse())
+								: null;
+						businessDetails.setFacilityType(facilityType);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating facilityType ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
 				} else if (appDynamicFieldsDTO.getFieldId().equals("fixedAssetPurchase")) {
 					businessDetails.setFixedAssetPurchase(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("fixedAssetName")) {
@@ -704,9 +716,25 @@ public class FieldServiceImpl implements FieldService {
 				} else if (appDynamicFieldsDTO.getFieldId().equals("proposedCollateral")) {
 					businessDetails.setProposedCollateral(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("businessType")) {
-					businessDetails.setBusinessType(appDynamicFieldsDTO.getResponse());
+					try {
+						BusinessType businessType = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? BusinessType.valueOf(appDynamicFieldsDTO.getResponse())
+								: null;
+						businessDetails.setBusinessType(businessType);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating businessType ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
 				} else if (appDynamicFieldsDTO.getFieldId().equals("sector")) {
-					businessDetails.setSector(appDynamicFieldsDTO.getResponse());
+					try {
+						BusinessSector businessSector = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? BusinessSector.valueOf(appDynamicFieldsDTO.getResponse())
+								: null;
+						businessDetails.setSector(businessSector);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating businessSector ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
 				} else if (appDynamicFieldsDTO.getFieldId().equals("detailOfBusness")) {
 					businessDetails.setDetailOfBusness(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("initialCapital")) {

@@ -146,14 +146,12 @@ public class RetailersDtoHelper implements Serializable {
 		List<LiabilitiesDetailsDTO> liabilitiesDetails = new ArrayList<LiabilitiesDetailsDTO>();
 		LiabilitiesDetailsDTO liabilitiesDetailsDTO = new LiabilitiesDetailsDTO();
 		liabilitiesDetailsDTO.setNameOfTheOrganization("ABC bank");
-		liabilitiesDetailsDTO.setLiabilityFrom("NBFI");
 		liabilitiesDetailsDTO.setTypeOfLiablity(LiabilityType.PERSONAL);
 		liabilitiesDetailsDTO.setLoanAmount(87654);
 		liabilitiesDetails.add(liabilitiesDetailsDTO);
 
 		LiabilitiesDetailsDTO liabilitiesDetailsDTO2 = new LiabilitiesDetailsDTO();
 		liabilitiesDetailsDTO2.setNameOfTheOrganization("ICICI bank");
-		liabilitiesDetailsDTO2.setLiabilityFrom("BANK");
 		liabilitiesDetailsDTO2.setTypeOfLiablity(LiabilityType.PERSONAL);
 		liabilitiesDetailsDTO2.setLoanAmount(8349.0);
 		liabilitiesDetails.add(liabilitiesDetailsDTO2);
