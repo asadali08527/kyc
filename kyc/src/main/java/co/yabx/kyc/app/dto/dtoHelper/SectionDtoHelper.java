@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.hibernate.validator.internal.util.privilegedactions.GetInstancesFromServiceLoader;
+
 import co.yabx.kyc.app.dto.GroupsDTO;
 import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.entities.Sections;
@@ -33,8 +35,11 @@ public class SectionDtoHelper implements Serializable {
 					nominee, userAddressDetailsSet, nomineeAddressDetailsSet, businessAddressDetailsSet,
 					userBankAccountDetailsSet, nomineeBankAccountDetailsSet, businessBankAccountDetailsSet);
 
-			appPagesSectionsDTO.setGroups(appPagesSectionGroupSet.stream()
-					.sorted(Comparator.comparing(GroupsDTO::getDisplayOrder)).collect(Collectors.toList()));
+			/*
+			 * appPagesSectionsDTO.setGroups(appPagesSectionGroupSet.stream()
+			 * .sorted(Comparator.comparing(GroupsDTO::getGroupId)).collect(Collectors.
+			 * toList()));
+			 */
 
 			appPagesSectionsDTO.setGroups(appPagesSectionGroupSet);
 			appPagesSectionsDTO.setEnable(appPagesSections.isEnable());
