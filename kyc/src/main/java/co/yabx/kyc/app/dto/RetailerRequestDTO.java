@@ -1,6 +1,9 @@
 package co.yabx.kyc.app.dto;
 
 import java.io.Serializable;
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -14,6 +17,7 @@ public class RetailerRequestDTO implements Serializable {
 	private int startIndex;
 	private int endIndex;
 	private PagesDTO pageResponse;
+	private List<MultipartFile> files;
 
 	public Long getRetailerId() {
 		return retailerId;
@@ -61,6 +65,14 @@ public class RetailerRequestDTO implements Serializable {
 
 	public void setEndIndex(int endIndex) {
 		this.endIndex = endIndex;
+	}
+
+	public List<MultipartFile> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<MultipartFile> files) {
+		this.files = files;
 	}
 
 	@Override

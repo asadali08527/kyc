@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 
-@Repository("attachmenetDetailsRepository")
-public interface AttachmenetDetailsRepository extends CrudRepository<AttachmentDetails, Long> {
+@Repository("attachmentDetailsRepository")
+public interface AttachmentDetailsRepository extends CrudRepository<AttachmentDetails, Long> {
 
 }

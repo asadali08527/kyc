@@ -1,13 +1,10 @@
 package co.yabx.kyc.app.controllers;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.List;
 
-import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +22,9 @@ import co.yabx.kyc.app.dto.KycDetailsDTO;
 import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
 import co.yabx.kyc.app.miniKyc.entity.KycDetails;
 import co.yabx.kyc.app.service.AccountStatusService;
-import co.yabx.kyc.app.service.AccountStatusTrackerService;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.KYCService;
+import co.yabx.kyc.app.service.StorageService;
 
 /**
  * 
@@ -46,6 +43,9 @@ public class KYCController {
 
 	@Autowired
 	private AppConfigService appConfigService;
+
+	@Autowired
+	private StorageService storageService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(KYCController.class);
 
@@ -103,22 +103,12 @@ public class KYCController {
 	 * @param file
 	 * @return
 	 */
-	@RequestMapping(value = "/upload/photo", method = RequestMethod.POST)
-	public ResponseEntity<?> createAccount(@RequestParam(name = "file") MultipartFile file) {
-		File convFile = new File(file.getOriginalFilename());
-		try {
-			convFile.createNewFile();
-			try (FileOutputStream fos = new FileOutputStream(convFile)) {
-				fos.write(file.getBytes());
-			}
-			BufferedImage image = null;
-			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-			image = ImageIO.read(convFile);
-			ImageIO.write(image, extension, new File("D://" + file.getOriginalFilename()));
-		} catch (Exception e) {
-
-		}
+	@RequestMapping(value = "/upload/image", method = RequestMethod.POST)
+	public ResponseEntity<?> uploadImage(@RequestParam("retailerId") Long retailerId, @RequestParam MultipartFile files,
+			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+		storageService.uplaod(null, retailerId, files);
 		return new ResponseEntity<>(HttpStatus.OK);
+
 	}
 
 }

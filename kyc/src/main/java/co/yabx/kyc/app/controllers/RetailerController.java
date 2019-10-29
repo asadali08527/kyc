@@ -1,8 +1,15 @@
 package co.yabx.kyc.app.controllers;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.List;
+
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import co.yabx.kyc.app.dto.QuestionAnswerDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
@@ -26,6 +34,7 @@ import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.service.AuthInfoService;
 import co.yabx.kyc.app.service.RetailerService;
+import co.yabx.kyc.app.service.StorageService;
 
 /**
  * 
@@ -42,6 +51,9 @@ public class RetailerController {
 
 	@Autowired
 	private RetailerService retailerService;
+
+	@Autowired
+	private StorageService storageService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetailerController.class);
 
@@ -153,6 +165,23 @@ public class RetailerController {
 	public ResponseEntity<ResponseDTO> searchRetailer(@PathVariable String dsrMsisdn, @PathVariable String retailerId) {
 		ResponseDTO loginDTO = retailerService.searchRetailerByDsr(dsrMsisdn, retailerId);
 		return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+
+	}
+
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping(value = "/upload/image", method = RequestMethod.POST)
+	public ResponseEntity<?> uploadImage(@RequestParam("dsrMSISDN") String msisdn,
+			@RequestParam("retailerId") Long retailerId, @RequestParam MultipartFile files,
+			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
+			storageService.uplaod(msisdn, retailerId, files);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
 	}
 

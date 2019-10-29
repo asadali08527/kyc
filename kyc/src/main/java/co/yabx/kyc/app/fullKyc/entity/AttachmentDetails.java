@@ -2,11 +2,14 @@ package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -49,7 +52,8 @@ public class AttachmentDetails implements Serializable {
 	@Column(name = "document_number")
 	private String documentNumber;
 
-	@Column(name = "document_type")
+	@Column(name = "document_type", length = 100, columnDefinition = "varchar(32) ")
+	@Enumerated(value = EnumType.STRING)
 	private DocumentType documentType;
 
 	@Column(name = "document_issue_date")
@@ -61,8 +65,8 @@ public class AttachmentDetails implements Serializable {
 	@Column(name = "document_expiry_date")
 	private Long documentExpiryDate;
 
-	@OneToMany(mappedBy = "attachmentDetails", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<Attachments> attachments;
+	@OneToMany(mappedBy = "attachmentDetails", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	private Set<Attachments> attachments = new HashSet<Attachments>();
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
 	User user;
@@ -175,6 +179,9 @@ public class AttachmentDetails implements Serializable {
 	}
 
 	public void setAttachments(Set<Attachments> attachments) {
+		for (Attachments details : attachments) {
+			details.setAttachmentDetails(this);
+		}
 		this.attachments = attachments;
 	}
 

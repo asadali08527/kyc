@@ -3,6 +3,7 @@ package co.yabx.kyc.app.fullKyc.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -42,7 +43,7 @@ public class Attachments implements Serializable {
 	@Column(name = "updated_at")
 	private Date updatedAt;
 
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+	@ManyToOne(fetch = FetchType.EAGER, targetEntity = AttachmentDetails.class)
 	AttachmentDetails attachmentDetails;
 
 	public Long getId() {

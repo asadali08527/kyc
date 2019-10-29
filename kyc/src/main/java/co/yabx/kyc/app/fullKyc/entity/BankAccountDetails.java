@@ -59,6 +59,7 @@ public class BankAccountDetails implements Serializable {
 	private Currency currency;
 
 	@Column(name = "operation_mode", length = 100, nullable = false, columnDefinition = "varchar(32) default 'Single'")
+	@Enumerated(value = EnumType.STRING)
 	private ModeOfOperation modeOfOperation;
 
 	@Column(name = "account_type", length = 100, nullable = false, columnDefinition = "varchar(32) default 'CURRENT'")
