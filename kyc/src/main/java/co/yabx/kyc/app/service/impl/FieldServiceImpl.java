@@ -210,12 +210,13 @@ public class FieldServiceImpl implements FieldService {
 			MonthlyTransactionProfiles monthlyTransactionProfiles = null;
 			monthlyTransactionProfiles = prepareMonthlyTxnProfiles(appDynamicFieldsDTOList, monthlyTransactionProfiles);
 			if (monthlyTransactionProfiles != null) {
-				if (monthlyTransactionProfilesSet == null)
+				if (monthlyTransactionProfilesSet == null) {
 					monthlyTransactionProfilesSet = new HashSet<MonthlyTransactionProfiles>();
-				monthlyTransactionProfilesSet.add(monthlyTransactionProfiles);
-			} else {
-				monthlyTransactionProfilesSet.clear();
-				monthlyTransactionProfilesSet.add(monthlyTransactionProfiles);
+					monthlyTransactionProfilesSet.add(monthlyTransactionProfiles);
+				} else {
+					monthlyTransactionProfilesSet.clear();
+					monthlyTransactionProfilesSet.add(monthlyTransactionProfiles);
+				}
 			}
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
