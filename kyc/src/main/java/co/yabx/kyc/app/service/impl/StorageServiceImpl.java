@@ -49,11 +49,11 @@ public class StorageServiceImpl implements StorageService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(StorageServiceImpl.class);
 
 	@Override
-	public void uplaod(String msisdn, Long retailerId, MultipartFile file) {
+	public AttachmentDetails uplaod(String msisdn, Long retailerId, MultipartFile file) {
 		User user = userService.getRetailerById(retailerId);
 		if (user != null) {
 			File convFile = new File(file.getOriginalFilename());
-			String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "D://")
+			String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/tmp/")
 					+ file.getOriginalFilename();
 			try {
 				convFile.createNewFile();
@@ -104,7 +104,9 @@ public class StorageServiceImpl implements StorageService {
 			attachmentDetails.setAttachments(attachmentList);
 			attachmentDetails.setUser(user);
 			attachmentDetails = attachmentDetailsRepository.save(attachmentDetails);
+			return attachmentDetails;
 		}
+		return null;
 	}
 
 }

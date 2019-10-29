@@ -32,6 +32,7 @@ import co.yabx.kyc.app.dto.RetailersDTO;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
+import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.service.AuthInfoService;
 import co.yabx.kyc.app.service.RetailerService;
 import co.yabx.kyc.app.service.StorageService;
@@ -178,8 +179,8 @@ public class RetailerController {
 			@RequestParam("retailerId") Long retailerId, @RequestParam MultipartFile files,
 			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
-			storageService.uplaod(msisdn, retailerId, files);
-			return new ResponseEntity<>(HttpStatus.OK);
+			AttachmentDetails attachmentDetails = storageService.uplaod(msisdn, retailerId, files);
+			return new ResponseEntity<>(attachmentDetails, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
