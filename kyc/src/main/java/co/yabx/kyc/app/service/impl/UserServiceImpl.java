@@ -161,102 +161,37 @@ public class UserServiceImpl implements UserService {
 			Boolean isNew = false;
 			Boolean isDsrUser = false;
 			User nominees = null;
-			Set<AddressDetails> userAddressDetailsSet = null;
-			Set<AddressDetails> nomineeAddressDetailsSet = null;
+			Set<AddressDetails> userAddressDetailsSet = new HashSet<AddressDetails>();
+			Set<AddressDetails> nomineeAddressDetailsSet = new HashSet<AddressDetails>();
 			Set<AddressDetails> businessAddressDetailsSet = new HashSet<AddressDetails>();
 			Set<BankAccountDetails> userBankAccountDetailsSet = new HashSet<BankAccountDetails>();
-			Set<BankAccountDetails> nomineeBankAccountDetailsSet = null;
+			Set<BankAccountDetails> nomineeBankAccountDetailsSet = new HashSet<BankAccountDetails>();
 			Set<BankAccountDetails> businessBankAccountDetailsSet = new HashSet<BankAccountDetails>();
-			Set<BusinessDetails> businessDetailsSet = null;
-			Set<LiabilitiesDetails> liabilitiesDetailsSet = null;
-			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet = null;
+			Set<BusinessDetails> businessDetailsSet = new HashSet<BusinessDetails>();
+			Set<LiabilitiesDetails> liabilitiesDetailsSet = new HashSet<LiabilitiesDetails>();
+			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet = new HashSet<MonthlyTransactionProfiles>();
 			Set<WorkEducationDetails> workEducationDetailsSet = null;
-			Set<IntroducerDetails> introducerDetailsSet = null;
+			Set<IntroducerDetails> introducerDetailsSet = new HashSet<IntroducerDetails>();
 			List<UserRelationships> nomineeRelationship = null;
 			Set<AttachmentDetails> attachmentDetailsSet = new HashSet<AttachmentDetails>();
 			if (retailer == null) {
 				// It means DSR profile need to be persisted
 				retailer = dsrUser;
 				isDsrUser = true;
-				userAddressDetailsSet = dsrUser.getAddressDetails() != null ? dsrUser.getAddressDetails()
-						: new HashSet<AddressDetails>();
-				userBankAccountDetailsSet = dsrUser.getBankAccountDetails() != null ? dsrUser.getBankAccountDetails()
-						: new HashSet<BankAccountDetails>();
-				liabilitiesDetailsSet = dsrUser.getLiabilitiesDetails() != null ? dsrUser.getLiabilitiesDetails()
-						: new HashSet<LiabilitiesDetails>();
-				userBankAccountDetailsSet = dsrUser.getBankAccountDetails() != null ? dsrUser.getBankAccountDetails()
-						: new HashSet<BankAccountDetails>();
-				nomineeRelationship = userRelationshipsRepository.findByMsisdnAndRelationship(dsrUser.getMsisdn(),
-						Relationship.NOMINEE);
-				nominees = nomineeRelationship != null && !nomineeRelationship.isEmpty()
-						? nomineeRelationship.get(0).getRelative()
-						: null;
-				if (nominees != null) {
-					nomineeAddressDetailsSet = nominees.getAddressDetails() != null ? nominees.getAddressDetails()
-							: new HashSet<AddressDetails>();
-					nomineeBankAccountDetailsSet = nominees.getBankAccountDetails() != null
-							? nominees.getBankAccountDetails()
-							: new HashSet<BankAccountDetails>();
-				} else {
+				if (nominees == null) {
 					isNew = true;
 				}
 
-				businessDetailsSet = dsrUser.getBusinessDetails() != null ? dsrUser.getBusinessDetails()
-						: new HashSet<BusinessDetails>();
-				if (businessDetailsSet != null && !businessDetailsSet.isEmpty()) {
-					for (BusinessDetails businessDetails : businessDetailsSet) {
-						businessAddressDetailsSet.addAll(businessDetails.getAddressDetails());
-						businessBankAccountDetailsSet.addAll(businessDetails.getBankAccountDetails());
-					}
-				} else {
-					businessDetailsSet = businessDetailsSet == null ? new HashSet<BusinessDetails>()
-							: businessDetailsSet;
-					businessAddressDetailsSet = new HashSet<AddressDetails>();
-					businessBankAccountDetailsSet = new HashSet<BankAccountDetails>();
-				}
-				workEducationDetailsSet = dsrUser.getWorkEducationDetails();
-
 			} else {
-				userBankAccountDetailsSet = retailer.getBankAccountDetails() != null ? retailer.getBankAccountDetails()
-						: new HashSet<BankAccountDetails>();
-				userAddressDetailsSet = retailer.getAddressDetails() != null ? retailer.getAddressDetails()
-						: new HashSet<AddressDetails>();
-				businessDetailsSet = retailer.getBusinessDetails() != null ? retailer.getBusinessDetails()
-						: new HashSet<BusinessDetails>();
-				liabilitiesDetailsSet = retailer.getLiabilitiesDetails() != null ? retailer.getLiabilitiesDetails()
-						: new HashSet<LiabilitiesDetails>();
 				nomineeRelationship = userRelationshipsRepository.findByMsisdnAndRelationship(retailer.getMsisdn(),
 						Relationship.NOMINEE);
 				nominees = nomineeRelationship != null && !nomineeRelationship.isEmpty()
 						? nomineeRelationship.get(0).getRelative()
 						: null;
-				if (nominees != null) {
-					nomineeAddressDetailsSet = nominees.getAddressDetails() != null ? nominees.getAddressDetails()
-							: new HashSet<AddressDetails>();
-					nomineeBankAccountDetailsSet = nominees.getBankAccountDetails() != null
-							? nominees.getBankAccountDetails()
-							: new HashSet<BankAccountDetails>();
-				} else {
+				if (nominees == null) {
 					isNew = true;
 					nominees = new Nominees();
 				}
-
-				if (businessDetailsSet != null && !businessDetailsSet.isEmpty()) {
-					for (BusinessDetails businessDetails : businessDetailsSet) {
-						businessAddressDetailsSet.addAll(businessDetails.getAddressDetails());
-						businessBankAccountDetailsSet.addAll(businessDetails.getBankAccountDetails());
-					}
-				} else {
-					businessDetailsSet = businessDetailsSet == null ? new HashSet<BusinessDetails>()
-							: businessDetailsSet;
-					businessAddressDetailsSet = new HashSet<AddressDetails>();
-					businessBankAccountDetailsSet = new HashSet<BankAccountDetails>();
-				}
-				monthlyTransactionProfilesSet = retailer.getMonthlyTransactionProfiles();
-				workEducationDetailsSet = retailer.getWorkEducationDetails();
-				introducerDetailsSet = retailer.getIntroducerDetails();
-				attachmentDetailsSet = retailer.getAttachmentDetails();
-
 			}
 			List<SectionsDTO> appPagesSectionsDTOList = appPagesDTO.getSections();
 			if (appPagesSectionsDTOList != null && !appPagesSectionsDTOList.isEmpty()) {
@@ -287,31 +222,52 @@ public class UserServiceImpl implements UserService {
 		if (isDsrUser) {
 			user.setUserType(UserType.DISTRIBUTORS.name());
 			user.setUserStatus(UserStatus.ACTIVE);
-		} else
+		} else {
 			user.setUserType(UserType.RETAILERS.name());
-		if (neitherNullNorEmpty(userAddressDetailsSet))
+		}
+		if (neitherNullNorEmpty(userAddressDetailsSet)) {
+			user.getAddressDetails().clear();
 			user.setAddressDetails(userAddressDetailsSet);
-		if (neitherNullNorEmpty(userBankAccountDetailsSet))
+		}
+		if (neitherNullNorEmpty(userBankAccountDetailsSet)) {
+			user.getBankAccountDetails().clear();
 			user.setBankAccountDetails(userBankAccountDetailsSet);
-		if (neitherNullNorEmpty(businessDetailsSet))
+		}
+		if (neitherNullNorEmpty(businessDetailsSet)) {
+			user.getBusinessDetails().clear();
 			user.setBusinessDetails(businessDetailsSet);
-		if (neitherNullNorEmpty(liabilitiesDetails))
+		}
+		if (neitherNullNorEmpty(liabilitiesDetails)) {
+			user.getLiabilitiesDetails().clear();
 			user.setLiabilitiesDetails(liabilitiesDetails);
-		if (neitherNullNorEmpty(workEducationDetailsSet))
+		}
+		if (neitherNullNorEmpty(workEducationDetailsSet)) {
+			user.getWorkEducationDetails().clear();
 			user.setWorkEducationDetails(workEducationDetailsSet);
-		if (neitherNullNorEmpty(monthlyTransactionProfilesSet))
+		}
+		if (neitherNullNorEmpty(monthlyTransactionProfilesSet)) {
+			user.getMonthlyTransactionProfiles().clear();
 			user.setMonthlyTransactionProfiles(monthlyTransactionProfilesSet);
-		if (neitherNullNorEmpty(introducerDetailsSet))
+		}
+		if (neitherNullNorEmpty(introducerDetailsSet)) {
+			user.getIntroducerDetails().clear();
 			user.setIntroducerDetails(introducerDetailsSet);
-		if (neitherNullNorEmpty(attachmentDetailsSet))
+		}
+		if (neitherNullNorEmpty(attachmentDetailsSet)) {
+			// Not being used till date
 			user.setAttachmentDetails(attachmentDetailsSet);
+		}
 		user = userRepository.save(user);
 		if (nominees != null) {
 			nominees.setUserType(UserType.NOMINEES.name());
-			if (nomineeAddressDetailsSet != null)
+			if (nomineeAddressDetailsSet != null) {
+				nominees.getAddressDetails().clear();
 				nominees.setAddressDetails(nomineeAddressDetailsSet);
-			if (nomineeBankAccountDetailsSet != null)
+			}
+			if (nomineeBankAccountDetailsSet != null) {
+				nominees.getBankAccountDetails().clear();
 				nominees.setBankAccountDetails(nomineeBankAccountDetailsSet);
+			}
 			nominees = userRepository.save(nominees);
 			persistUserRelationship(user, nominees, UserType.NOMINEES, isNew, nomineeRelationship);
 		}

@@ -2,6 +2,7 @@ package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -139,28 +140,28 @@ public abstract class User implements Serializable {
 	private String passportExpiryDate;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<MonthlyTransactionProfiles> monthlyTransactionProfiles;
+	private Set<MonthlyTransactionProfiles> monthlyTransactionProfiles = new HashSet<MonthlyTransactionProfiles>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<IntroducerDetails> introducerDetails;
+	private Set<IntroducerDetails> introducerDetails = new HashSet<IntroducerDetails>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<WorkEducationDetails> workEducationDetails;
+	private Set<WorkEducationDetails> workEducationDetails = new HashSet<WorkEducationDetails>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<LiabilitiesDetails> liabilitiesDetails;
+	private Set<LiabilitiesDetails> liabilitiesDetails = new HashSet<LiabilitiesDetails>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<BusinessDetails> businessDetails;
+	private Set<BusinessDetails> businessDetails = new HashSet<BusinessDetails>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<AddressDetails> addressDetails;
+	private Set<AddressDetails> addressDetails = new HashSet<AddressDetails>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<BankAccountDetails> bankAccountDetails;
+	private Set<BankAccountDetails> bankAccountDetails = new HashSet<BankAccountDetails>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<AttachmentDetails> attachmentDetails;
+	private Set<AttachmentDetails> attachmentDetails = new HashSet<AttachmentDetails>();
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "user", referencedColumnName = "id")

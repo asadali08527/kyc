@@ -48,6 +48,7 @@ import co.yabx.kyc.app.fullKyc.entity.MonthlyTransactionProfiles;
 import co.yabx.kyc.app.fullKyc.entity.Nominees;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
+import co.yabx.kyc.app.fullKyc.repository.AddressDetailsRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.repositories.AuthInfoRepository;
 import co.yabx.kyc.app.service.AppConfigService;
@@ -70,6 +71,9 @@ public class FieldServiceImpl implements FieldService {
 	@Autowired
 	private AppConfigService appConfigService;
 
+	@Autowired
+	private AddressDetailsRepository addressDetailsRepository;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(FieldServiceImpl.class);
 
 	@Override
@@ -85,20 +89,21 @@ public class FieldServiceImpl implements FieldService {
 		List<FieldsDTO> appDynamicFieldsDTOList = appPagesSectionGroupsDTO.getFields();
 		AddressDetails addressDetails = null;
 		BankAccountDetails bankAccountDetails = null;
-		LiabilitiesDetails liabilitiesDetails = null;
 		if ((appPagesSectionGroupsDTO.getGroupId() == 2
 				|| "addresses".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName()))
 				&& (appPagesSectionsDTO.getSectionId() == 1 || appPagesSectionsDTO.getSectionId() == 3)) {
 			// user address details
-			addressDetails = new AddressDetails();
 			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupTitle());
-			addressDetails.setAddressType(addressType);
+			addressDetails = addressDetailsRepository.findByUserAndAddressType(retailerOrDsrUser, addressType);
+			if (addressDetails == null) {
+				addressDetails = new AddressDetails();
+				addressDetails.setAddressType(addressType);
+			}
 			addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
 			if (addressDetails != null) {
 				if (userAddressDetailsSet == null) {
 					userAddressDetailsSet = new HashSet<AddressDetails>();
 				}
-				userAddressDetailsSet.clear();
 				userAddressDetailsSet.add(addressDetails);
 			}
 			return;
@@ -106,15 +111,18 @@ public class FieldServiceImpl implements FieldService {
 				|| "addresses".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName()))
 				&& appPagesSectionsDTO.getSectionId() == 2) {
 			// nominee address details
-			addressDetails = new AddressDetails();
 			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupTitle());
+			addressDetails = addressDetailsRepository.findByUserAndAddressType(nominees, addressType);
+			if (addressDetails == null) {
+				addressDetails = new AddressDetails();
+				addressDetails.setAddressType(addressType);
+			}
 			addressDetails.setAddressType(addressType);
 			addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
 			if (addressDetails != null) {
 				if (nomineeAddressDetailsSet == null) {
 					nomineeAddressDetailsSet = new HashSet<AddressDetails>();
 				}
-				nomineeAddressDetailsSet.clear();
 				nomineeAddressDetailsSet.add(addressDetails);
 			}
 			return;
@@ -122,14 +130,25 @@ public class FieldServiceImpl implements FieldService {
 				|| "addresses".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName()))
 				&& appPagesSectionsDTO.getSectionId() == 5) {
 			// Business address details
-			addressDetails = new AddressDetails();
 			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupTitle());
-			addressDetails.setAddressType(addressType);
+			if (businessAddressDetailsSet == null) {
+				businessAddressDetailsSet = new HashSet<AddressDetails>();
+			} else {
+				Optional<BusinessDetails> optional = businessDetailsSet.stream().findFirst();
+				if (optional.isPresent()) {
+					BusinessDetails businessDetails = optional.get();
+					if (businessDetails != null) {
+						addressDetails = addressDetailsRepository.findByBusinessDetailsAndAddressType(businessDetails,
+								addressType);
+					}
+				}
+			}
+			if (addressDetails == null) {
+				addressDetails = new AddressDetails();
+				addressDetails.setAddressType(addressType);
+			}
 			addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
 			if (addressDetails != null) {
-				if (businessAddressDetailsSet == null) {
-					businessAddressDetailsSet = new HashSet<AddressDetails>();
-				}
 				businessAddressDetailsSet.clear();
 				businessAddressDetailsSet.add(addressDetails);
 			}
@@ -142,7 +161,6 @@ public class FieldServiceImpl implements FieldService {
 			if (userBankAccountDetailsSet == null) {
 				userBankAccountDetailsSet = new HashSet<BankAccountDetails>();
 			}
-			userBankAccountDetailsSet.clear();
 			userBankAccountDetailsSet.add(bankAccountDetails);
 			return;
 
@@ -154,7 +172,6 @@ public class FieldServiceImpl implements FieldService {
 			if (nomineeBankAccountDetailsSet == null) {
 				nomineeBankAccountDetailsSet = new HashSet<BankAccountDetails>();
 			}
-			nomineeBankAccountDetailsSet.clear();
 			nomineeBankAccountDetailsSet.add(bankAccountDetails);
 			return;
 
@@ -166,17 +183,16 @@ public class FieldServiceImpl implements FieldService {
 			if (businessBankAccountDetailsSet == null) {
 				businessBankAccountDetailsSet = new HashSet<BankAccountDetails>();
 			}
-			businessBankAccountDetailsSet.clear();
 			businessBankAccountDetailsSet.add(bankAccountDetails);
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
 				.getLongProperty("GROUP_ID_FOR_LIABILITIES_DETAILS", 4l)
 				|| "liabilitiesDetails".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName())) {
+			LiabilitiesDetails liabilitiesDetails = null;
 			liabilitiesDetails = prepareLiabilities(appDynamicFieldsDTOList, liabilitiesDetails);
 			if (liabilitiesDetailsSet == null) {
 				liabilitiesDetailsSet = new HashSet<LiabilitiesDetails>();
 			}
-			liabilitiesDetailsSet.clear();
 			liabilitiesDetailsSet.add(liabilitiesDetails);
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
@@ -197,7 +213,6 @@ public class FieldServiceImpl implements FieldService {
 				if (businessDetailsSet == null) {
 					businessDetailsSet = new HashSet<BusinessDetails>();
 				}
-				businessDetailsSet.clear();
 				businessDetailsSet.add(businessDetails);
 			}
 			return;
@@ -234,7 +249,6 @@ public class FieldServiceImpl implements FieldService {
 					monthlyTransactionProfilesSet = new HashSet<MonthlyTransactionProfiles>();
 					monthlyTransactionProfilesSet.add(monthlyTransactionProfiles);
 				} else {
-					monthlyTransactionProfilesSet.clear();
 					monthlyTransactionProfilesSet.add(monthlyTransactionProfiles);
 				}
 			}
@@ -249,7 +263,6 @@ public class FieldServiceImpl implements FieldService {
 					workEducationDetailsSet = new HashSet<WorkEducationDetails>();
 					workEducationDetailsSet.add(workEducationDetails);
 				} else {
-					workEducationDetailsSet.clear();
 					workEducationDetailsSet.add(workEducationDetails);
 				}
 			}
@@ -264,7 +277,6 @@ public class FieldServiceImpl implements FieldService {
 					introducerDetailsSet = new HashSet<IntroducerDetails>();
 					introducerDetailsSet.add(introducerDetails);
 				} else {
-					introducerDetailsSet.clear();
 					introducerDetailsSet.add(introducerDetails);
 				}
 			}
