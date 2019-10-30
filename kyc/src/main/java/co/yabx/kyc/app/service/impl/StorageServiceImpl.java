@@ -56,7 +56,7 @@ public class StorageServiceImpl implements StorageService {
 		User user = userService.getRetailerById(retailerId);
 		if (user != null) {
 			File convFile = new File(file.getOriginalFilename());
-			String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/tmp/")
+			String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "D://test/")
 					+ file.getOriginalFilename();
 			try {
 				convFile.createNewFile();
@@ -131,11 +131,13 @@ public class StorageServiceImpl implements StorageService {
 				}
 				if (attachments == null) {
 					attachments = new Attachments();
-					attachments.setDocumentSide(documentSide);
+					if (documentSide != null)
+						attachments.setDocumentSide(documentSide);
 				}
 				attachments.setDocumentUrl(path);
 				attachmentList.add(attachments);
 				attachmentDetails.setAttachments(attachmentList);
+				attachmentDetails.setDocumentType(documentType);
 				attachmentDetails.setUser(user);
 				attachmentDetails = attachmentDetailsRepository.save(attachmentDetails);
 				return attachmentDetails;
