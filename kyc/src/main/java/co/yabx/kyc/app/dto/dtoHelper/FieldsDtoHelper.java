@@ -809,7 +809,6 @@ public class FieldsDtoHelper implements Serializable {
 				subFieldsDTO.setId(subFields.getId());
 				subFieldsDTOs.add(subFieldsDTO);
 			}
-			subFieldsDTOs.stream().sorted().collect(Collectors.toList());
 			return subFieldsDTOs;
 		}
 		return null;
