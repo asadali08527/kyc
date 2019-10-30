@@ -94,4 +94,18 @@ public class Attachments implements Serializable {
 		this.attachmentDetails = attachmentDetails;
 	}
 
+	@PrePersist
+	protected void insertDates() {
+		if (createdAt == null) {
+			createdAt = new Date();
+		}
+		if (updatedAt == null) {
+			updatedAt = new Date();
+		}
+	}
+
+	@PreUpdate
+	protected void updateTime() {
+		updatedAt = new Date();
+	}
 }

@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
+import javax.transaction.Transactional;
 
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -52,6 +53,7 @@ public class StorageServiceImpl implements StorageService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(StorageServiceImpl.class);
 
 	@Override
+	@Transactional
 	public AttachmentDetails uplaod(String msisdn, Long retailerId, MultipartFile file) {
 		User user = userService.getRetailerById(retailerId);
 		if (user != null) {
@@ -108,7 +110,7 @@ public class StorageServiceImpl implements StorageService {
 				}
 			}
 			if (documentType != null) {
-				attachmentDetails = attachmentDetailsRepository.findByDocumentType(documentType);
+				attachmentDetails = attachmentDetailsRepository.findByUserAndDocumentType(user, documentType);
 				if (attachmentDetails == null) {
 					attachmentDetails = new AttachmentDetails();
 					attachmentDetails.setAttachmentType(attachmentType);
@@ -128,19 +130,28 @@ public class StorageServiceImpl implements StorageService {
 						if (BackDoc.isPresent())
 							attachments = BackDoc.get();
 					}
+				} else {
+					Optional<Attachments> frontDoc = attachmentDetails.getAttachments().stream().findFirst();
+					if (frontDoc.isPresent())
+						attachments = frontDoc.get();
 				}
 				if (attachments == null) {
 					attachments = new Attachments();
-					if (documentSide != null)
+					if (documentSide != null) {
 						attachments.setDocumentSide(documentSide);
+					}
+					attachments.setDocumentUrl(path);
+					attachmentList.add(attachments);
+					attachmentDetails.setAttachments(attachmentList);
+					attachmentDetails.setDocumentType(documentType);
+					attachmentDetails.setUser(user);
+					attachmentDetails = attachmentDetailsRepository.save(attachmentDetails);
+					return attachmentDetails;
+				} else {
+					attachments.setDocumentUrl(path);
+					attachmentsRepository.save(attachments);
 				}
-				attachments.setDocumentUrl(path);
-				attachmentList.add(attachments);
-				attachmentDetails.setAttachments(attachmentList);
-				attachmentDetails.setDocumentType(documentType);
-				attachmentDetails.setUser(user);
-				attachmentDetails = attachmentDetailsRepository.save(attachmentDetails);
-				return attachmentDetails;
+
 			}
 		}
 		return null;
