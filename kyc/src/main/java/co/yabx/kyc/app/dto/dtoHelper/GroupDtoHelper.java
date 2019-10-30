@@ -86,9 +86,15 @@ public class GroupDtoHelper implements Serializable {
 				appPagesSectionGroupsDTO.setFields(appDynamicFieldsDTOs.stream()
 						.sorted(Comparator.comparing(FieldsDTO::getDisplayOrder)).collect(Collectors.toList()));
 				appPagesSectionGroupsDTO.setEnable(appPagesSectionGroups.isEnable());
-				appPagesSectionGroupsDTO
-						.setGroupId(subGroups != null && subGroups.getFields() != null ? subGroups.getId()
-								: appPagesSectionGroups.getGroupId());
+				if (subGroups != null) {
+					if (subGroups.getFields() != null) {
+						appPagesSectionGroupsDTO.setGroupId(subGroups.getId());
+					} else {
+						appPagesSectionGroupsDTO.setGroupId(Long.valueOf(subGroups.getDisplayOrder()));
+					}
+				} else {
+					appPagesSectionGroupsDTO.setGroupId(appPagesSectionGroups.getGroupId());
+				}
 				appPagesSectionGroupsDTO.setGroupName(appPagesSectionGroups.getGroupName());
 				appPagesSectionGroupsDTO
 						.setGroupTitle(subGroups != null && subGroups.getGroupType() != null ? subGroups.getGroupType()
