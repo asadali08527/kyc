@@ -34,13 +34,8 @@ public class SectionDtoHelper implements Serializable {
 			List<GroupsDTO> appPagesSectionGroupSet = GroupDtoHelper.getGroups(retailers, section, appPagesSections,
 					nominee, userAddressDetailsSet, nomineeAddressDetailsSet, businessAddressDetailsSet,
 					userBankAccountDetailsSet, nomineeBankAccountDetailsSet, businessBankAccountDetailsSet);
-
-			/*
-			 * appPagesSectionsDTO.setGroups(appPagesSectionGroupSet.stream()
-			 * .sorted(Comparator.comparing(GroupsDTO::getGroupId)).collect(Collectors.
-			 * toList()));
-			 */
-
+			appPagesSectionsDTO.setGroups(appPagesSectionGroupSet.stream()
+					.sorted(Comparator.comparing(GroupsDTO::getDisplayOrder)).collect(Collectors.toList()));
 			appPagesSectionsDTO.setGroups(appPagesSectionGroupSet);
 			appPagesSectionsDTO.setEnable(appPagesSections.isEnable());
 			appPagesSectionsDTO.setSectionId(appPagesSections.getSectionId());
