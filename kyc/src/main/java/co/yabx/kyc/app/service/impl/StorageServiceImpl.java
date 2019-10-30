@@ -112,8 +112,7 @@ public class StorageServiceImpl implements StorageService {
 				if (attachmentDetails == null) {
 					attachmentDetails = new AttachmentDetails();
 					attachmentDetails.setAttachmentType(attachmentType);
-				}
-				else if (documentSide != null) {
+				} else if (documentSide != null) {
 					if (documentSide == DocumentSide.FRONT) {
 						Optional<Attachments> frontDoc = attachmentDetails.getAttachments().stream()
 								.filter(f -> f != null && f.getDocumentSide() != null
@@ -130,7 +129,7 @@ public class StorageServiceImpl implements StorageService {
 							attachments = BackDoc.get();
 					}
 				}
-				if (attachments != null) {
+				if (attachments == null) {
 					attachments = new Attachments();
 					attachments.setDocumentSide(documentSide);
 				}

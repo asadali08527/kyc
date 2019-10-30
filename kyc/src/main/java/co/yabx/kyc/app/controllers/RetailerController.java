@@ -179,8 +179,9 @@ public class RetailerController {
 			@RequestParam("retailerId") Long retailerId, @RequestParam MultipartFile files,
 			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
-			AttachmentDetails attachmentDetails = storageService.uplaod(msisdn, retailerId, files);
-			return new ResponseEntity<>(attachmentDetails, HttpStatus.OK);
+			LOGGER.info("/upload/image request recieved for retailer={}, dsr={}", retailerId, msisdn);
+			storageService.uplaod(msisdn, retailerId, files);
+			return new ResponseEntity<>(files, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
