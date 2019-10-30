@@ -128,7 +128,6 @@ public class RetailersDtoHelper implements Serializable {
 		IntroducerDetailsDTO introducerDetailsDTO = new IntroducerDetailsDTO();
 		introducerDetailsDTO.setAccountNumber(123467l);
 		introducerDetailsDTO.setName("abc");
-		introducerDetailsDTO.setRelationship(Relationship.FRIEND);
 		introducerDetailsDTO.setSignatureVerified(true);
 		introducerDetails.add(introducerDetailsDTO);
 		userDto.setIntroducerDetails(introducerDetails);

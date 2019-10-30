@@ -14,7 +14,7 @@ public enum IdentityProof {
 	@Override
 	public String toString() {
 		if (super.toString().equals("DRIVING_LICENSE")) {
-			return "DRIVING LICENSE";
+			return "Driving License";
 		} else {
 			return super.toString();
 		}

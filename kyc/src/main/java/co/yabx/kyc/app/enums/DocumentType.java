@@ -19,7 +19,7 @@ public enum DocumentType {
 			return DocumentType.INCOME_TAX_RETURN;
 		} else if (value.equalsIgnoreCase("TRADE LICENSE")) {
 			return DocumentType.TRADE_LICENSE;
-		}else if (value.equalsIgnoreCase("NOMINEE PHOTOE")) {
+		} else if (value.equalsIgnoreCase("NOMINEE PHOTOE")) {
 			return DocumentType.NOMINEE_PHOTO;
 		} else {
 			return DocumentType.valueOf(value);
@@ -29,19 +29,19 @@ public enum DocumentType {
 	@Override
 	public String toString() {
 		if (super.toString().equals("TRADE_LICENSE")) {
-			return "TRADE LICENSE";
+			return "Trade License";
 		} else if (super.toString().equals("INCOME_TAX_RETURN")) {
-			return "INCOME TAX RETURN";
+			return "Income Tax Return";
 		} else if (super.toString().equals("BIRTH_CERTIFICATE")) {
-			return "BIRTH CERTIFICATE";
+			return "Birth Certificate";
 		} else if (super.toString().equals("VAT_REGISTRATION_NUMBER")) {
-			return "VAT REGISTRATION NUMBER";
+			return "VAT Registration Number";
 		} else if (super.toString().equals("TAX_IDENTIFICATION_NUMBER")) {
-			return "TAX IDENTIFICATION NUMBER";
+			return "TAX Identification Number";
 		} else if (super.toString().equals("NATIONAL_IDENTIFICATION_NUMBER")) {
-			return "NATIONAL IDENTIFICATION NUMBER";
+			return "National Identification Number";
 		} else if (super.toString().equals("DRIVING_LICENSE")) {
-			return "DRIVING LICENSE";
+			return "Driving License";
 		} else {
 			return super.toString();
 		}

@@ -21,13 +21,13 @@ public enum AddressType {
 	@Override
 	public String toString() {
 		if (super.toString().equals("BUSINESS_REGISTERED_ADDRESS")) {
-			return "BUSINESS REGISTERED ADDRESS";
+			return "Business Registered Address";
 		} else if (super.toString().equals("BUSINESS_OFFICE_ADDRESS")) {
-			return "BUSINESS OFFICE ADDRESS";
+			return "Business Office Address";
 		} else if (super.toString().equals("BUSINESS_FACTORY_ADDRESS")) {
-			return "BUSINESS FACTORY ADDRESS";
+			return "Business Factory Address";
 		} else if (super.toString().equals("BUSINESS_OTHER_ADDRESS")) {
-			return "BUSINESS OTHER ADDRESS";
+			return "Business Other Address";
 		} else {
 			return super.toString();
 		}
