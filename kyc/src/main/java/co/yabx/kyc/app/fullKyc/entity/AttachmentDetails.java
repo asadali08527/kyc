@@ -21,6 +21,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
+import co.yabx.kyc.app.enums.AttachmentType;
 import co.yabx.kyc.app.enums.DocumentType;
 
 /**
@@ -55,6 +56,10 @@ public class AttachmentDetails implements Serializable {
 	@Column(name = "document_type", length = 100, columnDefinition = "varchar(32) ")
 	@Enumerated(value = EnumType.STRING)
 	private DocumentType documentType;
+
+	@Column(name = "attachment_type", length = 100, columnDefinition = "varchar(32) ")
+	@Enumerated(value = EnumType.STRING)
+	private AttachmentType attachmentType;
 
 	@Column(name = "document_issue_date")
 	private Long documentIssueDate;
@@ -183,6 +188,14 @@ public class AttachmentDetails implements Serializable {
 			details.setAttachmentDetails(this);
 		}
 		this.attachments = attachments;
+	}
+
+	public AttachmentType getAttachmentType() {
+		return attachmentType;
+	}
+
+	public void setAttachmentType(AttachmentType attachmentType) {
+		this.attachmentType = attachmentType;
 	}
 
 }

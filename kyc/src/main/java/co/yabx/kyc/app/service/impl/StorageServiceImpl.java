@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -15,10 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import co.yabx.kyc.app.enums.AttachmentType;
 import co.yabx.kyc.app.enums.DocumentSide;
 import co.yabx.kyc.app.enums.DocumentType;
 import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.fullKyc.entity.Attachments;
+import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.repository.AttachmentDetailsRepository;
 import co.yabx.kyc.app.fullKyc.repository.AttachmentsRepository;
@@ -70,40 +73,74 @@ public class StorageServiceImpl implements StorageService {
 						retailerId, e.getMessage());
 			}
 			Set<Attachments> attachmentList = new HashSet<Attachments>();
-			AttachmentDetails attachmentDetails = new AttachmentDetails();
 			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 			String[] fileName = file.getOriginalFilename().replaceAll("." + extension, "").split("-");
-			Attachments attachments = new Attachments();
+			DocumentType documentType = null;
+			DocumentSide documentSide = null;
+			AttachmentDetails attachmentDetails = null;
+			Attachments attachments = null;
+			AttachmentType attachmentType = null;
 			if (fileName.length > 1) {
 				for (String name : fileName) {
 					if (name.equalsIgnoreCase("DRIVING_LICENSE")) {
-						attachmentDetails.setDocumentType(DocumentType.DRIVING_LICENSE);
+						documentType = DocumentType.DRIVING_LICENSE;
 					} else if (name.equalsIgnoreCase("PASSPORT")) {
-						attachmentDetails.setDocumentType(DocumentType.PASSPORT);
+						documentType = DocumentType.PASSPORT;
 					} else if (name.equalsIgnoreCase("front")) {
-						attachments.setDocumentSide(DocumentSide.FRONT);
+						documentSide = DocumentSide.FRONT;
 					} else if (name.equalsIgnoreCase("back")) {
-						attachments.setDocumentSide(DocumentSide.BACK);
+						documentSide = DocumentSide.BACK;
+					} else if (name.equalsIgnoreCase("idProof")) {
+						attachmentType = AttachmentType.IdentityProof;
+					} else if (name.equalsIgnoreCase("addressProof")) {
+						attachmentType = AttachmentType.AddressProof;
 					}
 				}
 			} else {
 				if (fileName[0].equalsIgnoreCase("tinCertificates")) {
-					attachmentDetails.setDocumentType(DocumentType.TIN_CERTIFICATE);
+					documentType = DocumentType.TIN_CERTIFICATE;
 				} else if (fileName[0].equalsIgnoreCase("tradeLicense")) {
-					attachmentDetails.setDocumentType(DocumentType.TRADE_LICENSE);
+					documentType = DocumentType.TRADE_LICENSE;
 				} else if (fileName[0].equalsIgnoreCase("nomineePhoto")) {
-					attachmentDetails.setDocumentType(DocumentType.NOMINEE_PHOTO);
+					documentType = DocumentType.NOMINEE_PHOTO;
 				} else if (fileName[0].equalsIgnoreCase("signature")) {
-					attachmentDetails.setDocumentType(DocumentType.SIGNATURE);
+					documentType = DocumentType.SIGNATURE;
 				}
 			}
-
-			attachmentList.add(attachments);
-			attachments.setDocumentUrl(path);
-			attachmentDetails.setAttachments(attachmentList);
-			attachmentDetails.setUser(user);
-			attachmentDetails = attachmentDetailsRepository.save(attachmentDetails);
-			return attachmentDetails;
+			if (documentType != null) {
+				attachmentDetails = attachmentDetailsRepository.findByDocumentType(documentType);
+				if (attachmentDetails == null) {
+					attachmentDetails = new AttachmentDetails();
+					attachmentDetails.setAttachmentType(attachmentType);
+				}
+				else if (documentSide != null) {
+					if (documentSide == DocumentSide.FRONT) {
+						Optional<Attachments> frontDoc = attachmentDetails.getAttachments().stream()
+								.filter(f -> f != null && f.getDocumentSide() != null
+										&& f.getDocumentSide().equals(DocumentSide.FRONT))
+								.findFirst();
+						if (frontDoc.isPresent())
+							attachments = frontDoc.get();
+					} else {
+						Optional<Attachments> BackDoc = attachmentDetails.getAttachments().stream()
+								.filter(f -> f != null && f.getDocumentSide() != null
+										&& f.getDocumentSide().equals(DocumentSide.BACK))
+								.findFirst();
+						if (BackDoc.isPresent())
+							attachments = BackDoc.get();
+					}
+				}
+				if (attachments != null) {
+					attachments = new Attachments();
+					attachments.setDocumentSide(documentSide);
+				}
+				attachments.setDocumentUrl(path);
+				attachmentList.add(attachments);
+				attachmentDetails.setAttachments(attachmentList);
+				attachmentDetails.setUser(user);
+				attachmentDetails = attachmentDetailsRepository.save(attachmentDetails);
+				return attachmentDetails;
+			}
 		}
 		return null;
 	}

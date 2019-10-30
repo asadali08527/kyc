@@ -19,10 +19,13 @@ import co.yabx.kyc.app.entities.filter.Filters;
 import co.yabx.kyc.app.entities.filter.SubFields;
 import co.yabx.kyc.app.entities.filter.SubGroups;
 import co.yabx.kyc.app.enums.AddressProof;
+import co.yabx.kyc.app.enums.AttachmentType;
 import co.yabx.kyc.app.enums.BankAccountType;
 import co.yabx.kyc.app.enums.BusinessSector;
 import co.yabx.kyc.app.enums.BusinessType;
 import co.yabx.kyc.app.enums.Currency;
+import co.yabx.kyc.app.enums.DocumentSide;
+import co.yabx.kyc.app.enums.DocumentType;
 import co.yabx.kyc.app.enums.EducationalQualification;
 import co.yabx.kyc.app.enums.FacilityDetails;
 import co.yabx.kyc.app.enums.FacilityType;
@@ -45,6 +48,8 @@ import co.yabx.kyc.app.fullKyc.entity.LicenseDetails;
 import co.yabx.kyc.app.fullKyc.entity.MonthlyTransactionProfiles;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
+import co.yabx.kyc.app.service.AppConfigService;
+import co.yabx.kyc.app.util.SpringUtil;
 
 public class FieldsDtoHelper implements Serializable {
 
@@ -143,42 +148,69 @@ public class FieldsDtoHelper implements Serializable {
 				dynamicFields.setOptions(options);
 			}
 			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields);
-			fieldsDTO.setSubFields(getSubFileds(dynamicFields));
+			fieldsDTO.setSubFields(getSubFileds(dynamicFields, null));
 			appDynamicFieldsDTOSet.add(fieldsDTO);
 		} else {
 			Set<AttachmentDetails> attachmentDetailsSet = retailers.getAttachmentDetails();
-			for (AttachmentDetails attachmentDetails : attachmentDetailsSet) {
-				if (dynamicFields.getFieldId().equals("idProof")) {
-					List<String> options = new ArrayList<String>();
-					IdentityProof[] idProof = IdentityProof.values();
-					for (IdentityProof proof : idProof) {
-						options.add(proof.toString());
-					}
-					dynamicFields.setOptions(options);
-				} else if (dynamicFields.getFieldId().equals("addressProof")) {
-					AddressProof[] addressProofs = AddressProof.values();
-					List<String> options = new ArrayList<String>();
-					for (AddressProof proof : addressProofs) {
-						options.add(proof.toString());
-					}
-					dynamicFields.setOptions(options);
-
-				} else if (dynamicFields.getFieldId().equals("tinCertificates")) {
-
-				} else if (dynamicFields.getFieldId().equals("tradeLicense")) {
-
-				} else if (dynamicFields.getFieldId().equals("nomineePhoto")) {
-
-				} else if (dynamicFields.getFieldId().equals("signature")) {
-
+			Optional<AttachmentDetails> attachmentDetails = null;
+			if (dynamicFields.getFieldId().equals("idProof")) {
+				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getAttachmentType() != null
+						&& f.getAttachmentType().equals(AttachmentType.IdentityProof)).findFirst();
+				List<String> options = new ArrayList<String>();
+				IdentityProof[] idProof = IdentityProof.values();
+				for (IdentityProof proof : idProof) {
+					options.add(proof.toString());
 				}
-				FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields);
-				fieldsDTO.setSubFields(getSubFileds(dynamicFields));
-				appDynamicFieldsDTOSet.add(fieldsDTO);
+				dynamicFields.setOptions(options);
+			} else if (dynamicFields.getFieldId().equals("addressProof")) {
+				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getAttachmentType() != null
+						&& f.getAttachmentType().equals(AttachmentType.AddressProof)).findFirst();
+				AddressProof[] addressProofs = AddressProof.values();
+				List<String> options = new ArrayList<String>();
+				for (AddressProof proof : addressProofs) {
+					options.add(proof.toString());
+				}
+				dynamicFields.setOptions(options);
+
+			} else if (dynamicFields.getFieldId().equals("tinCertificates")) {
+				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
+						&& f.getDocumentType().equals(DocumentType.TIN_CERTIFICATE)).findFirst();
+				setSavedAttachment(dynamicFields, attachmentDetails);
+
+			} else if (dynamicFields.getFieldId().equals("tradeLicense")) {
+				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
+						&& f.getDocumentType().equals(DocumentType.TRADE_LICENSE)).findFirst();
+				setSavedAttachment(dynamicFields, attachmentDetails);
+
+			} else if (dynamicFields.getFieldId().equals("nomineePhoto")) {
+				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
+						&& f.getDocumentType().equals(DocumentType.NOMINEE_PHOTO)).findFirst();
+				setSavedAttachment(dynamicFields, attachmentDetails);
+
+			} else if (dynamicFields.getFieldId().equals("signature")) {
+				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
+						&& f.getDocumentType().equals(DocumentType.SIGNATURE)).findFirst();
+				setSavedAttachment(dynamicFields, attachmentDetails);
 			}
+			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields);
+			fieldsDTO.setSubFields(getSubFileds(dynamicFields, attachmentDetails));
+			appDynamicFieldsDTOSet.add(fieldsDTO);
 
 		}
 
+	}
+
+	private static void setSavedAttachment(Fields dynamicFields, Optional<AttachmentDetails> attachmentDetails) {
+		if (attachmentDetails != null && attachmentDetails.isPresent()) {
+			Set<Attachments> attachments = attachmentDetails.get().getAttachments();
+			if (attachments != null && !attachments.isEmpty()) {
+				Optional<Attachments> attachmentOptional = attachments.stream().findFirst();
+				if (attachmentOptional.isPresent())
+					dynamicFields.setSavedData(
+							SpringUtil.bean(AppConfigService.class).getProperty("DOCUMENT_STORAGE_BASE_URL",
+									"https://yabx.co/") + attachmentOptional.get().getDocumentUrl());
+			}
+		}
 	}
 
 	private static void prepareIntroducerDetails(Fields dynamicFields, User retailers,
@@ -755,20 +787,54 @@ public class FieldsDtoHelper implements Serializable {
 		return appDynamicFieldsDTO;
 	}
 
-	private static List<SubFieldsDTO> getSubFileds(Fields dynamicFields) {
+	private static List<SubFieldsDTO> getSubFileds(Fields dynamicFields,
+			Optional<AttachmentDetails> attachmentDetailsOptional) {
 		Set<SubFields> subFieldsSet = dynamicFields.getSubFields();
 		if (subFieldsSet != null && !subFieldsSet.isEmpty()) {
 			List<SubFieldsDTO> subFieldsDTOs = new ArrayList<SubFieldsDTO>();
 			for (SubFields subFields : subFieldsSet) {
 				SubFieldsDTO subFieldsDTO = new SubFieldsDTO();
 				Fields subChildField = subFields.getChild();
-				subFieldsDTO.setFields(getAppDynamicFieldDTO(subChildField));
+				String side = subChildField.getFieldName();
+				FieldsDTO fieldsDTO = getAppDynamicFieldDTO(subChildField);
+				if (attachmentDetailsOptional != null && attachmentDetailsOptional.isPresent()) {
+					AttachmentDetails attachmentDetails = attachmentDetailsOptional.get();
+					Set<Attachments> attachmentsSet = attachmentDetails.getAttachments();
+					if (attachmentsSet != null && !attachmentsSet.isEmpty()) {
+						setsavedAttachement(attachmentsSet, side, fieldsDTO);
+					}
+				}
+				subFieldsDTO.setFields(fieldsDTO);
 				subFieldsDTO.setId(subFields.getId());
 				subFieldsDTOs.add(subFieldsDTO);
 			}
 			return subFieldsDTOs;
 		}
 		return null;
+	}
+
+	private static void setsavedAttachement(Set<Attachments> attachmentsSet, String side, FieldsDTO fieldsDTO) {
+
+		if (side != null && DocumentSide.FRONT.toString().equalsIgnoreCase(side)) {
+			Optional<Attachments> frontDoc = attachmentsSet.stream()
+					.filter(f -> f.getDocumentSide().equals(DocumentSide.FRONT)).findFirst();
+			if (frontDoc.isPresent()) {
+				if (frontDoc.get() != null) {
+					fieldsDTO.setSavedData(SpringUtil.bean(AppConfigService.class).getProperty(
+							"DOCUMENT_STORAGE_BASE_URL", "https://yabx.co/") + frontDoc.get().getDocumentUrl());
+				}
+			}
+		} else {
+			Optional<Attachments> backDoc = attachmentsSet.stream()
+					.filter(f -> f.getDocumentSide().equals(DocumentSide.BACK)).findFirst();
+			if (backDoc.isPresent()) {
+				if (backDoc.get() != null) {
+					fieldsDTO.setSavedData(SpringUtil.bean(AppConfigService.class).getProperty(
+							"DOCUMENT_STORAGE_BASE_URL", "https://yabx.co/") + backDoc.get().getDocumentUrl());
+				}
+			}
+		}
+
 	}
 
 	private static boolean checkFilterCriteria(Filters filter, String fieldId) {
