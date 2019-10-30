@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Transient;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import co.yabx.kyc.app.enums.ControlType;

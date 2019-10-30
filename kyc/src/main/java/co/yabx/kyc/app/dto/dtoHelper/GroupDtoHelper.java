@@ -87,7 +87,8 @@ public class GroupDtoHelper implements Serializable {
 						.sorted(Comparator.comparing(FieldsDTO::getDisplayOrder)).collect(Collectors.toList()));
 				appPagesSectionGroupsDTO.setEnable(appPagesSectionGroups.isEnable());
 				appPagesSectionGroupsDTO
-						.setGroupId(subGroups != null ? subGroups.getId() : appPagesSectionGroups.getGroupId());
+						.setGroupId(subGroups != null && subGroups.getFields() != null ? subGroups.getId()
+								: appPagesSectionGroups.getGroupId());
 				appPagesSectionGroupsDTO.setGroupName(appPagesSectionGroups.getGroupName());
 				appPagesSectionGroupsDTO
 						.setGroupTitle(subGroups != null && subGroups.getGroupType() != null ? subGroups.getGroupType()
@@ -112,7 +113,8 @@ public class GroupDtoHelper implements Serializable {
 			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(field);
 			Functionality functionality = new Functionality();
 			functionality.setType(FunctionalityType.Copy);
-			functionality.setFromGroup(appPagesSectionGroupSet.get(0).getGroupId());
+			// Link group from permanent to present and so on
+			functionality.setFromGroup(subGroups.getLinked_group());
 			functionality.setToGroup(subGroups.getId());
 			fieldsDTO.setFunctionality(functionality);
 			fields.add(fieldsDTO);

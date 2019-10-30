@@ -47,6 +47,17 @@ public abstract class SubGroups implements Serializable {
 	@Column(name = "display_order")
 	private Integer displayOrder;
 
+	@Column(name = "linked_group")
+	private Long linked_group;
+
+	public Long getLinked_group() {
+		return linked_group;
+	}
+
+	public void setLinked_group(Long linked_group) {
+		this.linked_group = linked_group;
+	}
+
 	public Integer getDisplayOrder() {
 		return displayOrder;
 	}

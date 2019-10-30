@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -808,6 +809,7 @@ public class FieldsDtoHelper implements Serializable {
 				subFieldsDTO.setId(subFields.getId());
 				subFieldsDTOs.add(subFieldsDTO);
 			}
+			subFieldsDTOs.stream().sorted().collect(Collectors.toList());
 			return subFieldsDTOs;
 		}
 		return null;
