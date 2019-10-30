@@ -38,7 +38,7 @@ public class BankAccountDetails implements Serializable {
 	@Column(name = "account_title")
 	private String accountTitle;
 
-	@Column(name = "concern_type", length = 100, nullable = false, columnDefinition = "varchar(32) default 'Proprietorship' ")
+	@Column(name = "concern_type", length = 100, columnDefinition = "varchar(32) default 'Proprietorship' ")
 	@Enumerated(value = EnumType.STRING)
 	private TypeOfConcern typeOfConcern;
 
@@ -51,18 +51,18 @@ public class BankAccountDetails implements Serializable {
 	@Column(name = "branch")
 	private String branch;
 
-	@Column(name = "purpose_of_account", length = 100, nullable = false, columnDefinition = "varchar(32) default 'Business'")
+	@Column(name = "purpose_of_account", length = 100, columnDefinition = "varchar(32) default 'Business'")
 	private String accountPurpose;
 
-	@Column(name = "currency", length = 100, nullable = false, columnDefinition = "varchar(32) default 'BDT'")
+	@Column(name = "currency", length = 100, columnDefinition = "varchar(32) default 'BDT'")
 	@Enumerated(value = EnumType.STRING)
 	private Currency currency;
 
-	@Column(name = "operation_mode", length = 100, nullable = false, columnDefinition = "varchar(32) default 'Single'")
+	@Column(name = "operation_mode", length = 100, columnDefinition = "varchar(32) default 'Single'")
 	@Enumerated(value = EnumType.STRING)
 	private ModeOfOperation modeOfOperation;
 
-	@Column(name = "account_type", length = 100, nullable = false, columnDefinition = "varchar(32) default 'CURRENT'")
+	@Column(name = "account_type", length = 100, columnDefinition = "varchar(32) default 'CURRENT'")
 	@Enumerated(value = EnumType.STRING)
 	private BankAccountType bankAccountType;
 

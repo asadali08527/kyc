@@ -63,7 +63,6 @@ public class StorageServiceImpl implements StorageService {
 				BufferedImage image = null;
 				String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 				image = ImageIO.read(convFile);
-
 				ImageIO.write(image, extension, new File(path));
 			} catch (Exception e) {
 				e.printStackTrace();
