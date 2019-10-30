@@ -86,10 +86,13 @@ public class FieldServiceImpl implements FieldService {
 		AddressDetails addressDetails = null;
 		BankAccountDetails bankAccountDetails = null;
 		LiabilitiesDetails liabilitiesDetails = null;
-		if (appPagesSectionGroupsDTO.getGroupId() == 2
+		if ((appPagesSectionGroupsDTO.getGroupId() == 2
+				|| "addresses".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName()))
 				&& (appPagesSectionsDTO.getSectionId() == 1 || appPagesSectionsDTO.getSectionId() == 3)) {
 			// user address details
 			addressDetails = new AddressDetails();
+			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupTitle());
+			addressDetails.setAddressType(addressType);
 			addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
 			if (addressDetails != null) {
 				if (userAddressDetailsSet == null) {
@@ -99,9 +102,13 @@ public class FieldServiceImpl implements FieldService {
 				userAddressDetailsSet.add(addressDetails);
 			}
 			return;
-		} else if (appPagesSectionGroupsDTO.getGroupId() == 2 && appPagesSectionsDTO.getSectionId() == 2) {
+		} else if ((appPagesSectionGroupsDTO.getGroupId() == 2
+				|| "addresses".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName()))
+				&& appPagesSectionsDTO.getSectionId() == 2) {
 			// nominee address details
 			addressDetails = new AddressDetails();
+			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupTitle());
+			addressDetails.setAddressType(addressType);
 			addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
 			if (addressDetails != null) {
 				if (nomineeAddressDetailsSet == null) {
@@ -111,9 +118,13 @@ public class FieldServiceImpl implements FieldService {
 				nomineeAddressDetailsSet.add(addressDetails);
 			}
 			return;
-		} else if (appPagesSectionGroupsDTO.getGroupId() == 2 && appPagesSectionsDTO.getSectionId() == 5) {
+		} else if ((appPagesSectionGroupsDTO.getGroupId() == 2
+				|| "addresses".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName()))
+				&& appPagesSectionsDTO.getSectionId() == 5) {
 			// Business address details
 			addressDetails = new AddressDetails();
+			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupTitle());
+			addressDetails.setAddressType(addressType);
 			addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
 			if (addressDetails != null) {
 				if (businessAddressDetailsSet == null) {
@@ -123,7 +134,8 @@ public class FieldServiceImpl implements FieldService {
 				businessAddressDetailsSet.add(addressDetails);
 			}
 			return;
-		} else if (appPagesSectionGroupsDTO.getGroupId() == 3
+		} else if ((appPagesSectionGroupsDTO.getGroupId() == 3
+				|| "accountInformations".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName()))
 				&& (appPagesSectionsDTO.getSectionId() == 1 || appPagesSectionsDTO.getSectionId() == 3)) {
 			bankAccountDetails = new BankAccountDetails();
 			bankAccountDetails = preparebankAccounts(appDynamicFieldsDTOList, bankAccountDetails);
@@ -134,7 +146,9 @@ public class FieldServiceImpl implements FieldService {
 			userBankAccountDetailsSet.add(bankAccountDetails);
 			return;
 
-		} else if (appPagesSectionGroupsDTO.getGroupId() == 3 && appPagesSectionsDTO.getSectionId() == 2) {
+		} else if ((appPagesSectionGroupsDTO.getGroupId() == 3
+				|| "accountInformations".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName()))
+				&& appPagesSectionsDTO.getSectionId() == 2) {
 			bankAccountDetails = new BankAccountDetails();
 			bankAccountDetails = preparebankAccounts(appDynamicFieldsDTOList, bankAccountDetails);
 			if (nomineeBankAccountDetailsSet == null) {
@@ -144,7 +158,9 @@ public class FieldServiceImpl implements FieldService {
 			nomineeBankAccountDetailsSet.add(bankAccountDetails);
 			return;
 
-		} else if (appPagesSectionGroupsDTO.getGroupId() == 3 && appPagesSectionsDTO.getSectionId() == 5) {
+		} else if ((appPagesSectionGroupsDTO.getGroupId() == 3
+				|| "accountInformations".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName()))
+				&& appPagesSectionsDTO.getSectionId() == 5) {
 			bankAccountDetails = new BankAccountDetails();
 			bankAccountDetails = preparebankAccounts(appDynamicFieldsDTOList, bankAccountDetails);
 			if (businessBankAccountDetailsSet == null) {
@@ -154,7 +170,8 @@ public class FieldServiceImpl implements FieldService {
 			businessBankAccountDetailsSet.add(bankAccountDetails);
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
-				.getLongProperty("GROUP_ID_FOR_LIABILITIES_DETAILS", 4l)) {
+				.getLongProperty("GROUP_ID_FOR_LIABILITIES_DETAILS", 4l)
+				|| "liabilitiesDetails".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName())) {
 			liabilitiesDetails = prepareLiabilities(appDynamicFieldsDTOList, liabilitiesDetails);
 			if (liabilitiesDetailsSet == null) {
 				liabilitiesDetailsSet = new HashSet<LiabilitiesDetails>();
@@ -163,7 +180,8 @@ public class FieldServiceImpl implements FieldService {
 			liabilitiesDetailsSet.add(liabilitiesDetails);
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
-				.getLongProperty("GROUP_ID_FOR_BUSINESS_DETAILS", 5l)) {
+				.getLongProperty("GROUP_ID_FOR_BUSINESS_DETAILS", 5l)
+				|| "businessDetails".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName())) {
 			BusinessDetails businessDetails = null;
 			if (businessDetailsSet == null || businessDetailsSet.isEmpty()) {
 				businessDetails = new BusinessDetails();
@@ -184,7 +202,8 @@ public class FieldServiceImpl implements FieldService {
 			}
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
-				.getLongProperty("GROUP_ID_FOR_BUSINESS_LICENSE_DETAILS", 6l)) {
+				.getLongProperty("GROUP_ID_FOR_BUSINESS_LICENSE_DETAILS", 6l)
+				|| "licenseDetails".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName())) {
 			LicenseDetails licenseDetails = null;
 			licenseDetails = prepareLicenseDetails(appDynamicFieldsDTOList, licenseDetails);
 			if (licenseDetails != null) {
@@ -206,7 +225,8 @@ public class FieldServiceImpl implements FieldService {
 			}
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
-				.getLongProperty("GROUP_ID_FOR_MONTHLY_TRANSACTION_PROFILE", 7l)) {
+				.getLongProperty("GROUP_ID_FOR_MONTHLY_TRANSACTION_PROFILE", 7l)
+				|| "monthlyTxnProfile".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName())) {
 			MonthlyTransactionProfiles monthlyTransactionProfiles = null;
 			monthlyTransactionProfiles = prepareMonthlyTxnProfiles(appDynamicFieldsDTOList, monthlyTransactionProfiles);
 			if (monthlyTransactionProfiles != null) {
@@ -220,7 +240,8 @@ public class FieldServiceImpl implements FieldService {
 			}
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
-				.getLongProperty("GROUP_ID_FOR_WORK_EDUCATION_DETAILS", 8l)) {
+				.getLongProperty("GROUP_ID_FOR_WORK_EDUCATION_DETAILS", 8l)
+				|| "WORK_EDUCATION".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName())) {
 			WorkEducationDetails workEducationDetails = null;
 			workEducationDetails = prepareWorkEducationDetails(appDynamicFieldsDTOList, workEducationDetails);
 			if (workEducationDetails != null) {
@@ -234,7 +255,8 @@ public class FieldServiceImpl implements FieldService {
 			}
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
-				.getLongProperty("GROUP_ID_FOR_INTRODUCER_DETAILS", 9l)) {
+				.getLongProperty("GROUP_ID_FOR_INTRODUCER_DETAILS", 9l)
+				|| "introducerDetails".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName())) {
 			IntroducerDetails introducerDetails = null;
 			introducerDetails = prepareIntroducerDetails(appDynamicFieldsDTOList, introducerDetails);
 			if (introducerDetails != null) {
@@ -248,7 +270,7 @@ public class FieldServiceImpl implements FieldService {
 			}
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService.getLongProperty("GROUP_ID_FOR_ATTACHMENT",
-				10l)) {
+				10l) || "documentDetails".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName())) {
 			prepareAttachmentDetails(appDynamicFieldsDTOList, attachmentDetailsSet);
 			return;
 
@@ -267,6 +289,24 @@ public class FieldServiceImpl implements FieldService {
 
 		}
 
+	}
+
+	private AddressType getAddressType(String groupTitle) {
+		if (groupTitle != null && !groupTitle.isEmpty()) {
+			if (groupTitle.equalsIgnoreCase("Permanent Address"))
+				return AddressType.PERMANNET;
+			else if (groupTitle.equalsIgnoreCase("Present Address"))
+				return AddressType.PRESENT;
+			else if (groupTitle.equalsIgnoreCase("Registered Address"))
+				return AddressType.BUSINESS_REGISTERED_ADDRESS;
+			else if (groupTitle.equalsIgnoreCase("Office Address"))
+				return AddressType.BUSINESS_OFFICE_ADDRESS;
+			else if (groupTitle.equalsIgnoreCase("Factory Address"))
+				return AddressType.BUSINESS_FACTORY_ADDRESS;
+			else if (groupTitle.equalsIgnoreCase("Other Address"))
+				return AddressType.BUSINESS_OTHER_ADDRESS;
+		}
+		return AddressType.OTHERS;
 	}
 
 	/**
@@ -630,13 +670,23 @@ public class FieldServiceImpl implements FieldService {
 	private AddressDetails prepareAddress(List<FieldsDTO> appDynamicFieldsDTOList, AddressDetails addressDetails) {
 		for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 			if (appDynamicFieldsDTO != null) {
-				if (appDynamicFieldsDTO.getFieldId().equals("houseNumberOrStreetName")) {
+				if (appDynamicFieldsDTO.getFieldId().equals("address")) {
 					addressDetails.setAddress(appDynamicFieldsDTO.getResponse());
-				} else if (appDynamicFieldsDTO.getFieldId().equals("area")) {
+				} else if (appDynamicFieldsDTO.getFieldId().equals("upazilaThana")) {
 					addressDetails.setUpazilaThana(appDynamicFieldsDTO.getResponse());
-				} else if (appDynamicFieldsDTO.getFieldId().equals("city")) {
+				} else if (appDynamicFieldsDTO.getFieldId().equals("cityDsitrict")) {
 					addressDetails.setCityDsitrict(appDynamicFieldsDTO.getResponse());
-				} else if (appDynamicFieldsDTO.getFieldId().equals("region")) {
+				} else if (appDynamicFieldsDTO.getFieldId().equals("division")) {
+					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("country")) {
+					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("mobileNumber")) {
+					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("phoneNumber")) {
+					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("email")) {
+					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("territory")) {
 					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("zipCode")) {
 					try {
@@ -649,15 +699,11 @@ public class FieldServiceImpl implements FieldService {
 						LOGGER.error("Exception while evaluating zipcode ={}, error={}",
 								appDynamicFieldsDTO.getResponse(), e.getMessage());
 					}
-				} else if (appDynamicFieldsDTO.getFieldId().equals("addressType")) {
+				} else if (appDynamicFieldsDTO.getFieldId().equals("landmark")) {
 					try {
-						AddressType addressType = appDynamicFieldsDTO.getResponse() != null
-								&& !appDynamicFieldsDTO.getResponse().isEmpty()
-										? AddressType.valueOf(appDynamicFieldsDTO.getResponse())
-										: null;
-						addressDetails.setAddressType(addressType);
+						addressDetails.setLandmark(appDynamicFieldsDTO.getResponse());
 					} catch (Exception e) {
-						LOGGER.error("Exception while evaluating addressType ={}, error={}",
+						LOGGER.error("Exception while evaluating landmark ={}, error={}",
 								appDynamicFieldsDTO.getResponse(), e.getMessage());
 					}
 				}

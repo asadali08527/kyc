@@ -625,17 +625,30 @@ public class FieldsDtoHelper implements Serializable {
 			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 		} else {
 			for (AddressDetails addressDetails : addressDetailsSet) {
-				if (dynamicFields.getFieldId().equals("houseNumberOrStreetName")) {
+				if (dynamicFields.getFieldId().equals("address")) {
 					dynamicFields.setSavedData(addressDetails.getAddress());
-				} else if (dynamicFields.getFieldId().equals("area")) {
+				} else if (dynamicFields.getFieldId().equals("upazilaThana")) {
 					dynamicFields.setSavedData(addressDetails.getUpazilaThana());
-				} else if (dynamicFields.getFieldId().equals("city")) {
+				} else if (dynamicFields.getFieldId().equals("cityDsitrict")) {
 					dynamicFields.setSavedData(addressDetails.getCityDsitrict());
-				} else if (dynamicFields.getFieldId().equals("region")) {
+				} else if (dynamicFields.getFieldId().equals("division")) {
 					dynamicFields.setSavedData(addressDetails.getDivision());
 				} else if (dynamicFields.getFieldId().equals("zipCode")) {
 					dynamicFields.setSavedData(addressDetails.getZipCode() + "");
+				} else if (dynamicFields.getFieldId().equals("landmark")) {
+					dynamicFields.setSavedData(addressDetails.getLandmark());
+				} else if (dynamicFields.getFieldId().equals("territory")) {
+					dynamicFields.setSavedData(addressDetails.getTerritory());
+				} else if (dynamicFields.getFieldId().equals("country")) {
+					dynamicFields.setSavedData(addressDetails.getCountry());
+				} else if (dynamicFields.getFieldId().equals("mobileNumber")) {
+					dynamicFields.setSavedData(addressDetails.getMobileNumber());
+				} else if (dynamicFields.getFieldId().equals("phoneNumber")) {
+					dynamicFields.setSavedData(addressDetails.getPhoneNumber());
+				} else if (dynamicFields.getFieldId().equals("email")) {
+					dynamicFields.setSavedData(addressDetails.getEmail());
 				}
+
 				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 			}
 
