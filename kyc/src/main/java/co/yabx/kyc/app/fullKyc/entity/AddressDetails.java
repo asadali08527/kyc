@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +18,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import co.yabx.kyc.app.enums.AddressType;
+import co.yabx.kyc.app.enums.Countries;
 
 @Entity
 @Table(name = "address_details", indexes = { @Index(name = "division", columnList = "division"),
@@ -53,8 +56,9 @@ public class AddressDetails implements Serializable {
 	@Column(name = "email")
 	private String email;
 
-	@Column(name = "country")
-	private String country;
+	@Column(name = "country", length = 100, columnDefinition = "varchar(32) default 'Bangladesh'")
+	@Enumerated(value = EnumType.STRING)
+	private Countries country;
 
 	@Column(name = "area")
 	private String area;
@@ -214,11 +218,11 @@ public class AddressDetails implements Serializable {
 		this.email = email;
 	}
 
-	public String getCountry() {
+	public Countries getCountry() {
 		return country;
 	}
 
-	public void setCountry(String country) {
+	public void setCountry(Countries country) {
 		this.country = country;
 	}
 
