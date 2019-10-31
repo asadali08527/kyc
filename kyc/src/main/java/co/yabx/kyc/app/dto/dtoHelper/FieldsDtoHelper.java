@@ -644,7 +644,8 @@ public class FieldsDtoHelper implements Serializable {
 				} else if (dynamicFields.getFieldId().equals("territory")) {
 					dynamicFields.setSavedData(addressDetails.getTerritory());
 				} else if (dynamicFields.getFieldId().equals("country")) {
-					dynamicFields.setSavedData(addressDetails.getCountry());
+					dynamicFields.setSavedData(
+							addressDetails.getCountry() != null ? addressDetails.getCountry().toString() : null);
 				} else if (dynamicFields.getFieldId().equals("mobileNumber")) {
 					dynamicFields.setSavedData(addressDetails.getMobileNumber());
 				} else if (dynamicFields.getFieldId().equals("phoneNumber")) {
