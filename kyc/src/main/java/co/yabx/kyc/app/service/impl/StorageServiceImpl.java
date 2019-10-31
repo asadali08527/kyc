@@ -56,7 +56,8 @@ public class StorageServiceImpl implements StorageService {
 	public AttachmentDetails uplaod(String msisdn, Long retailerId, MultipartFile file) {
 		User user = userService.getRetailerById(retailerId);
 		if (user != null) {
-			File convFile = new File(file.getOriginalFilename());
+			String fileName = file.getOriginalFilename().replaceAll(" ", "_");
+			File convFile = new File(fileName);
 			String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/tmp/")
 					+ file.getOriginalFilename();
 			try {
@@ -77,14 +78,14 @@ public class StorageServiceImpl implements StorageService {
 			LOGGER.info("File={} saved for retailer={}", file.getOriginalFilename(), retailerId);
 			Set<Attachments> attachmentList = new HashSet<Attachments>();
 			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-			String[] fileName = file.getOriginalFilename().replaceAll("." + extension, "").split("-");
+			String[] fileNames = fileName.replaceAll("." + extension, "").split("-");
 			DocumentType documentType = null;
 			DocumentSide documentSide = null;
 			AttachmentDetails attachmentDetails = null;
 			Attachments attachments = null;
 			AttachmentType attachmentType = null;
-			if (fileName.length > 1) {
-				for (String name : fileName) {
+			if (fileNames.length > 1) {
+				for (String name : fileNames) {
 					if (name.equalsIgnoreCase("DRIVING_LICENSE") || name.equalsIgnoreCase("DRIVING LICENSE")) {
 						documentType = DocumentType.DRIVING_LICENSE;
 					} else if (name.equalsIgnoreCase("PASSPORT")) {
@@ -100,13 +101,13 @@ public class StorageServiceImpl implements StorageService {
 					}
 				}
 			} else {
-				if (fileName[0].equalsIgnoreCase("tinCertificates")) {
+				if (fileNames[0].equalsIgnoreCase("tinCertificates")) {
 					documentType = DocumentType.TIN_CERTIFICATE;
-				} else if (fileName[0].equalsIgnoreCase("tradeLicense")) {
+				} else if (fileNames[0].equalsIgnoreCase("tradeLicense")) {
 					documentType = DocumentType.TRADE_LICENSE;
-				} else if (fileName[0].equalsIgnoreCase("nomineePhoto")) {
+				} else if (fileNames[0].equalsIgnoreCase("nomineePhoto")) {
 					documentType = DocumentType.NOMINEE_PHOTO;
-				} else if (fileName[0].equalsIgnoreCase("signature")) {
+				} else if (fileNames[0].equalsIgnoreCase("signature")) {
 					documentType = DocumentType.SIGNATURE;
 				}
 			}
