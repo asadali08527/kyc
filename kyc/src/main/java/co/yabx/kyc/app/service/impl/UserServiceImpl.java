@@ -170,7 +170,7 @@ public class UserServiceImpl implements UserService {
 			Set<BusinessDetails> businessDetailsSet = new HashSet<BusinessDetails>();
 			Set<LiabilitiesDetails> liabilitiesDetailsSet = new HashSet<LiabilitiesDetails>();
 			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet = new HashSet<MonthlyTransactionProfiles>();
-			Set<WorkEducationDetails> workEducationDetailsSet = null;
+			Set<WorkEducationDetails> workEducationDetailsSet = new HashSet<>();
 			Set<IntroducerDetails> introducerDetailsSet = new HashSet<IntroducerDetails>();
 			List<UserRelationships> nomineeRelationship = null;
 			Set<AttachmentDetails> attachmentDetailsSet = new HashSet<AttachmentDetails>();
@@ -226,32 +226,46 @@ public class UserServiceImpl implements UserService {
 			user.setUserType(UserType.RETAILERS.name());
 		}
 		if (neitherNullNorEmpty(userAddressDetailsSet)) {
-			user.getAddressDetails().clear();
-			user.setAddressDetails(userAddressDetailsSet);
+			Set<AddressDetails> userAddressDetails = user.getAddressDetails();
+			userAddressDetails.clear();
+			userAddressDetails.addAll(userAddressDetailsSet);
+			user.setAddressDetails(userAddressDetails);
 		}
 		if (neitherNullNorEmpty(userBankAccountDetailsSet)) {
-			user.getBankAccountDetails().clear();
-			user.setBankAccountDetails(userBankAccountDetailsSet);
+			Set<BankAccountDetails> userBankAccountDetails = user.getBankAccountDetails();
+			userBankAccountDetails.clear();
+			userBankAccountDetails.addAll(userBankAccountDetailsSet);
+			user.setBankAccountDetails(userBankAccountDetails);
 		}
 		if (neitherNullNorEmpty(businessDetailsSet)) {
-			user.getBusinessDetails().clear();
-			user.setBusinessDetails(businessDetailsSet);
+			Set<BusinessDetails> businessDetails = user.getBusinessDetails();
+			businessDetails.clear();
+			businessDetails.addAll(businessDetailsSet);
+			user.setBusinessDetails(businessDetails);
 		}
 		if (neitherNullNorEmpty(liabilitiesDetails)) {
-			user.getLiabilitiesDetails().clear();
-			user.setLiabilitiesDetails(liabilitiesDetails);
+			Set<LiabilitiesDetails> liabilitiesDetailsSet = user.getLiabilitiesDetails();
+			liabilitiesDetailsSet.clear();
+			liabilitiesDetailsSet.addAll(liabilitiesDetails);
+			user.setLiabilitiesDetails(liabilitiesDetailsSet);
 		}
 		if (neitherNullNorEmpty(workEducationDetailsSet)) {
-			user.getWorkEducationDetails().clear();
-			user.setWorkEducationDetails(workEducationDetailsSet);
+			Set<WorkEducationDetails> workEducationDetails = user.getWorkEducationDetails();
+			workEducationDetails.clear();
+			workEducationDetails.addAll(workEducationDetailsSet);
+			user.setWorkEducationDetails(workEducationDetails);
 		}
 		if (neitherNullNorEmpty(monthlyTransactionProfilesSet)) {
-			user.getMonthlyTransactionProfiles().clear();
-			user.setMonthlyTransactionProfiles(monthlyTransactionProfilesSet);
+			Set<MonthlyTransactionProfiles> monthlyTransactionProfiles = user.getMonthlyTransactionProfiles();
+			monthlyTransactionProfiles.clear();
+			monthlyTransactionProfiles.addAll(monthlyTransactionProfilesSet);
+			user.setMonthlyTransactionProfiles(monthlyTransactionProfiles);
 		}
 		if (neitherNullNorEmpty(introducerDetailsSet)) {
-			user.getIntroducerDetails().clear();
-			user.setIntroducerDetails(introducerDetailsSet);
+			Set<IntroducerDetails> introducerDetails = user.getIntroducerDetails();
+			introducerDetails.clear();
+			introducerDetails.addAll(introducerDetailsSet);
+			user.setIntroducerDetails(introducerDetails);
 		}
 		if (neitherNullNorEmpty(attachmentDetailsSet)) {
 			// Not being used till date
@@ -261,12 +275,16 @@ public class UserServiceImpl implements UserService {
 		if (nominees != null) {
 			nominees.setUserType(UserType.NOMINEES.name());
 			if (nomineeAddressDetailsSet != null) {
-				nominees.getAddressDetails().clear();
-				nominees.setAddressDetails(nomineeAddressDetailsSet);
+				Set<AddressDetails> userAddressDetails = nominees.getAddressDetails();
+				userAddressDetails.clear();
+				userAddressDetails.addAll(nomineeAddressDetailsSet);
+				nominees.setAddressDetails(userAddressDetails);
 			}
 			if (nomineeBankAccountDetailsSet != null) {
-				nominees.getBankAccountDetails().clear();
-				nominees.setBankAccountDetails(nomineeBankAccountDetailsSet);
+				Set<BankAccountDetails> userBankAccountDetails = nominees.getBankAccountDetails();
+				userBankAccountDetails.clear();
+				userBankAccountDetails.addAll(nomineeBankAccountDetailsSet);
+				nominees.setBankAccountDetails(userBankAccountDetails);
 			}
 			nominees = userRepository.save(nominees);
 			persistUserRelationship(user, nominees, UserType.NOMINEES, isNew, nomineeRelationship);

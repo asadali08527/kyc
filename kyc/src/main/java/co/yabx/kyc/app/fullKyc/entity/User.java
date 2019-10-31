@@ -140,28 +140,28 @@ public abstract class User implements Serializable {
 	private String passportExpiryDate;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<MonthlyTransactionProfiles> monthlyTransactionProfiles = new HashSet<MonthlyTransactionProfiles>();
+	private Set<MonthlyTransactionProfiles> monthlyTransactionProfiles = new HashSet<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<IntroducerDetails> introducerDetails = new HashSet<IntroducerDetails>();
+	private Set<IntroducerDetails> introducerDetails = new HashSet<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<WorkEducationDetails> workEducationDetails = new HashSet<WorkEducationDetails>();
+	private Set<WorkEducationDetails> workEducationDetails = new HashSet<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<LiabilitiesDetails> liabilitiesDetails = new HashSet<LiabilitiesDetails>();
+	private Set<LiabilitiesDetails> liabilitiesDetails = new HashSet<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<BusinessDetails> businessDetails = new HashSet<BusinessDetails>();
+	private Set<BusinessDetails> businessDetails = new HashSet<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<AddressDetails> addressDetails = new HashSet<AddressDetails>();
+	private Set<AddressDetails> addressDetails = new HashSet<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<BankAccountDetails> bankAccountDetails = new HashSet<BankAccountDetails>();
+	private Set<BankAccountDetails> bankAccountDetails = new HashSet<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<AttachmentDetails> attachmentDetails = new HashSet<AttachmentDetails>();
+	private Set<AttachmentDetails> attachmentDetails = new HashSet<>();
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "user", referencedColumnName = "id")

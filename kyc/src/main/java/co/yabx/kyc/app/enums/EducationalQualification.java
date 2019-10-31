@@ -38,4 +38,14 @@ public enum EducationalQualification {
 		}
 		return null;
 	}
+
+	public static EducationalQualification findByValue(String value) {
+		EducationalQualification[] customEducations = values();
+		for (EducationalQualification customEducation : customEducations) {
+			if (customEducation.getName().equalsIgnoreCase(value)) {
+				return customEducation;
+			}
+		}
+		return null;
+	}
 }

@@ -22,7 +22,6 @@ import co.yabx.kyc.app.enums.DocumentSide;
 import co.yabx.kyc.app.enums.DocumentType;
 import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.fullKyc.entity.Attachments;
-import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.repository.AttachmentDetailsRepository;
 import co.yabx.kyc.app.fullKyc.repository.AttachmentsRepository;

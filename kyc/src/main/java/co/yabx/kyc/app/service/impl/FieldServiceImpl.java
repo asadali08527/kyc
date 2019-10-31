@@ -94,36 +94,42 @@ public class FieldServiceImpl implements FieldService {
 				&& (appPagesSectionsDTO.getSectionId() == 1 || appPagesSectionsDTO.getSectionId() == 3)) {
 			// user address details
 			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupTitle());
-			addressDetails = addressDetailsRepository.findByUserAndAddressType(retailerOrDsrUser, addressType);
-			if (addressDetails == null) {
-				addressDetails = new AddressDetails();
-				addressDetails.setAddressType(addressType);
-			}
-			addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
-			if (addressDetails != null) {
-				if (userAddressDetailsSet == null) {
-					userAddressDetailsSet = new HashSet<AddressDetails>();
+			if (addressType != null) {
+				addressDetails = addressDetailsRepository.findByUserAndAddressType(retailerOrDsrUser, addressType);
+				if (addressDetails == null) {
+					addressDetails = new AddressDetails();
+					addressDetails.setAddressType(addressType);
 				}
-				userAddressDetailsSet.add(addressDetails);
+				addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
+				if (addressDetails != null) {
+					if (userAddressDetailsSet == null) {
+						userAddressDetailsSet = new HashSet<AddressDetails>();
+					}
+					userAddressDetailsSet.add(addressDetails);
+				}
 			}
 			return;
 		} else if ((appPagesSectionGroupsDTO.getGroupId() == 2
 				|| "addresses".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName()))
-				&& appPagesSectionsDTO.getSectionId() == 2) {
+				&& appPagesSectionsDTO.getSectionId() == 2)
+
+		{
 			// nominee address details
 			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupTitle());
-			addressDetails = addressDetailsRepository.findByUserAndAddressType(nominees, addressType);
-			if (addressDetails == null) {
-				addressDetails = new AddressDetails();
-				addressDetails.setAddressType(addressType);
-			}
-			addressDetails.setAddressType(addressType);
-			addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
-			if (addressDetails != null) {
-				if (nomineeAddressDetailsSet == null) {
-					nomineeAddressDetailsSet = new HashSet<AddressDetails>();
+			if (addressType != null) {
+				addressDetails = addressDetailsRepository.findByUserAndAddressType(nominees, addressType);
+				if (addressDetails == null) {
+					addressDetails = new AddressDetails();
+					addressDetails.setAddressType(addressType);
 				}
-				nomineeAddressDetailsSet.add(addressDetails);
+				addressDetails.setAddressType(addressType);
+				addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
+				if (addressDetails != null) {
+					if (nomineeAddressDetailsSet == null) {
+						nomineeAddressDetailsSet = new HashSet<AddressDetails>();
+					}
+					nomineeAddressDetailsSet.add(addressDetails);
+				}
 			}
 			return;
 		} else if ((appPagesSectionGroupsDTO.getGroupId() == 2
@@ -131,26 +137,28 @@ public class FieldServiceImpl implements FieldService {
 				&& appPagesSectionsDTO.getSectionId() == 5) {
 			// Business address details
 			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupTitle());
-			if (businessAddressDetailsSet == null) {
-				businessAddressDetailsSet = new HashSet<AddressDetails>();
-			} else {
-				Optional<BusinessDetails> optional = businessDetailsSet.stream().findFirst();
-				if (optional.isPresent()) {
-					BusinessDetails businessDetails = optional.get();
-					if (businessDetails != null) {
-						addressDetails = addressDetailsRepository.findByBusinessDetailsAndAddressType(businessDetails,
-								addressType);
+			if (addressType != null) {
+				if (businessAddressDetailsSet == null) {
+					businessAddressDetailsSet = new HashSet<AddressDetails>();
+				} else {
+					Optional<BusinessDetails> optional = businessDetailsSet.stream().findFirst();
+					if (optional.isPresent()) {
+						BusinessDetails businessDetails = optional.get();
+						if (businessDetails != null) {
+							addressDetails = addressDetailsRepository
+									.findByBusinessDetailsAndAddressType(businessDetails, addressType);
+						}
 					}
 				}
-			}
-			if (addressDetails == null) {
-				addressDetails = new AddressDetails();
-				addressDetails.setAddressType(addressType);
-			}
-			addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
-			if (addressDetails != null) {
-				businessAddressDetailsSet.clear();
-				businessAddressDetailsSet.add(addressDetails);
+				if (addressDetails == null) {
+					addressDetails = new AddressDetails();
+					addressDetails.setAddressType(addressType);
+				}
+				addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
+				if (addressDetails != null) {
+					businessAddressDetailsSet.clear();
+					businessAddressDetailsSet.add(addressDetails);
+				}
 			}
 			return;
 		} else if ((appPagesSectionGroupsDTO.getGroupId() == 3
@@ -318,7 +326,7 @@ public class FieldServiceImpl implements FieldService {
 			else if (groupTitle.equalsIgnoreCase("Other Address"))
 				return AddressType.BUSINESS_OTHER_ADDRESS;
 		}
-		return AddressType.OTHERS;
+		return null;
 	}
 
 	/**
@@ -508,10 +516,9 @@ public class FieldServiceImpl implements FieldService {
 				} else if (appDynamicFieldsDTO.getFieldId().equals("employer")) {
 					workEducationDetails.setEmployer(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("educationalQualification")) {
-
 					try {
 						EducationalQualification educationalQualification = EducationalQualification
-								.valueOf(appDynamicFieldsDTO.getResponse());
+								.findByValue(appDynamicFieldsDTO.getResponse());
 						workEducationDetails.setEducationalQualification(educationalQualification);
 
 					} catch (Exception e) {
