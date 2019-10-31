@@ -57,7 +57,7 @@ public class StorageServiceImpl implements StorageService {
 		User user = userService.getRetailerById(retailerId);
 		if (user != null) {
 			File convFile = new File(file.getOriginalFilename());
-			String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "D://test/")
+			String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/tmp/")
 					+ file.getOriginalFilename();
 			try {
 				convFile.createNewFile();
