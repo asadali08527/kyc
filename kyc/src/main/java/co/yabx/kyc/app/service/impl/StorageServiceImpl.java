@@ -3,6 +3,7 @@ package co.yabx.kyc.app.service.impl;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -53,31 +54,24 @@ public class StorageServiceImpl implements StorageService {
 
 	@Override
 	@Transactional
-	public AttachmentDetails uplaod(String msisdn, Long retailerId, MultipartFile file) {
+	public AttachmentDetails uplaod(String msisdn, Long retailerId, MultipartFile file) throws Exception {
 		User user = userService.getRetailerById(retailerId);
 		if (user != null) {
 			String fileName = file.getOriginalFilename().replaceAll(" ", "_");
 			File convFile = new File(fileName);
 			String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/tmp/")
 					+ file.getOriginalFilename();
-			try {
-				convFile.createNewFile();
-				try (FileOutputStream fos = new FileOutputStream(convFile)) {
-					fos.write(file.getBytes());
-				}
-				BufferedImage image = null;
-				String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-				image = ImageIO.read(convFile);
-				ImageIO.write(image, extension, new File(path));
-			} catch (Exception e) {
-				e.printStackTrace();
-				LOGGER.error("exception raised while copying image={},user={},error={}", file.getOriginalFilename(),
-						retailerId, e.getMessage());
-				return null;
+
+			convFile.createNewFile();
+			try (FileOutputStream fos = new FileOutputStream(convFile)) {
+				fos.write(file.getBytes());
 			}
+			BufferedImage image = null;
+			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+			image = ImageIO.read(convFile);
+			ImageIO.write(image, extension, new File(path));
 			LOGGER.info("File={} saved for retailer={}", file.getOriginalFilename(), retailerId);
 			Set<Attachments> attachmentList = new HashSet<Attachments>();
-			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 			String[] fileNames = fileName.replaceAll("." + extension, "").split("-");
 			DocumentType documentType = null;
 			DocumentSide documentSide = null;

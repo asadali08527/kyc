@@ -102,10 +102,11 @@ public class KYCController {
 	 * 
 	 * @param file
 	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/upload/image", method = RequestMethod.POST)
 	public ResponseEntity<?> uploadImage(@RequestParam("retailerId") Long retailerId, @RequestParam MultipartFile files,
-			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
 		storageService.uplaod(null, retailerId, files);
 		return new ResponseEntity<>(HttpStatus.OK);
 

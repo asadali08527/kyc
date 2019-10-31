@@ -26,6 +26,7 @@ import co.yabx.kyc.app.dto.RetailersDTO;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
+import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.service.AuthInfoService;
 import co.yabx.kyc.app.service.RetailerService;
 import co.yabx.kyc.app.service.StorageService;
@@ -173,8 +174,20 @@ public class RetailerController {
 			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
 			LOGGER.info("/upload/image request recieved for retailer={}, dsr={}", retailerId, msisdn);
-			storageService.uplaod(msisdn, retailerId, files);
-			return new ResponseEntity<>(files, HttpStatus.OK);
+			try {
+				AttachmentDetails attachmentDetails = storageService.uplaod(msisdn, retailerId, files);
+				if (attachmentDetails != null)
+					return new ResponseEntity<>(files, HttpStatus.OK);
+				else {
+					return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOGGER.error("exception raised while uploading image={},retailer={},error={}",
+						files.getOriginalFilename(), retailerId, e.getMessage());
+				return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+
 		}
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 

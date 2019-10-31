@@ -6,6 +6,6 @@ import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 
 public interface StorageService {
 
-	AttachmentDetails uplaod(String msisdn, Long retailerId, MultipartFile files);
+	AttachmentDetails uplaod(String msisdn, Long retailerId, MultipartFile files) throws Exception;
 
 }
