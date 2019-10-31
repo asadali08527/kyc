@@ -41,7 +41,7 @@ public class IntroducerDetails implements Serializable {
 	@Column(name = "relationship")
 	private String relationship;
 
-	@Column(name = "signature_verified", nullable = false, columnDefinition = "boolean default false")
+	@Column(name = "signature_verified", columnDefinition = "boolean default false")
 	private boolean isSignatureVerified;
 
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

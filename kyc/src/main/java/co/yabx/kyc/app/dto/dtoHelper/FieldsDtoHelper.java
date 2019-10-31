@@ -565,7 +565,9 @@ public class FieldsDtoHelper implements Serializable {
 				if (dynamicFields.getFieldId().equals("accountTitle")) {
 					dynamicFields.setSavedData(bankAccountDetails.getAccountTitle());
 				} else if (dynamicFields.getFieldId().equals("typeOfConcern")) {
-					dynamicFields.setSavedData(bankAccountDetails.getTypeOfConcern().toString());
+					dynamicFields.setSavedData(bankAccountDetails.getTypeOfConcern() != null
+							? bankAccountDetails.getTypeOfConcern().toString()
+							: null);
 					List<String> options = new ArrayList<String>();
 					TypeOfConcern[] concerns = TypeOfConcern.values();
 					for (TypeOfConcern concern : concerns) {
