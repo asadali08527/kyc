@@ -20,6 +20,7 @@ import co.yabx.kyc.app.entities.filter.Filters;
 import co.yabx.kyc.app.entities.filter.SubFields;
 import co.yabx.kyc.app.entities.filter.SubGroups;
 import co.yabx.kyc.app.enums.AddressProof;
+import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.AttachmentType;
 import co.yabx.kyc.app.enums.BankAccountType;
 import co.yabx.kyc.app.enums.BusinessSector;
@@ -626,7 +627,8 @@ public class FieldsDtoHelper implements Serializable {
 		if (addressDetailsSet == null || addressDetailsSet.isEmpty()) {
 			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 		} else {
-			for (AddressDetails addressDetails : addressDetailsSet) {
+			AddressDetails addressDetails = getAddressDetails(subGroups, addressDetailsSet);
+			if (addressDetailsSet != null) {
 				if (dynamicFields.getFieldId().equals("address")) {
 					dynamicFields.setSavedData(addressDetails.getAddress());
 				} else if (dynamicFields.getFieldId().equals("upazilaThana")) {
@@ -650,12 +652,38 @@ public class FieldsDtoHelper implements Serializable {
 				} else if (dynamicFields.getFieldId().equals("email")) {
 					dynamicFields.setSavedData(addressDetails.getEmail());
 				}
-
 				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 			}
-
 		}
 
+	}
+
+	private static AddressDetails getAddressDetails(SubGroups subGroups, Set<AddressDetails> addressDetailsSet) {
+		Optional<AddressDetails> addressDetailsOptional = addressDetailsSet.stream()
+				.filter(f -> f != null && f.getAddressType().equals(getAddressType(subGroups))).findFirst();
+		if (addressDetailsOptional.isPresent())
+			return addressDetailsOptional.get();
+		return null;
+	}
+
+	private static AddressType getAddressType(SubGroups subGroups) {
+		if (subGroups != null) {
+			String groupType = subGroups.getGroupType();
+			if ("Permanent Address".equalsIgnoreCase(groupType)) {
+				return AddressType.PERMANNET;
+			} else if ("Present Address".equalsIgnoreCase(groupType)) {
+				return AddressType.PRESENT;
+			} else if ("Registered Address".equalsIgnoreCase(groupType)) {
+				return AddressType.BUSINESS_REGISTERED_ADDRESS;
+			} else if ("Office Address".equalsIgnoreCase(groupType)) {
+				return AddressType.BUSINESS_OFFICE_ADDRESS;
+			} else if ("Factory Address".equalsIgnoreCase(groupType)) {
+				return AddressType.BUSINESS_FACTORY_ADDRESS;
+			} else if ("Other Address".equalsIgnoreCase(groupType)) {
+				return AddressType.BUSINESS_OTHER_ADDRESS;
+			}
+		}
+		return null;
 	}
 
 	private static void prepareProfileInformation(Fields dynamicFields, User retailers,
