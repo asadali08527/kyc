@@ -85,7 +85,7 @@ public class StorageServiceImpl implements StorageService {
 			AttachmentType attachmentType = null;
 			if (fileName.length > 1) {
 				for (String name : fileName) {
-					if (name.equalsIgnoreCase("DRIVING_LICENSE")) {
+					if (name.equalsIgnoreCase("DRIVING_LICENSE") || name.equalsIgnoreCase("DRIVING LICENSE")) {
 						documentType = DocumentType.DRIVING_LICENSE;
 					} else if (name.equalsIgnoreCase("PASSPORT")) {
 						documentType = DocumentType.PASSPORT;
