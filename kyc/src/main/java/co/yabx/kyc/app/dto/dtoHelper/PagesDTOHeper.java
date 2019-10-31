@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.swing.Spring;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +22,8 @@ import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.User;
+import co.yabx.kyc.app.service.AppConfigService;
+import co.yabx.kyc.app.util.SpringUtil;
 
 public class PagesDTOHeper implements Serializable {
 
@@ -56,7 +60,9 @@ public class PagesDTOHeper implements Serializable {
 			appPagesDTO.setPageCompletion(appPagesDTO.getTotalFields() != 0
 					? ((appPagesDTO.getFilledFields() * 100) / appPagesDTO.getTotalFields()) + "%"
 					: "0%");
-			appPagesDTO.setAction(prepareActions());
+			if (pages != null && pages.getPageId() != SpringUtil.bean(AppConfigService.class)
+					.getLongProperty("ATTACHMENT_PAGE_ID", 7l))
+				appPagesDTO.setAction(prepareActions());
 		}
 		return appPagesDTO;
 	}

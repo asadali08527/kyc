@@ -602,16 +602,17 @@ public class FieldServiceImpl implements FieldService {
 					}
 				} else if (appDynamicFieldsDTO.getFieldId().equals("bankOrNbfiName")) {
 					liabilitiesDetails.setBankOrNbfiName(appDynamicFieldsDTO.getResponse());
-				} else if (appDynamicFieldsDTO.getFieldId().equals("liabilityFrom")) {
+				} else if (appDynamicFieldsDTO.getFieldId().equals("liabilityFromOtherOrganization")) {
 					liabilitiesDetails.setLiabilityFromOtherOrganization(appDynamicFieldsDTO.getResponse());
-				} else if (appDynamicFieldsDTO.getFieldId().equals("typeOfLiablity")) {
+
+				} else if (appDynamicFieldsDTO.getFieldId().equals("loanAmountFromOtherOrganization")) {
 					try {
-						LiabilityType typeOfLiablity = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
-								? LiabilityType.valueOf(appDynamicFieldsDTO.getResponse())
-								: null;
-						liabilitiesDetails.setTypeOfLiablity(typeOfLiablity);
+						double loanAmount = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
+								? Double.valueOf(appDynamicFieldsDTO.getResponse())
+								: 0.0;
+						liabilitiesDetails.setLoanAmountFromOtherOrganization(loanAmount);
 					} catch (Exception e) {
-						LOGGER.error("Exception while evaluating liabilityType ={}, error={}",
+						LOGGER.error("Exception while evaluating loanAmountFromOtherOrganization ={}, error={}",
 								appDynamicFieldsDTO.getResponse(), e.getMessage());
 					}
 				}

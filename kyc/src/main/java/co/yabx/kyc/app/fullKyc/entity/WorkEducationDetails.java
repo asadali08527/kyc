@@ -161,4 +161,12 @@ public class WorkEducationDetails implements Serializable {
 		this.experience = experience;
 	}
 
+	@Override
+	public String toString() {
+		return "WorkEducationDetails [id=" + id + ", occupation=" + occupation + ", designation=" + designation
+				+ ", employer=" + employer + ", educationalQualification=" + educationalQualification + ", createdAt="
+				+ createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy
+				+ ", experience=" + experience + ", user=" + user + "]";
+	}
+
 }

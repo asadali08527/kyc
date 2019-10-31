@@ -286,15 +286,22 @@ public class FieldsDtoHelper implements Serializable {
 							? workEducationDetails.get().getEmployer()
 							: null);
 				} else if (dynamicFields.getFieldId().equals("educationalQualification")) {
+
 					Optional<WorkEducationDetails> workEducationDetails = WorkEducationDetailsSet.stream()
 							.filter(f -> f.getDesignation() != null).findFirst();
-					dynamicFields
-							.setSavedData(
-									workEducationDetails != null && workEducationDetails.isPresent()
-											? workEducationDetails.get().getEducationalQualification() != null
-													? workEducationDetails.get().getEducationalQualification().getName()
-													: null
-											: null);
+					try {
+						dynamicFields
+								.setSavedData(
+										workEducationDetails != null && workEducationDetails.isPresent()
+												? workEducationDetails.get().getEducationalQualification() != null
+														? workEducationDetails.get().getEducationalQualification()
+																.getName()
+														: null
+												: null);
+					} catch (Exception e) {
+						LOGGER.error("Exceptiong while parsing educationalQualification={},error={}",
+								workEducationDetails, e.getMessage());
+					}
 					List<String> options = new ArrayList<String>();
 					EducationalQualification[] accountTypes = EducationalQualification.values();
 					for (EducationalQualification statuses : accountTypes) {

@@ -42,6 +42,8 @@ public enum TypeOfConcern {
 			return "Semi Govt Org";
 		} else if (super.toString().equals("Public_Ltd")) {
 			return "Public Ltd";
+		} else if (super.toString().equals("Govt_Organization")) {
+			return "Govt Organization";
 		} else {
 			return super.toString();
 		}
