@@ -125,7 +125,8 @@ public class FieldsDtoHelper implements Serializable {
 		}
 		filledVsUnfilled.put("filledFields", filledFields);
 		filledVsUnfilled.put("totalFields", totalFields);
-		appDynamicFieldsDTOSet.add(appDynamicFieldsDTOSet.stream().max(Comparator.comparing(FieldsDTO::getId)).get());
+		// appDynamicFieldsDTOSet.add(appDynamicFieldsDTOSet.stream().max(Comparator.comparing(FieldsDTO::getId)).get());
+		appDynamicFieldsDTOSet.addAll(appDynamicFieldsDTOSet);
 		return appDynamicFieldsDTOSet;
 	}
 
