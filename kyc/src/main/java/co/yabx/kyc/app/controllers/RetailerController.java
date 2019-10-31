@@ -1,15 +1,9 @@
 package co.yabx.kyc.app.controllers;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.List;
-
-import javax.imageio.ImageIO;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +26,6 @@ import co.yabx.kyc.app.dto.RetailersDTO;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
-import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.service.AuthInfoService;
 import co.yabx.kyc.app.service.RetailerService;
 import co.yabx.kyc.app.service.StorageService;
