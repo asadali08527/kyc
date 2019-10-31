@@ -57,7 +57,7 @@ public class StorageServiceImpl implements StorageService {
 		User user = userService.getRetailerById(retailerId);
 		if (user != null) {
 			File convFile = new File(file.getOriginalFilename());
-			String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/tmp/")
+			String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "D://test/")
 					+ file.getOriginalFilename();
 			try {
 				convFile.createNewFile();
@@ -72,7 +72,9 @@ public class StorageServiceImpl implements StorageService {
 				e.printStackTrace();
 				LOGGER.error("exception raised while copying image={},user={},error={}", file.getOriginalFilename(),
 						retailerId, e.getMessage());
+				return null;
 			}
+			LOGGER.info("File={} saved for retailer={}", file.getOriginalFilename(), retailerId);
 			Set<Attachments> attachmentList = new HashSet<Attachments>();
 			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 			String[] fileName = file.getOriginalFilename().replaceAll("." + extension, "").split("-");
