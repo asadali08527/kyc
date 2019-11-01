@@ -18,6 +18,7 @@ public class RetailerRequestDTO implements Serializable {
 	private int endIndex;
 	private PagesDTO pageResponse;
 	private List<MultipartFile> files;
+	private Long userId;
 
 	public Long getRetailerId() {
 		return retailerId;
@@ -79,6 +80,14 @@ public class RetailerRequestDTO implements Serializable {
 	public String toString() {
 		return "RetailerRequestDTO [dsrMSISDN=" + dsrMSISDN + ", kycStatus=" + kycStatus + ", retailerId=" + retailerId
 				+ ", startIndex=" + startIndex + ", endIndex=" + endIndex + ", pageResponse=" + pageResponse + "]";
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 }

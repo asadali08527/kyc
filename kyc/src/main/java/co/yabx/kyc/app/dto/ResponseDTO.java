@@ -24,6 +24,7 @@ public class ResponseDTO implements Serializable {
 	private String profileCompeltion;
 	private String name;
 	private String email;
+	private Long userId;
 
 	public List<QuestionAnswerDTO> getQuestionAnswerDTOs() {
 		return questionAnswerDTOs;
@@ -141,6 +142,14 @@ public class ResponseDTO implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 }

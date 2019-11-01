@@ -268,7 +268,6 @@ public class FieldsDtoHelper implements Serializable {
 					}
 					dynamicFields.setOptions(options);
 				}
-				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 			} else {
 				Set<WorkEducationDetails> WorkEducationDetailsSet = retailers.getWorkEducationDetails();
 				if (dynamicFields.getFieldId().equals("occupation")) {
@@ -324,9 +323,9 @@ public class FieldsDtoHelper implements Serializable {
 								workEducationDetails.get().getExperience(), e.getMessage());
 					}
 
-					appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 				}
 			}
+			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 		}
 
 	}

@@ -19,6 +19,7 @@ public class DsrProfileDTO implements Serializable {
 	private List<AddressDetailsDTO> addressDetailsDTO;
 	private WorkEducationDetailsDTO workEducationDetailsDTO;
 	private PagesDTO pageResponse;
+	private Long userId;
 
 	public String getDsrMSISDN() {
 		return dsrMSISDN;
@@ -89,6 +90,14 @@ public class DsrProfileDTO implements Serializable {
 		return "DsrProfileDTO [kycStatus=" + kycStatus + ", retailerId=" + retailerId + ", startIndex=" + startIndex
 				+ ", endIndex=" + endIndex + ", dsrMSISDN=" + dsrMSISDN + ", addressDetailsDTO=" + addressDetailsDTO
 				+ ", workEducationDetailsDTO=" + workEducationDetailsDTO + ", pageResponse=" + pageResponse + "]";
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
 }

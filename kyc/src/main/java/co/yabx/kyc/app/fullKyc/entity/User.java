@@ -27,6 +27,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import co.yabx.kyc.app.entities.AuthInfo;
+import co.yabx.kyc.app.entities.DeviceInformations;
 import co.yabx.kyc.app.enums.Cities;
 import co.yabx.kyc.app.enums.Gender;
 import co.yabx.kyc.app.enums.MaritalStatuses;
@@ -178,6 +179,18 @@ public abstract class User implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "auth_info_id", referencedColumnName = "id")
 	private AuthInfo authInfo;
+
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinColumn(name = "device_info", referencedColumnName = "device_id")
+	private DeviceInformations deviceInformation;
+
+	public LoanPurposeDetails getLoanPurposeDetails() {
+		return loanPurposeDetails;
+	}
+
+	public void setLoanPurposeDetails(LoanPurposeDetails loanPurposeDetails) {
+		this.loanPurposeDetails = loanPurposeDetails;
+	}
 
 	public Set<IntroducerDetails> getIntroducerDetails() {
 		return introducerDetails;
@@ -541,6 +554,14 @@ public abstract class User implements Serializable {
 
 	public void setUserStatus(UserStatus userStatus) {
 		this.userStatus = userStatus;
+	}
+
+	public DeviceInformations getDeviceInformation() {
+		return deviceInformation;
+	}
+
+	public void setDeviceInformation(DeviceInformations deviceInformation) {
+		this.deviceInformation = deviceInformation;
 	}
 
 }
