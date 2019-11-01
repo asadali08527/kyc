@@ -26,9 +26,14 @@ import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
+import co.yabx.kyc.app.fullKyc.entity.User;
+import co.yabx.kyc.app.fullKyc.repository.AttachmentDetailsRepository;
+import co.yabx.kyc.app.fullKyc.repository.AttachmentsRepository;
+import co.yabx.kyc.app.service.AttachmentService;
 import co.yabx.kyc.app.service.AuthInfoService;
 import co.yabx.kyc.app.service.RetailerService;
 import co.yabx.kyc.app.service.StorageService;
+import co.yabx.kyc.app.service.UserService;
 
 /**
  * 
@@ -48,6 +53,18 @@ public class RetailerController {
 
 	@Autowired
 	private StorageService storageService;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private AttachmentsRepository attachmentsRepository;
+
+	@Autowired
+	private AttachmentDetailsRepository attachmentDetailsRepository;
+
+	@Autowired
+	private AttachmentService attachmentService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetailerController.class);
 
@@ -173,20 +190,23 @@ public class RetailerController {
 			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
 			LOGGER.info("/upload/image request recieved for retailer={}, dsr={}", retailerId, msisdn);
-			try {
-				AttachmentDetails attachmentDetails = storageService.uplaod(msisdn, retailerId, files);
-				if (attachmentDetails != null)
-					return new ResponseEntity<>(files, HttpStatus.OK);
-				else {
-					return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+			User user = userService.getRetailerById(retailerId);
+			if (user != null) {
+				try {
+					String filename = storageService.uploadImage(files);
+					AttachmentDetails attachmentDetails = attachmentService.persistInDb(user, files, filename);
+					if (attachmentDetails != null)
+						return new ResponseEntity<>(files, HttpStatus.OK);
+					else {
+						return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					LOGGER.error("exception raised while uploading image={},retailer={},error={}",
+							files.getOriginalFilename(), retailerId, e.getMessage());
+					return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				LOGGER.error("exception raised while uploading image={},retailer={},error={}",
-						files.getOriginalFilename(), retailerId, e.getMessage());
-				return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
-
 		}
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 

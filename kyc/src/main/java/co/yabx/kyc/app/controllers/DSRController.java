@@ -14,13 +14,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import co.yabx.kyc.app.dto.DsrProfileDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.VerifyOtpDTO;
+import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
+import co.yabx.kyc.app.fullKyc.entity.User;
+import co.yabx.kyc.app.service.AttachmentService;
 import co.yabx.kyc.app.service.AuthInfoService;
 import co.yabx.kyc.app.service.DSRService;
+import co.yabx.kyc.app.service.StorageService;
+import co.yabx.kyc.app.service.UserService;
 
 /**
  * 
@@ -37,6 +44,15 @@ public class DSRController {
 
 	@Autowired
 	private DSRService dsrService;
+
+	@Autowired
+	private StorageService storageService;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private AttachmentService attachmentService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(DSRController.class);
 
@@ -99,6 +115,39 @@ public class DSRController {
 				httpServletResponse)) {
 			ResponseDTO loginDTO = dsrService.generateMailOTP(verifyOtpDTO.getEmail());
 			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+	}
+
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/dsr/upload/image", method = RequestMethod.POST)
+	public ResponseEntity<?> uploadImage(@RequestParam("msisdn") String msisdn, @RequestParam MultipartFile files,
+			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+		LOGGER.info("/dsr/upload/image request recieved for msisdn={}", msisdn);
+		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
+			User user = userService.getDSRByMsisdn(msisdn);
+			if (user != null) {
+				try {
+					String saveFileName = storageService.uploadImage(files);
+					AttachmentDetails attachmentDetails = attachmentService.persistDsrProfilePicInDb(user, files,
+							saveFileName);
+					if (attachmentDetails != null)
+						return new ResponseEntity<>(files, HttpStatus.OK);
+					else {
+						return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					LOGGER.error("exception raised while uploading image={},msisdn={},error={}",
+							files.getOriginalFilename(), msisdn, e.getMessage());
+					return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+			}
 		}
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}

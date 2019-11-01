@@ -2,7 +2,7 @@ package co.yabx.kyc.app.enums;
 
 public enum DocumentType {
 	SIGNATURE, SELFIE, DRIVING_LICENSE, NATIONAL_IDENTIFICATION_NUMBER, PASSPORT, TIN_CERTIFICATE,
-	VAT_REGISTRATION_NUMBER, BIRTH_CERTIFICATE, INCOME_TAX_RETURN, TRADE_LICENSE, PHOTO, NOMINEE_PHOTO;
+	VAT_REGISTRATION_NUMBER, BIRTH_CERTIFICATE, INCOME_TAX_RETURN, TRADE_LICENSE, PHOTO, NOMINEE_PHOTO, PROFILE_PIC;
 
 	public static DocumentType getAddressType(String value) {
 		if (value.equalsIgnoreCase("DRIVING LICENSE")) {
@@ -21,6 +21,8 @@ public enum DocumentType {
 			return DocumentType.TRADE_LICENSE;
 		} else if (value.equalsIgnoreCase("NOMINEE PHOTOE")) {
 			return DocumentType.NOMINEE_PHOTO;
+		} else if (value.equalsIgnoreCase("PROFILE PIC")) {
+			return DocumentType.PROFILE_PIC;
 		} else {
 			return DocumentType.valueOf(value);
 		}
@@ -42,6 +44,8 @@ public enum DocumentType {
 			return "National Identification Number";
 		} else if (super.toString().equals("DRIVING_LICENSE")) {
 			return "Driving License";
+		} else if (super.toString().equals("PROFILE_PIC")) {
+			return "PROFILE PIC";
 		} else {
 			return super.toString();
 		}

@@ -1,0 +1,165 @@
+package co.yabx.kyc.app.service.impl;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.transaction.Transactional;
+
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import co.yabx.kyc.app.enums.AttachmentType;
+import co.yabx.kyc.app.enums.DocumentSide;
+import co.yabx.kyc.app.enums.DocumentType;
+import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
+import co.yabx.kyc.app.fullKyc.entity.Attachments;
+import co.yabx.kyc.app.fullKyc.entity.User;
+import co.yabx.kyc.app.fullKyc.repository.AttachmentDetailsRepository;
+import co.yabx.kyc.app.fullKyc.repository.AttachmentsRepository;
+import co.yabx.kyc.app.service.AttachmentService;
+
+/**
+ * 
+ * @author Asad.ali
+ *
+ */
+@Service
+public class AttachmentServiceImpl implements AttachmentService {
+
+	@Autowired
+	private AttachmentsRepository attachmentsRepository;
+
+	@Autowired
+	private AttachmentDetailsRepository attachmentDetailsRepository;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AttachmentServiceImpl.class);
+
+	@Override
+	@Transactional
+	public AttachmentDetails persistInDb(User user, MultipartFile file, String saveFileName) throws Exception {
+		LOGGER.info("File={} saved for retailer={}", file.getOriginalFilename(), user.getId());
+		String fileName = file.getOriginalFilename().replaceAll(" ", "_");
+		String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+		Set<Attachments> attachmentList = new HashSet<Attachments>();
+		String[] fileNames = fileName.replaceAll("." + extension, "").split("-");
+		DocumentType documentType = null;
+		DocumentSide documentSide = null;
+		AttachmentDetails attachmentDetails = null;
+		Attachments attachments = null;
+		AttachmentType attachmentType = null;
+		boolean isNew = false;
+		if (fileNames.length > 1) {
+			for (String name : fileNames) {
+				if (name.equalsIgnoreCase("DRIVING_LICENSE") || name.equalsIgnoreCase("DRIVING LICENSE")) {
+					documentType = DocumentType.DRIVING_LICENSE;
+				} else if (name.equalsIgnoreCase("PASSPORT")) {
+					documentType = DocumentType.PASSPORT;
+				} else if (name.equalsIgnoreCase("front")) {
+					documentSide = DocumentSide.FRONT;
+				} else if (name.equalsIgnoreCase("back")) {
+					documentSide = DocumentSide.BACK;
+				} else if (name.equalsIgnoreCase("idProof")) {
+					attachmentType = AttachmentType.IdentityProof;
+				} else if (name.equalsIgnoreCase("addressProof")) {
+					attachmentType = AttachmentType.AddressProof;
+				}
+			}
+		} else {
+			if (fileNames[0].equalsIgnoreCase("tinCertificates")) {
+				documentType = DocumentType.TIN_CERTIFICATE;
+			} else if (fileNames[0].equalsIgnoreCase("tradeLicense")) {
+				documentType = DocumentType.TRADE_LICENSE;
+			} else if (fileNames[0].equalsIgnoreCase("nomineePhoto")) {
+				documentType = DocumentType.NOMINEE_PHOTO;
+			} else if (fileNames[0].equalsIgnoreCase("signature")) {
+				documentType = DocumentType.SIGNATURE;
+			}
+		}
+		if (documentType != null) {
+			attachmentDetails = attachmentDetailsRepository.findByUserAndDocumentType(user, documentType);
+			if (attachmentDetails == null) {
+				attachmentDetails = new AttachmentDetails();
+				attachmentDetails.setAttachmentType(attachmentType);
+				isNew = true;
+			}
+			if (documentSide != null) {
+				if (documentSide == DocumentSide.FRONT) {
+					Optional<Attachments> frontDoc = attachmentDetails.getAttachments().stream().filter(f -> f != null
+							&& f.getDocumentSide() != null && f.getDocumentSide().equals(DocumentSide.FRONT))
+							.findFirst();
+					if (frontDoc.isPresent())
+						attachments = frontDoc.get();
+				} else {
+					Optional<Attachments> BackDoc = attachmentDetails.getAttachments().stream().filter(f -> f != null
+							&& f.getDocumentSide() != null && f.getDocumentSide().equals(DocumentSide.BACK))
+							.findFirst();
+					if (BackDoc.isPresent())
+						attachments = BackDoc.get();
+				}
+			} else {
+				Optional<Attachments> optional = attachmentDetails.getAttachments().stream().findFirst();
+				if (optional.isPresent())
+					attachments = optional.get();
+			}
+			if (attachments == null && isNew) {
+				attachments = new Attachments();
+				if (documentSide != null) {
+					attachments.setDocumentSide(documentSide);
+				}
+				attachments.setDocumentUrl(saveFileName);
+				attachmentList.add(attachments);
+				attachmentDetails.setAttachments(attachmentList);
+				attachmentDetails.setDocumentType(documentType);
+				attachmentDetails.setUser(user);
+				attachmentDetails = attachmentDetailsRepository.save(attachmentDetails);
+				return attachmentDetails;
+			} else if (!isNew && attachments == null) {
+				attachments = new Attachments();
+				if (documentSide != null) {
+					attachments.setDocumentSide(documentSide);
+				}
+				attachments.setDocumentUrl(saveFileName);
+				attachments.setAttachmentDetails(attachmentDetails);
+				attachmentsRepository.save(attachments);
+			} else {
+				attachments.setDocumentUrl(saveFileName);
+				attachmentsRepository.save(attachments);
+			}
+			return attachmentDetails;
+		}
+		return attachmentDetails;
+
+	}
+
+	@Override
+	public AttachmentDetails persistDsrProfilePicInDb(User user, MultipartFile files, String saveFileName) {
+		if (user != null) {
+			AttachmentDetails attachmentDetails = attachmentDetailsRepository.findByUserAndDocumentType(user,
+					DocumentType.PROFILE_PIC);
+			Set<Attachments> attachmentsSet = null;
+			if (attachmentDetails != null) {
+				attachmentsSet = attachmentDetails.getAttachments();
+				attachmentsSet.clear();
+			} else {
+				attachmentDetails = new AttachmentDetails();
+				attachmentDetails.setDocumentType(DocumentType.PROFILE_PIC);
+				attachmentsSet = new HashSet<Attachments>();
+			}
+			Attachments attachments = new Attachments();
+			attachments.setDocumentUrl(saveFileName);
+			attachmentsSet.add(attachments);
+			attachmentDetails.setAttachments(attachmentsSet);
+			attachmentDetails.setUser(user);
+			attachmentDetails = attachmentDetailsRepository.save(attachmentDetails);
+			return attachmentDetails;
+		}
+		return null;
+	}
+
+}
