@@ -1,6 +1,5 @@
 package co.yabx.kyc.app.controllers;
 
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 

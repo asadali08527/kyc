@@ -38,7 +38,7 @@ public class UserDeviceDataController {
 	@Resource
 	private UserRepository userRepository;
 
-	@RequestMapping(value = "/device/data/", method = RequestMethod.POST)
+	@RequestMapping(value = "/device/data", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> saveDeviceToken(@RequestParam("msisdn") String msisdn,
 			@RequestParam("deviceToken") String token, @RequestParam("deviceId") String deviceId,
