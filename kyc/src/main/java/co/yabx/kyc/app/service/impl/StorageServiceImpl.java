@@ -158,7 +158,7 @@ public class StorageServiceImpl implements StorageService {
 					attachments.setDocumentUrl(newFileName);
 					attachmentsRepository.save(attachments);
 				}
-
+				return attachmentDetails;
 			}
 		}
 		return null;
