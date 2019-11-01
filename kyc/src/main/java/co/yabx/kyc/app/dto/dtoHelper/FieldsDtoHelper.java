@@ -12,10 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import co.yabx.kyc.app.dto.FieldsDTO;
+import co.yabx.kyc.app.dto.Functionality;
 import co.yabx.kyc.app.dto.SubFieldsDTO;
 import co.yabx.kyc.app.entities.Fields;
 import co.yabx.kyc.app.entities.Sections;
 import co.yabx.kyc.app.entities.filter.Filters;
+import co.yabx.kyc.app.entities.filter.Operations;
 import co.yabx.kyc.app.entities.filter.SubFields;
 import co.yabx.kyc.app.entities.filter.SubGroups;
 import co.yabx.kyc.app.enums.AddressProof;
@@ -24,6 +26,7 @@ import co.yabx.kyc.app.enums.AttachmentType;
 import co.yabx.kyc.app.enums.BankAccountType;
 import co.yabx.kyc.app.enums.BusinessSector;
 import co.yabx.kyc.app.enums.BusinessType;
+import co.yabx.kyc.app.enums.Cities;
 import co.yabx.kyc.app.enums.Countries;
 import co.yabx.kyc.app.enums.Currency;
 import co.yabx.kyc.app.enums.DocumentSide;
@@ -31,6 +34,7 @@ import co.yabx.kyc.app.enums.DocumentType;
 import co.yabx.kyc.app.enums.EducationalQualification;
 import co.yabx.kyc.app.enums.FacilityDetails;
 import co.yabx.kyc.app.enums.FacilityType;
+import co.yabx.kyc.app.enums.FunctionalityType;
 import co.yabx.kyc.app.enums.Gender;
 import co.yabx.kyc.app.enums.IdentityProof;
 import co.yabx.kyc.app.enums.LiabilityType;
@@ -799,7 +803,15 @@ public class FieldsDtoHelper implements Serializable {
 				} else if (dynamicFields.getFieldId().equals("upazilaThana")) {
 					dynamicFields.setSavedData(addressDetails.getUpazilaThana());
 				} else if (dynamicFields.getFieldId().equals("cityDsitrict")) {
-					dynamicFields.setSavedData(addressDetails.getCityDsitrict());
+					dynamicFields.setSavedData(
+							addressDetails.getCityDsitrict() != null ? addressDetails.getCityDsitrict().toString()
+									: null);
+					List<String> options = new ArrayList<String>();
+					Cities[] accountTypes = Cities.values();
+					for (Cities statuses : accountTypes) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("division")) {
 					dynamicFields.setSavedData(addressDetails.getDivision());
 				} else if (dynamicFields.getFieldId().equals("zipCode")) {
@@ -860,8 +872,8 @@ public class FieldsDtoHelper implements Serializable {
 
 	private static void prepareProfileInformation(Fields dynamicFields, User retailers,
 			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter) {
-		if (retailers != null) {
-			if (checkFilterCriteria(filter, dynamicFields.getFieldId())) {
+		if (checkFilterCriteria(filter, dynamicFields.getFieldId())) {
+			if (retailers != null) {
 				if (dynamicFields.getFieldId().equals("firstName")) {
 					dynamicFields.setSavedData(retailers.getFirstName());
 				} else if (dynamicFields.getFieldId().equals("lastName")) {
@@ -871,7 +883,13 @@ public class FieldsDtoHelper implements Serializable {
 				} else if (dynamicFields.getFieldId().equals("dob")) {
 					dynamicFields.setSavedData(retailers.getDob());
 				} else if (dynamicFields.getFieldId().equals("pob")) {
-					dynamicFields.setSavedData(retailers.getPob());
+					dynamicFields.setSavedData(retailers.getPob() != null ? retailers.getPob().toString() : null);
+					List<String> options = new ArrayList<String>();
+					Cities[] cities = Cities.values();
+					for (Cities statuses : cities) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("fathersName")) {
 					dynamicFields.setSavedData(retailers.getFathersName());
 				} else if (dynamicFields.getFieldId().equals("mothersName")) {
@@ -944,10 +962,7 @@ public class FieldsDtoHelper implements Serializable {
 				} else if (dynamicFields.getFieldId().equals("nationalIdNumber")) {
 					dynamicFields.setSavedData(retailers.getNationalIdNumber());
 				}
-				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
-			}
-		} else {
-			if (checkFilterCriteria(filter, dynamicFields.getFieldId())) {
+			} else {
 				if (dynamicFields.getFieldId().equals("nationality")) {
 					List<String> options = new ArrayList<String>();
 					Nationality[] nationalities = Nationality.values();
@@ -979,10 +994,32 @@ public class FieldsDtoHelper implements Serializable {
 					}
 					dynamicFields.setOptions(options);
 				}
-				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 			}
+			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields);
+			addfunctionality(fieldsDTO, dynamicFields);
+			appDynamicFieldsDTOSet.add(fieldsDTO);
 		}
 
+	}
+
+	private static void addfunctionality(FieldsDTO fieldsDTO, Fields dynamicFields) {
+		if (dynamicFields.getOperations() != null) {
+			Set<Operations> operations = dynamicFields.getOperations();
+			Operations operation = operations.stream().findFirst().isPresent() ? operations.stream().findFirst().get()
+					: null;
+			if (operation != null) {
+				Functionality functionality = new Functionality();
+				try {
+					functionality.setType(FunctionalityType.getFunctionalityType(operation.getOperationType()));
+					functionality.setFieldToCompare(operation.getCompareWith());
+					functionality.setId(operation.getId());
+					fieldsDTO.setFunctionality(functionality);
+				} catch (Exception e) {
+					e.printStackTrace();
+					LOGGER.error("Exception raised while adding functionality={},error={}", operation, e.getMessage());
+				}
+			}
+		}
 	}
 
 	private static FieldsDTO getAppDynamicFieldDTO(Fields dynamicFields) {

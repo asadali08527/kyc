@@ -27,6 +27,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import co.yabx.kyc.app.entities.AuthInfo;
+import co.yabx.kyc.app.enums.Cities;
 import co.yabx.kyc.app.enums.Gender;
 import co.yabx.kyc.app.enums.MaritalStatuses;
 import co.yabx.kyc.app.enums.Nationality;
@@ -82,8 +83,9 @@ public abstract class User implements Serializable {
 	/**
 	 * Place of birth
 	 */
-	@Column(name = "pob")
-	private String pob;
+	@Column(name = "pob", length = 100, columnDefinition = "varchar(32) ")
+	@Enumerated(value = EnumType.STRING)
+	private Cities pob;
 
 	@Column(name = "gender")
 	private Gender gender;
@@ -292,11 +294,11 @@ public abstract class User implements Serializable {
 		this.updatedAt = updatedAt;
 	}
 
-	public String getPob() {
+	public Cities getPob() {
 		return pob;
 	}
 
-	public void setPob(String pob) {
+	public void setPob(Cities pob) {
 		this.pob = pob;
 	}
 

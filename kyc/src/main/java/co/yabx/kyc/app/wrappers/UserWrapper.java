@@ -33,7 +33,6 @@ public class UserWrapper {
 			AddressDetails addressDetail = new AddressDetails();
 			addressDetail.setAddressType(detailsDTO.getAddressType());
 			addressDetail.setUpazilaThana(detailsDTO.getArea());
-			addressDetail.setCityDsitrict(detailsDTO.getCity());
 			addressDetail.setAddress(detailsDTO.getHouseNumberOrStreetName());
 			addressDetail.setDivision(detailsDTO.getRegion());
 			addressDetail.setZipCode(detailsDTO.getZipCode());
@@ -164,7 +163,6 @@ public class UserWrapper {
 		User user = new Retailers();
 		user.setFirstName(userDTO.getName());
 		user.setDob(userDTO.getDob());
-		user.setPob(userDTO.getPob());
 		user.setFathersName(userDTO.getFathersName());
 		user.setMothersName(userDTO.getMothersName());
 		user.setMaritalStatus(userDTO.getMaritalStatus());

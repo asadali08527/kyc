@@ -18,6 +18,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import co.yabx.kyc.app.enums.AddressType;
+import co.yabx.kyc.app.enums.Cities;
 import co.yabx.kyc.app.enums.Countries;
 
 @Entity
@@ -41,8 +42,9 @@ public class AddressDetails implements Serializable {
 	@Column(name = "upazila_thana")
 	private String upazilaThana;
 
-	@Column(name = "city_district")
-	private String cityDsitrict;
+	@Column(name = "city_district", length = 100, columnDefinition = "varchar(32) ")
+	@Enumerated(value = EnumType.STRING)
+	private Cities cityDsitrict;
 
 	@Column(name = "division")
 	private String division;
@@ -186,11 +188,11 @@ public class AddressDetails implements Serializable {
 		this.upazilaThana = upazilaThana;
 	}
 
-	public String getCityDsitrict() {
+	public Cities getCityDsitrict() {
 		return cityDsitrict;
 	}
 
-	public void setCityDsitrict(String cityDsitrict) {
+	public void setCityDsitrict(Cities cityDsitrict) {
 		this.cityDsitrict = cityDsitrict;
 	}
 

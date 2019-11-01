@@ -20,6 +20,8 @@ import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.BankAccountType;
 import co.yabx.kyc.app.enums.BusinessSector;
 import co.yabx.kyc.app.enums.BusinessType;
+import co.yabx.kyc.app.enums.Cities;
+import co.yabx.kyc.app.enums.Countries;
 import co.yabx.kyc.app.enums.Currency;
 import co.yabx.kyc.app.enums.DocumentSide;
 import co.yabx.kyc.app.enums.DocumentType;
@@ -695,11 +697,29 @@ public class FieldServiceImpl implements FieldService {
 				} else if (appDynamicFieldsDTO.getFieldId().equals("upazilaThana")) {
 					addressDetails.setUpazilaThana(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("cityDsitrict")) {
-					addressDetails.setCityDsitrict(appDynamicFieldsDTO.getResponse());
+					try {
+						Cities citi = appDynamicFieldsDTO.getResponse() != null
+								&& !appDynamicFieldsDTO.getResponse().isEmpty()
+										? Cities.valueOf(appDynamicFieldsDTO.getResponse())
+										: null;
+						addressDetails.setCityDsitrict(citi);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating cityDsitrict ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
 				} else if (appDynamicFieldsDTO.getFieldId().equals("division")) {
 					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("country")) {
-					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
+					try {
+						Countries Country = appDynamicFieldsDTO.getResponse() != null
+								&& !appDynamicFieldsDTO.getResponse().isEmpty()
+										? Countries.valueOf(appDynamicFieldsDTO.getResponse())
+										: null;
+						addressDetails.setCountry(Country);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating country ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
 				} else if (appDynamicFieldsDTO.getFieldId().equals("mobileNumber")) {
 					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("phoneNumber")) {
@@ -961,7 +981,15 @@ public class FieldServiceImpl implements FieldService {
 			} else if (appDynamicFieldsDTO.getFieldId().equals("dob")) {
 				user.setDob(appDynamicFieldsDTO.getResponse());
 			} else if (appDynamicFieldsDTO.getFieldId().equals("pob")) {
-				user.setPob(appDynamicFieldsDTO.getResponse());
+				try {
+					Cities city = appDynamicFieldsDTO.getResponse() != null
+							? Cities.valueOf(appDynamicFieldsDTO.getResponse())
+							: null;
+					user.setPob(city);
+				} catch (Exception e) {
+					LOGGER.error("Exception while evaluating city ={}, error={}", appDynamicFieldsDTO.getResponse(),
+							e.getMessage());
+				}
 			} else if (appDynamicFieldsDTO.getFieldId().equals("fathersName")) {
 				user.setFathersName(appDynamicFieldsDTO.getResponse());
 			} else if (appDynamicFieldsDTO.getFieldId().equals("mothersName")) {

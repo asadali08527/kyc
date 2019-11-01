@@ -21,6 +21,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import co.yabx.kyc.app.entities.filter.Operations;
 import co.yabx.kyc.app.entities.filter.SubFields;
 import co.yabx.kyc.app.entities.filter.SubGroups;
 import co.yabx.kyc.app.enums.ControlType;
@@ -103,6 +104,9 @@ public class Fields implements Serializable {
 
 	@OneToMany(mappedBy = "fields", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private Set<SubGroups> subGroups;
+
+	@OneToMany(mappedBy = "fields", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	private Set<Operations> operations;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -271,6 +275,14 @@ public class Fields implements Serializable {
 
 	public void setSubGroups(Set<SubGroups> subGroups) {
 		this.subGroups = subGroups;
+	}
+
+	public Set<Operations> getOperations() {
+		return operations;
+	}
+
+	public void setOperations(Set<Operations> operations) {
+		this.operations = operations;
 	}
 
 }
