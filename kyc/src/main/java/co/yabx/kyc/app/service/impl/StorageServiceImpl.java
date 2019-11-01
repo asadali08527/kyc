@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
@@ -58,16 +59,15 @@ public class StorageServiceImpl implements StorageService {
 		User user = userService.getRetailerById(retailerId);
 		if (user != null) {
 			String fileName = file.getOriginalFilename().replaceAll(" ", "_");
+			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
+			String newFileName = UUID.randomUUID().toString() + System.currentTimeMillis() + "." + extension;
 			File convFile = new File(fileName);
-			String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/tmp/")
-					+ file.getOriginalFilename();
-
+			String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/tmp/") + newFileName;
 			convFile.createNewFile();
 			try (FileOutputStream fos = new FileOutputStream(convFile)) {
 				fos.write(file.getBytes());
 			}
 			BufferedImage image = null;
-			String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 			image = ImageIO.read(convFile);
 			ImageIO.write(image, extension, new File(path));
 			LOGGER.info("File={} saved for retailer={}", file.getOriginalFilename(), retailerId);
@@ -78,6 +78,7 @@ public class StorageServiceImpl implements StorageService {
 			AttachmentDetails attachmentDetails = null;
 			Attachments attachments = null;
 			AttachmentType attachmentType = null;
+			boolean isNew = false;
 			if (fileNames.length > 1) {
 				for (String name : fileNames) {
 					if (name.equalsIgnoreCase("DRIVING_LICENSE") || name.equalsIgnoreCase("DRIVING LICENSE")) {
@@ -110,7 +111,9 @@ public class StorageServiceImpl implements StorageService {
 				if (attachmentDetails == null) {
 					attachmentDetails = new AttachmentDetails();
 					attachmentDetails.setAttachmentType(attachmentType);
-				} else if (documentSide != null) {
+					isNew = true;
+				}
+				if (documentSide != null) {
 					if (documentSide == DocumentSide.FRONT) {
 						Optional<Attachments> frontDoc = attachmentDetails.getAttachments().stream()
 								.filter(f -> f != null && f.getDocumentSide() != null
@@ -127,22 +130,30 @@ public class StorageServiceImpl implements StorageService {
 							attachments = BackDoc.get();
 					}
 				} else {
-					Optional<Attachments> frontDoc = attachmentDetails.getAttachments().stream().findFirst();
-					if (frontDoc.isPresent())
-						attachments = frontDoc.get();
+					Optional<Attachments> optional = attachmentDetails.getAttachments().stream().findFirst();
+					if (optional.isPresent())
+						attachments = optional.get();
 				}
-				if (attachments == null) {
+				if (attachments == null && isNew) {
 					attachments = new Attachments();
 					if (documentSide != null) {
 						attachments.setDocumentSide(documentSide);
 					}
-					attachments.setDocumentUrl(path);
+					attachments.setDocumentUrl(newFileName);
 					attachmentList.add(attachments);
 					attachmentDetails.setAttachments(attachmentList);
 					attachmentDetails.setDocumentType(documentType);
 					attachmentDetails.setUser(user);
 					attachmentDetails = attachmentDetailsRepository.save(attachmentDetails);
 					return attachmentDetails;
+				} else if (!isNew && attachments == null) {
+					attachments = new Attachments();
+					if (documentSide != null) {
+						attachments.setDocumentSide(documentSide);
+					}
+					attachments.setDocumentUrl(path);
+					attachments.setAttachmentDetails(attachmentDetails);
+					attachmentsRepository.save(attachments);
 				} else {
 					attachments.setDocumentUrl(path);
 					attachmentsRepository.save(attachments);
