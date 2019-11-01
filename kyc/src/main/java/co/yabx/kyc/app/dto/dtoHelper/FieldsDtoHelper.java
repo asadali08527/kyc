@@ -644,8 +644,9 @@ public class FieldsDtoHelper implements Serializable {
 	private static LiabilitiesDetails getLiabilitiesDetails(SubGroups subGroups,
 			Set<LiabilitiesDetails> liabilitiesDetailsSet) {
 
-		Optional<LiabilitiesDetails> liabilitiesDetailsOptional = liabilitiesDetailsSet.stream()
-				.filter(f -> f != null && f.getTypeOfLiablity().equals(getLiabilityType(subGroups))).findFirst();
+		Optional<LiabilitiesDetails> liabilitiesDetailsOptional = liabilitiesDetailsSet.stream().filter(f -> f != null
+				&& f.getTypeOfLiablity() != null && f.getTypeOfLiablity().equals(getLiabilityType(subGroups)))
+				.findFirst();
 		if (liabilitiesDetailsOptional.isPresent())
 			return liabilitiesDetailsOptional.get();
 		return null;
