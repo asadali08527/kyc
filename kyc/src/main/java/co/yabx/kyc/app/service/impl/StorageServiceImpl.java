@@ -151,11 +151,11 @@ public class StorageServiceImpl implements StorageService {
 					if (documentSide != null) {
 						attachments.setDocumentSide(documentSide);
 					}
-					attachments.setDocumentUrl(path);
+					attachments.setDocumentUrl(newFileName);
 					attachments.setAttachmentDetails(attachmentDetails);
 					attachmentsRepository.save(attachments);
 				} else {
-					attachments.setDocumentUrl(path);
+					attachments.setDocumentUrl(newFileName);
 					attachmentsRepository.save(attachments);
 				}
 
