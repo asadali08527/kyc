@@ -793,6 +793,13 @@ public class FieldsDtoHelper implements Serializable {
 					options.add(statuses.toString());
 				}
 				dynamicFields.setOptions(options);
+			} else if (dynamicFields.getFieldId().equals("cityDsitrict")) {
+				List<String> options = new ArrayList<String>();
+				Cities[] accountTypes = Cities.values();
+				for (Cities statuses : accountTypes) {
+					options.add(statuses.toString());
+				}
+				dynamicFields.setOptions(options);
 			}
 			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 		} else {
