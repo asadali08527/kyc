@@ -46,10 +46,10 @@ public abstract class Operations implements Serializable {
 	@Column(name = "compare_with_field")
 	private Integer compareWith;
 
-	@Column(name = "min_threshild")
+	@Column(name = "min_threshold")
 	private Integer minThreshold;
 
-	@Column(name = "max_threshild")
+	@Column(name = "max_threshold")
 	private Integer maxThreshold;
 
 	public Integer getDisplayOrder() {
