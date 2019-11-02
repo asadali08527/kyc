@@ -30,7 +30,7 @@ public class AttachmentDetailsDTO implements Serializable {
 
 	private String documentNumber;
 
-	private DocumentType documentType;
+	private String documentType;
 
 	private Long documentIssueDate;
 
@@ -116,11 +116,11 @@ public class AttachmentDetailsDTO implements Serializable {
 		this.placeOfIssue = placeOfIssue;
 	}
 
-	public DocumentType getDocumentType() {
+	public String getDocumentType() {
 		return documentType;
 	}
 
-	public void setDocumentType(DocumentType documentType) {
+	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 	}
 

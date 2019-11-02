@@ -194,7 +194,9 @@ public class AttachmentServiceImpl implements AttachmentService {
 			if (attachmentDetailsList != null && !attachmentDetailsList.isEmpty()) {
 				for (AttachmentDetails attachmentDetails : attachmentDetailsList) {
 					AttachmentDetailsDTO attachmentDetailsDTO = new AttachmentDetailsDTO();
-					attachmentDetailsDTO.setDocumentType(attachmentDetails.getDocumentType());
+					attachmentDetailsDTO.setDocumentType(
+							attachmentDetails.getDocumentType() != null ? attachmentDetails.getDocumentType().toString()
+									: null);
 					attachmentDetailsDTO.setAttachments(prepareAttachmentDTO(attachmentDetails.getAttachments()));
 					attachmentDetailsDTO.setAttachmentType(attachmentDetails.getAttachmentType() != null
 							? attachmentDetails.getAttachmentType().toString()
