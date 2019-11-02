@@ -1020,6 +1020,8 @@ public class FieldsDtoHelper implements Serializable {
 					functionality.setType(FunctionalityType.getFunctionalityType(operation.getOperationType()));
 					functionality.setFieldToCompare(operation.getCompareWith());
 					functionality.setId(operation.getId());
+					functionality.setMinThreshold(operation.getMinThreshold());
+					functionality.setMaxThreshold(operation.getMaxThreshold());
 					fieldsDTO.setFunctionality(functionality);
 				} catch (Exception e) {
 					e.printStackTrace();

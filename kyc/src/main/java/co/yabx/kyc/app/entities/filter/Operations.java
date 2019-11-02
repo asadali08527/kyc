@@ -46,6 +46,12 @@ public abstract class Operations implements Serializable {
 	@Column(name = "compare_with_field")
 	private Integer compareWith;
 
+	@Column(name = "min_threshild")
+	private Integer minThreshold;
+
+	@Column(name = "max_threshild")
+	private Integer maxThreshold;
+
 	public Integer getDisplayOrder() {
 		return displayOrder;
 	}
@@ -84,6 +90,22 @@ public abstract class Operations implements Serializable {
 
 	public void setCompareWith(Integer compareWith) {
 		this.compareWith = compareWith;
+	}
+
+	public Integer getMinThreshold() {
+		return minThreshold;
+	}
+
+	public void setMinThreshold(Integer minThreshold) {
+		this.minThreshold = minThreshold;
+	}
+
+	public Integer getMaxThreshold() {
+		return maxThreshold;
+	}
+
+	public void setMaxThreshold(Integer maxThreshold) {
+		this.maxThreshold = maxThreshold;
 	}
 
 	@Override

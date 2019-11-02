@@ -2,6 +2,8 @@ package co.yabx.kyc.app.dto;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import co.yabx.kyc.app.enums.FunctionalityType;
@@ -13,6 +15,8 @@ public class Functionality implements Serializable {
 	private Long fromGroup;
 	private Long toGroup;
 	private Integer fieldToCompare;
+	private Integer minThreshold;
+	private Integer maxThreshold;
 
 	public FunctionalityType getType() {
 		return type;
@@ -52,6 +56,22 @@ public class Functionality implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Integer getMinThreshold() {
+		return minThreshold;
+	}
+
+	public void setMinThreshold(Integer minThreshold) {
+		this.minThreshold = minThreshold;
+	}
+
+	public Integer getMaxThreshold() {
+		return maxThreshold;
+	}
+
+	public void setMaxThreshold(Integer maxThreshold) {
+		this.maxThreshold = maxThreshold;
 	}
 
 }
