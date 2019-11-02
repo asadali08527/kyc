@@ -1,8 +1,10 @@
 package co.yabx.kyc.app.service.impl;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -45,6 +47,20 @@ public class StorageServiceImpl implements StorageService {
 		image = ImageIO.read(convFile);
 		ImageIO.write(image, extension, new File(path));
 		return newFileName;
+	}
+
+	@Override
+	public byte[] getImage(String filename) throws Exception {
+		String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/tmp/") + filename;
+		File file = new File(path);
+		BufferedImage image = ImageIO.read(file);
+		String extension = FilenameUtils.getExtension(path);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(image, extension, baos);
+		baos.flush();
+		byte[] imageInByte = baos.toByteArray();
+		baos.close();
+		return imageInByte;
 	}
 
 }

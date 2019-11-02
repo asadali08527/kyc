@@ -1,5 +1,7 @@
 package co.yabx.kyc.app.controllers;
 
+import java.awt.image.BufferedImage;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,6 +19,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import co.yabx.kyc.app.dto.DsrProfileDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
@@ -136,9 +142,9 @@ public class DSRController {
 					String saveFileName = storageService.uploadImage(files);
 					AttachmentDetails attachmentDetails = attachmentService.persistDsrProfilePicInDb(user, files,
 							saveFileName);
-					if (attachmentDetails != null)
-						return new ResponseEntity<>(files, HttpStatus.OK);
-					else {
+					if (attachmentDetails != null) {
+						return new ResponseEntity<>(storageService.getImage(saveFileName), HttpStatus.OK);
+					} else {
 						return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
 					}
 				} catch (Exception e) {
@@ -152,4 +158,34 @@ public class DSRController {
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 	}
 
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/dsr/image", method = RequestMethod.GET)
+	public ResponseEntity<?> fetchImage(@RequestParam("msisdn") String msisdn, HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse) throws Exception {
+		LOGGER.info("/dsr/image request recieved for msisdn={}", msisdn);
+		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
+			User user = userService.getDSRByMsisdn(msisdn);
+			if (user != null) {
+				try {
+					String filename = attachmentService.fetchDsrProfilePic(user);
+					if (filename != null && !filename.isEmpty()) {
+						return new ResponseEntity<>(storageService.getImage(filename), HttpStatus.OK);
+					} else {
+						return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					LOGGER.error("exception raised while reading profile pic for user={},error={}", msisdn,
+							e.getMessage());
+					return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+	}
 }

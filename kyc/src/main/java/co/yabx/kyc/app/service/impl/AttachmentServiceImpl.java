@@ -3,7 +3,6 @@ package co.yabx.kyc.app.service.impl;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.transaction.Transactional;
 
@@ -159,6 +158,23 @@ public class AttachmentServiceImpl implements AttachmentService {
 			attachmentDetails = attachmentDetailsRepository.save(attachmentDetails);
 			return attachmentDetails;
 		}
+		return null;
+	}
+
+	@Override
+	public String fetchDsrProfilePic(User user) {
+		AttachmentDetails attachmentDetails = attachmentDetailsRepository.findByUserAndDocumentType(user,
+				DocumentType.PROFILE_PIC);
+		if (attachmentDetails != null) {
+			Set<Attachments> attachments = attachmentDetails.getAttachments();
+			if (attachments != null && !attachments.isEmpty()) {
+				Optional<Attachments> optional = attachments.stream().findFirst();
+				if (optional.isPresent()) {
+					return optional.get().getDocumentUrl();
+				}
+			}
+		}
+
 		return null;
 	}
 

@@ -16,4 +16,6 @@ public interface AttachmentService {
 
 	AttachmentDetails persistDsrProfilePicInDb(User user, MultipartFile files, String saveFileName);
 
+	String fetchDsrProfilePic(User user);
+
 }

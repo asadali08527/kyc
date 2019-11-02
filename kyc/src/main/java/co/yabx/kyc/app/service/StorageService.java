@@ -6,4 +6,6 @@ public interface StorageService {
 
 	String uploadImage(MultipartFile file) throws Exception;
 
+	byte[] getImage(String filename) throws Exception;
+
 }
