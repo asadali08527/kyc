@@ -19,7 +19,7 @@ public class AttachmentsDTO implements Serializable {
 
 	private DocumentSide documentSide;
 
-	private String documentUrl;
+	private byte[] byteArray;
 
 	private Date createdAt;
 
@@ -41,14 +41,6 @@ public class AttachmentsDTO implements Serializable {
 
 	public void setDocumentSide(DocumentSide documentSide) {
 		this.documentSide = documentSide;
-	}
-
-	public String getDocumentUrl() {
-		return documentUrl;
-	}
-
-	public void setDocumentUrl(String documentUrl) {
-		this.documentUrl = documentUrl;
 	}
 
 	public Date getCreatedAt() {
@@ -75,11 +67,12 @@ public class AttachmentsDTO implements Serializable {
 		this.attachmentDetails = attachmentDetails;
 	}
 
-	@Override
-	public String toString() {
-		return "AttachmentsDTO [id=" + id + ", documentSide=" + documentSide + ", documentUrl=" + documentUrl
-				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", attachmentDetails=" + attachmentDetails
-				+ "]";
+	public byte[] getByteArray() {
+		return byteArray;
+	}
+
+	public void setByteArray(byte[] bs) {
+		this.byteArray = bs;
 	}
 
 }

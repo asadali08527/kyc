@@ -1,5 +1,7 @@
 package co.yabx.kyc.app.controllers;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,6 +24,7 @@ import co.yabx.kyc.app.dto.QuestionAnswerDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.RetailerRequestDTO;
 import co.yabx.kyc.app.dto.RetailersDTO;
+import co.yabx.kyc.app.fullKyc.dto.AttachmentDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
@@ -56,12 +59,6 @@ public class RetailerController {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private AttachmentsRepository attachmentsRepository;
-
-	@Autowired
-	private AttachmentDetailsRepository attachmentDetailsRepository;
 
 	@Autowired
 	private AttachmentService attachmentService;
@@ -212,4 +209,30 @@ public class RetailerController {
 
 	}
 
+	@RequestMapping(value = "/retailer/image", method = RequestMethod.GET)
+	public ResponseEntity<?> getImages(@RequestParam("dsrMSISDN") String msisdn,
+			@RequestParam("retailerId") Long retailerId, HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse) {
+		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
+			LOGGER.info("/retailer/image request recieved for retailer={}, dsr={}", retailerId, msisdn);
+			User user = userService.getRetailerById(retailerId);
+			if (user != null) {
+				try {
+					List<AttachmentDetailsDTO> attachmentDetails = attachmentService.getRetailerDocuments(user);
+					if (attachmentDetails != null)
+						return new ResponseEntity<>(attachmentDetails, HttpStatus.OK);
+					else {
+						return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					LOGGER.error("exception raised while fetching retailer documents for retailer={},error={}",
+							retailerId, e.getMessage());
+					return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+	}
 }

@@ -2,10 +2,12 @@ package co.yabx.kyc.app.fullKyc.dto;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import co.yabx.kyc.app.enums.AttachmentType;
 import co.yabx.kyc.app.enums.DocumentType;
 
 /**
@@ -17,8 +19,6 @@ import co.yabx.kyc.app.enums.DocumentType;
 public class AttachmentDetailsDTO implements Serializable {
 
 	private Long id;
-
-	private String documentUrl;
 
 	private Date snapTime;
 
@@ -38,7 +38,9 @@ public class AttachmentDetailsDTO implements Serializable {
 
 	private Long documentExpiryDate;
 
-	private Set<AttachmentsDTO> attachments;
+	private List<AttachmentsDTO> attachments;
+
+	private String attachmentType;
 
 	private UserDTO user;
 
@@ -80,14 +82,6 @@ public class AttachmentDetailsDTO implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getDocumentUrl() {
-		return documentUrl;
-	}
-
-	public void setDocumentUrl(String documentUrl) {
-		this.documentUrl = documentUrl;
 	}
 
 	public String getDocumentNumber() {
@@ -138,21 +132,29 @@ public class AttachmentDetailsDTO implements Serializable {
 		this.user = user;
 	}
 
-	public Set<AttachmentsDTO> getAttachments() {
+	public List<AttachmentsDTO> getAttachments() {
 		return attachments;
 	}
 
-	public void setAttachments(Set<AttachmentsDTO> attachments) {
+	public void setAttachments(List<AttachmentsDTO> attachments) {
 		this.attachments = attachments;
 	}
 
 	@Override
 	public String toString() {
-		return "AttachmentDetailsDTO [id=" + id + ", documentUrl=" + documentUrl + ", snapTime=" + snapTime
-				+ ", isSelfie=" + isSelfie + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
-				+ ", documentNumber=" + documentNumber + ", documentType=" + documentType + ", documentIssueDate="
-				+ documentIssueDate + ", placeOfIssue=" + placeOfIssue + ", documentExpiryDate=" + documentExpiryDate
-				+ ", attachments=" + attachments + ", user=" + user + "]";
+		return "AttachmentDetailsDTO [id=" + id + ", snapTime=" + snapTime + ", isSelfie=" + isSelfie + ", createdAt="
+				+ createdAt + ", updatedAt=" + updatedAt + ", documentNumber=" + documentNumber + ", documentType="
+				+ documentType + ", documentIssueDate=" + documentIssueDate + ", placeOfIssue=" + placeOfIssue
+				+ ", documentExpiryDate=" + documentExpiryDate + ", attachments=" + attachments + ", user=" + user
+				+ "]";
+	}
+
+	public String getAttachmentType() {
+		return attachmentType;
+	}
+
+	public void setAttachmentType(String attachmentType) {
+		this.attachmentType = attachmentType;
 	}
 
 }

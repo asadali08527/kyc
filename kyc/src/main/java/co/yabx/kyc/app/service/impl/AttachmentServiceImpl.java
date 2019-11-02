@@ -1,6 +1,8 @@
 package co.yabx.kyc.app.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,12 +18,15 @@ import org.springframework.web.multipart.MultipartFile;
 import co.yabx.kyc.app.enums.AttachmentType;
 import co.yabx.kyc.app.enums.DocumentSide;
 import co.yabx.kyc.app.enums.DocumentType;
+import co.yabx.kyc.app.fullKyc.dto.AttachmentDetailsDTO;
+import co.yabx.kyc.app.fullKyc.dto.AttachmentsDTO;
 import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.fullKyc.entity.Attachments;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.repository.AttachmentDetailsRepository;
 import co.yabx.kyc.app.fullKyc.repository.AttachmentsRepository;
 import co.yabx.kyc.app.service.AttachmentService;
+import co.yabx.kyc.app.service.StorageService;
 
 /**
  * 
@@ -36,6 +41,9 @@ public class AttachmentServiceImpl implements AttachmentService {
 
 	@Autowired
 	private AttachmentDetailsRepository attachmentDetailsRepository;
+
+	@Autowired
+	private StorageService storageService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AttachmentServiceImpl.class);
 
@@ -175,6 +183,46 @@ public class AttachmentServiceImpl implements AttachmentService {
 			}
 		}
 
+		return null;
+	}
+
+	@Override
+	public List<AttachmentDetailsDTO> getRetailerDocuments(User user) {
+		if (user != null) {
+			List<AttachmentDetails> attachmentDetailsList = attachmentDetailsRepository.findByUser(user);
+			List<AttachmentDetailsDTO> attachmentDetailsDTOs = new ArrayList<AttachmentDetailsDTO>();
+			if (attachmentDetailsList != null && !attachmentDetailsList.isEmpty()) {
+				for (AttachmentDetails attachmentDetails : attachmentDetailsList) {
+					AttachmentDetailsDTO attachmentDetailsDTO = new AttachmentDetailsDTO();
+					attachmentDetailsDTO.setDocumentType(attachmentDetails.getDocumentType());
+					attachmentDetailsDTO.setAttachments(prepareAttachmentDTO(attachmentDetails.getAttachments()));
+					attachmentDetailsDTO.setAttachmentType(attachmentDetails.getAttachmentType() != null
+							? attachmentDetails.getAttachmentType().toString()
+							: null);
+					attachmentDetailsDTOs.add(attachmentDetailsDTO);
+				}
+			}
+			return attachmentDetailsDTOs;
+		}
+		return null;
+	}
+
+	private List<AttachmentsDTO> prepareAttachmentDTO(Set<Attachments> attachmentsSet) {
+		List<AttachmentsDTO> attachmentsDTOs = new ArrayList<AttachmentsDTO>();
+		if (attachmentsSet != null && !attachmentsSet.isEmpty()) {
+			for (Attachments attachments : attachmentsSet) {
+				AttachmentsDTO attachmentsDTO = new AttachmentsDTO();
+				attachmentsDTO.setDocumentSide(attachments.getDocumentSide());
+				try {
+					attachmentsDTO.setByteArray(storageService.getImage(attachments.getDocumentUrl()));
+					attachmentsDTOs.add(attachmentsDTO);
+				} catch (Exception e) {
+					LOGGER.error("Exception while fetching images={},error={}", attachments.getDocumentUrl(),
+							e.getMessage());
+				}
+			}
+			return attachmentsDTOs;
+		}
 		return null;
 	}
 
