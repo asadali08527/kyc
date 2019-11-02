@@ -92,7 +92,7 @@ public class RetailerController {
 
 	}
 
-	@RequestMapping(value = "/retailer/personal-information", method = RequestMethod.POST)
+	@RequestMapping(value = "/retailer/profile", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> submitRetailerProfile(@RequestBody RetailerRequestDTO retailerRequestDTO,
 			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
@@ -133,12 +133,12 @@ public class RetailerController {
 
 	@RequestMapping(value = "/retailer/kyc-submit", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> submitKyc(@RequestBody RetailersDTO retailersDTO, HttpServletRequest httpServletRequest,
+	public ResponseEntity<?> submitKyc(@RequestParam(value = "dsrMsisdn") String dsrMsisdn,
+			@RequestParam(value = "retailerId") Long retailerId, HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse) {
-		if (authInfoService.isAuthorized(retailersDTO.getDsrMsisdn() != null && !retailersDTO.getDsrMsisdn().isEmpty()
-				? retailersDTO.getDsrMsisdn()
-				: null, httpServletRequest, httpServletResponse)) {
-			ResponseDTO loginDTO = retailerService.submitKyc(retailersDTO);
+		if (authInfoService.isAuthorized(dsrMsisdn != null && !dsrMsisdn.isEmpty() ? dsrMsisdn : null,
+				httpServletRequest, httpServletResponse)) {
+			ResponseDTO loginDTO = retailerService.submitKyc(dsrMsisdn, retailerId);
 			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

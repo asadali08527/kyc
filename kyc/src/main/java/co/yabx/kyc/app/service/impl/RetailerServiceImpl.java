@@ -18,7 +18,6 @@ import co.yabx.kyc.app.dto.dtoHelper.RetailersDtoHelper;
 import co.yabx.kyc.app.enums.PageType;
 import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.UserStatus;
-import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
@@ -30,7 +29,7 @@ import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
 import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
-import co.yabx.kyc.app.service.AppConfigService;
+import co.yabx.kyc.app.service.AccountStatusService;
 import co.yabx.kyc.app.service.RetailerService;
 import co.yabx.kyc.app.service.UserService;
 import co.yabx.kyc.app.wrappers.UserWrapper;
@@ -47,7 +46,7 @@ public class RetailerServiceImpl implements RetailerService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private AppConfigService appConfigService;
+	private AccountStatusService accountStatusService;
 
 	@Autowired
 	private RetailersRepository retailersRepository;
@@ -141,18 +140,15 @@ public class RetailerServiceImpl implements RetailerService {
 	}
 
 	@Override
-	public ResponseDTO submitKyc(RetailersDTO retailersDTO) {
-		if (retailersDTO != null && retailersDTO.getDsrMsisdn() != null && !retailersDTO.getDsrMsisdn().isEmpty()) {
-
+	public ResponseDTO submitKyc(String dsrMsisdn, Long retailerId) {
+		if (dsrMsisdn != null && retailerId != null && !dsrMsisdn.isEmpty()) {
 			List<UserRelationships> userRelationshipsList = userRelationshipsRepository
-					.findByMsisdnAndRelationship(retailersDTO.getDsrMsisdn(), Relationship.RETAILER);
+					.findByMsisdnAndRelationship(dsrMsisdn, Relationship.RETAILER);
 			if (userRelationshipsList != null && !userRelationshipsList.isEmpty()) {
 				Optional<UserRelationships> retailer = userRelationshipsList.stream()
-						.filter(f -> f.getRelative().getId().equals(retailersDTO.getRetailerId())).findFirst();
+						.filter(f -> f.getRelative().getId().equals(retailerId)).findFirst();
 				if (retailer.isPresent()) {
-					User user = retailer.get().getRelative();
-					user.setUserStatus(UserStatus.INPROGRESS);
-					userRepository.save(user);
+					accountStatusService.createAccountStatus(retailer.get().getMsisdn(), dsrMsisdn, true);
 					return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
 				}
 			}

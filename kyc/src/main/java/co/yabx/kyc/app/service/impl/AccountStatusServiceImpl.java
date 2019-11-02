@@ -293,4 +293,10 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 		return createAccount(accountStatuses, msisdn, createdBy, false, AccountStatus.NEW);
 	}
 
+	@Override
+	public AccountStatuses createAccountStatus(String msisdn, String createdBy, boolean isKycAvailable) {
+		AccountStatuses accountStatuses = accountStatusesRepository.findByMsisdn(msisdn);
+		return createAccount(accountStatuses, msisdn, createdBy, isKycAvailable, AccountStatus.NEW);
+	}
+
 }
