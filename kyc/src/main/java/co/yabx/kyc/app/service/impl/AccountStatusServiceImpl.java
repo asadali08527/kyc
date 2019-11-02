@@ -124,7 +124,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 				AccountStatuses accountStatuses = accountStatusesRepository
 						.findByMsisdn(EncoderDecoderUtil.base64Decode(kycDetails.getMsisdn()));
 				return createAccount(accountStatuses, EncoderDecoderUtil.base64Decode(kycDetails.getMsisdn()),
-						kycDetails.getCreatedBy(), true, AccountStatus.NEW);
+						kycDetails.getCreatedBy(), true, AccountStatus.NEW, KycStatus.NO);
 			} catch (Exception e) {
 				e.printStackTrace();
 				LOGGER.error("Exception raised while updating account status for msisdn={}, error={}",
@@ -135,7 +135,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	}
 
 	private AccountStatuses createAccount(AccountStatuses accountStatuses, String msisdn, String createdBy,
-			boolean isKycAvailable, AccountStatus accountStatus) {
+			boolean isKycAvailable, AccountStatus accountStatus, KycStatus kycStatus) {
 		if (accountStatuses == null) {
 			accountStatuses = new AccountStatuses();
 			accountStatuses.setKycAvailable(isKycAvailable);
@@ -152,7 +152,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 		else
 			accountStatuses.setAccountStatus(AccountStatus.NEW);
 		accountStatuses.setAmlCftStatus(AmlCftStatus.NO);
-		accountStatuses.setKycVerified(KycStatus.NO);
+		accountStatuses.setKycVerified(kycStatus);
 		accountStatuses.setCreatedBy(createdBy);
 		accountStatuses = accountStatusesRepository.save(accountStatuses);
 		return accountStatuses;
@@ -185,7 +185,8 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 		if (accountStatuses != null)
 			return updateAccountStatus(accountStatuses, getAccountStatus(status), reason, updatedBy);
 		else {
-			accountStatuses = createAccount(accountStatuses, msisdn, updatedBy, false, getAccountStatus(status));
+			accountStatuses = createAccount(accountStatuses, msisdn, updatedBy, false, getAccountStatus(status),
+					KycStatus.NO);
 		}
 		return accountStatuses;
 	}
@@ -290,13 +291,14 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	@Override
 	public AccountStatuses createAccountStatus(String msisdn, String createdBy) {
 		AccountStatuses accountStatuses = accountStatusesRepository.findByMsisdn(msisdn);
-		return createAccount(accountStatuses, msisdn, createdBy, false, AccountStatus.NEW);
+		return createAccount(accountStatuses, msisdn, createdBy, false, AccountStatus.NEW, KycStatus.NO);
 	}
 
 	@Override
-	public AccountStatuses createAccountStatus(String msisdn, String createdBy, boolean isKycAvailable) {
+	public AccountStatuses createAccountStatus(String msisdn, String createdBy, boolean isKycAvailable,
+			KycStatus kycStatus) {
 		AccountStatuses accountStatuses = accountStatusesRepository.findByMsisdn(msisdn);
-		return createAccount(accountStatuses, msisdn, createdBy, isKycAvailable, AccountStatus.NEW);
+		return createAccount(accountStatuses, msisdn, createdBy, isKycAvailable, AccountStatus.NEW, kycStatus);
 	}
 
 }

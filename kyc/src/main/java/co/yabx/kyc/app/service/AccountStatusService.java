@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import co.yabx.kyc.app.dto.AccountStatusDTO;
+import co.yabx.kyc.app.enums.KycStatus;
 import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
 import co.yabx.kyc.app.miniKyc.entity.KycDetails;
 
@@ -28,6 +29,7 @@ public interface AccountStatusService {
 
 	public AccountStatuses createAccountStatus(String msisdn, String createdBy);
 
-	public AccountStatuses createAccountStatus(String msisdn, String createdBy, boolean isKycAvailable);
+	public AccountStatuses createAccountStatus(String msisdn, String createdBy, boolean isKycAvailable,
+			KycStatus kycStatus);
 
 }

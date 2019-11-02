@@ -15,6 +15,8 @@ import co.yabx.kyc.app.dto.RetailerRequestDTO;
 import co.yabx.kyc.app.dto.RetailersDTO;
 import co.yabx.kyc.app.dto.dtoHelper.QuestionAnswerDTOHelper;
 import co.yabx.kyc.app.dto.dtoHelper.RetailersDtoHelper;
+import co.yabx.kyc.app.enums.AccountStatus;
+import co.yabx.kyc.app.enums.KycStatus;
 import co.yabx.kyc.app.enums.PageType;
 import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.UserStatus;
@@ -148,7 +150,8 @@ public class RetailerServiceImpl implements RetailerService {
 				Optional<UserRelationships> retailer = userRelationshipsList.stream()
 						.filter(f -> f.getRelative().getId().equals(retailerId)).findFirst();
 				if (retailer.isPresent()) {
-					accountStatusService.createAccountStatus(retailer.get().getMsisdn(), dsrMsisdn, true);
+					accountStatusService.createAccountStatus(retailer.get().getMsisdn(), dsrMsisdn, true,
+							KycStatus.SUBMITTED);
 					return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
 				}
 			}
