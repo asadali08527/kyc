@@ -2,7 +2,6 @@ package co.yabx.kyc.app.dto.dtoHelper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -124,14 +123,45 @@ public class FieldsDtoHelper implements Serializable {
 				prepareAttachmentDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter);
 			}
 
-			if (dynamicFields.getSavedData() != null && !dynamicFields.getSavedData().isEmpty())
+			if (dynamicFields.getSavedData() != null && !dynamicFields.getSavedData().isEmpty()) {
 				filledFields++;
+			} else if (checkSubFields(dynamicFields)) {
+				filledFields++;
+				totalFields++;
+			}
+			if (isHavingSubFields(dynamicFields)) {
+				totalFields++;
+			}
 		}
 		filledVsUnfilled.put("filledFields", filledFields);
 		filledVsUnfilled.put("totalFields", totalFields);
 		// appDynamicFieldsDTOSet.add(appDynamicFieldsDTOSet.stream().max(Comparator.comparing(FieldsDTO::getId)).get());
 		appDynamicFieldsDTOSet.addAll(appDynamicFieldsDTOSet);
 		return appDynamicFieldsDTOSet;
+	}
+
+	private static boolean isHavingSubFields(Fields dynamicFields) {
+		if (dynamicFields != null) {
+			Set<SubFields> subFields = dynamicFields.getSubFields();
+			if (subFields != null && !subFields.isEmpty()) {
+				return true;
+			}
+		}
+		return false;
+
+	}
+
+	private static boolean checkSubFields(Fields dynamicFields) {
+		if (dynamicFields != null) {
+			Set<SubFields> subFields = dynamicFields.getSubFields();
+			if (subFields != null && !subFields.isEmpty()) {
+				for (SubFields subField : subFields) {
+					Fields field = subField.getChild();
+					return field.getSavedData() != null && !field.getSavedData().isEmpty();
+				}
+			}
+		}
+		return false;
 	}
 
 	private static void prepareAttachmentDetails(Fields dynamicFields, User retailers,
