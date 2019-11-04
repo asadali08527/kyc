@@ -1,8 +1,8 @@
 package co.yabx.kyc.app.enums;
 
 public enum TypeOfConcern {
-	Proprietorship, Partnership, Joint_Venture, Private_Ltd, Public_Ltd, Govt_Organization, Semi_Govt_Org, Trust, NGO,
-	CLUB_SOCIETY, EDUCATIONAL_INSTITUTION, RELIGIOUS_ESTABLISHMENT, OTHERS;
+	Proprietorship, Partnership, Joint_Venture, Private_Ltd, Public_Ltd, Govt_Organization, Semi_Govt_Organization,
+	Trust, NGO, CLUB_SOCIETY, EDUCATIONAL_INSTITUTION, RELIGIOUS_ESTABLISHMENT, OTHERS;
 
 	public static TypeOfConcern getTypeOfConcern(String value) {
 		if (value.equalsIgnoreCase("Joint Venture")) {
@@ -13,8 +13,8 @@ public enum TypeOfConcern {
 			return TypeOfConcern.Public_Ltd;
 		} else if (value.equalsIgnoreCase("Govt Organization")) {
 			return TypeOfConcern.Govt_Organization;
-		} else if (value.equalsIgnoreCase("Semi Govt Org")) {
-			return TypeOfConcern.Semi_Govt_Org;
+		} else if (value.equalsIgnoreCase("Semi Govt Organization")) {
+			return TypeOfConcern.Semi_Govt_Organization;
 		} else if (value.equalsIgnoreCase("Club Society")) {
 			return TypeOfConcern.CLUB_SOCIETY;
 		} else if (value.equalsIgnoreCase("Educational Institution")) {
@@ -38,8 +38,8 @@ public enum TypeOfConcern {
 			return "Educational Institution";
 		} else if (super.toString().equals("CLUB_SOCIETY")) {
 			return "Club Society";
-		} else if (super.toString().equals("Semi_Govt_Org")) {
-			return "Semi Govt Org";
+		} else if (super.toString().equals("Semi_Govt_Organization")) {
+			return "Semi Govt Organization";
 		} else if (super.toString().equals("Public_Ltd")) {
 			return "Public Ltd";
 		} else if (super.toString().equals("Govt_Organization")) {

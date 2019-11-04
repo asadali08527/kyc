@@ -106,7 +106,6 @@ public class RetailersDtoHelper implements Serializable {
 		List<BankAccountDetailsDTO> accountDetails = new ArrayList<BankAccountDetailsDTO>();
 		BankAccountDetailsDTO bankAccountDetails = new BankAccountDetailsDTO();
 		bankAccountDetails.setAccountNumber(12345l);
-		bankAccountDetails.setBankAccountType(BankAccountType.SAVING);
 		bankAccountDetails.setBankName("ICICI BAnk");
 		bankAccountDetails.setBranch("Bengaluru");
 		bankAccountDetails.setBankAccountIdentifier(BankAccountIdentifier.PRIMARY);
@@ -164,7 +163,6 @@ public class RetailersDtoHelper implements Serializable {
 		List<BankAccountDetailsDTO> businessAccountDetails = new ArrayList<BankAccountDetailsDTO>();
 		BankAccountDetailsDTO businessBankAccountDetails = new BankAccountDetailsDTO();
 		businessBankAccountDetails.setAccountNumber(12345l);
-		businessBankAccountDetails.setBankAccountType(BankAccountType.SAVING);
 		businessBankAccountDetails.setBankName("ICICI BAnk");
 		businessBankAccountDetails.setBranch("Bengaluru");
 		businessBankAccountDetails.setBankAccountIdentifier(BankAccountIdentifier.PRIMARY);

@@ -442,207 +442,213 @@ public class FieldsDtoHelper implements Serializable {
 
 	private static void prepareBusinessInformation(Fields dynamicFields, User retailers,
 			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter) {
-
-		if (retailers == null || retailers.getBusinessDetails() == null || retailers.getBusinessDetails().isEmpty()) {
-			if (dynamicFields.getFieldId().equals("facilityDetails")) {
-				List<String> options = new ArrayList<String>();
-				FacilityDetails[] accountTypes = FacilityDetails.values();
-				for (FacilityDetails statuses : accountTypes) {
-					options.add(statuses.toString());
+		if (checkFilterCriteria(filter, dynamicFields.getFieldId())) {
+			if (retailers == null || retailers.getBusinessDetails() == null
+					|| retailers.getBusinessDetails().isEmpty()) {
+				if (dynamicFields.getFieldId().equals("facilityDetails")) {
+					List<String> options = new ArrayList<String>();
+					FacilityDetails[] accountTypes = FacilityDetails.values();
+					for (FacilityDetails statuses : accountTypes) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
+				} else if (dynamicFields.getFieldId().equals("facilityType")) {
+					List<String> options = new ArrayList<String>();
+					FacilityType[] accountTypes = FacilityType.values();
+					for (FacilityType statuses : accountTypes) {
+						options.add(statuses.getName());
+					}
+					dynamicFields.setOptions(options);
+				} else if (dynamicFields.getFieldId().equals("businessType")) {
+					List<String> options = new ArrayList<String>();
+					BusinessType[] accountTypes = BusinessType.values();
+					for (BusinessType statuses : accountTypes) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
+				} else if (dynamicFields.getFieldId().equals("sector")) {
+					List<String> options = new ArrayList<String>();
+					BusinessSector[] accountTypes = BusinessSector.values();
+					for (BusinessSector statuses : accountTypes) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
 				}
-				dynamicFields.setOptions(options);
-			} else if (dynamicFields.getFieldId().equals("facilityType")) {
-				List<String> options = new ArrayList<String>();
-				FacilityType[] accountTypes = FacilityType.values();
-				for (FacilityType statuses : accountTypes) {
-					options.add(statuses.getName());
+				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+			} else {
+				Set<BusinessDetails> BusinessDetailsSet = retailers.getBusinessDetails();
+				Optional<BusinessDetails> businessDetailsOptional = BusinessDetailsSet.stream().findFirst();
+				if (dynamicFields.getFieldId().equals("businessPhone")) {
+					dynamicFields.setSavedData(
+							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getBusinessPhone()
+									: null);
+				} else if (dynamicFields.getFieldId().equals("businessName")) {
+					dynamicFields.setSavedData(
+							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getBusinessName()
+									: null);
+				} else if (dynamicFields.getFieldId().equals("directorOrPartnerName")) {
+					dynamicFields.setSavedData(businessDetailsOptional.isPresent()
+							? businessDetailsOptional.get().getDirectorOrPartnerName()
+							: null);
+				} else if (dynamicFields.getFieldId().equals("facilityDetails")) {
+					dynamicFields
+							.setSavedData(businessDetailsOptional.isPresent()
+									? businessDetailsOptional.get().getFacilityDetails() != null
+											? businessDetailsOptional.get().getFacilityDetails().toString()
+											: null
+									: null);
+					List<String> options = new ArrayList<String>();
+					FacilityDetails[] accountTypes = FacilityDetails.values();
+					for (FacilityDetails statuses : accountTypes) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
+				} else if (dynamicFields.getFieldId().equals("facilityType")) {
+					dynamicFields
+							.setSavedData(businessDetailsOptional.isPresent()
+									? businessDetailsOptional.get().getFacilityType() != null
+											? businessDetailsOptional.get().getFacilityType().toString()
+											: null
+									: null);
+					List<String> options = new ArrayList<String>();
+					FacilityType[] accountTypes = FacilityType.values();
+					for (FacilityType statuses : accountTypes) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
+				} else if (dynamicFields.getFieldId().equals("fixedAssetPurchase")) {
+					dynamicFields.setSavedData(
+							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getFixedAssetPurchase()
+									: null);
+				} else if (dynamicFields.getFieldId().equals("fixedAssetName")) {
+					dynamicFields.setSavedData(
+							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getFixedAssetName()
+									: null);
+				} else if (dynamicFields.getFieldId().equals("price")) {
+					dynamicFields.setSavedData(
+							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getPrice() + "" : null);
+				} else if (dynamicFields.getFieldId().equals("origin")) {
+					dynamicFields.setSavedData(
+							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getOrigin() : null);
+				} else if (dynamicFields.getFieldId().equals("proposedCollateral")) {
+					dynamicFields.setSavedData(
+							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getProposedCollateral()
+									: null);
+				} else if (dynamicFields.getFieldId().equals("businessType")) {
+					dynamicFields
+							.setSavedData(businessDetailsOptional.isPresent()
+									? businessDetailsOptional.get().getBusinessType() != null
+											? businessDetailsOptional.get().getBusinessType().toString()
+											: null
+									: null);
+					List<String> options = new ArrayList<String>();
+					BusinessType[] accountTypes = BusinessType.values();
+					for (BusinessType statuses : accountTypes) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
+				} else if (dynamicFields.getFieldId().equals("sector")) {
+					dynamicFields
+							.setSavedData(businessDetailsOptional.isPresent()
+									? businessDetailsOptional.get().getSector() != null
+											? businessDetailsOptional.get().getSector().toString()
+											: null
+									: null);
+					List<String> options = new ArrayList<String>();
+					BusinessSector[] accountTypes = BusinessSector.values();
+					for (BusinessSector statuses : accountTypes) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
+				} else if (dynamicFields.getFieldId().equals("detailOfBusness")) {
+					dynamicFields.setSavedData(
+							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getDetailOfBusness()
+									: null);
+				} else if (dynamicFields.getFieldId().equals("initialCapital")) {
+					dynamicFields.setSavedData(
+							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getInitialCapital() + ""
+									: null);
+				} else if (dynamicFields.getFieldId().equals("fundSource")) {
+					dynamicFields.setSavedData(
+							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getFundSource() : null);
+				} else if (dynamicFields.getFieldId().equals("vatRegistrationNumber")) {
+					dynamicFields.setSavedData(businessDetailsOptional.isPresent()
+							? businessDetailsOptional.get().getVatRegistrationNumber()
+							: null);
+				} else if (dynamicFields.getFieldId().equals("businessStartDate")) {
+					dynamicFields.setSavedData(
+							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getBusinessStartDate()
+									: null);
+				} else if (dynamicFields.getFieldId().equals("businessTin")) {
+					dynamicFields.setSavedData(
+							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getBusinessTin()
+									: null);
+				} else if (dynamicFields.getFieldId().equals("annualSales")) {
+					dynamicFields
+							.setSavedData(businessDetailsOptional.isPresent()
+									? businessDetailsOptional.get().getAnnualSales() != 0.0
+											? businessDetailsOptional.get().getAnnualSales() + ""
+											: null
+									: null);
+				} else if (dynamicFields.getFieldId().equals("annualGrossProfit")) {
+					dynamicFields
+							.setSavedData(businessDetailsOptional.isPresent()
+									? businessDetailsOptional.get().getAnnualGrossProfit() != 0.0
+											? businessDetailsOptional.get().getAnnualGrossProfit() + ""
+											: null
+									: null);
+				} else if (dynamicFields.getFieldId().equals("annualExpenses")) {
+					dynamicFields
+							.setSavedData(businessDetailsOptional.isPresent()
+									? businessDetailsOptional.get().getAnnualExpenses() != 0.0
+											? businessDetailsOptional.get().getAnnualExpenses() + ""
+											: null
+									: null);
+				} else if (dynamicFields.getFieldId().equals("valueOfFixedAssets")) {
+					dynamicFields
+							.setSavedData(businessDetailsOptional.isPresent()
+									? businessDetailsOptional.get().getValueOfFixedAssets() != 0.0
+											? businessDetailsOptional.get().getValueOfFixedAssets() + ""
+											: null
+									: null);
+				} else if (dynamicFields.getFieldId().equals("numberOfEmployees")) {
+					dynamicFields
+							.setSavedData(businessDetailsOptional.isPresent()
+									? businessDetailsOptional.get().getNumberOfEmployees() != 0
+											? businessDetailsOptional.get().getNumberOfEmployees() + ""
+											: null
+									: null);
+				} else if (dynamicFields.getFieldId().equals("stockValue")) {
+					dynamicFields
+							.setSavedData(businessDetailsOptional.isPresent()
+									? businessDetailsOptional.get().getStockValue() != 0.0
+											? businessDetailsOptional.get().getStockValue() + ""
+											: null
+									: null);
+				} else if (dynamicFields.getFieldId().equals("deposits")) {
+					dynamicFields
+							.setSavedData(businessDetailsOptional.isPresent()
+									? businessDetailsOptional.get().getDeposits() != 0.0
+											? businessDetailsOptional.get().getDeposits() + ""
+											: null
+									: null);
+				} else if (dynamicFields.getFieldId().equals("withdrawls")) {
+					dynamicFields
+							.setSavedData(businessDetailsOptional.isPresent()
+									? businessDetailsOptional.get().getWithdrawls() != 0.0
+											? businessDetailsOptional.get().getWithdrawls() + ""
+											: null
+									: null);
+				} else if (dynamicFields.getFieldId().equals("initialDeposit")) {
+					dynamicFields
+							.setSavedData(businessDetailsOptional.isPresent()
+									? businessDetailsOptional.get().getInitialDeposit() != 0.0
+											? businessDetailsOptional.get().getInitialDeposit() + ""
+											: null
+									: null);
 				}
-				dynamicFields.setOptions(options);
-			} else if (dynamicFields.getFieldId().equals("businessType")) {
-				List<String> options = new ArrayList<String>();
-				BusinessType[] accountTypes = BusinessType.values();
-				for (BusinessType statuses : accountTypes) {
-					options.add(statuses.toString());
-				}
-				dynamicFields.setOptions(options);
-			} else if (dynamicFields.getFieldId().equals("sector")) {
-				List<String> options = new ArrayList<String>();
-				BusinessSector[] accountTypes = BusinessSector.values();
-				for (BusinessSector statuses : accountTypes) {
-					options.add(statuses.toString());
-				}
-				dynamicFields.setOptions(options);
+				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 			}
-			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
-		} else {
-			Set<BusinessDetails> BusinessDetailsSet = retailers.getBusinessDetails();
-			Optional<BusinessDetails> businessDetailsOptional = BusinessDetailsSet.stream().findFirst();
-			if (dynamicFields.getFieldId().equals("businessPhone")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getBusinessPhone() : null);
-			} else if (dynamicFields.getFieldId().equals("businessName")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getBusinessName() : null);
-			} else if (dynamicFields.getFieldId().equals("directorOrPartnerName")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getDirectorOrPartnerName()
-								: null);
-			} else if (dynamicFields.getFieldId().equals("facilityDetails")) {
-				dynamicFields
-						.setSavedData(businessDetailsOptional.isPresent()
-								? businessDetailsOptional.get().getFacilityDetails() != null
-										? businessDetailsOptional.get().getFacilityDetails().toString()
-										: null
-								: null);
-				List<String> options = new ArrayList<String>();
-				FacilityDetails[] accountTypes = FacilityDetails.values();
-				for (FacilityDetails statuses : accountTypes) {
-					options.add(statuses.toString());
-				}
-				dynamicFields.setOptions(options);
-			} else if (dynamicFields.getFieldId().equals("facilityType")) {
-				dynamicFields
-						.setSavedData(businessDetailsOptional.isPresent()
-								? businessDetailsOptional.get().getFacilityType() != null
-										? businessDetailsOptional.get().getFacilityType().toString()
-										: null
-								: null);
-				List<String> options = new ArrayList<String>();
-				FacilityType[] accountTypes = FacilityType.values();
-				for (FacilityType statuses : accountTypes) {
-					options.add(statuses.toString());
-				}
-				dynamicFields.setOptions(options);
-			} else if (dynamicFields.getFieldId().equals("fixedAssetPurchase")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getFixedAssetPurchase()
-								: null);
-			} else if (dynamicFields.getFieldId().equals("fixedAssetName")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getFixedAssetName() : null);
-			} else if (dynamicFields.getFieldId().equals("price")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getPrice() + "" : null);
-			} else if (dynamicFields.getFieldId().equals("origin")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getOrigin() : null);
-			} else if (dynamicFields.getFieldId().equals("proposedCollateral")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getProposedCollateral()
-								: null);
-			} else if (dynamicFields.getFieldId().equals("businessType")) {
-				dynamicFields
-						.setSavedData(businessDetailsOptional.isPresent()
-								? businessDetailsOptional.get().getBusinessType() != null
-										? businessDetailsOptional.get().getBusinessType().toString()
-										: null
-								: null);
-				List<String> options = new ArrayList<String>();
-				BusinessType[] accountTypes = BusinessType.values();
-				for (BusinessType statuses : accountTypes) {
-					options.add(statuses.toString());
-				}
-				dynamicFields.setOptions(options);
-			} else if (dynamicFields.getFieldId().equals("sector")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent()
-								? businessDetailsOptional.get().getSector() != null
-										? businessDetailsOptional.get().getSector().toString()
-										: null
-								: null);
-				List<String> options = new ArrayList<String>();
-				BusinessSector[] accountTypes = BusinessSector.values();
-				for (BusinessSector statuses : accountTypes) {
-					options.add(statuses.toString());
-				}
-				dynamicFields.setOptions(options);
-			} else if (dynamicFields.getFieldId().equals("detailOfBusness")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getDetailOfBusness()
-								: null);
-			} else if (dynamicFields.getFieldId().equals("initialCapital")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getInitialCapital() + ""
-								: null);
-			} else if (dynamicFields.getFieldId().equals("fundSource")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getFundSource() : null);
-			} else if (dynamicFields.getFieldId().equals("vatRegistrationNumber")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getVatRegistrationNumber()
-								: null);
-			} else if (dynamicFields.getFieldId().equals("businessStartDate")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getBusinessStartDate()
-								: null);
-			} else if (dynamicFields.getFieldId().equals("businessTin")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getBusinessTin() : null);
-			} else if (dynamicFields.getFieldId().equals("annualSales")) {
-				dynamicFields
-						.setSavedData(businessDetailsOptional.isPresent()
-								? businessDetailsOptional.get().getAnnualSales() != 0.0
-										? businessDetailsOptional.get().getAnnualSales() + ""
-										: null
-								: null);
-			} else if (dynamicFields.getFieldId().equals("annualGrossProfit")) {
-				dynamicFields
-						.setSavedData(businessDetailsOptional.isPresent()
-								? businessDetailsOptional.get().getAnnualGrossProfit() != 0.0
-										? businessDetailsOptional.get().getAnnualGrossProfit() + ""
-										: null
-								: null);
-			} else if (dynamicFields.getFieldId().equals("annualExpenses")) {
-				dynamicFields
-						.setSavedData(businessDetailsOptional.isPresent()
-								? businessDetailsOptional.get().getAnnualExpenses() != 0.0
-										? businessDetailsOptional.get().getAnnualExpenses() + ""
-										: null
-								: null);
-			} else if (dynamicFields.getFieldId().equals("valueOfFixedAssets")) {
-				dynamicFields
-						.setSavedData(businessDetailsOptional.isPresent()
-								? businessDetailsOptional.get().getValueOfFixedAssets() != 0.0
-										? businessDetailsOptional.get().getValueOfFixedAssets() + ""
-										: null
-								: null);
-			} else if (dynamicFields.getFieldId().equals("numberOfEmployees")) {
-				dynamicFields
-						.setSavedData(businessDetailsOptional.isPresent()
-								? businessDetailsOptional.get().getNumberOfEmployees() != 0
-										? businessDetailsOptional.get().getNumberOfEmployees() + ""
-										: null
-								: null);
-			} else if (dynamicFields.getFieldId().equals("stockValue")) {
-				dynamicFields
-						.setSavedData(businessDetailsOptional.isPresent()
-								? businessDetailsOptional.get().getStockValue() != 0.0
-										? businessDetailsOptional.get().getStockValue() + ""
-										: null
-								: null);
-			} else if (dynamicFields.getFieldId().equals("deposits")) {
-				dynamicFields.setSavedData(
-						businessDetailsOptional.isPresent()
-								? businessDetailsOptional.get().getDeposits() != 0.0
-										? businessDetailsOptional.get().getDeposits() + ""
-										: null
-								: null);
-			} else if (dynamicFields.getFieldId().equals("withdrawls")) {
-				dynamicFields
-						.setSavedData(businessDetailsOptional.isPresent()
-								? businessDetailsOptional.get().getWithdrawls() != 0.0
-										? businessDetailsOptional.get().getWithdrawls() + ""
-										: null
-								: null);
-			} else if (dynamicFields.getFieldId().equals("initialDeposit")) {
-				dynamicFields
-						.setSavedData(businessDetailsOptional.isPresent()
-								? businessDetailsOptional.get().getInitialDeposit() != 0.0
-										? businessDetailsOptional.get().getInitialDeposit() + ""
-										: null
-								: null);
-			}
-			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 		}
 
 	}
