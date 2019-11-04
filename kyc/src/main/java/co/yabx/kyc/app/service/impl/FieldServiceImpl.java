@@ -143,7 +143,7 @@ public class FieldServiceImpl implements FieldService {
 				if (businessAddressDetailsSet == null) {
 					businessAddressDetailsSet = new HashSet<AddressDetails>();
 				} else {
-					Optional<BusinessDetails> optional = businessDetailsSet.stream().findFirst();
+					Optional<BusinessDetails> optional = retailerOrDsrUser.getBusinessDetails().stream().findFirst();
 					if (optional.isPresent()) {
 						BusinessDetails businessDetails = optional.get();
 						if (businessDetails != null) {
@@ -777,7 +777,7 @@ public class FieldServiceImpl implements FieldService {
 				} else if (appDynamicFieldsDTO.getFieldId().equals("facilityType")) {
 					try {
 						FacilityType facilityType = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
-								? FacilityType.valueOf(appDynamicFieldsDTO.getResponse())
+								? FacilityType.findByValue(appDynamicFieldsDTO.getResponse())
 								: null;
 						businessDetails.setFacilityType(facilityType);
 					} catch (Exception e) {

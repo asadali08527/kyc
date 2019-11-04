@@ -29,4 +29,14 @@ public enum FacilityType {
 		}
 		return null;
 	}
+
+	public static FacilityType findByValue(String value) {
+		FacilityType[] facilityTypes = values();
+		for (FacilityType facilityType : facilityTypes) {
+			if (facilityType.getName().equalsIgnoreCase(value)) {
+				return facilityType;
+			}
+		}
+		return null;
+	}
 }
