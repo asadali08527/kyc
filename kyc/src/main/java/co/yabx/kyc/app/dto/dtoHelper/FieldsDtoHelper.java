@@ -1035,7 +1035,6 @@ public class FieldsDtoHelper implements Serializable {
 		FieldsDTO appDynamicFieldsDTO = new FieldsDTO();
 		appDynamicFieldsDTO.setCamera(dynamicFields.isCamera());
 		appDynamicFieldsDTO.setDataType(dynamicFields.getDataType());
-		appDynamicFieldsDTO.setEditable(dynamicFields.isEditable());
 		appDynamicFieldsDTO.setFieldId(dynamicFields.getFieldId());
 		appDynamicFieldsDTO.setFieldName(dynamicFields.getFieldName());
 		appDynamicFieldsDTO.setId(dynamicFields.getId());
@@ -1043,6 +1042,9 @@ public class FieldsDtoHelper implements Serializable {
 		appDynamicFieldsDTO.setOptions(dynamicFields.getOptions());
 		appDynamicFieldsDTO.setPlaceHolderText(dynamicFields.getPlaceHolderText());
 		appDynamicFieldsDTO.setSavedData(dynamicFields.getSavedData());
+		appDynamicFieldsDTO.setEditable(dynamicFields.getSavedData() != null && !dynamicFields.getSavedData().isEmpty()
+				? dynamicFields.isEditable()
+				: true);
 		appDynamicFieldsDTO.setType(dynamicFields.getType());
 		appDynamicFieldsDTO.setValidation(dynamicFields.getValidation());
 		appDynamicFieldsDTO.setDisplayOrder(dynamicFields.getDisplayOrder());
