@@ -62,7 +62,7 @@ public class BankAccountDetails implements Serializable {
 	@Enumerated(value = EnumType.STRING)
 	private ModeOfOperation modeOfOperation;
 
-	@Column(name = "account_type", length = 100, columnDefinition = "varchar(32) default 'CURRENT'")
+	@Column(name = "account_type", length = 100, columnDefinition = "varchar(32) default 'Current'")
 	@Enumerated(value = EnumType.STRING)
 	private BankAccountType bankAccountType;
 
