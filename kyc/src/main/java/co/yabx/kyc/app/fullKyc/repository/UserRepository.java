@@ -4,7 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import co.yabx.kyc.app.entities.AuthInfo;
-import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.entity.User;
 
 @Repository("userRepository")

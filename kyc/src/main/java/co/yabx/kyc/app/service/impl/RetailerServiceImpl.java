@@ -20,6 +20,7 @@ import co.yabx.kyc.app.enums.KycStatus;
 import co.yabx.kyc.app.enums.PageType;
 import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.UserStatus;
+import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
@@ -64,7 +65,7 @@ public class RetailerServiceImpl implements RetailerService {
 	@Override
 	public ResponseDTO getSummaries(String dsrMSISDN, Integer startIndex, Integer endIndex) {
 		if (dsrMSISDN != null && !dsrMSISDN.isEmpty()) {
-			User dsr = userRepository.findBymsisdn(dsrMSISDN);
+			User dsr = userRepository.findBymsisdnAndUserType(dsrMSISDN, UserType.DISTRIBUTORS.toString());
 			if (dsr != null) {
 				List<UserRelationships> dsrRetailersRelationships = userRelationshipsRepository.findByMsisdn(dsrMSISDN);
 				if (dsrRetailersRelationships != null && !dsrRetailersRelationships.isEmpty()) {

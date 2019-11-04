@@ -37,7 +37,7 @@ import co.yabx.kyc.app.enums.UserStatus;
 
 @Entity
 @Table(name = "users", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
-		@Index(name = "created_at", columnList = "created_at"),
+		@Index(name = "user_type", columnList = "user_type"),
 		@Index(name = "auth_info_id", columnList = "auth_info_id") })
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // Least normalisation strategy
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
