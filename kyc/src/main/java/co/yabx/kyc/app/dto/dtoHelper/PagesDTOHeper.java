@@ -69,7 +69,7 @@ public class PagesDTOHeper implements Serializable {
 
 	private static ActionDTO prepareActions() {
 		ActionDTO actionDTO = new ActionDTO();
-		actionDTO.setData("Submit");
+		actionDTO.setData(SpringUtil.bean(AppConfigService.class).getProperty("KYC_PAGE_ACTION_BUTTON_NAME", "Save"));
 		actionDTO.setName("submitForm");
 		actionDTO.setType("submit");
 		return actionDTO;
