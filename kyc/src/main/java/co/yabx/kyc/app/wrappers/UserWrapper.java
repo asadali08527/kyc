@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import co.yabx.kyc.app.entities.Fields;
 import co.yabx.kyc.app.fullKyc.dto.AddressDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.BankAccountDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
@@ -34,7 +33,6 @@ public class UserWrapper {
 			addressDetail.setAddressType(detailsDTO.getAddressType());
 			addressDetail.setUpazilaThana(detailsDTO.getArea());
 			addressDetail.setAddress(detailsDTO.getHouseNumberOrStreetName());
-			addressDetail.setDivision(detailsDTO.getRegion());
 			addressDetail.setZipCode(detailsDTO.getZipCode());
 			addressDetails.add(addressDetail);
 		}

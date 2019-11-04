@@ -20,10 +20,12 @@ import javax.persistence.Table;
 import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.Cities;
 import co.yabx.kyc.app.enums.Countries;
+import co.yabx.kyc.app.enums.Divisions;
 
 @Entity
 @Table(name = "address_details", indexes = { @Index(name = "division", columnList = "division"),
-		@Index(name = "address_type", columnList = "address_type") })
+		@Index(name = "address_type", columnList = "address_type"),
+		@Index(name = "city_district", columnList = "city_district") })
 public class AddressDetails implements Serializable {
 
 	@Id
@@ -46,8 +48,9 @@ public class AddressDetails implements Serializable {
 	@Enumerated(value = EnumType.STRING)
 	private Cities cityDsitrict;
 
-	@Column(name = "division")
-	private String division;
+	@Column(name = "division", length = 100, columnDefinition = "varchar(32) ")
+	@Enumerated(value = EnumType.STRING)
+	private Divisions division;
 
 	@Column(name = "postal_code")
 	private Integer zipCode;
@@ -196,11 +199,11 @@ public class AddressDetails implements Serializable {
 		this.cityDsitrict = cityDsitrict;
 	}
 
-	public String getDivision() {
+	public Divisions getDivision() {
 		return division;
 	}
 
-	public void setDivision(String division) {
+	public void setDivision(Divisions division) {
 		this.division = division;
 	}
 

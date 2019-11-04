@@ -28,6 +28,7 @@ import co.yabx.kyc.app.enums.BusinessType;
 import co.yabx.kyc.app.enums.Cities;
 import co.yabx.kyc.app.enums.Countries;
 import co.yabx.kyc.app.enums.Currency;
+import co.yabx.kyc.app.enums.Divisions;
 import co.yabx.kyc.app.enums.DocumentSide;
 import co.yabx.kyc.app.enums.DocumentType;
 import co.yabx.kyc.app.enums.EducationalQualification;
@@ -836,6 +837,13 @@ public class FieldsDtoHelper implements Serializable {
 					options.add(statuses.toString());
 				}
 				dynamicFields.setOptions(options);
+			} else if (dynamicFields.getFieldId().equals("division")) {
+				List<String> options = new ArrayList<String>();
+				Divisions[] accountTypes = Divisions.values();
+				for (Divisions statuses : accountTypes) {
+					options.add(statuses.toString());
+				}
+				dynamicFields.setOptions(options);
 			}
 			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 		} else {
@@ -856,7 +864,15 @@ public class FieldsDtoHelper implements Serializable {
 					}
 					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("division")) {
-					dynamicFields.setSavedData(addressDetails.getDivision());
+					dynamicFields.setSavedData(
+							addressDetails.getDivision() != null ? addressDetails.getDivision().toString() : null);
+					List<String> options = new ArrayList<String>();
+					Divisions[] accountTypes = Divisions.values();
+					for (Divisions statuses : accountTypes) {
+						options.add(statuses.toString());
+					}
+					dynamicFields.setOptions(options);
+
 				} else if (dynamicFields.getFieldId().equals("zipCode")) {
 					dynamicFields.setSavedData(addressDetails != null ? addressDetails.getZipCode() + "" : null);
 				} else if (dynamicFields.getFieldId().equals("landmark")) {

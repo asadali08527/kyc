@@ -23,6 +23,7 @@ import co.yabx.kyc.app.enums.BusinessType;
 import co.yabx.kyc.app.enums.Cities;
 import co.yabx.kyc.app.enums.Countries;
 import co.yabx.kyc.app.enums.Currency;
+import co.yabx.kyc.app.enums.Divisions;
 import co.yabx.kyc.app.enums.DocumentSide;
 import co.yabx.kyc.app.enums.DocumentType;
 import co.yabx.kyc.app.enums.EducationalQualification;
@@ -708,7 +709,16 @@ public class FieldServiceImpl implements FieldService {
 								appDynamicFieldsDTO.getResponse(), e.getMessage());
 					}
 				} else if (appDynamicFieldsDTO.getFieldId().equals("division")) {
-					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
+					try {
+						Divisions Country = appDynamicFieldsDTO.getResponse() != null
+								&& !appDynamicFieldsDTO.getResponse().isEmpty()
+										? Divisions.valueOf(appDynamicFieldsDTO.getResponse())
+										: null;
+						addressDetails.setDivision(Country);
+					} catch (Exception e) {
+						LOGGER.error("Exception while evaluating division ={}, error={}",
+								appDynamicFieldsDTO.getResponse(), e.getMessage());
+					}
 				} else if (appDynamicFieldsDTO.getFieldId().equals("country")) {
 					try {
 						Countries Country = appDynamicFieldsDTO.getResponse() != null
@@ -721,13 +731,13 @@ public class FieldServiceImpl implements FieldService {
 								appDynamicFieldsDTO.getResponse(), e.getMessage());
 					}
 				} else if (appDynamicFieldsDTO.getFieldId().equals("mobileNumber")) {
-					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
+					addressDetails.setMobileNumber(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("phoneNumber")) {
-					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
+					addressDetails.setPhoneNumber(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("email")) {
-					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
+					addressDetails.setEmail(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("territory")) {
-					addressDetails.setDivision(appDynamicFieldsDTO.getResponse());
+					addressDetails.setTerritory(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("zipCode")) {
 					try {
 						Integer zipCode = appDynamicFieldsDTO.getResponse() != null
