@@ -176,4 +176,77 @@ public class AccountStatuses implements Serializable {
 				+ ", updateReason=" + updateReason + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((KycVerified == null) ? 0 : KycVerified.hashCode());
+		result = prime * result + ((accountStatus == null) ? 0 : accountStatus.hashCode());
+		result = prime * result + ((amlCftStatus == null) ? 0 : amlCftStatus.hashCode());
+		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
+		result = prime * result + ((createdBy == null) ? 0 : createdBy.hashCode());
+		result = prime * result + (isKycAvailable ? 1231 : 1237);
+		result = prime * result + ((msisdn == null) ? 0 : msisdn.hashCode());
+		result = prime * result + ((transactionStatus == null) ? 0 : transactionStatus.hashCode());
+		result = prime * result + ((updateReason == null) ? 0 : updateReason.hashCode());
+		result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
+		result = prime * result + ((updatedBy == null) ? 0 : updatedBy.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AccountStatuses other = (AccountStatuses) obj;
+		if (KycVerified != other.KycVerified)
+			return false;
+		if (accountStatus != other.accountStatus)
+			return false;
+		if (amlCftStatus != other.amlCftStatus)
+			return false;
+		if (createdAt == null) {
+			if (other.createdAt != null)
+				return false;
+		} else if (!createdAt.equals(other.createdAt))
+			return false;
+		if (createdBy == null) {
+			if (other.createdBy != null)
+				return false;
+		} else if (!createdBy.equals(other.createdBy))
+			return false;
+		if (isKycAvailable != other.isKycAvailable)
+			return false;
+		if (msisdn == null) {
+			if (other.msisdn != null)
+				return false;
+		} else if (!msisdn.equals(other.msisdn))
+			return false;
+		if (transactionStatus == null) {
+			if (other.transactionStatus != null)
+				return false;
+		} else if (!transactionStatus.equals(other.transactionStatus))
+			return false;
+		if (updateReason == null) {
+			if (other.updateReason != null)
+				return false;
+		} else if (!updateReason.equals(other.updateReason))
+			return false;
+		if (updatedAt == null) {
+			if (other.updatedAt != null)
+				return false;
+		} else if (!updatedAt.equals(other.updatedAt))
+			return false;
+		if (updatedBy == null) {
+			if (other.updatedBy != null)
+				return false;
+		} else if (!updatedBy.equals(other.updatedBy))
+			return false;
+		return true;
+	}
+
 }

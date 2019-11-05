@@ -217,4 +217,89 @@ public class AuthInfo implements Serializable, UserDetails {
 		this.accountNonLocked = accountNonLocked;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (accountNonExpired ? 1231 : 1237);
+		result = prime * result + (accountNonLocked ? 1231 : 1237);
+		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
+		result = prime * result + (credentialsNonExpired ? 1231 : 1237);
+		result = prime * result + ((currentAuthType == null) ? 0 : currentAuthType.hashCode());
+		result = prime * result + (enabled ? 1231 : 1237);
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((msisdn == null) ? 0 : msisdn.hashCode());
+		result = prime * result + ((originAuthType == null) ? 0 : originAuthType.hashCode());
+		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((secretKey == null) ? 0 : secretKey.hashCode());
+		result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		result = prime * result + ((yabxToken == null) ? 0 : yabxToken.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AuthInfo other = (AuthInfo) obj;
+		if (accountNonExpired != other.accountNonExpired)
+			return false;
+		if (accountNonLocked != other.accountNonLocked)
+			return false;
+		if (createdAt == null) {
+			if (other.createdAt != null)
+				return false;
+		} else if (!createdAt.equals(other.createdAt))
+			return false;
+		if (credentialsNonExpired != other.credentialsNonExpired)
+			return false;
+		if (currentAuthType != other.currentAuthType)
+			return false;
+		if (enabled != other.enabled)
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (msisdn == null) {
+			if (other.msisdn != null)
+				return false;
+		} else if (!msisdn.equals(other.msisdn))
+			return false;
+		if (originAuthType != other.originAuthType)
+			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
+		if (secretKey == null) {
+			if (other.secretKey != null)
+				return false;
+		} else if (!secretKey.equals(other.secretKey))
+			return false;
+		if (updatedAt == null) {
+			if (other.updatedAt != null)
+				return false;
+		} else if (!updatedAt.equals(other.updatedAt))
+			return false;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		if (yabxToken == null) {
+			if (other.yabxToken != null)
+				return false;
+		} else if (!yabxToken.equals(other.yabxToken))
+			return false;
+		return true;
+	}
+
 }

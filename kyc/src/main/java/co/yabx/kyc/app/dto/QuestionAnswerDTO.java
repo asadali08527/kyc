@@ -72,4 +72,65 @@ public class QuestionAnswerDTO implements Serializable {
 		this.options = options;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((answer == null) ? 0 : answer.hashCode());
+		result = prime * result + ((controlType == null) ? 0 : controlType.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((options == null) ? 0 : options.hashCode());
+		result = prime * result + ((question == null) ? 0 : question.hashCode());
+		result = prime * result + ((questionNumber == null) ? 0 : questionNumber.hashCode());
+		result = prime * result + ((retailerId == null) ? 0 : retailerId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		QuestionAnswerDTO other = (QuestionAnswerDTO) obj;
+		if (answer == null) {
+			if (other.answer != null)
+				return false;
+		} else if (!answer.equals(other.answer))
+			return false;
+		if (controlType == null) {
+			if (other.controlType != null)
+				return false;
+		} else if (!controlType.equals(other.controlType))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (options == null) {
+			if (other.options != null)
+				return false;
+		} else if (!options.equals(other.options))
+			return false;
+		if (question == null) {
+			if (other.question != null)
+				return false;
+		} else if (!question.equals(other.question))
+			return false;
+		if (questionNumber == null) {
+			if (other.questionNumber != null)
+				return false;
+		} else if (!questionNumber.equals(other.questionNumber))
+			return false;
+		if (retailerId == null) {
+			if (other.retailerId != null)
+				return false;
+		} else if (!retailerId.equals(other.retailerId))
+			return false;
+		return true;
+	}
+
 }

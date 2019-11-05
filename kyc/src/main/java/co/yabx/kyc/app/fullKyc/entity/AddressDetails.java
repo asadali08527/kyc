@@ -265,4 +265,125 @@ public class AddressDetails implements Serializable {
 				+ customerInformations + "]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		result = prime * result + ((addressType == null) ? 0 : addressType.hashCode());
+		result = prime * result + ((area == null) ? 0 : area.hashCode());
+		result = prime * result + ((businessDetails == null) ? 0 : businessDetails.hashCode());
+		result = prime * result + ((cityDsitrict == null) ? 0 : cityDsitrict.hashCode());
+		result = prime * result + ((country == null) ? 0 : country.hashCode());
+		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
+		result = prime * result + ((customerInformations == null) ? 0 : customerInformations.hashCode());
+		result = prime * result + ((division == null) ? 0 : division.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((landmark == null) ? 0 : landmark.hashCode());
+		result = prime * result + ((mobileNumber == null) ? 0 : mobileNumber.hashCode());
+		result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
+		result = prime * result + ((territory == null) ? 0 : territory.hashCode());
+		result = prime * result + ((upazilaThana == null) ? 0 : upazilaThana.hashCode());
+		result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		result = prime * result + ((zipCode == null) ? 0 : zipCode.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AddressDetails other = (AddressDetails) obj;
+		if (address == null) {
+			if (other.address != null)
+				return false;
+		} else if (!address.equals(other.address))
+			return false;
+		if (addressType != other.addressType)
+			return false;
+		if (area == null) {
+			if (other.area != null)
+				return false;
+		} else if (!area.equals(other.area))
+			return false;
+		if (businessDetails == null) {
+			if (other.businessDetails != null)
+				return false;
+		} else if (!businessDetails.equals(other.businessDetails))
+			return false;
+		if (cityDsitrict != other.cityDsitrict)
+			return false;
+		if (country != other.country)
+			return false;
+		if (createdAt == null) {
+			if (other.createdAt != null)
+				return false;
+		} else if (!createdAt.equals(other.createdAt))
+			return false;
+		if (customerInformations == null) {
+			if (other.customerInformations != null)
+				return false;
+		} else if (!customerInformations.equals(other.customerInformations))
+			return false;
+		if (division != other.division)
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (landmark == null) {
+			if (other.landmark != null)
+				return false;
+		} else if (!landmark.equals(other.landmark))
+			return false;
+		if (mobileNumber == null) {
+			if (other.mobileNumber != null)
+				return false;
+		} else if (!mobileNumber.equals(other.mobileNumber))
+			return false;
+		if (phoneNumber == null) {
+			if (other.phoneNumber != null)
+				return false;
+		} else if (!phoneNumber.equals(other.phoneNumber))
+			return false;
+		if (territory == null) {
+			if (other.territory != null)
+				return false;
+		} else if (!territory.equals(other.territory))
+			return false;
+		if (upazilaThana == null) {
+			if (other.upazilaThana != null)
+				return false;
+		} else if (!upazilaThana.equals(other.upazilaThana))
+			return false;
+		if (updatedAt == null) {
+			if (other.updatedAt != null)
+				return false;
+		} else if (!updatedAt.equals(other.updatedAt))
+			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
+		if (zipCode == null) {
+			if (other.zipCode != null)
+				return false;
+		} else if (!zipCode.equals(other.zipCode))
+			return false;
+		return true;
+	}
+
 }

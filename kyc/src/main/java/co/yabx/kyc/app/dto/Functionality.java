@@ -74,4 +74,62 @@ public class Functionality implements Serializable {
 		this.maxThreshold = maxThreshold;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((fieldToCompare == null) ? 0 : fieldToCompare.hashCode());
+		result = prime * result + ((fromGroup == null) ? 0 : fromGroup.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((maxThreshold == null) ? 0 : maxThreshold.hashCode());
+		result = prime * result + ((minThreshold == null) ? 0 : minThreshold.hashCode());
+		result = prime * result + ((toGroup == null) ? 0 : toGroup.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Functionality other = (Functionality) obj;
+		if (fieldToCompare == null) {
+			if (other.fieldToCompare != null)
+				return false;
+		} else if (!fieldToCompare.equals(other.fieldToCompare))
+			return false;
+		if (fromGroup == null) {
+			if (other.fromGroup != null)
+				return false;
+		} else if (!fromGroup.equals(other.fromGroup))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (maxThreshold == null) {
+			if (other.maxThreshold != null)
+				return false;
+		} else if (!maxThreshold.equals(other.maxThreshold))
+			return false;
+		if (minThreshold == null) {
+			if (other.minThreshold != null)
+				return false;
+		} else if (!minThreshold.equals(other.minThreshold))
+			return false;
+		if (toGroup == null) {
+			if (other.toGroup != null)
+				return false;
+		} else if (!toGroup.equals(other.toGroup))
+			return false;
+		if (type != other.type)
+			return false;
+		return true;
+	}
+
 }

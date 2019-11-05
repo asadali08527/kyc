@@ -285,4 +285,134 @@ public class Fields implements Serializable {
 		this.operations = operations;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (camera ? 1231 : 1237);
+		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
+		result = prime * result + ((dataType == null) ? 0 : dataType.hashCode());
+		result = prime * result + ((defaultValue == null) ? 0 : defaultValue.hashCode());
+		result = prime * result + ((displayOrder == null) ? 0 : displayOrder.hashCode());
+		result = prime * result + (editable ? 1231 : 1237);
+		result = prime * result + ((fieldId == null) ? 0 : fieldId.hashCode());
+		result = prime * result + ((fieldName == null) ? 0 : fieldName.hashCode());
+		result = prime * result + ((groups == null) ? 0 : groups.hashCode());
+		result = prime * result + ((hash == null) ? 0 : hash.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + (mandatory ? 1231 : 1237);
+		result = prime * result + ((operations == null) ? 0 : operations.hashCode());
+		result = prime * result + ((options == null) ? 0 : options.hashCode());
+		result = prime * result + ((placeHolderText == null) ? 0 : placeHolderText.hashCode());
+		result = prime * result + ((savedData == null) ? 0 : savedData.hashCode());
+		result = prime * result + ((subFields == null) ? 0 : subFields.hashCode());
+		result = prime * result + ((subGroups == null) ? 0 : subGroups.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
+		result = prime * result + ((validation == null) ? 0 : validation.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Fields other = (Fields) obj;
+		if (camera != other.camera)
+			return false;
+		if (createdAt == null) {
+			if (other.createdAt != null)
+				return false;
+		} else if (!createdAt.equals(other.createdAt))
+			return false;
+		if (dataType != other.dataType)
+			return false;
+		if (defaultValue == null) {
+			if (other.defaultValue != null)
+				return false;
+		} else if (!defaultValue.equals(other.defaultValue))
+			return false;
+		if (displayOrder == null) {
+			if (other.displayOrder != null)
+				return false;
+		} else if (!displayOrder.equals(other.displayOrder))
+			return false;
+		if (editable != other.editable)
+			return false;
+		if (fieldId == null) {
+			if (other.fieldId != null)
+				return false;
+		} else if (!fieldId.equals(other.fieldId))
+			return false;
+		if (fieldName == null) {
+			if (other.fieldName != null)
+				return false;
+		} else if (!fieldName.equals(other.fieldName))
+			return false;
+		if (groups == null) {
+			if (other.groups != null)
+				return false;
+		} else if (!groups.equals(other.groups))
+			return false;
+		if (hash == null) {
+			if (other.hash != null)
+				return false;
+		} else if (!hash.equals(other.hash))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (mandatory != other.mandatory)
+			return false;
+		if (operations == null) {
+			if (other.operations != null)
+				return false;
+		} else if (!operations.equals(other.operations))
+			return false;
+		if (options == null) {
+			if (other.options != null)
+				return false;
+		} else if (!options.equals(other.options))
+			return false;
+		if (placeHolderText == null) {
+			if (other.placeHolderText != null)
+				return false;
+		} else if (!placeHolderText.equals(other.placeHolderText))
+			return false;
+		if (savedData == null) {
+			if (other.savedData != null)
+				return false;
+		} else if (!savedData.equals(other.savedData))
+			return false;
+		if (subFields == null) {
+			if (other.subFields != null)
+				return false;
+		} else if (!subFields.equals(other.subFields))
+			return false;
+		if (subGroups == null) {
+			if (other.subGroups != null)
+				return false;
+		} else if (!subGroups.equals(other.subGroups))
+			return false;
+		if (type != other.type)
+			return false;
+		if (updatedAt == null) {
+			if (other.updatedAt != null)
+				return false;
+		} else if (!updatedAt.equals(other.updatedAt))
+			return false;
+		if (validation == null) {
+			if (other.validation != null)
+				return false;
+		} else if (!validation.equals(other.validation))
+			return false;
+		return true;
+	}
+
 }

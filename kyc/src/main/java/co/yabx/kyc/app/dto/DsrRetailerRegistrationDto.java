@@ -23,4 +23,29 @@ public class DsrRetailerRegistrationDto implements Serializable {
 		return "DsrRetailerRegistrationDto [dsr=" + dsr + "]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dsr == null) ? 0 : dsr.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DsrRetailerRegistrationDto other = (DsrRetailerRegistrationDto) obj;
+		if (dsr == null) {
+			if (other.dsr != null)
+				return false;
+		} else if (!dsr.equals(other.dsr))
+			return false;
+		return true;
+	}
+
 }

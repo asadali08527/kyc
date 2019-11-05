@@ -134,4 +134,74 @@ public class Groups implements Serializable {
 				+ appDynamicFields + "]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((appDynamicFields == null) ? 0 : appDynamicFields.hashCode());
+		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
+		result = prime * result + ((displayOrder == null) ? 0 : displayOrder.hashCode());
+		result = prime * result + (enable ? 1231 : 1237);
+		result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
+		result = prime * result + ((groupName == null) ? 0 : groupName.hashCode());
+		result = prime * result + ((groupTitle == null) ? 0 : groupTitle.hashCode());
+		result = prime * result + ((totalFields == null) ? 0 : totalFields.hashCode());
+		result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Groups other = (Groups) obj;
+		if (appDynamicFields == null) {
+			if (other.appDynamicFields != null)
+				return false;
+		} else if (!appDynamicFields.equals(other.appDynamicFields))
+			return false;
+		if (createdAt == null) {
+			if (other.createdAt != null)
+				return false;
+		} else if (!createdAt.equals(other.createdAt))
+			return false;
+		if (displayOrder == null) {
+			if (other.displayOrder != null)
+				return false;
+		} else if (!displayOrder.equals(other.displayOrder))
+			return false;
+		if (enable != other.enable)
+			return false;
+		if (groupId == null) {
+			if (other.groupId != null)
+				return false;
+		} else if (!groupId.equals(other.groupId))
+			return false;
+		if (groupName == null) {
+			if (other.groupName != null)
+				return false;
+		} else if (!groupName.equals(other.groupName))
+			return false;
+		if (groupTitle == null) {
+			if (other.groupTitle != null)
+				return false;
+		} else if (!groupTitle.equals(other.groupTitle))
+			return false;
+		if (totalFields == null) {
+			if (other.totalFields != null)
+				return false;
+		} else if (!totalFields.equals(other.totalFields))
+			return false;
+		if (updatedAt == null) {
+			if (other.updatedAt != null)
+				return false;
+		} else if (!updatedAt.equals(other.updatedAt))
+			return false;
+		return true;
+	}
+
 }
