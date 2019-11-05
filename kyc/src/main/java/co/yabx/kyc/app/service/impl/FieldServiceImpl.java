@@ -52,6 +52,7 @@ import co.yabx.kyc.app.fullKyc.entity.Nominees;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
 import co.yabx.kyc.app.fullKyc.repository.AddressDetailsRepository;
+import co.yabx.kyc.app.fullKyc.repository.LiabilitiesDetailsRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.repositories.AuthInfoRepository;
 import co.yabx.kyc.app.service.AppConfigService;
@@ -69,7 +70,7 @@ public class FieldServiceImpl implements FieldService {
 	private AuthInfoRepository authInfoRepository;
 
 	@Autowired
-	private UserRepository userRepository;
+	private LiabilitiesDetailsRepository liabilitiesDetailsRepository;
 
 	@Autowired
 	private AppConfigService appConfigService;
@@ -125,7 +126,6 @@ public class FieldServiceImpl implements FieldService {
 					addressDetails = new AddressDetails();
 					addressDetails.setAddressType(addressType);
 				}
-				addressDetails.setAddressType(addressType);
 				addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
 				if (addressDetails != null) {
 					if (nomineeAddressDetailsSet == null) {
@@ -199,12 +199,20 @@ public class FieldServiceImpl implements FieldService {
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
 				.getLongProperty("GROUP_ID_FOR_LIABILITIES_DETAILS", 4l)
 				|| "liabilitiesDetails".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName())) {
-			LiabilitiesDetails liabilitiesDetails = null;
-			liabilitiesDetails = prepareLiabilities(appDynamicFieldsDTOList, liabilitiesDetails);
-			if (liabilitiesDetailsSet == null) {
-				liabilitiesDetailsSet = new HashSet<LiabilitiesDetails>();
+			LiabilityType liabilityType = getLiabilitesType(appPagesSectionGroupsDTO.getGroupTitle());
+			if (liabilityType != null) {
+				LiabilitiesDetails liabilitiesDetails = liabilitiesDetailsRepository
+						.findByUserAndLiabilityType(retailerOrDsrUser, liabilityType);
+				if (liabilitiesDetails == null) {
+					liabilitiesDetails = new LiabilitiesDetails();
+					liabilitiesDetails.setLiabilityType(liabilityType);
+				}
+					liabilitiesDetails = prepareLiabilities(appDynamicFieldsDTOList, liabilitiesDetails);
+				if (liabilitiesDetailsSet == null) {
+					liabilitiesDetailsSet = new HashSet<LiabilitiesDetails>();
+				}
+				liabilitiesDetailsSet.add(liabilitiesDetails);
 			}
-			liabilitiesDetailsSet.add(liabilitiesDetails);
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
 				.getLongProperty("GROUP_ID_FOR_BUSINESS_DETAILS", 5l)
@@ -312,6 +320,15 @@ public class FieldServiceImpl implements FieldService {
 
 		}
 
+	}
+
+	private LiabilityType getLiabilitesType(String groupTitle) {
+		if ("Personal Liabilities".equalsIgnoreCase(groupTitle)) {
+			return LiabilityType.PERSONAL;
+		} else if ("Business Liabilities".equalsIgnoreCase(groupTitle)) {
+			return LiabilityType.BUSINESS;
+		}
+		return null;
 	}
 
 	private AddressType getAddressType(String groupTitle) {
@@ -591,7 +608,6 @@ public class FieldServiceImpl implements FieldService {
 	private LiabilitiesDetails prepareLiabilities(List<FieldsDTO> appDynamicFieldsDTOList,
 			LiabilitiesDetails liabilitiesDetails) {
 		if (appDynamicFieldsDTOList != null && !appDynamicFieldsDTOList.isEmpty()) {
-			liabilitiesDetails = new LiabilitiesDetails();
 			for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 				if (appDynamicFieldsDTO.getFieldId().equals("loanAmount")) {
 					try {

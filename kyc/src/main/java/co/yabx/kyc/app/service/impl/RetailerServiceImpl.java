@@ -100,7 +100,8 @@ public class RetailerServiceImpl implements RetailerService {
 			}
 		}
 		ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "Retailer Not Found", "404", null);
-		responseDTO.setRetailerInfo(userService.getUserDetails(null, PageType.RETAILERS));
+		// responseDTO.setRetailerInfo(userService.getUserDetails(null,
+		// PageType.RETAILERS));
 		return responseDTO;
 
 		// return RetailersDtoHelper.getCompletRetailerInfo(dsrMsisdn, retailerId);

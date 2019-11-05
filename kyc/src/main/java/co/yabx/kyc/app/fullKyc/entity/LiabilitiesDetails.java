@@ -38,7 +38,7 @@ public class LiabilitiesDetails implements Serializable {
 	private double loanAmountFromOtherOrganization;
 
 	@Column(name = "liability_type")
-	private LiabilityType typeOfLiablity;
+	private LiabilityType liabilityType;
 
 	@Column(name = "created_at")
 	private Date createdAt;
@@ -133,14 +133,6 @@ public class LiabilitiesDetails implements Serializable {
 
 	}
 
-	public LiabilityType getTypeOfLiablity() {
-		return typeOfLiablity;
-	}
-
-	public void setTypeOfLiablity(LiabilityType typeOfLiablity) {
-		this.typeOfLiablity = typeOfLiablity;
-	}
-
 	public String getLiabilityFromOtherOrganization() {
 		return liabilityFromOtherOrganization;
 	}
@@ -157,12 +149,20 @@ public class LiabilitiesDetails implements Serializable {
 		this.loanAmountFromOtherOrganization = loanAmountFromOtherOrganization;
 	}
 
+	public LiabilityType getLiabilityType() {
+		return liabilityType;
+	}
+
+	public void setLiabilityType(LiabilityType liabilityType) {
+		this.liabilityType = liabilityType;
+	}
+
 	@Override
 	public String toString() {
 		return "LiabilitiesDetails [id=" + id + ", loanAmount=" + loanAmount + ", bankOrNbfiName=" + bankOrNbfiName
 				+ ", liabilityFromOtherOrganization=" + liabilityFromOtherOrganization
-				+ ", loanAmountFromOtherOrganization=" + loanAmountFromOtherOrganization + ", typeOfLiablity="
-				+ typeOfLiablity + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy
+				+ ", loanAmountFromOtherOrganization=" + loanAmountFromOtherOrganization + ", liabilityType="
+				+ liabilityType + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy
 				+ ", updatedBy=" + updatedBy + ", user=" + user + "]";
 	}
 

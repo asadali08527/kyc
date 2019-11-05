@@ -148,7 +148,7 @@ public class UserWrapper {
 			liabilitiesDetails.setBankOrNbfiName(liabilitiesDetailsDTO.getNameOfTheOrganization());
 			liabilitiesDetails
 					.setLiabilityFromOtherOrganization(liabilitiesDetailsDTO.getLiabilityFromOtherOrganization());
-			liabilitiesDetails.setTypeOfLiablity(liabilitiesDetailsDTO.getTypeOfLiablity());
+			liabilitiesDetails.setLiabilityType(liabilitiesDetailsDTO.getTypeOfLiablity());
 			liabilitiesDetails.setLoanAmount(liabilitiesDetailsDTO.getLoanAmount());
 			liabilitiesDetails
 					.setLoanAmountFromOtherOrganization(liabilitiesDetailsDTO.getLoanAmountFromOtherOrganization());
