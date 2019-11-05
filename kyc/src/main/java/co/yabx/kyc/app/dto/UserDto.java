@@ -39,41 +39,4 @@ public class UserDto {
 		return "UserDto [name=" + name + ", msisdn=" + msisdn + ", retailer=" + retailer + "]";
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((msisdn == null) ? 0 : msisdn.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((retailer == null) ? 0 : retailer.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		UserDto other = (UserDto) obj;
-		if (msisdn == null) {
-			if (other.msisdn != null)
-				return false;
-		} else if (!msisdn.equals(other.msisdn))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (retailer == null) {
-			if (other.retailer != null)
-				return false;
-		} else if (!retailer.equals(other.retailer))
-			return false;
-		return true;
-	}
-
 }

@@ -46,7 +46,6 @@ public class AdditionalCategory implements Serializable {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-
 	@PrePersist
 	protected void insertDates() {
 		if (createdAt == null) {
@@ -67,7 +66,7 @@ public class AdditionalCategory implements Serializable {
 
 	@OneToMany(fetch = FetchType.EAGER, targetEntity = AdditionalCategoryFields.class)
 	private Set<AdditionalCategoryFields> additionalCategoryFields;
-
+	
 	@Column(name = "created_at")
 	private Date createdAt;
 
@@ -119,64 +118,6 @@ public class AdditionalCategory implements Serializable {
 		return "AdditionalCategory [id=" + id + ", categoryName=" + categoryName + ", categoryMaxCount="
 				+ categoryMaxCount + ", colorCode=" + colorCode + ", additionalCategoryFields="
 				+ additionalCategoryFields + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((additionalCategoryFields == null) ? 0 : additionalCategoryFields.hashCode());
-		result = prime * result + categoryMaxCount;
-		result = prime * result + ((categoryName == null) ? 0 : categoryName.hashCode());
-		result = prime * result + ((colorCode == null) ? 0 : colorCode.hashCode());
-		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AdditionalCategory other = (AdditionalCategory) obj;
-		if (additionalCategoryFields == null) {
-			if (other.additionalCategoryFields != null)
-				return false;
-		} else if (!additionalCategoryFields.equals(other.additionalCategoryFields))
-			return false;
-		if (categoryMaxCount != other.categoryMaxCount)
-			return false;
-		if (categoryName == null) {
-			if (other.categoryName != null)
-				return false;
-		} else if (!categoryName.equals(other.categoryName))
-			return false;
-		if (colorCode == null) {
-			if (other.colorCode != null)
-				return false;
-		} else if (!colorCode.equals(other.colorCode))
-			return false;
-		if (createdAt == null) {
-			if (other.createdAt != null)
-				return false;
-		} else if (!createdAt.equals(other.createdAt))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (updatedAt == null) {
-			if (other.updatedAt != null)
-				return false;
-		} else if (!updatedAt.equals(other.updatedAt))
-			return false;
-		return true;
 	}
 
 }
