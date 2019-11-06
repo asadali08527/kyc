@@ -128,7 +128,8 @@ public class FieldsDtoHelper implements Serializable {
 				isProcessed = prepareIntroducerDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter);
 			} else if (dynamicFields.getGroups().getGroupId() == 10) {
 				// Attachment Detaiils
-				isProcessed = prepareAttachmentDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter);
+				isProcessed = prepareAttachmentDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
+						filledVsUnfilled);
 			}
 			if (isProcessed)
 				totalFields++;
@@ -136,7 +137,6 @@ public class FieldsDtoHelper implements Serializable {
 				filledFields++;
 			} else if (checkSubFields(dynamicFields)) {
 				filledFields++;
-				totalFields++;
 			}
 			if (isHavingSubFields(dynamicFields)) {
 				totalFields++;
@@ -174,7 +174,7 @@ public class FieldsDtoHelper implements Serializable {
 	}
 
 	private static boolean prepareAttachmentDetails(Fields dynamicFields, User retailers,
-			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter) {
+			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter, Map<String, Integer> filledVsUnfilled) {
 
 		if (retailers == null || retailers.getAttachmentDetails() == null
 				|| retailers.getAttachmentDetails().isEmpty()) {
@@ -195,7 +195,7 @@ public class FieldsDtoHelper implements Serializable {
 				dynamicFields.setOptions(options);
 			}
 			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields);
-			fieldsDTO.setSubFields(getSubFileds(dynamicFields, null));
+			fieldsDTO.setSubFields(getSubFileds(dynamicFields, null, filledVsUnfilled));
 			appDynamicFieldsDTOSet.add(fieldsDTO);
 			return true;
 		} else {
@@ -223,40 +223,45 @@ public class FieldsDtoHelper implements Serializable {
 			} else if (dynamicFields.getFieldId().equals("tinCertificates")) {
 				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
 						&& f.getDocumentType().equals(DocumentType.TIN_CERTIFICATE)).findFirst();
-				setSavedAttachment(dynamicFields, attachmentDetails);
+				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled);
 
 			} else if (dynamicFields.getFieldId().equals("tradeLicense")) {
 				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
 						&& f.getDocumentType().equals(DocumentType.TRADE_LICENSE)).findFirst();
-				setSavedAttachment(dynamicFields, attachmentDetails);
+				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled);
 
 			} else if (dynamicFields.getFieldId().equals("nomineePhoto")) {
 				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
 						&& f.getDocumentType().equals(DocumentType.NOMINEE_PHOTO)).findFirst();
-				setSavedAttachment(dynamicFields, attachmentDetails);
+				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled);
 
 			} else if (dynamicFields.getFieldId().equals("signature")) {
 				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
 						&& f.getDocumentType().equals(DocumentType.SIGNATURE)).findFirst();
-				setSavedAttachment(dynamicFields, attachmentDetails);
+				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled);
 			}
 			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields);
-			fieldsDTO.setSubFields(getSubFileds(dynamicFields, attachmentDetails));
+			fieldsDTO.setSubFields(getSubFileds(dynamicFields, attachmentDetails, filledVsUnfilled));
 			appDynamicFieldsDTOSet.add(fieldsDTO);
 			return true;
 		}
 
 	}
 
-	private static void setSavedAttachment(Fields dynamicFields, Optional<AttachmentDetails> attachmentDetails) {
+	private static void setSavedAttachment(Fields dynamicFields, Optional<AttachmentDetails> attachmentDetails,
+			Map<String, Integer> filledVsUnfilled) {
 		if (attachmentDetails != null && attachmentDetails.isPresent()) {
 			Set<Attachments> attachments = attachmentDetails.get().getAttachments();
 			if (attachments != null && !attachments.isEmpty()) {
 				Optional<Attachments> attachmentOptional = attachments.stream().findFirst();
-				if (attachmentOptional.isPresent())
+				if (attachmentOptional.isPresent()) {
 					dynamicFields.setSavedData(
 							SpringUtil.bean(AppConfigService.class).getProperty("DOCUMENT_STORAGE_BASE_URL",
 									"https://yabx.co/") + attachmentOptional.get().getDocumentUrl());
+					Integer count = filledVsUnfilled.get("filledFields");
+					filledVsUnfilled.put("filledFields", count++);
+
+				}
 			}
 		}
 	}
@@ -1113,7 +1118,7 @@ public class FieldsDtoHelper implements Serializable {
 	}
 
 	private static List<SubFieldsDTO> getSubFileds(Fields dynamicFields,
-			Optional<AttachmentDetails> attachmentDetailsOptional) {
+			Optional<AttachmentDetails> attachmentDetailsOptional, Map<String, Integer> filledVsUnfilled) {
 		Set<SubFields> subFieldsSet = dynamicFields.getSubFields();
 		if (subFieldsSet != null && !subFieldsSet.isEmpty()) {
 			List<SubFieldsDTO> subFieldsDTOs = new ArrayList<SubFieldsDTO>();
@@ -1126,7 +1131,7 @@ public class FieldsDtoHelper implements Serializable {
 					AttachmentDetails attachmentDetails = attachmentDetailsOptional.get();
 					Set<Attachments> attachmentsSet = attachmentDetails.getAttachments();
 					if (attachmentsSet != null && !attachmentsSet.isEmpty()) {
-						setsavedAttachement(attachmentsSet, side, fieldsDTO);
+						setsavedAttachement(attachmentsSet, side, fieldsDTO, filledVsUnfilled);
 					}
 				}
 				subFieldsDTO.setFields(fieldsDTO);
@@ -1138,7 +1143,8 @@ public class FieldsDtoHelper implements Serializable {
 		return null;
 	}
 
-	private static void setsavedAttachement(Set<Attachments> attachmentsSet, String side, FieldsDTO fieldsDTO) {
+	private static void setsavedAttachement(Set<Attachments> attachmentsSet, String side, FieldsDTO fieldsDTO,
+			Map<String, Integer> filledVsUnfilled) {
 
 		if (side != null && DocumentSide.FRONT.toString().equalsIgnoreCase(side)) {
 			Optional<Attachments> frontDoc = attachmentsSet.stream()
@@ -1147,6 +1153,8 @@ public class FieldsDtoHelper implements Serializable {
 				if (frontDoc.get() != null) {
 					fieldsDTO.setSavedData(SpringUtil.bean(AppConfigService.class).getProperty(
 							"DOCUMENT_STORAGE_BASE_URL", "https://yabx.co/") + frontDoc.get().getDocumentUrl());
+					Integer count = filledVsUnfilled.get("filledFields");
+					filledVsUnfilled.put("filledFields", count++);
 				}
 			}
 		} else {
@@ -1156,6 +1164,8 @@ public class FieldsDtoHelper implements Serializable {
 				if (backDoc.get() != null) {
 					fieldsDTO.setSavedData(SpringUtil.bean(AppConfigService.class).getProperty(
 							"DOCUMENT_STORAGE_BASE_URL", "https://yabx.co/") + backDoc.get().getDocumentUrl());
+					Integer count = filledVsUnfilled.get("filledFields");
+					filledVsUnfilled.put("filledFields", count++);
 				}
 			}
 		}

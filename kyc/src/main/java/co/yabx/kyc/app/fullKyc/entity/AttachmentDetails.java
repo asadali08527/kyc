@@ -30,7 +30,7 @@ import co.yabx.kyc.app.enums.DocumentType;
  *
  */
 @Entity
-@Table(name = "attachment_details", indexes = { @Index(name = "document_number", columnList = "document_number"),
+@Table(name = "attachment_details", indexes = { @Index(name = "attachment_type", columnList = "attachment_type"),
 		@Index(name = "document_type", columnList = "document_type") })
 public class AttachmentDetails implements Serializable {
 
@@ -197,94 +197,6 @@ public class AttachmentDetails implements Serializable {
 
 	public void setAttachmentType(AttachmentType attachmentType) {
 		this.attachmentType = attachmentType;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((attachmentType == null) ? 0 : attachmentType.hashCode());
-		result = prime * result + ((attachments == null) ? 0 : attachments.hashCode());
-		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
-		result = prime * result + ((documentExpiryDate == null) ? 0 : documentExpiryDate.hashCode());
-		result = prime * result + ((documentIssueDate == null) ? 0 : documentIssueDate.hashCode());
-		result = prime * result + ((documentNumber == null) ? 0 : documentNumber.hashCode());
-		result = prime * result + ((documentType == null) ? 0 : documentType.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + (isSelfie ? 1231 : 1237);
-		result = prime * result + ((placeOfIssue == null) ? 0 : placeOfIssue.hashCode());
-		result = prime * result + ((snapTime == null) ? 0 : snapTime.hashCode());
-		result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AttachmentDetails other = (AttachmentDetails) obj;
-		if (attachmentType != other.attachmentType)
-			return false;
-		if (attachments == null) {
-			if (other.attachments != null)
-				return false;
-		} else if (!attachments.equals(other.attachments))
-			return false;
-		if (createdAt == null) {
-			if (other.createdAt != null)
-				return false;
-		} else if (!createdAt.equals(other.createdAt))
-			return false;
-		if (documentExpiryDate == null) {
-			if (other.documentExpiryDate != null)
-				return false;
-		} else if (!documentExpiryDate.equals(other.documentExpiryDate))
-			return false;
-		if (documentIssueDate == null) {
-			if (other.documentIssueDate != null)
-				return false;
-		} else if (!documentIssueDate.equals(other.documentIssueDate))
-			return false;
-		if (documentNumber == null) {
-			if (other.documentNumber != null)
-				return false;
-		} else if (!documentNumber.equals(other.documentNumber))
-			return false;
-		if (documentType != other.documentType)
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (isSelfie != other.isSelfie)
-			return false;
-		if (placeOfIssue == null) {
-			if (other.placeOfIssue != null)
-				return false;
-		} else if (!placeOfIssue.equals(other.placeOfIssue))
-			return false;
-		if (snapTime == null) {
-			if (other.snapTime != null)
-				return false;
-		} else if (!snapTime.equals(other.snapTime))
-			return false;
-		if (updatedAt == null) {
-			if (other.updatedAt != null)
-				return false;
-		} else if (!updatedAt.equals(other.updatedAt))
-			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
-		return true;
 	}
 
 }

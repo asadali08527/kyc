@@ -14,7 +14,6 @@ import co.yabx.kyc.app.dto.FieldsDTO;
 import co.yabx.kyc.app.dto.GroupsDTO;
 import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.dto.SubFieldsDTO;
-import co.yabx.kyc.app.entities.Fields;
 import co.yabx.kyc.app.enums.AddressProof;
 import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.BankAccountType;
@@ -36,7 +35,6 @@ import co.yabx.kyc.app.enums.LicenseType;
 import co.yabx.kyc.app.enums.MaritalStatuses;
 import co.yabx.kyc.app.enums.ModeOfOperation;
 import co.yabx.kyc.app.enums.Nationality;
-import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.ResidentStatus;
 import co.yabx.kyc.app.enums.TypeOfConcern;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
@@ -53,7 +51,6 @@ import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
 import co.yabx.kyc.app.fullKyc.repository.AddressDetailsRepository;
 import co.yabx.kyc.app.fullKyc.repository.LiabilitiesDetailsRepository;
-import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.repositories.AuthInfoRepository;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.FieldService;
@@ -207,7 +204,7 @@ public class FieldServiceImpl implements FieldService {
 					liabilitiesDetails = new LiabilitiesDetails();
 					liabilitiesDetails.setLiabilityType(liabilityType);
 				}
-					liabilitiesDetails = prepareLiabilities(appDynamicFieldsDTOList, liabilitiesDetails);
+				liabilitiesDetails = prepareLiabilities(appDynamicFieldsDTOList, liabilitiesDetails);
 				if (liabilitiesDetailsSet == null) {
 					liabilitiesDetailsSet = new HashSet<LiabilitiesDetails>();
 				}
