@@ -134,6 +134,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 		return null;
 	}
 
+	@Transactional
 	private AccountStatuses createAccount(AccountStatuses accountStatuses, String msisdn, String createdBy,
 			boolean isKycAvailable, AccountStatus accountStatus, KycStatus kycStatus) {
 		if (accountStatuses == null) {

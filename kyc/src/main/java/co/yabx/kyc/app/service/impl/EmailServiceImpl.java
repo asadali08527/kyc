@@ -17,6 +17,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import co.yabx.kyc.app.entities.OTP;
+import co.yabx.kyc.app.enums.ActionType;
 import co.yabx.kyc.app.enums.OtpGroup;
 import co.yabx.kyc.app.enums.OtpType;
 import co.yabx.kyc.app.fullKyc.entity.DSRUser;
@@ -55,13 +56,21 @@ public class EmailServiceImpl implements EmailService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
 
 	@Override
-	public void sendOTP(OTP otp, String mail) {
+	public void sendOTP(OTP otp, String mail, ActionType actionType) {
 		try {
 			Map<String, Object> variables = new HashMap<>();
 			variables.put("otp", otp.getOtp());
-			mailSource.sendMailTLS(mail, appConfigService.getProperty("VERIFY_EMAIL_SUBJECT", "Verify Email!"),
-					appConfigService.getProperty("VERIFY_EMAIL_TEMPLATE_PATH", "D:\\templates\\") + "/mail_templates",
-					appConfigService.getProperty("VERIFY_EMAIL_TEMPLATE_FILE_NAME", "verify_email.ftl"), variables);
+			if (ActionType.Verify == actionType)
+				mailSource.sendMailTLS(mail, appConfigService.getProperty("VERIFY_EMAIL_SUBJECT", "Verify Email!"),
+						appConfigService.getProperty("VERIFY_EMAIL_TEMPLATE_PATH", "D:\\templates\\")
+								+ "/mail_templates",
+						appConfigService.getProperty("VERIFY_EMAIL_TEMPLATE_FILE_NAME", "verify_email.ftl"), variables);
+			else
+				mailSource.sendMailTLS(mail, appConfigService.getProperty("LOGIN_OTP_EMAIL_SUBJECT", "Login OTP!"),
+						appConfigService.getProperty("LOGIN_OTP_EMAIL_TEMPLATE_PATH", "D:\\templates\\")
+								+ "/mail_templates",
+						appConfigService.getProperty("LOGIN_OTP_EMAIL_TEMPLATE_FILE_NAME", "login_mail_templates.ftl"),
+						variables);
 		} catch (IOException | TemplateException | MessagingException ex) {
 			LOGGER.error("Exception while sending OTP to email={},error={}", mail, ex.getMessage());
 		}

@@ -18,6 +18,7 @@ import co.yabx.kyc.app.dto.dtoHelper.DsrDtoHelper;
 import co.yabx.kyc.app.dto.dtoHelper.RetailersDtoHelper;
 import co.yabx.kyc.app.entities.AuthInfo;
 import co.yabx.kyc.app.entities.OTP;
+import co.yabx.kyc.app.enums.ActionType;
 import co.yabx.kyc.app.enums.OtpGroup;
 import co.yabx.kyc.app.enums.OtpType;
 import co.yabx.kyc.app.enums.PageType;
@@ -72,7 +73,9 @@ public class DSRServiceImpl implements DSRService {
 			otpExpiryTime.add(Calendar.SECOND, appConfigService.getIntProperty("OTP_EXPIRY_TIME_IN_SECONDS", 300));
 			OTP otp = otpService.generateAndPersistOTP(dsrUser.getId(), OtpType.SMS, otpExpiryTime.getTime(),
 					OtpGroup.REGISTRATION);
-			// send otp code
+			if (appConfigService.getBooleanProperty("IS_TO_SEND_PHONE_OTP_ON_MAIL_FOR_LOGIN", true))
+				emailService.sendOTP(otp, dsrUser.getEmail(), ActionType.Login);
+			// send otp code to phone
 			return DsrDtoHelper.getLoginDTO(msisdn, "SUCCESS", "200", null);
 		} else {
 			return DsrDtoHelper.getLoginDTO(msisdn, "DSR Not Found", "404", null);
@@ -190,7 +193,7 @@ public class DSRServiceImpl implements DSRService {
 			otpExpiryTime.add(Calendar.SECOND, appConfigService.getIntProperty("OTP_EXPIRY_TIME_IN_SECONDS", 300));
 			OTP otp = otpService.generateAndPersistOTP(dsrUser.getId(), OtpType.MAIL, otpExpiryTime.getTime(),
 					OtpGroup.VERIFICATION);
-			emailService.sendOTP(otp, mail);
+			emailService.sendOTP(otp, mail, ActionType.Verify);
 			return DsrDtoHelper.getLoginDTO(mail, "SUCCESS", "200", null);
 
 		}

@@ -149,12 +149,18 @@ public class RetailerServiceImpl implements RetailerService {
 			List<UserRelationships> userRelationshipsList = userRelationshipsRepository
 					.findByMsisdnAndRelationship(dsrMsisdn, Relationship.RETAILER);
 			if (userRelationshipsList != null && !userRelationshipsList.isEmpty()) {
-				Optional<UserRelationships> retailer = userRelationshipsList.stream()
+				Optional<UserRelationships> userRelationships = userRelationshipsList.stream()
 						.filter(f -> f.getRelative().getId().equals(retailerId)).findFirst();
-				if (retailer.isPresent()) {
-					accountStatusService.createAccountStatus(retailer.get().getMsisdn(), dsrMsisdn, true,
-							KycStatus.SUBMITTED);
-					return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
+				if (userRelationships.isPresent()) {
+					if (userRelationships.get().getRelative() != null
+							&& userRelationships.get().getRelative().getMsisdn() != null
+							&& !userRelationships.get().getRelative().getMsisdn().isEmpty()) {
+						accountStatusService.createAccountStatus(userRelationships.get().getRelative().getMsisdn(),
+								dsrMsisdn, true, KycStatus.SUBMITTED);
+						return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
+					} else {
+						return RetailersDtoHelper.getResponseDTO(null, "No retailer mapping found", "404", null);
+					}
 				}
 			}
 			return RetailersDtoHelper.getResponseDTO(null, "No DSR and retailer mapping found", "404", null);
