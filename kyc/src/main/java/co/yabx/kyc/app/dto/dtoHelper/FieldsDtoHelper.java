@@ -259,7 +259,7 @@ public class FieldsDtoHelper implements Serializable {
 							SpringUtil.bean(AppConfigService.class).getProperty("DOCUMENT_STORAGE_BASE_URL",
 									"https://yabx.co/") + attachmentOptional.get().getDocumentUrl());
 					Integer count = filledVsUnfilled.get("filledFields");
-					filledVsUnfilled.put("filledFields", count++);
+					filledVsUnfilled.put("filledFields", count+1);
 
 				}
 			}
@@ -302,7 +302,7 @@ public class FieldsDtoHelper implements Serializable {
 	private static void increamentFilledFields(Fields dynamicFields, Map<String, Integer> filledVsUnfilled) {
 		if (dynamicFields.getSavedData() != null && !dynamicFields.getSavedData().isEmpty()) {
 			Integer count = filledVsUnfilled.get("filledFields");
-			filledVsUnfilled.put("filledFields", count != null ? count++ : 1);
+			filledVsUnfilled.put("filledFields", count != null ? count+1 : 1);
 		}
 	}
 
@@ -1174,7 +1174,7 @@ public class FieldsDtoHelper implements Serializable {
 					fieldsDTO.setSavedData(SpringUtil.bean(AppConfigService.class).getProperty(
 							"DOCUMENT_STORAGE_BASE_URL", "https://yabx.co/") + frontDoc.get().getDocumentUrl());
 					Integer count = filledVsUnfilled.get("filledFields");
-					filledVsUnfilled.put("filledFields", count++);
+					filledVsUnfilled.put("filledFields", count+1);
 				}
 			}
 		} else {
@@ -1185,7 +1185,7 @@ public class FieldsDtoHelper implements Serializable {
 					fieldsDTO.setSavedData(SpringUtil.bean(AppConfigService.class).getProperty(
 							"DOCUMENT_STORAGE_BASE_URL", "https://yabx.co/") + backDoc.get().getDocumentUrl());
 					Integer count = filledVsUnfilled.get("filledFields");
-					filledVsUnfilled.put("filledFields", count++);
+					filledVsUnfilled.put("filledFields", count+1);
 				}
 			}
 		}
