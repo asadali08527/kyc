@@ -643,6 +643,8 @@ public class FieldServiceImpl implements FieldService {
 			if (appDynamicFieldsDTO != null) {
 				if (appDynamicFieldsDTO.getFieldId().equals("accountTitle")) {
 					bankAccountDetails.setAccountTitle(appDynamicFieldsDTO.getResponse());
+				} else if (appDynamicFieldsDTO.getFieldId().equals("accountPurpose")) {
+					bankAccountDetails.setAccountPurpose(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("typeOfConcern")) {
 					try {
 						TypeOfConcern typeOfConcern = TypeOfConcern.valueOf(appDynamicFieldsDTO.getResponse());

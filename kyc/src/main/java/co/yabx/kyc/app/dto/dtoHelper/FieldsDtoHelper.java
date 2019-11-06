@@ -112,7 +112,8 @@ public class FieldsDtoHelper implements Serializable {
 				isProcessed = prepareLiabilitiesDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
 						subGroups, filledVsUnfilled);
 			} else if (dynamicFields.getGroups().getGroupId() == 5) {
-				prepareBusinessInformation(dynamicFields, retailers, appDynamicFieldsDTOSet, filter, filledVsUnfilled);
+				isProcessed = prepareBusinessInformation(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
+						filledVsUnfilled);
 			} else if (dynamicFields.getGroups().getGroupId() == 6) {
 				isProcessed = prepareLicenseDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
 						filledVsUnfilled);
@@ -259,7 +260,7 @@ public class FieldsDtoHelper implements Serializable {
 							SpringUtil.bean(AppConfigService.class).getProperty("DOCUMENT_STORAGE_BASE_URL",
 									"https://yabx.co/") + attachmentOptional.get().getDocumentUrl());
 					Integer count = filledVsUnfilled.get("filledFields");
-					filledVsUnfilled.put("filledFields", count+1);
+					filledVsUnfilled.put("filledFields", count + 1);
 
 				}
 			}
@@ -302,7 +303,7 @@ public class FieldsDtoHelper implements Serializable {
 	private static void increamentFilledFields(Fields dynamicFields, Map<String, Integer> filledVsUnfilled) {
 		if (dynamicFields.getSavedData() != null && !dynamicFields.getSavedData().isEmpty()) {
 			Integer count = filledVsUnfilled.get("filledFields");
-			filledVsUnfilled.put("filledFields", count != null ? count+1 : 1);
+			filledVsUnfilled.put("filledFields", count != null ? count + 1 : 1);
 		}
 	}
 
@@ -464,7 +465,7 @@ public class FieldsDtoHelper implements Serializable {
 
 	}
 
-	private static void prepareBusinessInformation(Fields dynamicFields, User retailers,
+	private static boolean prepareBusinessInformation(Fields dynamicFields, User retailers,
 			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter, Map<String, Integer> filledVsUnfilled) {
 		if (checkFilterCriteria(filter, dynamicFields.getFieldId())) {
 			if (retailers == null || retailers.getBusinessDetails() == null
@@ -500,6 +501,7 @@ public class FieldsDtoHelper implements Serializable {
 				}
 				increamentFilledFields(dynamicFields, filledVsUnfilled);
 				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+				return true;
 			} else {
 				Set<BusinessDetails> BusinessDetailsSet = retailers.getBusinessDetails();
 				Optional<BusinessDetails> businessDetailsOptional = BusinessDetailsSet.stream().findFirst();
@@ -674,8 +676,10 @@ public class FieldsDtoHelper implements Serializable {
 				}
 				increamentFilledFields(dynamicFields, filledVsUnfilled);
 				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
+				return true;
 			}
 		}
+		return false;
 
 	}
 
@@ -1174,7 +1178,7 @@ public class FieldsDtoHelper implements Serializable {
 					fieldsDTO.setSavedData(SpringUtil.bean(AppConfigService.class).getProperty(
 							"DOCUMENT_STORAGE_BASE_URL", "https://yabx.co/") + frontDoc.get().getDocumentUrl());
 					Integer count = filledVsUnfilled.get("filledFields");
-					filledVsUnfilled.put("filledFields", count+1);
+					filledVsUnfilled.put("filledFields", count + 1);
 				}
 			}
 		} else {
@@ -1185,7 +1189,7 @@ public class FieldsDtoHelper implements Serializable {
 					fieldsDTO.setSavedData(SpringUtil.bean(AppConfigService.class).getProperty(
 							"DOCUMENT_STORAGE_BASE_URL", "https://yabx.co/") + backDoc.get().getDocumentUrl());
 					Integer count = filledVsUnfilled.get("filledFields");
-					filledVsUnfilled.put("filledFields", count+1);
+					filledVsUnfilled.put("filledFields", count + 1);
 				}
 			}
 		}
