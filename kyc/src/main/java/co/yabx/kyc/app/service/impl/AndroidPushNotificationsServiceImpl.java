@@ -79,7 +79,6 @@ public class AndroidPushNotificationsServiceImpl implements AndroidPushNotificat
 
 			try {
 				String firebaseResponse = pushNotification.get();
-
 				return new ResponseEntity<>(firebaseResponse, HttpStatus.OK);
 			} catch (InterruptedException | ExecutionException ex) {
 			}

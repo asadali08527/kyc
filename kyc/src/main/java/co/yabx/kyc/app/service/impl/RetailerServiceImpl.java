@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import co.yabx.kyc.app.dto.QuestionAnswerDTO;
@@ -33,6 +34,8 @@ import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.service.AccountStatusService;
+import co.yabx.kyc.app.service.AndroidPushNotificationsService;
+import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.RetailerService;
 import co.yabx.kyc.app.service.UserService;
 import co.yabx.kyc.app.wrappers.UserWrapper;
@@ -60,6 +63,12 @@ public class RetailerServiceImpl implements RetailerService {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private AndroidPushNotificationsService androidPushNotificationsService;
+
+	@Autowired
+	AppConfigService appConfigService;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetailerServiceImpl.class);
 
 	@Override
@@ -75,6 +84,8 @@ public class RetailerServiceImpl implements RetailerService {
 					ResponseDTO responseDTO = RetailersDtoHelper.getSummary(retailers);
 					responseDTO.setName(dsr.getFirstName());
 					responseDTO.setEmail(dsr.getEmail());
+					if (appConfigService.getBooleanProperty("IS_TO_PUSH_SUMMARY_NOTIFICATION", false))
+						notifyKycStatusToDSR(dsr, responseDTO);
 					return responseDTO;
 				}
 			} else {
@@ -85,6 +96,35 @@ public class RetailerServiceImpl implements RetailerService {
 
 		}
 		return RetailersDtoHelper.getResponseDTO(null, "Either DSR msisdn is missing or no data passed", "403", null);
+	}
+
+	@Async
+	private void notifyKycStatusToDSR(User dsr, ResponseDTO responseDTO) {
+		if (responseDTO != null && dsr != null && dsr.getDeviceInformation() != null
+				&& dsr.getDeviceInformation().getDeviceId() != null) {
+			List<RetailersDTO> retailersDTOs = responseDTO.getRetailers();
+			int submitted = 0;
+			int rejected = 0;
+			int approved = 0;
+			int inProgress = 0;
+			for (RetailersDTO retailersDTO : retailersDTOs) {
+				KycStatus kycStatus = retailersDTO.getKycStatus();
+				if (KycStatus.IN_PROGRESS == kycStatus) {
+					inProgress++;
+				} else if (KycStatus.REJECTED == kycStatus) {
+					rejected++;
+				} else if (KycStatus.APPROVED == kycStatus) {
+					approved++;
+				} else if (KycStatus.SUBMITTED == kycStatus) {
+					submitted++;
+				}
+			}
+			androidPushNotificationsService.sendNotificationToDevice(dsr.getDeviceInformation().getDeviceId(),
+					"Retailers KYC Status Update",
+					"Total Retailers:" + submitted + inProgress + approved + rejected + "Submitted:" + submitted
+							+ " ,In-Progress:" + inProgress + " ,Rejected:" + rejected + " ,Approved:" + approved,
+					"");
+		}
 	}
 
 	@Override

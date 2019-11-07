@@ -151,40 +151,43 @@ public class AdminServiceImpl implements AdminService {
 				List<UserDto> retailersList = userDto.getRetailer();
 				User dsrUser = userRepository.findBymsisdnAndUserType(dsrMSISDN, UserType.DISTRIBUTORS.name());
 				if (dsrUser != null) {
-
+					createOrUpdateRetailers(dsrUser, retailersList);
 				} else {
 					dsrUser = new DSRUser();
 					dsrUser.setFirstName(dsrName);
 					dsrUser.setMsisdn(dsrMSISDN);
 					dsrUser = userRepository.save(dsrUser);
 				}
-				if (retailersList != null) {
-					for (UserDto retailers : retailersList) {
-						String retailerMSISDN = retailers.getMsisdn();
-						String retailersName = retailers.getName();
-						User retailerUser = userRepository.findBymsisdnAndUserType(retailerMSISDN,
-								UserType.RETAILERS.name());
-						if (retailerUser != null) {
 
-						} else {
-							retailerUser = new Retailers();
-							retailerUser.setFirstName(retailersName);
-							retailerUser.setMsisdn(retailerMSISDN);
-							retailerUser = userRepository.save(retailerUser);
-						}
-						UserRelationships userRelationships = userRelationshipsRepository
-								.findByMsisdnAndRelationshipAndRelative(dsrMSISDN, Relationship.RETAILER,
-										retailerUser);
-						if (userRelationships != null) {
+			}
+		}
+	}
 
-						} else {
-							userRelationships = new UserRelationships();
-							userRelationships.setMsisdn(dsrMSISDN);
-							userRelationships.setRelationship(Relationship.RETAILER);
-							userRelationships.setRelative(retailerUser);
-							userRelationshipsRepository.save(userRelationships);
-						}
-					}
+	private void createOrUpdateRetailers(User dsrUser, List<UserDto> retailersList) {
+		if (retailersList != null) {
+			for (UserDto retailers : retailersList) {
+				String retailerMSISDN = retailers.getMsisdn();
+				String retailersName = retailers.getName();
+				User retailerUser = userRepository.findBymsisdnAndUserType(retailerMSISDN, UserType.RETAILERS.name());
+				if (retailerUser != null) {
+
+				} else {
+					retailerUser = new Retailers();
+					retailerUser.setFirstName(retailersName);
+					retailerUser.setMsisdn(retailerMSISDN);
+					retailerUser = userRepository.save(retailerUser);
+				}
+				UserRelationships userRelationships = userRelationshipsRepository
+						.findByMsisdnAndRelationshipAndRelative(dsrUser.getMsisdn(), Relationship.RETAILER,
+								retailerUser);
+				if (userRelationships != null) {
+
+				} else {
+					userRelationships = new UserRelationships();
+					userRelationships.setMsisdn(dsrUser.getMsisdn());
+					userRelationships.setRelationship(Relationship.RETAILER);
+					userRelationships.setRelative(retailerUser);
+					userRelationshipsRepository.save(userRelationships);
 				}
 			}
 		}
