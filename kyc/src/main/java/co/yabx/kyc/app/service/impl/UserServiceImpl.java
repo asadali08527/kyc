@@ -272,7 +272,7 @@ public class UserServiceImpl implements UserService {
 			user.setAttachmentDetails(attachmentDetailsSet);
 		}
 		user = userRepository.save(user);
-		if (nominees != null) {
+		if (nominees != null && nominees.getMsisdn() != null && !nominees.getMsisdn().isEmpty()) {
 			nominees.setUserType(UserType.NOMINEES.name());
 			if (nomineeAddressDetailsSet != null) {
 				Set<AddressDetails> userAddressDetails = nominees.getAddressDetails();
