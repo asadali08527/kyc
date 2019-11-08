@@ -10,6 +10,7 @@ import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
 import co.yabx.kyc.app.fullKyc.entity.IntroducerDetails;
 import co.yabx.kyc.app.fullKyc.entity.LiabilitiesDetails;
+import co.yabx.kyc.app.fullKyc.entity.LicenseDetails;
 import co.yabx.kyc.app.fullKyc.entity.MonthlyTransactionProfiles;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
@@ -27,6 +28,7 @@ public interface SectionService {
 			Set<BusinessDetails> businessDetailsSet, Set<AddressDetails> businessAddressDetailsSet,
 			Set<BankAccountDetails> businessBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetailsSet,
 			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet,
-			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet, Set<AttachmentDetails> attachmentDetailsSet);
+			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet, Set<AttachmentDetails> attachmentDetailsSet,
+			Set<LicenseDetails> licenseDetailsSet);
 
 }

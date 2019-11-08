@@ -73,83 +73,81 @@ public class FieldsDtoHelper implements Serializable {
 			List<GroupsDTO> groupsDTOList) {
 		Integer totalFields = 0;
 		List<FieldsDTO> appDynamicFieldsDTOSet = new ArrayList<FieldsDTO>();
-		if (sectionGroupRelationship.isMultiple()) {
-			if (sectionGroupRelationship.getGroups().getGroupId() == 6) {
-				prepareLicenseDetails(appDynamicFieldsSet, retailers, appDynamicFieldsDTOSet, filter, filledVsUnfilled,
-						groupsDTOList);
+
+		for (Fields dynamicFields : appDynamicFieldsSet) {
+			boolean isProcessed = false;
+			if (dynamicFields.getGroups().getGroupId() == 1
+					&& (appPagesSections.getSectionId() == 1 || appPagesSections.getSectionId() == 3)) {
+				// User personal Info
+				isProcessed = prepareProfileInformation(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
+						filledVsUnfilled);
+			} else if (dynamicFields.getGroups().getGroupId() == 1 && appPagesSections.getSectionId() == 2) {
+				// nominee
+				isProcessed = prepareProfileInformation(dynamicFields, nominee, appDynamicFieldsDTOSet, filter,
+						filledVsUnfilled);
+			} else if (dynamicFields.getGroups().getGroupId() == 2
+					&& (appPagesSections.getSectionId() == 1 || appPagesSections.getSectionId() == 3)) {
+				// user address details
+				isProcessed = prepareAddress(dynamicFields, userAddressDetailsSet, appDynamicFieldsDTOSet, subGroups,
+						filter, filledVsUnfilled);
+			} else if (dynamicFields.getGroups().getGroupId() == 2 && appPagesSections.getSectionId() == 2) {
+				// nominee address details
+				isProcessed = prepareAddress(dynamicFields, nomineeAddressDetailsSet, appDynamicFieldsDTOSet, subGroups,
+						filter, filledVsUnfilled);
+			} else if (dynamicFields.getGroups().getGroupId() == 2 && appPagesSections.getSectionId() == 5) {
+				// Business address details
+				isProcessed = prepareAddress(dynamicFields, businessAddressDetailsSet, appDynamicFieldsDTOSet,
+						subGroups, filter, filledVsUnfilled);
+			} else if (dynamicFields.getGroups().getGroupId() == 3
+					&& (appPagesSections.getSectionId() == 1 || appPagesSections.getSectionId() == 3)) {
+				// user account details
+				isProcessed = prepareAccountInformations(dynamicFields, userBankAccountDetailsSet,
+						appDynamicFieldsDTOSet, filter, filledVsUnfilled);
+			} else if (dynamicFields.getGroups().getGroupId() == 3 && appPagesSections.getSectionId() == 2) {
+				// nominee account details
+				isProcessed = prepareAccountInformations(dynamicFields, nomineeBankAccountDetailsSet,
+						appDynamicFieldsDTOSet, filter, filledVsUnfilled);
+			} else if (dynamicFields.getGroups().getGroupId() == 3 && appPagesSections.getSectionId() == 5) {
+				// business account details
+				isProcessed = prepareAccountInformations(dynamicFields, businessBankAccountDetailsSet,
+						appDynamicFieldsDTOSet, filter, filledVsUnfilled);
+			} else if (dynamicFields.getGroups().getGroupId() == 4) {
+				isProcessed = prepareLiabilitiesDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
+						subGroups, filledVsUnfilled);
+			} else if (dynamicFields.getGroups().getGroupId() == 5) {
+				isProcessed = prepareBusinessInformation(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
+						filledVsUnfilled);
+			} else if (dynamicFields.getGroups().getGroupId() == 6) {
+				isProcessed = prepareLicenseDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
+						filledVsUnfilled, subGroups);
+			} else if (dynamicFields.getGroups().getGroupId() == 7) {
+				isProcessed = prepareMonthlyTransactionProfile(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
+						filledVsUnfilled);
+			} else if (dynamicFields.getGroups().getGroupId() == 8
+					&& (appPagesSections.getSectionId() == 1 || appPagesSections.getSectionId() == 3)) {
+				// user or distributor work education
+				isProcessed = prepareWorkEducationDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
+						filledVsUnfilled);
+			} else if (dynamicFields.getGroups().getGroupId() == 8 && appPagesSections.getSectionId() == 2) {
+				// nominee work education
+				isProcessed = prepareWorkEducationDetails(dynamicFields, nominee, appDynamicFieldsDTOSet, filter,
+						filledVsUnfilled);
+			} else if (dynamicFields.getGroups().getGroupId() == 9) {
+				// Introducer Detaiils
+				isProcessed = prepareIntroducerDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
+						filledVsUnfilled);
+			} else if (dynamicFields.getGroups().getGroupId() == 10) {
+				// Attachment Detaiils
+				isProcessed = prepareAttachmentDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
+						filledVsUnfilled);
 			}
-		} else {
-			for (Fields dynamicFields : appDynamicFieldsSet) {
-				boolean isProcessed = false;
-				if (dynamicFields.getGroups().getGroupId() == 1
-						&& (appPagesSections.getSectionId() == 1 || appPagesSections.getSectionId() == 3)) {
-					// User personal Info
-					isProcessed = prepareProfileInformation(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
-							filledVsUnfilled);
-				} else if (dynamicFields.getGroups().getGroupId() == 1 && appPagesSections.getSectionId() == 2) {
-					// nominee
-					isProcessed = prepareProfileInformation(dynamicFields, nominee, appDynamicFieldsDTOSet, filter,
-							filledVsUnfilled);
-				} else if (dynamicFields.getGroups().getGroupId() == 2
-						&& (appPagesSections.getSectionId() == 1 || appPagesSections.getSectionId() == 3)) {
-					// user address details
-					isProcessed = prepareAddress(dynamicFields, userAddressDetailsSet, appDynamicFieldsDTOSet,
-							subGroups, filter, filledVsUnfilled);
-				} else if (dynamicFields.getGroups().getGroupId() == 2 && appPagesSections.getSectionId() == 2) {
-					// nominee address details
-					isProcessed = prepareAddress(dynamicFields, nomineeAddressDetailsSet, appDynamicFieldsDTOSet,
-							subGroups, filter, filledVsUnfilled);
-				} else if (dynamicFields.getGroups().getGroupId() == 2 && appPagesSections.getSectionId() == 5) {
-					// Business address details
-					isProcessed = prepareAddress(dynamicFields, businessAddressDetailsSet, appDynamicFieldsDTOSet,
-							subGroups, filter, filledVsUnfilled);
-				} else if (dynamicFields.getGroups().getGroupId() == 3
-						&& (appPagesSections.getSectionId() == 1 || appPagesSections.getSectionId() == 3)) {
-					// user account details
-					isProcessed = prepareAccountInformations(dynamicFields, userBankAccountDetailsSet,
-							appDynamicFieldsDTOSet, filter, filledVsUnfilled);
-				} else if (dynamicFields.getGroups().getGroupId() == 3 && appPagesSections.getSectionId() == 2) {
-					// nominee account details
-					isProcessed = prepareAccountInformations(dynamicFields, nomineeBankAccountDetailsSet,
-							appDynamicFieldsDTOSet, filter, filledVsUnfilled);
-				} else if (dynamicFields.getGroups().getGroupId() == 3 && appPagesSections.getSectionId() == 5) {
-					// business account details
-					isProcessed = prepareAccountInformations(dynamicFields, businessBankAccountDetailsSet,
-							appDynamicFieldsDTOSet, filter, filledVsUnfilled);
-				} else if (dynamicFields.getGroups().getGroupId() == 4) {
-					isProcessed = prepareLiabilitiesDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
-							subGroups, filledVsUnfilled);
-				} else if (dynamicFields.getGroups().getGroupId() == 5) {
-					isProcessed = prepareBusinessInformation(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
-							filledVsUnfilled);
-				} else if (dynamicFields.getGroups().getGroupId() == 7) {
-					isProcessed = prepareMonthlyTransactionProfile(dynamicFields, retailers, appDynamicFieldsDTOSet,
-							filter, filledVsUnfilled);
-				} else if (dynamicFields.getGroups().getGroupId() == 8
-						&& (appPagesSections.getSectionId() == 1 || appPagesSections.getSectionId() == 3)) {
-					// user or distributor work education
-					isProcessed = prepareWorkEducationDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
-							filledVsUnfilled);
-				} else if (dynamicFields.getGroups().getGroupId() == 8 && appPagesSections.getSectionId() == 2) {
-					// nominee work education
-					isProcessed = prepareWorkEducationDetails(dynamicFields, nominee, appDynamicFieldsDTOSet, filter,
-							filledVsUnfilled);
-				} else if (dynamicFields.getGroups().getGroupId() == 9) {
-					// Introducer Detaiils
-					isProcessed = prepareIntroducerDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
-							filledVsUnfilled);
-				} else if (dynamicFields.getGroups().getGroupId() == 10) {
-					// Attachment Detaiils
-					isProcessed = prepareAttachmentDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
-							filledVsUnfilled);
-				}
-				if (isProcessed)
-					totalFields++;
-				if (isHavingSubFields(dynamicFields)) {
-					totalFields++;
-				}
+			if (isProcessed)
+				totalFields++;
+			if (isHavingSubFields(dynamicFields)) {
+				totalFields++;
 			}
 		}
+
 		filledVsUnfilled.put("totalFields", totalFields);
 		// appDynamicFieldsDTOSet.add(appDynamicFieldsDTOSet.stream().max(Comparator.comparing(FieldsDTO::getId)).get());
 		appDynamicFieldsDTOSet.addAll(appDynamicFieldsDTOSet);
@@ -432,42 +430,44 @@ public class FieldsDtoHelper implements Serializable {
 
 	}
 
-	private static boolean prepareLicenseDetails(Set<Fields> appDynamicFieldsSet, User retailers,
-			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter, Map<String, Integer> filledVsUnfilled, List<GroupsDTO> groupsDTOList) {
+	private static boolean prepareLicenseDetails(Fields dynamicFields, User retailers,
+			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter, Map<String, Integer> filledVsUnfilled,
+			SubGroups subGroups) {
 		if (retailers == null || retailers.getBusinessDetails() == null || retailers.getBusinessDetails().isEmpty()) {
-			if (appDynamicFieldsSet.getFieldId().equals("licenseType")) {
-				List<String> options = new ArrayList<String>();
-				LicenseType[] accountTypes = LicenseType.values();
-				for (LicenseType statuses : accountTypes) {
-					options.add(statuses.toString());
-				}
-				appDynamicFieldsSet.setOptions(options);
-			}
 		} else {
-			if (appDynamicFieldsSet.getFieldId().equals("licenseType")) {
-				Set<BusinessDetails> businessDetailsSet = retailers.getBusinessDetails();
-				Optional<BusinessDetails> optional = businessDetailsSet.stream().findFirst();
-				Set<LicenseDetails> licenseDetailsSet = optional.isPresent() ? optional.get().getLicenseDetails() : null;
-				if(licenseDetailsSet.size()>1) {
-					for(LicenseDetails licenseDetails:licenseDetailsSet) {
-				
-					appDynamicFieldsSet.setSavedData(licenseDetails != null && licenseDetails.getLicenseType() != null
-				
+			Set<BusinessDetails> businessDetailsSet = retailers.getBusinessDetails();
+			Optional<BusinessDetails> optional = businessDetailsSet.stream().findFirst();
+			Set<LicenseDetails> licenseDetailsSet = optional.isPresent() ? optional.get().getLicenseDetails() : null;
+			Optional<LicenseDetails> optionalLicenseDetails = licenseDetailsSet.stream()
+					.filter(f -> f.getLicenseType().equals(getLicenseType(subGroups))).findFirst();
+			LicenseDetails licenseDetails = optionalLicenseDetails.isPresent() ? optionalLicenseDetails.get() : null;
+			if (dynamicFields.getFieldId().equals("licenseNumber")) {
+				dynamicFields.setSavedData(licenseDetails != null ? licenseDetails.getLicenseNumber() : null);
+			} else if (dynamicFields.getFieldId().equals("licenseExpiryDate")) {
+				dynamicFields.setSavedData(licenseDetails != null ? licenseDetails.getLicenseExpiryDate() : null);
+			} else if (dynamicFields.getFieldId().equals("licenseIssuingAuthority")) {
+				dynamicFields.setSavedData(licenseDetails != null ? licenseDetails.getLicenseIssuingAuthority() : null);
+			} else if (dynamicFields.getFieldId().equals("licenseType")) {
+				dynamicFields.setSavedData(licenseDetails != null && licenseDetails.getLicenseType() != null
 						? licenseDetails.getLicenseType().toString()
 						: null);
-				
-			}  if (appDynamicFieldsSet.getFieldId().equals("licenseNumber")) {
-				appDynamicFieldsSet.setSavedData(licenseDetails != null ? licenseDetails.getLicenseNumber() : null);
-			} else if (appDynamicFieldsSet.getFieldId().equals("licenseExpiryDate")) {
-				appDynamicFieldsSet.setSavedData(licenseDetails != null ? licenseDetails.getLicenseExpiryDate() : null);
-			} else if (appDynamicFieldsSet.getFieldId().equals("licenseIssuingAuthority")) {
-				appDynamicFieldsSet.setSavedData(licenseDetails != null ? licenseDetails.getLicenseIssuingAuthority() : null);
 			}
 		}
-			}
-		increamentFilledFields(appDynamicFieldsSet, filledVsUnfilled);
-		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(appDynamicFieldsSet));
+		increamentFilledFields(dynamicFields, filledVsUnfilled);
+		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields));
 		return true;
+
+	}
+
+	private static LicenseType getLicenseType(SubGroups subGroups) {
+		if (subGroups != null) {
+			if ("Trade License".equalsIgnoreCase(subGroups.getGroupType()))
+				return LicenseType.TRADE;
+			else
+				return LicenseType.OTHER;
+
+		}
+		return null;
 
 	}
 

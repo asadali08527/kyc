@@ -29,7 +29,7 @@ import co.yabx.kyc.app.enums.FacilityType;
 @Entity
 @Table(name = "business_details", indexes = { @Index(name = "business_type", columnList = "business_type"),
 		@Index(name = "business_name", columnList = "business_name"),
-		@Index(name = "license_details", columnList = "license_details") })
+		@Index(name = "facility_details", columnList = "facility_details") })
 public class BusinessDetails implements Serializable {
 
 	@Id

@@ -14,6 +14,7 @@ import co.yabx.kyc.app.dto.FieldsDTO;
 import co.yabx.kyc.app.dto.GroupsDTO;
 import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.dto.SubFieldsDTO;
+import co.yabx.kyc.app.entities.filter.SubGroups;
 import co.yabx.kyc.app.enums.AddressProof;
 import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.BankAccountType;
@@ -51,6 +52,7 @@ import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
 import co.yabx.kyc.app.fullKyc.repository.AddressDetailsRepository;
 import co.yabx.kyc.app.fullKyc.repository.LiabilitiesDetailsRepository;
+import co.yabx.kyc.app.fullKyc.repository.LicenseDetailsRepository;
 import co.yabx.kyc.app.repositories.AuthInfoRepository;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.FieldService;
@@ -64,9 +66,6 @@ import co.yabx.kyc.app.service.FieldService;
 public class FieldServiceImpl implements FieldService {
 
 	@Autowired
-	private AuthInfoRepository authInfoRepository;
-
-	@Autowired
 	private LiabilitiesDetailsRepository liabilitiesDetailsRepository;
 
 	@Autowired
@@ -74,6 +73,9 @@ public class FieldServiceImpl implements FieldService {
 
 	@Autowired
 	private AddressDetailsRepository addressDetailsRepository;
+
+	@Autowired
+	private LicenseDetailsRepository licenseDetailsRepository;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(FieldServiceImpl.class);
 
@@ -85,7 +87,7 @@ public class FieldServiceImpl implements FieldService {
 			Set<BankAccountDetails> businessBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetailsSet,
 			SectionsDTO appPagesSectionsDTO, Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet,
 			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet,
-			Set<AttachmentDetails> attachmentDetailsSet) {
+			Set<AttachmentDetails> attachmentDetailsSet, Set<LicenseDetails> licenseDetailsSet) {
 
 		List<FieldsDTO> appDynamicFieldsDTOList = appPagesSectionGroupsDTO.getFields();
 		AddressDetails addressDetails = null;
@@ -218,11 +220,7 @@ public class FieldServiceImpl implements FieldService {
 			if (businessDetailsSet == null || businessDetailsSet.isEmpty()) {
 				businessDetails = new BusinessDetails();
 			} else {
-				Optional<BusinessDetails> businessDetailsOptional = businessDetailsSet.stream().findFirst();
-				if (!businessDetailsOptional.isPresent())
-					businessDetails = new BusinessDetails();
-				else
-					businessDetails = businessDetailsOptional.get();
+				businessDetails = getBusinessDetails(businessDetailsSet);
 			}
 			businessDetails = prepareBusinessInformation(appDynamicFieldsDTOList, businessDetails);
 			if (businessDetails != null) {
@@ -235,29 +233,26 @@ public class FieldServiceImpl implements FieldService {
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
 				.getLongProperty("GROUP_ID_FOR_BUSINESS_LICENSE_DETAILS", 6l)
 				|| "licenseDetails".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName())) {
-			LicenseDetails licenseDetails = null;
-			licenseDetails = prepareLicenseDetails(appDynamicFieldsDTOList, licenseDetails);
-			if (licenseDetails != null) {
-				if (businessDetailsSet == null || businessDetailsSet.isEmpty()) {
-					BusinessDetails businessDetails = new BusinessDetails();
-					businessDetails.setLicenseDetails(licenseDetails);
-					businessDetailsSet = new HashSet<BusinessDetails>();
-					businessDetailsSet.add(businessDetails);
-				} else {
-					BusinessDetails businessDetails = null;
-					Optional<BusinessDetails> businessDetailsOptional = businessDetailsSet.stream().findFirst();
-					if (!businessDetailsOptional.isPresent())
-						businessDetails = new BusinessDetails();
-					else
-						businessDetails = businessDetailsOptional.get();
-					businessDetails.setLicenseDetails(licenseDetails);
-					businessDetailsSet.add(businessDetails);
+			LicenseType licenseType = getLicenseType(appPagesSectionGroupsDTO.getGroupTitle());
+			if (licenseType != null) {
+				LicenseDetails licenseDetails = null;
+				BusinessDetails businessDetails = getBusinessDetails(businessDetailsSet);
+				if (businessDetails != null)
+					licenseDetails = licenseDetailsRepository.findByBusinessDetailsAndLicenseType(businessDetails,
+							licenseType);
+				if (licenseDetails == null) {
+					licenseDetails = new LicenseDetails();
+					licenseDetails.setLicenseType(licenseType);
 				}
+				licenseDetails = prepareLicenseDetails(appDynamicFieldsDTOList, licenseDetails);
+				licenseDetailsSet.add(licenseDetails);
 			}
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
 				.getLongProperty("GROUP_ID_FOR_MONTHLY_TRANSACTION_PROFILE", 7l)
-				|| "monthlyTxnProfile".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName())) {
+				|| "monthlyTxnProfile".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName()))
+
+		{
 			MonthlyTransactionProfiles monthlyTransactionProfiles = null;
 			monthlyTransactionProfiles = prepareMonthlyTxnProfiles(appDynamicFieldsDTOList, monthlyTransactionProfiles);
 			if (monthlyTransactionProfiles != null) {
@@ -319,6 +314,14 @@ public class FieldServiceImpl implements FieldService {
 
 	}
 
+	private BusinessDetails getBusinessDetails(Set<BusinessDetails> businessDetailsSet) {
+		Optional<BusinessDetails> businessDetailsOptional = businessDetailsSet.stream().findFirst();
+		if (!businessDetailsOptional.isPresent())
+			return new BusinessDetails();
+		else
+			return businessDetailsOptional.get();
+	}
+
 	private LiabilityType getLiabilitesType(String groupTitle) {
 		if ("Personal Liabilities".equalsIgnoreCase(groupTitle)) {
 			return LiabilityType.PERSONAL;
@@ -344,6 +347,18 @@ public class FieldServiceImpl implements FieldService {
 				return AddressType.BUSINESS_OTHER_ADDRESS;
 		}
 		return null;
+	}
+
+	private static LicenseType getLicenseType(String groupTitle) {
+		if (groupTitle != null && !groupTitle.isEmpty()) {
+			if ("Trade License".equalsIgnoreCase(groupTitle))
+				return LicenseType.TRADE;
+			else
+				return LicenseType.OTHER;
+
+		}
+		return null;
+
 	}
 
 	/**

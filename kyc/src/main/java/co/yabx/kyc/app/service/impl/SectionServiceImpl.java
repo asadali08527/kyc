@@ -16,6 +16,7 @@ import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
 import co.yabx.kyc.app.fullKyc.entity.IntroducerDetails;
 import co.yabx.kyc.app.fullKyc.entity.LiabilitiesDetails;
+import co.yabx.kyc.app.fullKyc.entity.LicenseDetails;
 import co.yabx.kyc.app.fullKyc.entity.MonthlyTransactionProfiles;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
@@ -41,8 +42,8 @@ public class SectionServiceImpl implements SectionService {
 			Set<BusinessDetails> businessDetailsSet, Set<AddressDetails> businessAddressDetailsSet,
 			Set<BankAccountDetails> businessBankAccountDetailsSet, Set<LiabilitiesDetails> liabilitiesDetailsSet,
 			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet,
-			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet,
-			Set<AttachmentDetails> attachmentDetailsSet) {
+			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet, Set<AttachmentDetails> attachmentDetailsSet,
+			Set<LicenseDetails> licenseDetailsSet) {
 		for (SectionsDTO appPagesSectionsDTO : appPagesSectionsDTOList) {
 			List<GroupsDTO> appPagesSectionGroupsDTOList = appPagesSectionsDTO.getGroups();
 			if (appPagesSectionGroupsDTOList != null && !appPagesSectionGroupsDTOList.isEmpty()) {
@@ -52,7 +53,7 @@ public class SectionServiceImpl implements SectionService {
 							nomineeBankAccountDetailsSet, businessDetailsSet, businessAddressDetailsSet,
 							businessBankAccountDetailsSet, liabilitiesDetailsSet, appPagesSectionsDTO,
 							monthlyTransactionProfilesSet, workEducationDetailsSet, introducerDetailsSet,
-							attachmentDetailsSet);
+							attachmentDetailsSet, licenseDetailsSet);
 				}
 			}
 

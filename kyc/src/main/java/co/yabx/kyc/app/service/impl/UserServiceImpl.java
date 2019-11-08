@@ -28,6 +28,7 @@ import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
 import co.yabx.kyc.app.fullKyc.entity.DSRUser;
 import co.yabx.kyc.app.fullKyc.entity.IntroducerDetails;
 import co.yabx.kyc.app.fullKyc.entity.LiabilitiesDetails;
+import co.yabx.kyc.app.fullKyc.entity.LicenseDetails;
 import co.yabx.kyc.app.fullKyc.entity.MonthlyTransactionProfiles;
 import co.yabx.kyc.app.fullKyc.entity.Nominees;
 import co.yabx.kyc.app.fullKyc.entity.Retailers;
@@ -174,6 +175,8 @@ public class UserServiceImpl implements UserService {
 			Set<IntroducerDetails> introducerDetailsSet = new HashSet<IntroducerDetails>();
 			List<UserRelationships> nomineeRelationship = null;
 			Set<AttachmentDetails> attachmentDetailsSet = new HashSet<AttachmentDetails>();
+			Set<LicenseDetails> licenseDetailsSet = new HashSet<LicenseDetails>();
+
 			if (retailer == null) {
 				// It means DSR profile need to be persisted
 				retailer = dsrUser;
@@ -199,7 +202,7 @@ public class UserServiceImpl implements UserService {
 						userAddressDetailsSet, userBankAccountDetailsSet, nomineeAddressDetailsSet,
 						nomineeBankAccountDetailsSet, businessDetailsSet, businessAddressDetailsSet,
 						businessBankAccountDetailsSet, liabilitiesDetailsSet, workEducationDetailsSet,
-						introducerDetailsSet, monthlyTransactionProfilesSet, attachmentDetailsSet);
+						introducerDetailsSet, monthlyTransactionProfilesSet, attachmentDetailsSet, licenseDetailsSet);
 				return persistUser(retailer, nominees, userAddressDetailsSet, userBankAccountDetailsSet,
 						liabilitiesDetailsSet, isNew, nomineeRelationship, nomineeAddressDetailsSet, isDsrUser,
 						businessDetailsSet, nomineeBankAccountDetailsSet, monthlyTransactionProfilesSet,
