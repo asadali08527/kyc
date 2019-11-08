@@ -78,7 +78,9 @@ public class GroupDtoHelper implements Serializable {
 						businessAddressDetailsSet, userBankAccountDetailsSet, nomineeBankAccountDetailsSet,
 						businessBankAccountDetailsSet, subGroups, filter, sectionGroupRelationship, groupsDTOList);
 				if (subGroups != null) {
-					addFunctionality(subGroups, groupsDTOList, fields);
+					addFunctionality(subGroups, groupsDTOList, fields, appPagesSectionGroupsDTO);
+				} else {
+					appPagesSectionGroupsDTO.setVisible(true);
 				}
 				Set<FieldsDTO> appDynamicFieldsDTOs = fields.stream().sorted(Comparator.comparing(FieldsDTO::getId))
 						.collect(Collectors.toSet());
@@ -108,8 +110,9 @@ public class GroupDtoHelper implements Serializable {
 	}
 
 	private static void addFunctionality(SubGroups subGroups, List<GroupsDTO> appPagesSectionGroupSet,
-			List<FieldsDTO> fields) {
+			List<FieldsDTO> fields, GroupsDTO appPagesSectionGroupsDTO) {
 		Fields field = subGroups.getFields();
+		appPagesSectionGroupsDTO.setVisible(subGroups.isVisible());
 		if (field != null) {
 			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(field);
 			Functionality functionality = new Functionality();

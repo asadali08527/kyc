@@ -30,6 +30,8 @@ public class GroupsDTO implements Serializable {
 
 	private Integer displayOrder;
 
+	private boolean visible;
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -115,6 +117,14 @@ public class GroupsDTO implements Serializable {
 
 	public void setDisplayOrder(Integer displayOrder) {
 		this.displayOrder = displayOrder;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 
 }

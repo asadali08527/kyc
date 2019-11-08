@@ -58,6 +58,9 @@ public abstract class SubGroups implements Serializable {
 	@Column(name = "linked_group")
 	private Long linked_group;
 
+	@Column(name = "visible", columnDefinition = "boolean default true")
+	private boolean visible;
+
 	public Long getLinked_group() {
 		return linked_group;
 	}
@@ -112,6 +115,14 @@ public abstract class SubGroups implements Serializable {
 
 	public void setFunctionalityType(FunctionalityType functionalityType) {
 		this.functionalityType = functionalityType;
+	}
+
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
 	}
 
 }
