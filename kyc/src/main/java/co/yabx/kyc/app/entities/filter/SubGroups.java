@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +20,8 @@ import javax.persistence.Table;
 
 import co.yabx.kyc.app.entities.Fields;
 import co.yabx.kyc.app.entities.SectionGroupRelationship;
+import co.yabx.kyc.app.enums.BusinessType;
+import co.yabx.kyc.app.enums.FunctionalityType;
 
 /**
  * 
@@ -43,6 +47,10 @@ public abstract class SubGroups implements Serializable {
 	@JoinColumn(name = "fields")
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = Fields.class)
 	Fields fields;
+
+	@Column(name = "functionality_type", length = 100)
+	@Enumerated(value = EnumType.STRING)
+	private FunctionalityType functionalityType;
 
 	@Column(name = "display_order")
 	private Integer displayOrder;
@@ -96,6 +104,14 @@ public abstract class SubGroups implements Serializable {
 
 	public void setSectionGroupRelationship(SectionGroupRelationship sectionGroupRelationship) {
 		this.sectionGroupRelationship = sectionGroupRelationship;
+	}
+
+	public FunctionalityType getFunctionalityType() {
+		return functionalityType;
+	}
+
+	public void setFunctionalityType(FunctionalityType functionalityType) {
+		this.functionalityType = functionalityType;
 	}
 
 }

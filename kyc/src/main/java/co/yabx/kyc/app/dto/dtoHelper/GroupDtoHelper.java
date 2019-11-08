@@ -76,7 +76,7 @@ public class GroupDtoHelper implements Serializable {
 				List<FieldsDTO> fields = FieldsDtoHelper.getFields(appDynamicFieldsSet, retailers, groups,
 						appPagesSections, nominee, userAddressDetailsSet, nomineeAddressDetailsSet,
 						businessAddressDetailsSet, userBankAccountDetailsSet, nomineeBankAccountDetailsSet,
-						businessBankAccountDetailsSet, subGroups, filter, sectionGroupRelationship,groupsDTOList);
+						businessBankAccountDetailsSet, subGroups, filter, sectionGroupRelationship, groupsDTOList);
 				if (subGroups != null) {
 					addFunctionality(subGroups, groupsDTOList, fields);
 				}
@@ -113,7 +113,7 @@ public class GroupDtoHelper implements Serializable {
 		if (field != null) {
 			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(field);
 			Functionality functionality = new Functionality();
-			functionality.setType(FunctionalityType.Copy);
+			functionality.setType(subGroups.getFunctionalityType());
 			// Link group from permanent to present and so on
 			functionality.setFromGroup(subGroups.getLinked_group());
 			functionality.setToGroup(subGroups.getId());

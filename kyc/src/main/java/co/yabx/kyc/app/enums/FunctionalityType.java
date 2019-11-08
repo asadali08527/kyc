@@ -1,7 +1,7 @@
 package co.yabx.kyc.app.enums;
 
 public enum FunctionalityType {
-	Copy, Compare, Validation;
+	Copy, Compare, Validation, Replicate;
 
 	public static FunctionalityType getFunctionalityType(String value) {
 		if (value.equalsIgnoreCase("COPY")) {
@@ -10,6 +10,8 @@ public enum FunctionalityType {
 			return FunctionalityType.Compare;
 		} else if (value.equalsIgnoreCase("VALIDATION")) {
 			return FunctionalityType.Validation;
+		} else if (value.equalsIgnoreCase("REPLICATE")) {
+			return FunctionalityType.Replicate;
 		} else {
 			return FunctionalityType.valueOf(value);
 		}
@@ -23,6 +25,8 @@ public enum FunctionalityType {
 			return "COPY";
 		} else if (super.toString().equals("Validation")) {
 			return "VALIDATION";
+		} else if (super.toString().equals("Replicate")) {
+			return "REPLICATE";
 		} else {
 			return super.toString();
 		}
