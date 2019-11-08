@@ -78,7 +78,6 @@ public class UserWrapper {
 			businessDetails.setFundSource(businessDetailsDTO.getFundSource());
 			businessDetails.setInitialCapital(businessDetailsDTO.getInitialCapital());
 			businessDetails.setInitialDeposit(businessDetailsDTO.getInitialDeposit());
-			businessDetails.setLicenseDetails(prepareLicenseDetails(businessDetailsDTO.getLicenseDetails()));
 			businessDetails.setAddressDetails(getAddressDetails(businessDetailsDTO.getAddressDetails()));
 			businessDetails
 					.setBankAccountDetails(prepareBankAccountDetails(businessDetailsDTO.getBankAccountDetails()));

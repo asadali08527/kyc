@@ -2,6 +2,7 @@ package co.yabx.kyc.app.fullKyc.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -122,15 +123,14 @@ public class BusinessDetails implements Serializable {
 	@Column(name = "initial_deposits")
 	private double initialDeposit;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "license_details", referencedColumnName = "id")
-	private LicenseDetails licenseDetails;
+	@OneToMany(mappedBy = "businessDetails", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private Set<LicenseDetails> licenseDetails = new HashSet<LicenseDetails>();
 
 	@OneToMany(mappedBy = "businessDetails", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<AddressDetails> addressDetails;
+	private Set<AddressDetails> addressDetails = new HashSet<AddressDetails>();
 
 	@OneToMany(mappedBy = "businessDetails", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-	private Set<BankAccountDetails> bankAccountDetails;
+	private Set<BankAccountDetails> bankAccountDetails = new HashSet<BankAccountDetails>();
 
 	@ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
 	User user;
@@ -359,14 +359,6 @@ public class BusinessDetails implements Serializable {
 		this.initialDeposit = initialDeposit;
 	}
 
-	public LicenseDetails getLicenseDetails() {
-		return licenseDetails;
-	}
-
-	public void setLicenseDetails(LicenseDetails licenseDetails) {
-		this.licenseDetails = licenseDetails;
-	}
-
 	public Set<AddressDetails> getAddressDetails() {
 		return addressDetails;
 	}
@@ -465,6 +457,14 @@ public class BusinessDetails implements Serializable {
 
 	public void setPayables(String payables) {
 		this.payables = payables;
+	}
+
+	public Set<LicenseDetails> getLicenseDetails() {
+		return licenseDetails;
+	}
+
+	public void setLicenseDetails(Set<LicenseDetails> licenseDetails) {
+		this.licenseDetails = licenseDetails;
 	}
 
 }

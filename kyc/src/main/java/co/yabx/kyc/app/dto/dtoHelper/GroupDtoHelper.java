@@ -34,7 +34,7 @@ public class GroupDtoHelper implements Serializable {
 			Set<BankAccountDetails> businessBankAccountDetailsSet) {
 		List<SectionGroupRelationship> sectionGroupRelationships = SpringUtil
 				.bean(SectionGroupRelationshipRepository.class).findBySectionId(appPagesSections.getSectionId());
-		List<GroupsDTO> appPagesSectionGroupSet = new ArrayList<GroupsDTO>();
+		List<GroupsDTO> groupsDTOList = new ArrayList<GroupsDTO>();
 		for (SectionGroupRelationship sectionGroupRelationship : sectionGroupRelationships) {
 			if (sectionGroupRelationship.isActive()) {
 				Groups appPagesSectionGroups = sectionGroupRelationship.getGroups();
@@ -45,26 +45,25 @@ public class GroupDtoHelper implements Serializable {
 						prepareGroups(subGropus, retailers, appPagesSections, nominee, userAddressDetailsSet,
 								nomineeAddressDetailsSet, businessAddressDetailsSet, userBankAccountDetailsSet,
 								nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, appPagesSectionGroups,
-								appPagesSectionGroupSet, filledVsUnfilled, filters);
+								groupsDTOList, filledVsUnfilled, filters, sectionGroupRelationship);
 					}
-
 				} else {
 					prepareGroups(null, retailers, appPagesSections, nominee, userAddressDetailsSet,
 							nomineeAddressDetailsSet, businessAddressDetailsSet, userBankAccountDetailsSet,
 							nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, appPagesSectionGroups,
-							appPagesSectionGroupSet, filledVsUnfilled, filters);
+							groupsDTOList, filledVsUnfilled, filters, sectionGroupRelationship);
 				}
 			}
 		}
-		return appPagesSectionGroupSet;
+		return groupsDTOList;
 	}
 
 	private static void prepareGroups(SubGroups subGroups, User retailers, Sections appPagesSections, User nominee,
 			Set<AddressDetails> userAddressDetailsSet, Set<AddressDetails> nomineeAddressDetailsSet,
 			Set<AddressDetails> businessAddressDetailsSet, Set<BankAccountDetails> userBankAccountDetailsSet,
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet, Set<BankAccountDetails> businessBankAccountDetailsSet,
-			Groups appPagesSectionGroups, List<GroupsDTO> appPagesSectionGroupSet,
-			Map<String, Integer> filledVsUnfilled, Set<Filters> filters) {
+			Groups appPagesSectionGroups, List<GroupsDTO> groupsDTOList, Map<String, Integer> filledVsUnfilled,
+			Set<Filters> filters, SectionGroupRelationship sectionGroupRelationship) {
 
 		if (appPagesSectionGroups != null) {
 			Map<String, Integer> groups = new HashMap<String, Integer>();
@@ -77,9 +76,9 @@ public class GroupDtoHelper implements Serializable {
 				List<FieldsDTO> fields = FieldsDtoHelper.getFields(appDynamicFieldsSet, retailers, groups,
 						appPagesSections, nominee, userAddressDetailsSet, nomineeAddressDetailsSet,
 						businessAddressDetailsSet, userBankAccountDetailsSet, nomineeBankAccountDetailsSet,
-						businessBankAccountDetailsSet, subGroups, filter);
+						businessBankAccountDetailsSet, subGroups, filter, sectionGroupRelationship,groupsDTOList);
 				if (subGroups != null) {
-					addFunctionality(subGroups, appPagesSectionGroupSet, fields);
+					addFunctionality(subGroups, groupsDTOList, fields);
 				}
 				Set<FieldsDTO> appDynamicFieldsDTOs = fields.stream().sorted(Comparator.comparing(FieldsDTO::getId))
 						.collect(Collectors.toSet());
@@ -102,7 +101,7 @@ public class GroupDtoHelper implements Serializable {
 				appPagesSectionGroupsDTO.setTotalFields(groups.get("totalFields"));
 				appPagesSectionGroupsDTO.setFilledFields(groups.get("filledFields"));
 			}
-			appPagesSectionGroupSet.add(appPagesSectionGroupsDTO);
+			groupsDTOList.add(appPagesSectionGroupsDTO);
 			filledVsUnfilled.put("filledFields", filledVsUnfilled.get("filledFields") + groups.get("filledFields"));
 			filledVsUnfilled.put("totalFields", filledVsUnfilled.get("totalFields") + groups.get("totalFields"));
 		}

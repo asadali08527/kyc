@@ -5,10 +5,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -47,6 +49,9 @@ public class LicenseDetails implements Serializable {
 
 	@Column(name = "update_by")
 	private String updatedBy;
+
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = BusinessDetails.class)
+	BusinessDetails businessDetails;
 
 	public Long getId() {
 		return id;
@@ -132,6 +137,14 @@ public class LicenseDetails implements Serializable {
 
 	public void setLicenseType(LicenseType licenseType) {
 		this.licenseType = licenseType;
+	}
+
+	public BusinessDetails getBusinessDetails() {
+		return businessDetails;
+	}
+
+	public void setBusinessDetails(BusinessDetails businessDetails) {
+		this.businessDetails = businessDetails;
 	}
 
 }

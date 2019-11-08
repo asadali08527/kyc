@@ -48,6 +48,12 @@ public class SectionGroupRelationship implements Serializable {
 	@Column(name = "active", columnDefinition = "boolean default true")
 	private boolean active;
 
+	@Column(name = "multiple", columnDefinition = "boolean default false")
+	private boolean multiple;
+
+	@Column(name = "multiple_values")
+	private boolean multiple_values;
+
 	@OneToMany(mappedBy = "sectionGroupRelationship", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private Set<Filters> filters;
 
@@ -130,6 +136,22 @@ public class SectionGroupRelationship implements Serializable {
 
 	public void setGroups(Groups groups) {
 		this.groups = groups;
+	}
+
+	public boolean isMultiple() {
+		return multiple;
+	}
+
+	public void setMultiple(boolean multiple) {
+		this.multiple = multiple;
+	}
+
+	public boolean isMultiple_values() {
+		return multiple_values;
+	}
+
+	public void setMultiple_values(boolean multiple_values) {
+		this.multiple_values = multiple_values;
 	}
 
 }
