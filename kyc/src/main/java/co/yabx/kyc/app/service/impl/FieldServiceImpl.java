@@ -237,7 +237,7 @@ public class FieldServiceImpl implements FieldService {
 			if (licenseType != null) {
 				LicenseDetails licenseDetails = null;
 				BusinessDetails businessDetails = getBusinessDetails(businessDetailsSet);
-				if (businessDetails != null)
+				if (businessDetails != null && businessDetails.getId() != null)
 					licenseDetails = licenseDetailsRepository.findByBusinessDetailsAndLicenseType(businessDetails,
 							licenseType);
 				if (licenseDetails == null) {
