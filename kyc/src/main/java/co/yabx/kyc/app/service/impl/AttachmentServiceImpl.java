@@ -89,10 +89,13 @@ public class AttachmentServiceImpl implements AttachmentService {
 			}
 		}
 		if (documentType != null) {
-			attachmentDetails = attachmentDetailsRepository.findByUserAndDocumentType(user, documentType);
+			if (attachmentType != null) {
+				attachmentDetails = attachmentDetailsRepository.findByUserAndDocumentTypeAndAttachmentType(user,
+						documentType, attachmentType);
+			} else
+				attachmentDetails = attachmentDetailsRepository.findByUserAndDocumentType(user, documentType);
 			if (attachmentDetails == null) {
 				attachmentDetails = new AttachmentDetails();
-				attachmentDetails.setAttachmentType(attachmentType);
 				isNew = true;
 			}
 			if (documentSide != null) {
@@ -123,6 +126,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 				attachmentList.add(attachments);
 				attachmentDetails.setAttachments(attachmentList);
 				attachmentDetails.setDocumentType(documentType);
+				attachmentDetails.setAttachmentType(attachmentType);
 				attachmentDetails.setUser(user);
 				attachmentDetails = attachmentDetailsRepository.save(attachmentDetails);
 				return attachmentDetails;
@@ -138,6 +142,8 @@ public class AttachmentServiceImpl implements AttachmentService {
 				attachments.setDocumentUrl(saveFileName);
 				attachmentsRepository.save(attachments);
 			}
+			LOGGER.info("File={} saved for retailer={}, detailes={}", file.getOriginalFilename(), user.getId(),
+					attachmentDetails);
 			return attachmentDetails;
 		}
 		return attachmentDetails;

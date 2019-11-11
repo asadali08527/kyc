@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import co.yabx.kyc.app.enums.AttachmentType;
 import co.yabx.kyc.app.enums.DocumentType;
 import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.fullKyc.entity.User;
@@ -15,5 +16,8 @@ public interface AttachmentDetailsRepository extends CrudRepository<AttachmentDe
 	AttachmentDetails findByUserAndDocumentType(User user, DocumentType documentType);
 
 	List<AttachmentDetails> findByUser(User user);
+
+	AttachmentDetails findByUserAndDocumentTypeAndAttachmentType(User user, DocumentType documentType,
+			AttachmentType attachmentType);
 
 }
