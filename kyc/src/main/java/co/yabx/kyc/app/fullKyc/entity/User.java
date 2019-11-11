@@ -118,10 +118,12 @@ public abstract class User implements Serializable {
 	@Column(name = "sister_concerned_or_allied")
 	private String sisterConcernedOrAllied;
 
-	@Column(name = "nationality", length = 100, nullable = false, columnDefinition = "varchar(32) default 'Bangladeshi' ")
+	@Column(name = "nationality", length = 100, nullable = false, columnDefinition = "varchar(32) default 'Bengali' ")
+	@Enumerated(value = EnumType.STRING)
 	private Nationality nationality;
 
 	@Column(name = "resident_status", length = 100, nullable = false, columnDefinition = "varchar(32) default 'Resident' ")
+	@Enumerated(value = EnumType.STRING)
 	private ResidentStatus residentialStatus;
 
 	@Column(name = "tax_identification_number")
