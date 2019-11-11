@@ -139,11 +139,11 @@ public class DSRController {
 			User user = userService.getDSRByMsisdn(msisdn);
 			if (user != null) {
 				try {
-					String saveFileName = storageService.uploadImage(files);
+					String saveFileName = storageService.uploadImage(files, user.getId());
 					AttachmentDetails attachmentDetails = attachmentService.persistDsrProfilePicInDb(user, files,
 							saveFileName);
 					if (attachmentDetails != null) {
-						return new ResponseEntity<>(storageService.getImage(saveFileName), HttpStatus.OK);
+						return new ResponseEntity<>(storageService.getImage(saveFileName, user.getId()), HttpStatus.OK);
 					} else {
 						return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
 					}
@@ -174,7 +174,7 @@ public class DSRController {
 				try {
 					String filename = attachmentService.fetchDsrProfilePic(user);
 					if (filename != null && !filename.isEmpty()) {
-						return new ResponseEntity<>(storageService.getImage(filename), HttpStatus.OK);
+						return new ResponseEntity<>(storageService.getImage(filename, user.getId()), HttpStatus.OK);
 					} else {
 						return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
 					}

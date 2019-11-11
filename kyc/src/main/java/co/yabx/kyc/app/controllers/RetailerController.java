@@ -191,7 +191,7 @@ public class RetailerController {
 			User user = userService.getRetailerById(retailerId);
 			if (user != null) {
 				try {
-					String filename = storageService.uploadImage(files);
+					String filename = storageService.uploadImage(files, retailerId);
 					AttachmentDetails attachmentDetails = attachmentService.persistInDb(user, files, filename);
 					if (attachmentDetails != null)
 						return new ResponseEntity<>(files, HttpStatus.OK);

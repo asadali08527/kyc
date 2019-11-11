@@ -32,12 +32,13 @@ public class StorageServiceImpl implements StorageService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(StorageServiceImpl.class);
 
 	@Override
-	public String uploadImage(MultipartFile file) throws Exception {
+	public String uploadImage(MultipartFile file, Long retailerId) throws Exception {
 		String fileName = file.getOriginalFilename().replaceAll(" ", "_");
 		String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-		String newFileName = UUID.randomUUID().toString() + System.currentTimeMillis() + "." + extension;
+		String newFileName = System.currentTimeMillis() + "." + extension;
 		File convFile = new File(fileName);
-		String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/tmp/") + newFileName;
+		String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/tmp/") + retailerId + "/"
+				+ newFileName;
 		convFile.createNewFile();
 		try (FileOutputStream fos = new FileOutputStream(convFile)) {
 			fos.write(file.getBytes());
@@ -49,8 +50,8 @@ public class StorageServiceImpl implements StorageService {
 	}
 
 	@Override
-	public byte[] getImage(String filename) throws Exception {
-		String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/tmp/") + filename;
+	public byte[] getImage(String filename, Long retailerId) throws Exception {
+		String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/tmp/") + retailerId + "/" + filename;
 		File file = new File(path);
 		BufferedImage image = ImageIO.read(file);
 		String extension = FilenameUtils.getExtension(path);

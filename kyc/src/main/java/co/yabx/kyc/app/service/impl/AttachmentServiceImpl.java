@@ -203,7 +203,8 @@ public class AttachmentServiceImpl implements AttachmentService {
 					attachmentDetailsDTO.setDocumentType(
 							attachmentDetails.getDocumentType() != null ? attachmentDetails.getDocumentType().toString()
 									: null);
-					attachmentDetailsDTO.setAttachments(prepareAttachmentDTO(attachmentDetails.getAttachments()));
+					attachmentDetailsDTO
+							.setAttachments(prepareAttachmentDTO(attachmentDetails.getAttachments(), user.getId()));
 					attachmentDetailsDTO.setAttachmentType(attachmentDetails.getAttachmentType() != null
 							? attachmentDetails.getAttachmentType().toString()
 							: null);
@@ -215,14 +216,14 @@ public class AttachmentServiceImpl implements AttachmentService {
 		return null;
 	}
 
-	private List<AttachmentsDTO> prepareAttachmentDTO(Set<Attachments> attachmentsSet) {
+	private List<AttachmentsDTO> prepareAttachmentDTO(Set<Attachments> attachmentsSet, Long retailerId) {
 		List<AttachmentsDTO> attachmentsDTOs = new ArrayList<AttachmentsDTO>();
 		if (attachmentsSet != null && !attachmentsSet.isEmpty()) {
 			for (Attachments attachments : attachmentsSet) {
 				AttachmentsDTO attachmentsDTO = new AttachmentsDTO();
 				attachmentsDTO.setDocumentSide(attachments.getDocumentSide());
 				try {
-					attachmentsDTO.setByteArray(storageService.getImage(attachments.getDocumentUrl()));
+					attachmentsDTO.setByteArray(storageService.getImage(attachments.getDocumentUrl(), retailerId));
 					attachmentsDTOs.add(attachmentsDTO);
 				} catch (Exception e) {
 					LOGGER.error("Exception while fetching images={},error={}", attachments.getDocumentUrl(),

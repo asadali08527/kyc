@@ -439,7 +439,7 @@ public class FieldsDtoHelper implements Serializable {
 			Optional<BusinessDetails> optional = businessDetailsSet.stream().findFirst();
 			Set<LicenseDetails> licenseDetailsSet = optional.isPresent() ? optional.get().getLicenseDetails() : null;
 			Optional<LicenseDetails> optionalLicenseDetails = licenseDetailsSet.stream()
-					.filter(f -> f.getLicenseType().equals(getLicenseType(subGroups))).findFirst();
+					.filter(f -> f != null && f.getLicenseType().equals(getLicenseType(subGroups))).findFirst();
 			LicenseDetails licenseDetails = optionalLicenseDetails.isPresent() ? optionalLicenseDetails.get() : null;
 			if (dynamicFields.getFieldId().equals("licenseNumber")) {
 				dynamicFields.setSavedData(licenseDetails != null ? licenseDetails.getLicenseNumber() : null);

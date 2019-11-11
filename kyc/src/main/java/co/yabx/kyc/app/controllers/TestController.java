@@ -47,7 +47,7 @@ public class TestController {
 			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
 		User user = userService.getRetailerById(retailerId);
 		try {
-			String filename = storageService.uploadImage(files);
+			String filename = storageService.uploadImage(files, user.getId());
 			AttachmentDetails attachmentDetails = attachmentService.persistInDb(user, files, filename);
 			if (attachmentDetails != null)
 				return new ResponseEntity<>(files, HttpStatus.OK);
