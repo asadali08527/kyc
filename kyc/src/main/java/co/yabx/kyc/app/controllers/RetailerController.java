@@ -180,18 +180,19 @@ public class RetailerController {
 	 * 
 	 * @param file
 	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/upload/image", method = RequestMethod.POST)
 	public ResponseEntity<?> uploadImage(@RequestParam("dsrMSISDN") String msisdn,
 			@RequestParam("retailerId") Long retailerId, @RequestParam MultipartFile files,
-			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
 		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
 			LOGGER.info("/upload/image request recieved for retailer={}, dsr={}, file={}", retailerId, msisdn,
 					files != null ? files.getOriginalFilename() : null);
 			User user = userService.getRetailerById(retailerId);
 			if (user != null) {
+				String filename = storageService.uploadImage(files, retailerId);
 				try {
-					String filename = storageService.uploadImage(files, retailerId);
 					AttachmentDetails attachmentDetails = attachmentService.persistInDb(user, files, filename);
 					if (attachmentDetails != null)
 						return new ResponseEntity<>(files, HttpStatus.OK);
