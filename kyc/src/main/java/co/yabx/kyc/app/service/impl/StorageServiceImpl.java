@@ -45,7 +45,10 @@ public class StorageServiceImpl implements StorageService {
 		}
 		BufferedImage image = null;
 		image = ImageIO.read(convFile);
-		ImageIO.write(image, extension, new File(path));
+		File destination = new File(path);
+		if (!destination.exists())
+			destination.mkdir();
+		ImageIO.write(image, extension, destination);
 		return newFileName;
 	}
 
