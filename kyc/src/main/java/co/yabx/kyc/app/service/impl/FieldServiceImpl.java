@@ -246,6 +246,7 @@ public class FieldServiceImpl implements FieldService {
 				}
 				licenseDetails = prepareLicenseDetails(appDynamicFieldsDTOList, licenseDetails);
 				licenseDetailsSet.add(licenseDetails);
+				businessDetails.setLicenseDetails(licenseDetailsSet);
 			}
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService

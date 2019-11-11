@@ -206,7 +206,7 @@ public class UserServiceImpl implements UserService {
 				return persistUser(retailer, nominees, userAddressDetailsSet, userBankAccountDetailsSet,
 						liabilitiesDetailsSet, isNew, nomineeRelationship, nomineeAddressDetailsSet, isDsrUser,
 						businessDetailsSet, nomineeBankAccountDetailsSet, monthlyTransactionProfilesSet,
-						workEducationDetailsSet, introducerDetailsSet, attachmentDetailsSet);
+						workEducationDetailsSet, introducerDetailsSet, attachmentDetailsSet, licenseDetailsSet);
 			}
 		}
 		return dsrUser;
@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet,
 			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet,
 			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet,
-			Set<AttachmentDetails> attachmentDetailsSet) throws Exception {
+			Set<AttachmentDetails> attachmentDetailsSet, Set<LicenseDetails> licenseDetailsSet) throws Exception {
 		if (isDsrUser) {
 			user.setUserType(UserType.DISTRIBUTORS.name());
 			user.setUserStatus(UserStatus.ACTIVE);

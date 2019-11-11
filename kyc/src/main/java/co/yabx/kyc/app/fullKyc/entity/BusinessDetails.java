@@ -464,6 +464,9 @@ public class BusinessDetails implements Serializable {
 	}
 
 	public void setLicenseDetails(Set<LicenseDetails> licenseDetails) {
+		for (LicenseDetails details : licenseDetails) {
+			details.setBusinessDetails(this);
+		}
 		this.licenseDetails = licenseDetails;
 	}
 
