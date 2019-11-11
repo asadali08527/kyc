@@ -186,7 +186,8 @@ public class RetailerController {
 			@RequestParam("retailerId") Long retailerId, @RequestParam MultipartFile files,
 			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
-			LOGGER.info("/upload/image request recieved for retailer={}, dsr={}", retailerId, msisdn);
+			LOGGER.info("/upload/image request recieved for retailer={}, dsr={}, file={}", retailerId, msisdn,
+					files != null ? files.getOriginalFilename() : null);
 			User user = userService.getRetailerById(retailerId);
 			if (user != null) {
 				try {
