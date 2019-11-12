@@ -45,10 +45,12 @@ public class StorageServiceImpl implements StorageService {
 		}
 		BufferedImage image = null;
 		image = ImageIO.read(convFile);
-		File destination = new File(path);
+		LOGGER.info("Image getting stored at location={} for retailer={}", path, retailerId);
+		File destination = new File(
+				appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/tmp/") + retailerId + "/");
 		if (!destination.exists())
-			destination.mkdir();
-		ImageIO.write(image, extension, destination);
+			destination.mkdirs();
+		ImageIO.write(image, extension, new File(path));
 		return newFileName;
 	}
 
