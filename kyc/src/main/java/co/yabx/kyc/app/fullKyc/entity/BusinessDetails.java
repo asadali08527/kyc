@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -49,9 +51,11 @@ public class BusinessDetails implements Serializable {
 	private String directorOrPartnerName;
 
 	@Column(name = "facility_details", columnDefinition = "varchar(32) ")
+	@Enumerated(value = EnumType.STRING)
 	private FacilityDetails facilityDetails;
 
 	@Column(name = "facility_type", columnDefinition = "varchar(32) ")
+	@Enumerated(value = EnumType.STRING)
 	private FacilityType facilityType;
 
 	@Column(name = "fixed_asset_purchase")
@@ -69,10 +73,12 @@ public class BusinessDetails implements Serializable {
 	@Column(name = "proposed_collateral")
 	private String proposedCollateral;
 
-	@Column(name = "business_type", length = 100, nullable = false, columnDefinition = "varchar(32) default 'Proprietorship'")
+	@Column(name = "business_type", length = 100, columnDefinition = "varchar(32) default 'Proprietorship'")
+	@Enumerated(value = EnumType.STRING)
 	private BusinessType businessType;
 
 	@Column(name = "sector", length = 100, columnDefinition = "varchar(32) ")
+	@Enumerated(value = EnumType.STRING)
 	private BusinessSector sector;
 
 	@Column(name = "detail_of_busness", length = 100, columnDefinition = "varchar(32) default 'Telecom Retailer'")
