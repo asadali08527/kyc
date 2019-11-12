@@ -19,7 +19,6 @@ import co.yabx.kyc.app.entities.SectionGroupRelationship;
 import co.yabx.kyc.app.entities.Sections;
 import co.yabx.kyc.app.entities.filter.Filters;
 import co.yabx.kyc.app.entities.filter.SubGroups;
-import co.yabx.kyc.app.enums.FunctionalityType;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.User;

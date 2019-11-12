@@ -1146,6 +1146,7 @@ public class FieldsDtoHelper implements Serializable {
 		appDynamicFieldsDTO.setValidation(dynamicFields.getValidation());
 		appDynamicFieldsDTO.setDisplayOrder(dynamicFields.getDisplayOrder());
 		appDynamicFieldsDTO.setDefaultValue(dynamicFields.getDefaultValue());
+		appDynamicFieldsDTO.setHelp(dynamicFields.getHelp());
 		return appDynamicFieldsDTO;
 	}
 

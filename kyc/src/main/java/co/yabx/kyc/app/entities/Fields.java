@@ -69,6 +69,9 @@ public class Fields implements Serializable {
 	@Column(name = "default_value")
 	private String defaultValue;
 
+	@Column(name = "help_text")
+	private String help;
+
 	@Column(name = "created_at")
 	private Date createdAt;
 
@@ -252,15 +255,6 @@ public class Fields implements Serializable {
 		this.defaultValue = defaultValue;
 	}
 
-	@Override
-	public String toString() {
-		return "AppDynamicFields [id=" + id + ", type=" + type + ", fieldId=" + fieldId + ", dataType=" + dataType
-				+ ", fieldName=" + fieldName + ", placeHolderText=" + placeHolderText + ", savedData=" + savedData
-				+ ", validation=" + validation + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", camera="
-				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", hash=" + hash + ", displayOrder="
-				+ displayOrder + ", options=" + options + ", groups=" + groups + "]";
-	}
-
 	public Set<SubFields> getSubFields() {
 		return subFields;
 	}
@@ -283,6 +277,25 @@ public class Fields implements Serializable {
 
 	public void setOperations(Set<Operations> operations) {
 		this.operations = operations;
+	}
+
+	public String getHelp() {
+		return help;
+	}
+
+	public void setHelp(String help) {
+		this.help = help;
+	}
+
+	@Override
+	public String toString() {
+		return "Fields [id=" + id + ", type=" + type + ", fieldId=" + fieldId + ", dataType=" + dataType
+				+ ", fieldName=" + fieldName + ", placeHolderText=" + placeHolderText + ", savedData=" + savedData
+				+ ", validation=" + validation + ", defaultValue=" + defaultValue + ", help=" + help + ", createdAt="
+				+ createdAt + ", updatedAt=" + updatedAt + ", camera=" + camera + ", editable=" + editable
+				+ ", mandatory=" + mandatory + ", hash=" + hash + ", displayOrder=" + displayOrder + ", options="
+				+ options + ", groups=" + groups + ", subFields=" + subFields + ", subGroups=" + subGroups
+				+ ", operations=" + operations + "]";
 	}
 
 }

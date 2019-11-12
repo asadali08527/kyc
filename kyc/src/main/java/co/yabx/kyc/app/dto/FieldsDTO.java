@@ -51,6 +51,8 @@ public class FieldsDTO implements Serializable {
 
 	private Integer displayOrder;
 
+	private String help;
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -211,6 +213,14 @@ public class FieldsDTO implements Serializable {
 				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", response=" + response
 				+ ", defaultValue=" + defaultValue + ", options=" + options + ", subFields=" + subFields
 				+ ", functionality=" + functionality + ", displayOrder=" + displayOrder + "]";
+	}
+
+	public String getHelp() {
+		return help;
+	}
+
+	public void setHelp(String help) {
+		this.help = help;
 	}
 
 }
