@@ -284,7 +284,7 @@ public class UserServiceImpl implements UserService {
 				userAddressDetails.clear();
 				userAddressDetails.addAll(nomineeAddressDetailsSet);
 				nominees.setAddressDetails(userAddressDetails);
-				LOGGER.info("Nominees={} Address={} is being saved", nominees, userAddressDetailsSet);
+				LOGGER.info("Nominees={} Address={} is being saved", nominees.getId(), userAddressDetailsSet);
 			}
 			if (nomineeBankAccountDetailsSet != null) {
 				Set<BankAccountDetails> userBankAccountDetails = nominees.getBankAccountDetails();

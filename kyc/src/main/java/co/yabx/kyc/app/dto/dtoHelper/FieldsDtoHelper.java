@@ -289,17 +289,17 @@ public class FieldsDtoHelper implements Serializable {
 				dynamicFields
 						.setSavedData(introducerDetailsOptional.isPresent()
 								? introducerDetailsOptional.get().getAccountNumber() != null
-										? introducerDetailsOptional.get().getAccountNumber() + ""
+										? String.valueOf(introducerDetailsOptional.get().getAccountNumber())
 										: null
 								: null);
 			} else if (dynamicFields.getFieldId().equals("isSignatureVerified")) {
 				dynamicFields.setSavedData(introducerDetailsOptional.isPresent()
-						? introducerDetailsOptional.get().isSignatureVerified() + ""
+						? String.valueOf(introducerDetailsOptional.get().isSignatureVerified())
 						: null);
 			} else if (dynamicFields.getFieldId().equals("relationship")) {
-				dynamicFields.setSavedData(
-						introducerDetailsOptional.isPresent() ? introducerDetailsOptional.get().getRelationship() + ""
-								: null);
+				dynamicFields.setSavedData(introducerDetailsOptional.isPresent()
+						? String.valueOf(introducerDetailsOptional.get().getRelationship())
+						: null);
 			}
 		}
 		increamentFilledFields(dynamicFields, filledVsUnfilled);
@@ -375,7 +375,7 @@ public class FieldsDtoHelper implements Serializable {
 							.filter(f -> f.getDesignation() != null).findFirst();
 					try {
 						dynamicFields.setSavedData(workEducationDetails != null && workEducationDetails.isPresent()
-								? workEducationDetails.get().getExperience() + ""
+								? String.valueOf(workEducationDetails.get().getExperience())
 								: null);
 					} catch (Exception e) {
 						LOGGER.error("Exceptiong while parsing experience={},error={}",
@@ -401,29 +401,36 @@ public class FieldsDtoHelper implements Serializable {
 			Optional<MonthlyTransactionProfiles> monthlyTransactionProfileOptional = monthlyTransactionProfiles.stream()
 					.findFirst();
 			if (dynamicFields.getFieldId().equals("monthlyTurnOver")) {
-				dynamicFields.setSavedData(monthlyTransactionProfileOptional.isPresent()
-						? monthlyTransactionProfileOptional.get().getMonthlyTurnOver() != 0.0
-								? monthlyTransactionProfileOptional.get().getMonthlyTurnOver() + ""
-								: null
-						: null);
+				dynamicFields
+						.setSavedData(
+								monthlyTransactionProfileOptional.isPresent()
+										? monthlyTransactionProfileOptional.get().getMonthlyTurnOver() != 0.0
+												? String.valueOf(
+														monthlyTransactionProfileOptional.get().getMonthlyTurnOver())
+												: null
+										: null);
 			} else if (dynamicFields.getFieldId().equals("deposits")) {
 				dynamicFields.setSavedData(monthlyTransactionProfileOptional.isPresent()
 						? monthlyTransactionProfileOptional.get().getDeposits() != 0.0
-								? monthlyTransactionProfileOptional.get().getDeposits() + ""
+								? String.valueOf(monthlyTransactionProfileOptional.get().getDeposits())
 								: null
 						: null);
 			} else if (dynamicFields.getFieldId().equals("withdrawls")) {
-				dynamicFields.setSavedData(monthlyTransactionProfileOptional.isPresent()
-						? monthlyTransactionProfileOptional.get().getWithdrawls() != 0.0
-								? monthlyTransactionProfileOptional.get().getWithdrawls() + ""
-								: null
-						: null);
+				dynamicFields
+						.setSavedData(
+								monthlyTransactionProfileOptional.isPresent()
+										? monthlyTransactionProfileOptional.get().getWithdrawls() != 0.0 ? String
+												.valueOf(monthlyTransactionProfileOptional.get().getWithdrawls()) : null
+										: null);
 			} else if (dynamicFields.getFieldId().equals("initialDeposit")) {
-				dynamicFields.setSavedData(monthlyTransactionProfileOptional.isPresent()
-						? monthlyTransactionProfileOptional.get().getInitialDeposit() != 0.0
-								? monthlyTransactionProfileOptional.get().getInitialDeposit() + ""
-								: null
-						: null);
+				dynamicFields
+						.setSavedData(
+								monthlyTransactionProfileOptional.isPresent()
+										? monthlyTransactionProfileOptional.get().getInitialDeposit() != 0.0
+												? String.valueOf(
+														monthlyTransactionProfileOptional.get().getInitialDeposit())
+												: null
+										: null);
 
 			}
 		}
@@ -563,8 +570,9 @@ public class FieldsDtoHelper implements Serializable {
 							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getFixedAssetName()
 									: null);
 				} else if (dynamicFields.getFieldId().equals("price")) {
-					dynamicFields.setSavedData(
-							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getPrice() + "" : null);
+					dynamicFields.setSavedData(businessDetailsOptional.isPresent()
+							? String.valueOf(businessDetailsOptional.get().getPrice())
+							: null);
 				} else if (dynamicFields.getFieldId().equals("origin")) {
 					dynamicFields.setSavedData(
 							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getOrigin() : null);
@@ -603,9 +611,9 @@ public class FieldsDtoHelper implements Serializable {
 							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getDetailOfBusness()
 									: null);
 				} else if (dynamicFields.getFieldId().equals("initialCapital")) {
-					dynamicFields.setSavedData(
-							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getInitialCapital() + ""
-									: null);
+					dynamicFields.setSavedData(businessDetailsOptional.isPresent()
+							? String.valueOf(businessDetailsOptional.get().getInitialCapital())
+							: null);
 				} else if (dynamicFields.getFieldId().equals("fundSource")) {
 					dynamicFields.setSavedData(
 							businessDetailsOptional.isPresent() ? businessDetailsOptional.get().getFundSource() : null);
@@ -625,63 +633,65 @@ public class FieldsDtoHelper implements Serializable {
 					dynamicFields
 							.setSavedData(businessDetailsOptional.isPresent()
 									? businessDetailsOptional.get().getAnnualSales() != 0.0
-											? businessDetailsOptional.get().getAnnualSales() + ""
+											? String.valueOf(businessDetailsOptional.get().getAnnualSales())
 											: null
 									: null);
 				} else if (dynamicFields.getFieldId().equals("annualGrossProfit")) {
 					dynamicFields
 							.setSavedData(businessDetailsOptional.isPresent()
 									? businessDetailsOptional.get().getAnnualGrossProfit() != 0.0
-											? businessDetailsOptional.get().getAnnualGrossProfit() + ""
+											? String.valueOf(businessDetailsOptional.get().getAnnualGrossProfit())
 											: null
 									: null);
 				} else if (dynamicFields.getFieldId().equals("annualExpenses")) {
 					dynamicFields
 							.setSavedData(businessDetailsOptional.isPresent()
 									? businessDetailsOptional.get().getAnnualExpenses() != 0.0
-											? businessDetailsOptional.get().getAnnualExpenses() + ""
+											? String.valueOf(businessDetailsOptional.get().getAnnualExpenses())
 											: null
 									: null);
 				} else if (dynamicFields.getFieldId().equals("valueOfFixedAssets")) {
 					dynamicFields
-							.setSavedData(businessDetailsOptional.isPresent()
-									? businessDetailsOptional.get().getValueOfFixedAssets() != 0.0
-											? businessDetailsOptional.get().getValueOfFixedAssets() + ""
-											: null
-									: null);
+							.setSavedData(
+									businessDetailsOptional.isPresent()
+											? businessDetailsOptional.get().getValueOfFixedAssets() != 0.0
+													? String.valueOf(
+															businessDetailsOptional.get().getValueOfFixedAssets())
+													: null
+											: null);
 				} else if (dynamicFields.getFieldId().equals("numberOfEmployees")) {
 					dynamicFields
 							.setSavedData(businessDetailsOptional.isPresent()
 									? businessDetailsOptional.get().getNumberOfEmployees() != 0
-											? businessDetailsOptional.get().getNumberOfEmployees() + ""
+											? String.valueOf(businessDetailsOptional.get().getNumberOfEmployees())
 											: null
 									: null);
 				} else if (dynamicFields.getFieldId().equals("stockValue")) {
 					dynamicFields
 							.setSavedData(businessDetailsOptional.isPresent()
 									? businessDetailsOptional.get().getStockValue() != 0.0
-											? businessDetailsOptional.get().getStockValue() + ""
+											? String.valueOf(businessDetailsOptional.get().getStockValue())
 											: null
 									: null);
 				} else if (dynamicFields.getFieldId().equals("deposits")) {
 					dynamicFields
 							.setSavedData(businessDetailsOptional.isPresent()
 									? businessDetailsOptional.get().getDeposits() != 0.0
-											? businessDetailsOptional.get().getDeposits() + ""
+											? String.valueOf(businessDetailsOptional.get().getDeposits())
 											: null
 									: null);
 				} else if (dynamicFields.getFieldId().equals("withdrawls")) {
 					dynamicFields
 							.setSavedData(businessDetailsOptional.isPresent()
 									? businessDetailsOptional.get().getWithdrawls() != 0.0
-											? businessDetailsOptional.get().getWithdrawls() + ""
+											? String.valueOf(businessDetailsOptional.get().getWithdrawls())
 											: null
 									: null);
 				} else if (dynamicFields.getFieldId().equals("initialDeposit")) {
 					dynamicFields
 							.setSavedData(businessDetailsOptional.isPresent()
 									? businessDetailsOptional.get().getInitialDeposit() != 0.0
-											? businessDetailsOptional.get().getInitialDeposit() + ""
+											? String.valueOf(businessDetailsOptional.get().getInitialDeposit())
 											: null
 									: null);
 				}
@@ -703,14 +713,16 @@ public class FieldsDtoHelper implements Serializable {
 			Set<LiabilitiesDetails> LiabilitiesDetailsSet = retailers.getLiabilitiesDetails();
 			LiabilitiesDetails liabilitiesDetails = getLiabilitiesDetails(subGroups, LiabilitiesDetailsSet);
 			if (dynamicFields.getFieldId().equals("loanAmount")) {
-				dynamicFields.setSavedData(liabilitiesDetails != null ? liabilitiesDetails.getLoanAmount() + "" : null);
+				dynamicFields.setSavedData(
+						liabilitiesDetails != null ? String.valueOf(liabilitiesDetails.getLoanAmount()) : null);
 			} else if (dynamicFields.getFieldId().equals("bankOrNbfiName")) {
 				dynamicFields.setSavedData(liabilitiesDetails != null ? liabilitiesDetails.getBankOrNbfiName() : null);
 			} else if (dynamicFields.getFieldId().equals("liabilityFromOtherOrganization")) {
 				dynamicFields.setSavedData(
 						liabilitiesDetails != null ? liabilitiesDetails.getLiabilityFromOtherOrganization() : null);
 			} else if (dynamicFields.getFieldId().equals("loanAmountFromOtherOrganization")) {
-				dynamicFields.setSavedData(liabilitiesDetails != null ? liabilitiesDetails.getLoanAmount() + "" : null);
+				dynamicFields.setSavedData(
+						liabilitiesDetails != null ? String.valueOf(liabilitiesDetails.getLoanAmount()) : null);
 			}
 		}
 		increamentFilledFields(dynamicFields, filledVsUnfilled);
@@ -803,7 +815,7 @@ public class FieldsDtoHelper implements Serializable {
 				dynamicFields
 						.setSavedData(bankAccountDetailsOptional.isPresent()
 								? bankAccountDetailsOptional.get().getAccountNumber() != null
-										? bankAccountDetailsOptional.get().getAccountNumber() + ""
+										? String.valueOf(bankAccountDetailsOptional.get().getAccountNumber())
 										: null
 								: null);
 			} else if (dynamicFields.getFieldId().equals("branch")) {
@@ -918,7 +930,7 @@ public class FieldsDtoHelper implements Serializable {
 
 				} else if (dynamicFields.getFieldId().equals("zipCode")) {
 					dynamicFields.setSavedData(
-							addressDetails.getZipCode() != null ? addressDetails.getZipCode() + "" : null);
+							addressDetails.getZipCode() != null ? String.valueOf(addressDetails.getZipCode()) : null);
 				} else if (dynamicFields.getFieldId().equals("landmark")) {
 					dynamicFields.setSavedData(addressDetails.getLandmark());
 				} else if (dynamicFields.getFieldId().equals("territory")) {
@@ -1032,7 +1044,7 @@ public class FieldsDtoHelper implements Serializable {
 					}
 					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("id")) {
-					dynamicFields.setSavedData(retailers.getId() + "");
+					dynamicFields.setSavedData(String.valueOf(retailers.getId()));
 				} else if (dynamicFields.getFieldId().equals("msisdn")) {
 					dynamicFields.setSavedData(retailers.getMsisdn());
 				} else if (dynamicFields.getFieldId().equals("sisterConcernedOrAllied")) {
