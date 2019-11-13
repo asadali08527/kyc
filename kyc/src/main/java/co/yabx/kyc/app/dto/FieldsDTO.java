@@ -25,7 +25,7 @@ public class FieldsDTO implements Serializable {
 
 	private String placeHolderText;
 
-	private String savedData;
+	private Object savedData;
 
 	private String validation;
 
@@ -85,11 +85,11 @@ public class FieldsDTO implements Serializable {
 		this.placeHolderText = placeHolderText;
 	}
 
-	public String getSavedData() {
+	public Object getSavedData() {
 		return savedData;
 	}
 
-	public void setSavedData(String savedData) {
+	public void setSavedData(Object savedData) {
 		this.savedData = savedData;
 	}
 

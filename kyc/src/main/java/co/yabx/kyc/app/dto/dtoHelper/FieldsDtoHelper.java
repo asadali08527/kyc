@@ -174,7 +174,7 @@ public class FieldsDtoHelper implements Serializable {
 			if (subFields != null && !subFields.isEmpty()) {
 				for (SubFields subField : subFields) {
 					Fields field = subField.getChild();
-					return field.getSavedData() != null && !field.getSavedData().isEmpty();
+					return field.getSavedData() != null;
 				}
 			}
 		}
@@ -308,7 +308,7 @@ public class FieldsDtoHelper implements Serializable {
 	}
 
 	private static void increamentFilledFields(Fields dynamicFields, Map<String, Integer> filledVsUnfilled) {
-		if (dynamicFields.getSavedData() != null && !dynamicFields.getSavedData().isEmpty()) {
+		if (dynamicFields.getSavedData() != null) {
 			Integer count = filledVsUnfilled.get("filledFields");
 			filledVsUnfilled.put("filledFields", count != null ? count + 1 : 1);
 		}
@@ -1155,9 +1155,7 @@ public class FieldsDtoHelper implements Serializable {
 		appDynamicFieldsDTO.setOptions(dynamicFields.getOptions());
 		appDynamicFieldsDTO.setPlaceHolderText(dynamicFields.getPlaceHolderText());
 		appDynamicFieldsDTO.setSavedData(dynamicFields.getSavedData());
-		appDynamicFieldsDTO.setEditable(dynamicFields.getSavedData() != null && !dynamicFields.getSavedData().isEmpty()
-				? dynamicFields.isEditable()
-				: true);
+		appDynamicFieldsDTO.setEditable(dynamicFields.getSavedData() != null ? dynamicFields.isEditable() : true);
 		appDynamicFieldsDTO.setType(dynamicFields.getType());
 		appDynamicFieldsDTO.setValidation(dynamicFields.getValidation());
 		appDynamicFieldsDTO.setDisplayOrder(dynamicFields.getDisplayOrder());

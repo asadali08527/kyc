@@ -47,6 +47,10 @@ public class AppConfigSyncController {
 		Map<String, Object> resp = new HashMap<>();
 
 		if (syncType.equalsIgnoreCase("ALL")) {
+
+			resp.put("version", appConfigService.getProperty("SERVER_LATEST_VERSION", "1.2"));
+			resp.put("updatedTime", appConfigService.getLongProperty("UPDATED_TIME", System.currentTimeMillis()));
+
 		} else {
 			if (syncType.contains("PROFILE_OPTIONS")) {
 			}

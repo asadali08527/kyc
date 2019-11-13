@@ -117,13 +117,13 @@ public class GroupDtoHelper implements Serializable {
 					for (SubFieldsDTO subFieldsDTO : fieldsDTO.getSubFields()) {
 						FieldsDTO fields = subFieldsDTO.getFields();
 						if (fields.isMandatory()) {
-							if (fields.getSavedData() == null || fields.getSavedData().isEmpty())
+							if (fields.getSavedData() == null)
 								return false;
 						}
 					}
 				} else {
 					if (fieldsDTO.isMandatory()) {
-						if (fieldsDTO.getSavedData() == null || fieldsDTO.getSavedData().isEmpty())
+						if (fieldsDTO.getSavedData() == null)
 							return false;
 					}
 				}
