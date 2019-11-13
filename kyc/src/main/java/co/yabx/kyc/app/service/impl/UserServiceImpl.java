@@ -195,6 +195,8 @@ public class UserServiceImpl implements UserService {
 					isNew = true;
 					nominees = new Nominees();
 				}
+				LOGGER.info("Nominee={} for Retailer={}", nominees != null ? nominees.getId() : null,
+						retailer.getMsisdn());
 			}
 			List<SectionsDTO> appPagesSectionsDTOList = appPagesDTO.getSections();
 			if (appPagesSectionsDTOList != null && !appPagesSectionsDTOList.isEmpty()) {
@@ -282,6 +284,7 @@ public class UserServiceImpl implements UserService {
 				userAddressDetails.clear();
 				userAddressDetails.addAll(nomineeAddressDetailsSet);
 				nominees.setAddressDetails(userAddressDetails);
+				LOGGER.info("Nominees={} Address={} is being saved", nominees, userAddressDetailsSet);
 			}
 			if (nomineeBankAccountDetailsSet != null) {
 				Set<BankAccountDetails> userBankAccountDetails = nominees.getBankAccountDetails();

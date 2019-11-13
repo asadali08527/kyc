@@ -83,6 +83,9 @@ public class FieldsDtoHelper implements Serializable {
 						filledVsUnfilled);
 			} else if (dynamicFields.getGroups().getGroupId() == 1 && appPagesSections.getSectionId() == 2) {
 				// nominee
+				if (dynamicFields.getFieldId().equals("msisdn")) {
+					dynamicFields.setEditable(true);
+				}
 				isProcessed = prepareProfileInformation(dynamicFields, nominee, appDynamicFieldsDTOSet, filter,
 						filledVsUnfilled);
 			} else if (dynamicFields.getGroups().getGroupId() == 2

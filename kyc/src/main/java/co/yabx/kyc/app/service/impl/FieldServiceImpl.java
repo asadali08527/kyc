@@ -119,8 +119,10 @@ public class FieldServiceImpl implements FieldService {
 		{
 			// nominee address details
 			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupTitle());
-			if (addressType != null && nominees != null && nominees.getId() != null) {
-				addressDetails = addressDetailsRepository.findByUserAndAddressType(nominees, addressType);
+			if (addressType != null) {
+				if (nominees != null && nominees.getId() != null)
+					addressDetails = addressDetailsRepository.findByUserAndAddressType(nominees, addressType);
+				LOGGER.info("Nominee={} Address={} for addressType={}", nominees, addressDetails, addressType);
 				if (addressDetails == null) {
 					addressDetails = new AddressDetails();
 					addressDetails.setAddressType(addressType);
