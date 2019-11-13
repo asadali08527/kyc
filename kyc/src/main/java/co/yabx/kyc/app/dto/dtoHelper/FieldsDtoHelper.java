@@ -413,11 +413,12 @@ public class FieldsDtoHelper implements Serializable {
 												: null
 										: null);
 			} else if (dynamicFields.getFieldId().equals("deposits")) {
-				dynamicFields.setSavedData(monthlyTransactionProfileOptional.isPresent()
-						? monthlyTransactionProfileOptional.get().getDeposits() != 0.0
-								? monthlyTransactionProfileOptional.get().getDeposits()
-								: null
-						: null);
+				dynamicFields
+						.setSavedData(
+								monthlyTransactionProfileOptional.isPresent()
+										? monthlyTransactionProfileOptional.get().getDeposits() != 0.0 ? decimalFormat
+												.format(monthlyTransactionProfileOptional.get().getDeposits()) : null
+										: null);
 			} else if (dynamicFields.getFieldId().equals("withdrawls")) {
 				dynamicFields
 						.setSavedData(
