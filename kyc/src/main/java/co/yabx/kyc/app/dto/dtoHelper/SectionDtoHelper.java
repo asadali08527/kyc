@@ -2,6 +2,7 @@ package co.yabx.kyc.app.dto.dtoHelper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -32,8 +33,8 @@ public class SectionDtoHelper implements Serializable {
 			List<GroupsDTO> appPagesSectionGroupSet = GroupDtoHelper.getGroups(retailers, section, appPagesSections,
 					nominee, userAddressDetailsSet, nomineeAddressDetailsSet, businessAddressDetailsSet,
 					userBankAccountDetailsSet, nomineeBankAccountDetailsSet, businessBankAccountDetailsSet);
-			appPagesSectionsDTO.setGroups(appPagesSectionGroupSet.stream()
-					.sorted(Comparator.comparing(GroupsDTO::getDisplayOrder)).collect(Collectors.toList()));
+			Collections.sort(appPagesSectionGroupSet);
+			appPagesSectionsDTO.setGroups(appPagesSectionGroupSet);
 			appPagesSectionsDTO.setGroups(appPagesSectionGroupSet);
 			appPagesSectionsDTO.setEnable(appPagesSections.isEnable());
 			appPagesSectionsDTO.setSectionId(appPagesSections.getSectionId());

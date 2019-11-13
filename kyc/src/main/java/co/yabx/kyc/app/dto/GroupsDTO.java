@@ -7,7 +7,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class GroupsDTO implements Serializable {
+public class GroupsDTO implements Serializable, Comparable<GroupsDTO> {
 	private static final long serialVersionUID = 214321L;
 
 	private Long groupId;
@@ -135,6 +135,12 @@ public class GroupsDTO implements Serializable {
 
 	public void setMandatoryFieldReceived(boolean mandatoryFieldReceived) {
 		this.mandatoryFieldReceived = mandatoryFieldReceived;
+	}
+
+	@Override
+	public int compareTo(GroupsDTO groupsDTO) {
+		return groupId.compareTo(groupsDTO.getGroupId());
+
 	}
 
 }
