@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import co.yabx.kyc.app.dto.FieldsDTO;
 import co.yabx.kyc.app.dto.Functionality;
 import co.yabx.kyc.app.dto.GroupsDTO;
+import co.yabx.kyc.app.dto.SubFieldsDTO;
 import co.yabx.kyc.app.entities.Fields;
 import co.yabx.kyc.app.entities.Groups;
 import co.yabx.kyc.app.entities.SectionGroupRelationship;
@@ -101,11 +102,34 @@ public class GroupDtoHelper implements Serializable {
 					appPagesSectionGroupsDTO.setDisplayOrder(appPagesSectionGroups.getDisplayOrder());
 				appPagesSectionGroupsDTO.setTotalFields(groups.get("totalFields"));
 				appPagesSectionGroupsDTO.setFilledFields(groups.get("filledFields"));
+				appPagesSectionGroupsDTO.setMandatoryFieldReceived(isMandatoryFieldReceived(fields));
 			}
 			groupsDTOList.add(appPagesSectionGroupsDTO);
 			filledVsUnfilled.put("filledFields", filledVsUnfilled.get("filledFields") + groups.get("filledFields"));
 			filledVsUnfilled.put("totalFields", filledVsUnfilled.get("totalFields") + groups.get("totalFields"));
 		}
+	}
+
+	private static boolean isMandatoryFieldReceived(List<FieldsDTO> fieldsDtoList) {
+		if (fieldsDtoList != null && !fieldsDtoList.isEmpty()) {
+			for (FieldsDTO fieldsDTO : fieldsDtoList) {
+				if (fieldsDTO.getSubFields() != null && !fieldsDTO.getSubFields().isEmpty()) {
+					for (SubFieldsDTO subFieldsDTO : fieldsDTO.getSubFields()) {
+						FieldsDTO fields = subFieldsDTO.getFields();
+						if (fields.isMandatory()) {
+							if (fields.getSavedData() == null || fields.getSavedData().isEmpty())
+								return false;
+						}
+					}
+				} else {
+					if (fieldsDTO.isMandatory()) {
+						if (fieldsDTO.getSavedData() == null || fieldsDTO.getSavedData().isEmpty())
+							return false;
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	private static void addFunctionality(SubGroups subGroups, List<GroupsDTO> appPagesSectionGroupSet,

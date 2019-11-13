@@ -32,6 +32,8 @@ public class GroupsDTO implements Serializable {
 
 	private boolean visible;
 
+	private boolean mandatoryFieldReceived;
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -125,6 +127,14 @@ public class GroupsDTO implements Serializable {
 
 	public void setVisible(boolean visible) {
 		this.visible = visible;
+	}
+
+	public boolean isMandatoryFieldReceived() {
+		return mandatoryFieldReceived;
+	}
+
+	public void setMandatoryFieldReceived(boolean mandatoryFieldReceived) {
+		this.mandatoryFieldReceived = mandatoryFieldReceived;
 	}
 
 }
