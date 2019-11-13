@@ -26,7 +26,7 @@ import co.yabx.kyc.app.fullKyc.repository.UserRepository;
  *
  */
 @Controller
-@RequestMapping(value = "/v1")
+@RequestMapping(value = "/version/v1")
 public class AppLaunchEventController {
 
 	private ExecutorService executorService = Executors.newFixedThreadPool(2);

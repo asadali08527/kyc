@@ -24,7 +24,7 @@ import co.yabx.kyc.app.service.AppConfigService;
  *
  */
 @Controller
-@RequestMapping(value = "/v1")
+@RequestMapping(value = "/version/v1")
 public class AppConfigSyncController {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(AppConfigSyncController.class);
