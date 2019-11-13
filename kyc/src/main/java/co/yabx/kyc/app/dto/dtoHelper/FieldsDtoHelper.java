@@ -914,7 +914,8 @@ public class FieldsDtoHelper implements Serializable {
 					dynamicFields.setOptions(options);
 
 				} else if (dynamicFields.getFieldId().equals("zipCode")) {
-					dynamicFields.setSavedData(addressDetails != null ? addressDetails.getZipCode() + "" : null);
+					dynamicFields.setSavedData(
+							addressDetails.getZipCode() != null ? addressDetails.getZipCode() + "" : null);
 				} else if (dynamicFields.getFieldId().equals("landmark")) {
 					dynamicFields.setSavedData(addressDetails.getLandmark());
 				} else if (dynamicFields.getFieldId().equals("territory")) {
