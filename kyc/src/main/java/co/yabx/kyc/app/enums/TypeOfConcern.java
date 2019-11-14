@@ -7,9 +7,9 @@ public enum TypeOfConcern {
 	public static TypeOfConcern getTypeOfConcern(String value) {
 		if (value.equalsIgnoreCase("Joint Venture")) {
 			return TypeOfConcern.Joint_Venture;
-		} else if (value.equalsIgnoreCase("Private Ltd")) {
+		} else if (value.equalsIgnoreCase("Private Ltd.")) {
 			return TypeOfConcern.Private_Ltd;
-		} else if (value.equalsIgnoreCase("Public Ltd")) {
+		} else if (value.equalsIgnoreCase("Public Ltd.")) {
 			return TypeOfConcern.Public_Ltd;
 		} else if (value.equalsIgnoreCase("Govt Organization")) {
 			return TypeOfConcern.Govt_Organization;
@@ -31,7 +31,7 @@ public enum TypeOfConcern {
 		if (super.toString().equals("Joint_Venture")) {
 			return "Joint Venture";
 		} else if (super.toString().equals("Private_Ltd")) {
-			return "Private Ltd";
+			return "Private Ltd.";
 		} else if (super.toString().equals("RELIGIOUS_ESTABLISHMENT")) {
 			return "Religious Establishment";
 		} else if (super.toString().equals("EDUCATIONAL_INSTITUTION")) {
@@ -41,7 +41,7 @@ public enum TypeOfConcern {
 		} else if (super.toString().equals("Semi_Govt_Organization")) {
 			return "Semi Govt Organization";
 		} else if (super.toString().equals("Public_Ltd")) {
-			return "Public Ltd";
+			return "Public Ltd.";
 		} else if (super.toString().equals("Govt_Organization")) {
 			return "Govt Organization";
 		} else {

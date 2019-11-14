@@ -122,11 +122,10 @@ public class FieldServiceImpl implements FieldService {
 			if (addressType != null) {
 				if (nominees != null && nominees.getId() != null)
 					addressDetails = addressDetailsRepository.findByUserAndAddressType(nominees, addressType);
-				LOGGER.info("Nominee={} Address={} for addressType={}", nominees, addressDetails, addressType);
 				if (addressDetails == null) {
 					addressDetails = new AddressDetails();
-					addressDetails.setAddressType(addressType);
 				}
+				addressDetails.setAddressType(addressType);
 				addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
 				if (addressDetails != null) {
 					if (nomineeAddressDetailsSet == null) {
@@ -134,6 +133,8 @@ public class FieldServiceImpl implements FieldService {
 					}
 					nomineeAddressDetailsSet.add(addressDetails);
 				}
+				LOGGER.info("Nominee={} Address={} for addressType={}", nominees != null ? nominees.getId() : null,
+						nomineeAddressDetailsSet, addressType);
 			}
 			return;
 		} else if ((appPagesSectionGroupsDTO.getGroupId() == 2
