@@ -267,8 +267,8 @@ public class FieldsDtoHelper implements Serializable {
 				Optional<Attachments> attachmentOptional = attachments.stream().findFirst();
 				if (attachmentOptional.isPresent()) {
 					dynamicFields.setSavedData(
-							SpringUtil.bean(AppConfigService.class).getProperty("DOCUMENT_STORAGE_BASE_URL",
-									"https://yabx.co/") + attachmentOptional.get().getDocumentUrl());
+							SpringUtil.bean(AppConfigService.class).getProperty("DOCUMENT_STORAGE_BASE_URL", "")
+									+ attachmentOptional.get().getDocumentUrl());
 					Integer count = filledVsUnfilled.get("filledFields");
 					filledVsUnfilled.put("filledFields", count + 1);
 
@@ -1205,8 +1205,9 @@ public class FieldsDtoHelper implements Serializable {
 					.filter(f -> f.getDocumentSide().equals(DocumentSide.FRONT)).findFirst();
 			if (frontDoc.isPresent()) {
 				if (frontDoc.get() != null) {
-					fieldsDTO.setSavedData(SpringUtil.bean(AppConfigService.class).getProperty(
-							"DOCUMENT_STORAGE_BASE_URL", "https://yabx.co/") + frontDoc.get().getDocumentUrl());
+					fieldsDTO.setSavedData(
+							SpringUtil.bean(AppConfigService.class).getProperty("DOCUMENT_STORAGE_BASE_URL", "")
+									+ frontDoc.get().getDocumentUrl());
 					Integer count = filledVsUnfilled.get("filledFields");
 					filledVsUnfilled.put("filledFields", count + 1);
 				}
@@ -1216,8 +1217,9 @@ public class FieldsDtoHelper implements Serializable {
 					.filter(f -> f.getDocumentSide().equals(DocumentSide.BACK)).findFirst();
 			if (backDoc.isPresent()) {
 				if (backDoc.get() != null) {
-					fieldsDTO.setSavedData(SpringUtil.bean(AppConfigService.class).getProperty(
-							"DOCUMENT_STORAGE_BASE_URL", "https://yabx.co/") + backDoc.get().getDocumentUrl());
+					fieldsDTO.setSavedData(
+							SpringUtil.bean(AppConfigService.class).getProperty("DOCUMENT_STORAGE_BASE_URL", "")
+									+ backDoc.get().getDocumentUrl());
 					Integer count = filledVsUnfilled.get("filledFields");
 					filledVsUnfilled.put("filledFields", count + 1);
 				}
