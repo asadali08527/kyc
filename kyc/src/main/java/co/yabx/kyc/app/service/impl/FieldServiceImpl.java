@@ -985,7 +985,7 @@ public class FieldServiceImpl implements FieldService {
 	private LicenseDetails prepareLicenseDetails(List<FieldsDTO> appDynamicFieldsDTOList,
 			LicenseDetails licenseDetails) {
 		if (appDynamicFieldsDTOList != null && !appDynamicFieldsDTOList.isEmpty()) {
-			if (licenseDetails != null)
+			if (licenseDetails == null)
 				licenseDetails = new LicenseDetails();
 			for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 				if (appDynamicFieldsDTO.getFieldId().equals("licenseNumber")) {
