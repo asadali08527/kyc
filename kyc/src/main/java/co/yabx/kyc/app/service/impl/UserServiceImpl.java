@@ -248,7 +248,7 @@ public class UserServiceImpl implements UserService {
 			businessDetailsSet.forEach(f -> f.setLicenseDetails(licenseDetailsSet));
 			businessDetails.addAll(businessDetailsSet);
 			user.setBusinessDetails(businessDetails);
-			LOGGER.info("Business details={} with license details is being saved", businessDetailsSet,
+			LOGGER.info("Business details={} with license details={} is being saved", businessDetailsSet,
 					licenseDetailsSet);
 		}
 		if (neitherNullNorEmpty(liabilitiesDetails)) {

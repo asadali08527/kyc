@@ -245,10 +245,10 @@ public class FieldServiceImpl implements FieldService {
 				if (licenseDetails == null) {
 					licenseDetails = new LicenseDetails();
 				}
-				LOGGER.info("License details={} is being added for licenseType={}", licenseDetails, licenseType);
 				licenseDetails.setLicenseType(licenseType);
 				licenseDetails = prepareLicenseDetails(appDynamicFieldsDTOList, licenseDetails);
 				licenseDetailsSet.add(licenseDetails);
+				LOGGER.info("License details={} is being added for licenseType={}", licenseDetails, licenseType);
 				// businessDetails.setLicenseDetails(licenseDetailsSet);
 			}
 			return;
@@ -985,7 +985,8 @@ public class FieldServiceImpl implements FieldService {
 	private LicenseDetails prepareLicenseDetails(List<FieldsDTO> appDynamicFieldsDTOList,
 			LicenseDetails licenseDetails) {
 		if (appDynamicFieldsDTOList != null && !appDynamicFieldsDTOList.isEmpty()) {
-			licenseDetails = new LicenseDetails();
+			if (licenseDetails != null)
+				licenseDetails = new LicenseDetails();
 			for (FieldsDTO appDynamicFieldsDTO : appDynamicFieldsDTOList) {
 				if (appDynamicFieldsDTO.getFieldId().equals("licenseNumber")) {
 					licenseDetails.setLicenseNumber(appDynamicFieldsDTO.getResponse());
@@ -993,16 +994,6 @@ public class FieldServiceImpl implements FieldService {
 					licenseDetails.setLicenseExpiryDate(appDynamicFieldsDTO.getResponse());
 				} else if (appDynamicFieldsDTO.getFieldId().equals("licenseIssuingAuthority")) {
 					licenseDetails.setLicenseIssuingAuthority(appDynamicFieldsDTO.getResponse());
-				} else if (appDynamicFieldsDTO.getFieldId().equals("licenseType")) {
-					try {
-						LicenseType licenseType = neitherBlankNorNull(appDynamicFieldsDTO.getResponse())
-								? LicenseType.valueOf(appDynamicFieldsDTO.getResponse())
-								: null;
-						licenseDetails.setLicenseType(licenseType);
-					} catch (Exception e) {
-						LOGGER.error("Exception while evaluating licenseType ={}, error={}",
-								appDynamicFieldsDTO.getResponse(), e.getMessage());
-					}
 				}
 			}
 		}
