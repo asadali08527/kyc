@@ -248,7 +248,7 @@ public class FieldServiceImpl implements FieldService {
 				licenseDetails.setLicenseType(licenseType);
 				licenseDetails = prepareLicenseDetails(appDynamicFieldsDTOList, licenseDetails);
 				licenseDetailsSet.add(licenseDetails);
-				LOGGER.info("License details={} is being added for licenseType={}", licenseDetails, licenseType);
+				LOGGER.info("License details={} is being added for licenseType={}", licenseDetailsSet, licenseType);
 				// businessDetails.setLicenseDetails(licenseDetailsSet);
 			}
 			return;

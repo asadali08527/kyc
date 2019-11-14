@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,7 +37,8 @@ public class LicenseDetails implements Serializable {
 	@Column(name = "license_issuing_authority")
 	private String licenseIssuingAuthority;
 
-	@Column(name = "license_type")
+	@Column(name = "license_type", length = 100, columnDefinition = "varchar(32) ")
+	@Enumerated(value = EnumType.STRING)
 	private LicenseType licenseType;
 
 	@Column(name = "created_at")
