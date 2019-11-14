@@ -245,10 +245,11 @@ public class FieldServiceImpl implements FieldService {
 				if (licenseDetails == null) {
 					licenseDetails = new LicenseDetails();
 				}
+				LOGGER.info("License details={} is being added for licenseType={}", licenseDetails, licenseType);
 				licenseDetails.setLicenseType(licenseType);
 				licenseDetails = prepareLicenseDetails(appDynamicFieldsDTOList, licenseDetails);
 				licenseDetailsSet.add(licenseDetails);
-				businessDetails.setLicenseDetails(licenseDetailsSet);
+				// businessDetails.setLicenseDetails(licenseDetailsSet);
 			}
 			return;
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService

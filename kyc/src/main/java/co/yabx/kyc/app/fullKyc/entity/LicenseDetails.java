@@ -147,4 +147,12 @@ public class LicenseDetails implements Serializable {
 		this.businessDetails = businessDetails;
 	}
 
+	@Override
+	public String toString() {
+		return "LicenseDetails [id=" + id + ", licenseNumber=" + licenseNumber + ", licenseExpiryDate="
+				+ licenseExpiryDate + ", licenseIssuingAuthority=" + licenseIssuingAuthority + ", licenseType="
+				+ licenseType + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy
+				+ ", updatedBy=" + updatedBy + "]";
+	}
+
 }

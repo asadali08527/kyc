@@ -245,8 +245,11 @@ public class UserServiceImpl implements UserService {
 		if (neitherNullNorEmpty(businessDetailsSet)) {
 			Set<BusinessDetails> businessDetails = user.getBusinessDetails();
 			businessDetails.clear();
+			businessDetailsSet.forEach(f -> f.setLicenseDetails(licenseDetailsSet));
 			businessDetails.addAll(businessDetailsSet);
 			user.setBusinessDetails(businessDetails);
+			LOGGER.info("Business details={} with license details is being saved", businessDetailsSet,
+					licenseDetailsSet);
 		}
 		if (neitherNullNorEmpty(liabilitiesDetails)) {
 			Set<LiabilitiesDetails> liabilitiesDetailsSet = user.getLiabilitiesDetails();

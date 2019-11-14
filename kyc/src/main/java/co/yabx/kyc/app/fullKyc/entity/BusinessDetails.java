@@ -474,4 +474,23 @@ public class BusinessDetails implements Serializable {
 		this.licenseDetails = licenseDetails;
 	}
 
+	@Override
+	public String toString() {
+		return "BusinessDetails [id=" + id + ", businessPhone=" + businessPhone + ", businessName=" + businessName
+				+ ", directorOrPartnerName=" + directorOrPartnerName + ", facilityDetails=" + facilityDetails
+				+ ", facilityType=" + facilityType + ", fixedAssetPurchase=" + fixedAssetPurchase + ", fixedAssetName="
+				+ fixedAssetName + ", price=" + price + ", origin=" + origin + ", proposedCollateral="
+				+ proposedCollateral + ", businessType=" + businessType + ", sector=" + sector + ", detailOfBusness="
+				+ detailOfBusness + ", initialCapital=" + initialCapital + ", fundSource=" + fundSource
+				+ ", vatRegistrationNumber=" + vatRegistrationNumber + ", businessStartDate=" + businessStartDate
+				+ ", businessTin=" + businessTin + ", annualSales=" + annualSales + ", annualGrossProfit="
+				+ annualGrossProfit + ", annualExpenses=" + annualExpenses + ", valueOfFixedAssets="
+				+ valueOfFixedAssets + ", numberOfEmployees=" + numberOfEmployees + ", stockValue=" + stockValue
+				+ ", monthlyTurnOver=" + monthlyTurnOver + ", deposits=" + deposits + ", withdrawls=" + withdrawls
+				+ ", initialDeposit=" + initialDeposit + ", licenseDetails=" + licenseDetails + ", addressDetails="
+				+ addressDetails + ", bankAccountDetails=" + bankAccountDetails + ", user=" + user + ", createdAt="
+				+ createdAt + ", updatedAt=" + updatedAt + ", receivables=" + receivables + ", payables=" + payables
+				+ "]";
+	}
+
 }
