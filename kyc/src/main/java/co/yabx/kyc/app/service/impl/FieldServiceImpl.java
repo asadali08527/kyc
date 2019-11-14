@@ -238,14 +238,14 @@ public class FieldServiceImpl implements FieldService {
 			LicenseType licenseType = getLicenseType(appPagesSectionGroupsDTO.getGroupTitle());
 			if (licenseType != null) {
 				LicenseDetails licenseDetails = null;
-				BusinessDetails businessDetails = getBusinessDetails(businessDetailsSet);
+				BusinessDetails businessDetails = getBusinessDetails(retailerOrDsrUser.getBusinessDetails());
 				if (businessDetails != null && businessDetails.getId() != null)
 					licenseDetails = licenseDetailsRepository.findByBusinessDetailsAndLicenseType(businessDetails,
 							licenseType);
 				if (licenseDetails == null) {
 					licenseDetails = new LicenseDetails();
-					licenseDetails.setLicenseType(licenseType);
 				}
+				licenseDetails.setLicenseType(licenseType);
 				licenseDetails = prepareLicenseDetails(appDynamicFieldsDTOList, licenseDetails);
 				licenseDetailsSet.add(licenseDetails);
 				businessDetails.setLicenseDetails(licenseDetailsSet);
