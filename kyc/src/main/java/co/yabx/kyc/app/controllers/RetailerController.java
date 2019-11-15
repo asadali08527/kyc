@@ -2,6 +2,7 @@ package co.yabx.kyc.app.controllers;
 
 import java.util.List;
 
+import javax.jws.soap.SOAPBinding.Use;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,15 +24,15 @@ import org.springframework.web.multipart.MultipartFile;
 import co.yabx.kyc.app.dto.QuestionAnswerDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.RetailerRequestDTO;
-import co.yabx.kyc.app.dto.RetailersDTO;
+import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.fullKyc.dto.AttachmentDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.BusinessDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.LiabilitiesDetailsDTO;
 import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.fullKyc.entity.User;
-import co.yabx.kyc.app.fullKyc.repository.AttachmentDetailsRepository;
-import co.yabx.kyc.app.fullKyc.repository.AttachmentsRepository;
+import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
+import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
 import co.yabx.kyc.app.service.AttachmentService;
 import co.yabx.kyc.app.service.AuthInfoService;
 import co.yabx.kyc.app.service.RetailerService;
@@ -62,6 +63,9 @@ public class RetailerController {
 
 	@Autowired
 	private AttachmentService attachmentService;
+
+	@Autowired
+	private UserRelationshipsRepository relationshipsRepository;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetailerController.class);
 
@@ -191,19 +195,23 @@ public class RetailerController {
 					files != null ? files.getOriginalFilename() : null);
 			User user = userService.getRetailerById(retailerId);
 			if (user != null) {
-				String filename = storageService.uploadImage(files, retailerId);
-				try {
-					AttachmentDetails attachmentDetails = attachmentService.persistInDb(user, files, filename);
-					if (attachmentDetails != null)
-						return new ResponseEntity<>(files, HttpStatus.OK);
-					else {
-						return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+				UserRelationships userRelationships = relationshipsRepository
+						.findByMsisdnAndRelationshipAndRelative(msisdn, Relationship.RETAILER, user);
+				if (userRelationships != null) {
+					String filename = storageService.uploadImage(files, retailerId);
+					try {
+						AttachmentDetails attachmentDetails = attachmentService.persistInDb(user, files, filename);
+						if (attachmentDetails != null)
+							return new ResponseEntity<>(files, HttpStatus.OK);
+						else {
+							return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						LOGGER.error("exception raised while uploading image={},retailer={},error={}",
+								files.getOriginalFilename(), retailerId, e.getMessage());
+						return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-					LOGGER.error("exception raised while uploading image={},retailer={},error={}",
-							files.getOriginalFilename(), retailerId, e.getMessage());
-					return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 				}
 			}
 		}
@@ -219,18 +227,53 @@ public class RetailerController {
 			LOGGER.info("/retailer/image request recieved for retailer={}, dsr={}", retailerId, msisdn);
 			User user = userService.getRetailerById(retailerId);
 			if (user != null) {
-				try {
-					List<AttachmentDetailsDTO> attachmentDetails = attachmentService.getRetailerDocuments(user);
-					if (attachmentDetails != null)
-						return new ResponseEntity<>(attachmentDetails, HttpStatus.OK);
-					else {
-						return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+				UserRelationships userRelationships = relationshipsRepository
+						.findByMsisdnAndRelationshipAndRelative(msisdn, Relationship.RETAILER, user);
+				if (userRelationships != null) {
+					try {
+						List<AttachmentDetailsDTO> attachmentDetails = attachmentService.getRetailerDocuments(user);
+						if (attachmentDetails != null)
+							return new ResponseEntity<>(attachmentDetails, HttpStatus.OK);
+						else {
+							return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						LOGGER.error("exception raised while fetching retailer documents for retailer={},error={}",
+								retailerId, e.getMessage());
+						return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
-					LOGGER.error("exception raised while fetching retailer documents for retailer={},error={}",
-							retailerId, e.getMessage());
-					return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+			}
+		}
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+	}
+
+	@RequestMapping(value = "/retailer/image/file", method = RequestMethod.GET)
+	public ResponseEntity<?> getImages(@RequestParam("dsrMSISDN") String msisdn,
+			@RequestParam("retailerId") Long retailerId, @RequestParam("filename") String filename,
+			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
+			LOGGER.info("/retailer/image request recieved for retailer={}, dsr={}, filename={}", retailerId, msisdn,
+					filename);
+			User user = userService.getRetailerById(retailerId);
+			if (user != null) {
+				UserRelationships userRelationships = relationshipsRepository
+						.findByMsisdnAndRelationshipAndRelative(msisdn, Relationship.RETAILER, user);
+				if (userRelationships != null) {
+					try {
+						if (filename != null && !filename.isEmpty()) {
+							return new ResponseEntity<>(storageService.getImage(filename, user.getId()), HttpStatus.OK);
+						} else {
+							return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						LOGGER.error("exception raised while fetching retailer={} image={},error={}", user.getId(),
+								filename, e.getMessage());
+						return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+					}
 				}
 			}
 		}
