@@ -83,7 +83,6 @@ public class RetailersDtoHelper implements Serializable {
 		userDto.setPob("Gurugram");
 		userDto.setFathersName("ABC");
 		userDto.setMothersName("PQR");
-		userDto.setMaritalStatus(MaritalStatuses.SINGLE);
 		userDto.setSpouseName("LMN");
 		userDto.setNumberOfDependents(0);
 		userDto.setRetailerPhoto("");
@@ -91,7 +90,6 @@ public class RetailersDtoHelper implements Serializable {
 		userDto.setBirthRegistrationNumber("AP987GHM2562");
 		userDto.setDrivingLicenseNumber("90KL9772L");
 		userDto.setEmail("abc@abc.com");
-		userDto.setGender(Gender.MALE);
 		userDto.setId(19876l);
 		userDto.setMsisdn("9789876543");
 		userDto.setSisterConcernedOrAllied("yes");
@@ -241,7 +239,6 @@ public class RetailersDtoHelper implements Serializable {
 		nominee.setRetailerId("2");
 		nominee.setDob("23/07/1988");
 		nominee.setAge(31);
-		nominee.setGender(Gender.FEMALE);
 		nominee.setFathersName("mls");
 		nominee.setMothersName("pdq");
 		nominee.setSpouseName("pkdls");

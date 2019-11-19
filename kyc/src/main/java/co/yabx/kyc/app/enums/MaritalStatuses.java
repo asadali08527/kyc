@@ -1,6 +1,6 @@
 package co.yabx.kyc.app.enums;
 
 public enum MaritalStatuses {
-	SINGLE, MARRIED, DIVORCED, WIDOWED, SEPARATED
+	Single, Married, Divorced, Widowed, Separated
 
 }
