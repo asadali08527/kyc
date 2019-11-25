@@ -1168,7 +1168,11 @@ public class FieldsDtoHelper implements Serializable {
 						: dynamicFields.getDefaultValue());
 		appDynamicFieldsDTO
 				.setHelp(dynamicFields.getHelp() != null ? dynamicFields.getHelp().trim() : dynamicFields.getHelp());
+		appDynamicFieldsDTO.setEnableFutureDates(dynamicFields.getEnableFutureDates());
+		appDynamicFieldsDTO.setEnablePastDates(dynamicFields.getEnablePastDates());
+		appDynamicFieldsDTO.setInternationalRepresentation(dynamicFields.getInternationalRepresentation());
 		return appDynamicFieldsDTO;
+
 	}
 
 	private static List<SubFieldsDTO> getSubFileds(Fields dynamicFields,

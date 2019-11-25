@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import co.yabx.kyc.app.enums.ControlType;
@@ -52,6 +54,12 @@ public class FieldsDTO implements Serializable {
 	private Integer displayOrder;
 
 	private String help;
+
+	private Boolean enableFutureDates;
+
+	private Boolean enablePastDates;
+
+	private Boolean internationalRepresentation;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -221,6 +229,30 @@ public class FieldsDTO implements Serializable {
 
 	public void setHelp(String help) {
 		this.help = help;
+	}
+
+	public Boolean getEnableFutureDates() {
+		return enableFutureDates;
+	}
+
+	public void setEnableFutureDates(Boolean enableFutureDates) {
+		this.enableFutureDates = enableFutureDates;
+	}
+
+	public Boolean getEnablePastDates() {
+		return enablePastDates;
+	}
+
+	public void setEnablePastDates(Boolean enablePastDates) {
+		this.enablePastDates = enablePastDates;
+	}
+
+	public Boolean getInternationalRepresentation() {
+		return internationalRepresentation;
+	}
+
+	public void setInternationalRepresentation(Boolean internationalRepresentation) {
+		this.internationalRepresentation = internationalRepresentation;
 	}
 
 }

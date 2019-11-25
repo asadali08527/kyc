@@ -92,6 +92,15 @@ public class Fields implements Serializable {
 	@Column(name = "display_order")
 	private Integer displayOrder;
 
+	@Column(name = "accept_future")
+	private Boolean enableFutureDates;
+
+	@Column(name = "accept_past")
+	private Boolean enablePastDates;
+
+	@Column(name = "international_representation")
+	private Boolean internationalRepresentation;
+
 	/**
 	 * options field is non persistent field, and will be used only while returning
 	 * options of a radio or check box input types.
@@ -296,6 +305,30 @@ public class Fields implements Serializable {
 				+ ", mandatory=" + mandatory + ", hash=" + hash + ", displayOrder=" + displayOrder + ", options="
 				+ options + ", groups=" + groups + ", subFields=" + subFields + ", subGroups=" + subGroups
 				+ ", operations=" + operations + "]";
+	}
+
+	public Boolean getEnableFutureDates() {
+		return enableFutureDates;
+	}
+
+	public void setEnableFutureDates(Boolean enableFutureDates) {
+		this.enableFutureDates = enableFutureDates;
+	}
+
+	public Boolean getEnablePastDates() {
+		return enablePastDates;
+	}
+
+	public void setEnablePastDates(Boolean enablePastDates) {
+		this.enablePastDates = enablePastDates;
+	}
+
+	public Boolean getInternationalRepresentation() {
+		return internationalRepresentation;
+	}
+
+	public void setInternationalRepresentation(Boolean internationalRepresentation) {
+		this.internationalRepresentation = internationalRepresentation;
 	}
 
 }
