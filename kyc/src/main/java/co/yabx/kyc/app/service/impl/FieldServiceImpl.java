@@ -1067,7 +1067,7 @@ public class FieldServiceImpl implements FieldService {
 				try {
 					Gender gender = appDynamicFieldsDTO.getResponse() != null
 							&& !appDynamicFieldsDTO.getResponse().isEmpty()
-									? Gender.valueOf(appDynamicFieldsDTO.getResponse().toUpperCase())
+									? Gender.valueOf(appDynamicFieldsDTO.getResponse())
 									: null;
 					user.setGender(gender);
 				} catch (Exception e) {

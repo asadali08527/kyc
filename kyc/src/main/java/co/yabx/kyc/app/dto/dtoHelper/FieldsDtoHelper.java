@@ -1040,7 +1040,7 @@ public class FieldsDtoHelper implements Serializable {
 				} else if (dynamicFields.getFieldId().equals("email")) {
 					dynamicFields.setSavedData(retailers.getEmail());
 				} else if (dynamicFields.getFieldId().equals("gender")) {
-					dynamicFields.setSavedData(retailers.getGender() != null ? retailers.getGender().toString() : null);
+					dynamicFields.setSavedData(retailers.getGender() != null ? retailers.getGender() : null);
 					List<String> options = new ArrayList<String>();
 					Gender[] genders = Gender.values();
 					for (Gender statuses : genders) {
