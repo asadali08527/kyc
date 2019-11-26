@@ -251,7 +251,7 @@ public class RetailerController {
 	}
 
 	@RequestMapping(value = "/retailer/image/file", method = RequestMethod.GET)
-	public ResponseEntity<?> getImages(@RequestParam("dsrMSISDN") String msisdn,
+	public ResponseEntity<byte[]> getImages(@RequestParam("dsrMSISDN") String msisdn,
 			@RequestParam("retailerId") Long retailerId, @RequestParam("filename") String filename,
 			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
@@ -272,7 +272,7 @@ public class RetailerController {
 						e.printStackTrace();
 						LOGGER.error("exception raised while fetching retailer={} image={},error={}", user.getId(),
 								filename, e.getMessage());
-						return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+						return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 					}
 				}
 			}
