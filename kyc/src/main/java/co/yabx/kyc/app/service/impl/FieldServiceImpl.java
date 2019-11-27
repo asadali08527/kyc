@@ -1047,7 +1047,7 @@ public class FieldServiceImpl implements FieldService {
 					Integer nod = appDynamicFieldsDTO.getResponse() != null
 							&& !appDynamicFieldsDTO.getResponse().isEmpty()
 									? Integer.valueOf(appDynamicFieldsDTO.getResponse())
-									: null;
+									: 0;
 					user.setNumberOfDependents(nod);
 				} catch (Exception e) {
 					LOGGER.error("Exception while evaluating number of dependents ={}, error={}",
