@@ -3,10 +3,12 @@ package co.yabx.kyc.app.dto.dtoHelper;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -206,7 +208,9 @@ public class FieldsDtoHelper implements Serializable {
 				dynamicFields.setOptions(options);
 			}
 			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields);
-			fieldsDTO.setSubFields(getSubFileds(dynamicFields, null, filledVsUnfilled));
+			List<SubFieldsDTO> subFieldsDTOs = getSubFileds(dynamicFields, null, filledVsUnfilled);
+			subFieldsDTOs.stream().sorted(Comparator.comparing(SubFieldsDTO::getId)).collect(Collectors.toList());
+			fieldsDTO.setSubFields(subFieldsDTOs);
 			appDynamicFieldsDTOSet.add(fieldsDTO);
 			return true;
 		} else {
@@ -252,7 +256,9 @@ public class FieldsDtoHelper implements Serializable {
 				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled);
 			}
 			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields);
-			fieldsDTO.setSubFields(getSubFileds(dynamicFields, attachmentDetails, filledVsUnfilled));
+			List<SubFieldsDTO> subFieldsDTOs = getSubFileds(dynamicFields, attachmentDetails, filledVsUnfilled);
+			subFieldsDTOs.stream().sorted(Comparator.comparing(SubFieldsDTO::getId)).collect(Collectors.toList());
+			fieldsDTO.setSubFields(subFieldsDTOs);
 			appDynamicFieldsDTOSet.add(fieldsDTO);
 			return true;
 		}
