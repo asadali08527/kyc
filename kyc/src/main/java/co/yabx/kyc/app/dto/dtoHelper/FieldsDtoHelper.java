@@ -209,7 +209,8 @@ public class FieldsDtoHelper implements Serializable {
 			}
 			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields);
 			List<SubFieldsDTO> subFieldsDTOs = getSubFileds(dynamicFields, null, filledVsUnfilled);
-			subFieldsDTOs.stream().sorted(Comparator.comparing(SubFieldsDTO::getId)).collect(Collectors.toList());
+			if (subFieldsDTOs != null)
+				subFieldsDTOs.stream().sorted(Comparator.comparing(SubFieldsDTO::getId)).collect(Collectors.toList());
 			fieldsDTO.setSubFields(subFieldsDTOs);
 			appDynamicFieldsDTOSet.add(fieldsDTO);
 			return true;
@@ -257,7 +258,8 @@ public class FieldsDtoHelper implements Serializable {
 			}
 			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields);
 			List<SubFieldsDTO> subFieldsDTOs = getSubFileds(dynamicFields, attachmentDetails, filledVsUnfilled);
-			subFieldsDTOs.stream().sorted(Comparator.comparing(SubFieldsDTO::getId)).collect(Collectors.toList());
+			if (subFieldsDTOs != null)
+				subFieldsDTOs.stream().sorted(Comparator.comparing(SubFieldsDTO::getId)).collect(Collectors.toList());
 			fieldsDTO.setSubFields(subFieldsDTOs);
 			appDynamicFieldsDTOSet.add(fieldsDTO);
 			return true;
