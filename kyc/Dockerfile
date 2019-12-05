@@ -1,11 +1,11 @@
 From openjdk:8
 MAINTAINER yabx.co
-RUN mkdir kyc<br>
-ADD kyc/target/kyc-1.0.jar kyc/kyc-1.0.jar <br>
-WORKDIR kyc<br>
-RUN "pwd"<br>
-RUN "ls"<br>
-EXPOSE 8085<br>
+RUN mkdir kyc 
+ADD kyc/target/kyc-1.0.jar kyc/kyc-1.0.jar
+WORKDIR kyc
+RUN "pwd"
+RUN "ls"
+EXPOSE 8085
 ENTRYPOINT ["java","-jar", "kyc-1.0.jar"]
 CMD ["java","-jar","kyc-1.0.jar"]
 
