@@ -1,7 +1,6 @@
 From openjdk:8
 MAINTAINER yabx.co
 RUN mkdir kyc 
-ADD kyc/target/kyc-1.0.jar kyc/kyc-1.0.jar
 WORKDIR kyc
 RUN "pwd"
 RUN "ls"
