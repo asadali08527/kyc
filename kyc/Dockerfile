@@ -1,6 +1,8 @@
 From openjdk:8
 MAINTAINER yabx.co
 WORKDIR /var/lib/jenkins/workspace/kyc-pipeline/kyc/target/
-COPY target/kyc-1.0.jar .
-ENTRYPOINT ["java","-jar", "kyc-1.0.jar"]
+EXPOSE 8080
+EXPOSE 3306
+COPY target/kyc-1.0.jar app.jar
+ENTRYPOINT ["java","-jar", "app.jar"]
 CMD ["-start"]
