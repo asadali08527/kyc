@@ -21,6 +21,7 @@ import co.yabx.kyc.app.entities.Sections;
 import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
+import co.yabx.kyc.app.fullKyc.entity.FieldRemarks;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.util.SpringUtil;
@@ -33,7 +34,7 @@ public class PagesDTOHeper implements Serializable {
 			Set<AddressDetails> userAddressDetailsSet, Set<AddressDetails> nomineeAddressDetailsSet,
 			Set<AddressDetails> businessAddressDetailsSet, Set<BankAccountDetails> userBankAccountDetailsSet,
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet, Set<BankAccountDetails> businessBankAccountDetailsSet,
-			String type) {
+			String type, List<FieldRemarks> fieldRemarksList) {
 		PagesDTO appPagesDTO = new PagesDTO();
 		Map<String, Integer> filledVsUnfilled = new HashMap<String, Integer>();
 		filledVsUnfilled.put("filledFields", 0);
@@ -43,7 +44,7 @@ public class PagesDTOHeper implements Serializable {
 			List<SectionsDTO> appPagesSectionSet = SectionDtoHelper.getSections(appPagesSectionsSet, retailers,
 					filledVsUnfilled, nominee, userAddressDetailsSet, nomineeAddressDetailsSet,
 					businessAddressDetailsSet, userBankAccountDetailsSet, nomineeBankAccountDetailsSet,
-					businessBankAccountDetailsSet);
+					businessBankAccountDetailsSet, fieldRemarksList);
 			appPagesDTO.setSections(appPagesSectionSet.stream().sorted(Comparator.comparing(SectionsDTO::getSectionId))
 					.collect(Collectors.toList()));
 			appPagesDTO.setEnable(pages.isEnable());

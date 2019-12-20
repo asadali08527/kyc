@@ -1,5 +1,6 @@
 package co.yabx.kyc.app.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import co.yabx.kyc.app.dto.PagesDTO;
 import co.yabx.kyc.app.dto.QuestionAnswerDTO;
 import co.yabx.kyc.app.dto.ResponseDTO;
 import co.yabx.kyc.app.dto.RetailerRequestDTO;
@@ -145,6 +147,16 @@ public class RetailerServiceImpl implements RetailerService {
 		return responseDTO;
 
 		// return RetailersDtoHelper.getCompletRetailerInfo(dsrMsisdn, retailerId);
+	}
+
+	public List<PagesDTO> findAllRetailers() {
+		List<UserRelationships> dsrRetailersRelationships = userRelationshipsRepository
+				.findByRelationship(Relationship.RETAILER);
+		List<PagesDTO> pagesDTOs = new ArrayList<PagesDTO>();
+		for (UserRelationships userRelationships : dsrRetailersRelationships) {
+			pagesDTOs.addAll(userService.getUserDetails(userRelationships.getRelative(), PageType.RETAILERS));
+		}
+		return pagesDTOs;
 	}
 
 	@Override

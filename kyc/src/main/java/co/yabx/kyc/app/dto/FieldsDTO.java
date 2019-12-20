@@ -61,6 +61,8 @@ public class FieldsDTO implements Serializable {
 
 	private Boolean internationalRepresentation;
 
+	private String remark;
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -253,6 +255,14 @@ public class FieldsDTO implements Serializable {
 
 	public void setInternationalRepresentation(Boolean internationalRepresentation) {
 		this.internationalRepresentation = internationalRepresentation;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 }

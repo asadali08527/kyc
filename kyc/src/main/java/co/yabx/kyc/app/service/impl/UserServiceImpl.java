@@ -26,6 +26,7 @@ import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.BusinessDetails;
 import co.yabx.kyc.app.fullKyc.entity.DSRUser;
+import co.yabx.kyc.app.fullKyc.entity.FieldRemarks;
 import co.yabx.kyc.app.fullKyc.entity.IntroducerDetails;
 import co.yabx.kyc.app.fullKyc.entity.LiabilitiesDetails;
 import co.yabx.kyc.app.fullKyc.entity.LicenseDetails;
@@ -36,6 +37,7 @@ import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
 import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
 import co.yabx.kyc.app.fullKyc.repository.DSRUserRepository;
+import co.yabx.kyc.app.fullKyc.repository.FieldRemarksRepository;
 import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
@@ -57,7 +59,7 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private AppConfigService appConfigService;
+	private FieldRemarksRepository fieldRemarksRepository;
 
 	@Autowired
 	private RetailersRepository retailersRepository;
@@ -127,10 +129,11 @@ public class UserServiceImpl implements UserService {
 				});
 			}
 		}
+		List<FieldRemarks> fieldRemarksList = fieldRemarksRepository.findByUserId(user.getId());
 		for (Pages pages : appPages) {
 			appPagesDTOList.add(PagesDTOHeper.prepareAppPagesDto(pages, user, nominee, userAddressDetailsSet,
 					nomineeAddressDetailsSet, businessAddressDetailsSet, userBankAccountDetailsSet,
-					nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, type.name()));
+					nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, type.name(), fieldRemarksList));
 
 		}
 
