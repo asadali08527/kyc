@@ -10,7 +10,7 @@ import co.yabx.kyc.app.enums.KycStatus;
 public class RetailersDTO implements Serializable {
 	private Long retailerId;
 	private String retailerName;
-	private KycStatus kycStatus;
+	private String kycStatus;
 	private String comments;
 	private String dsrMsisdn;
 
@@ -30,11 +30,11 @@ public class RetailersDTO implements Serializable {
 		this.dsrMsisdn = dsrMsisdn;
 	}
 
-	public KycStatus getKycStatus() {
+	public String getKycStatus() {
 		return kycStatus;
 	}
 
-	public void setKycStatus(KycStatus kycStatus) {
+	public void setKycStatus(String kycStatus) {
 		this.kycStatus = kycStatus;
 	}
 

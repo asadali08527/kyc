@@ -62,9 +62,10 @@ public class RetailersDtoHelper implements Serializable {
 						? SpringUtil.bean(AccountStatusesRepository.class).findByMsisdn(retailers.getMsisdn())
 						: null;
 				if (accountStatuses != null)
-					retailersDTO.setKycStatus(accountStatuses.getKycVerified());
+					retailersDTO.setKycStatus(
+							accountStatuses.getKycVerified() != null ? accountStatuses.getKycVerified().name() : null);
 				else
-					retailersDTO.setKycStatus(KycStatus.NEW);
+					retailersDTO.setKycStatus(KycStatus.NEW.name());
 				retailersDTO.setComments("n/a");
 				retailersList.add(retailersDTO);
 			}

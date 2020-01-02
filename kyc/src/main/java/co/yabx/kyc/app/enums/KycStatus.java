@@ -9,6 +9,8 @@ public enum KycStatus {
 			return KycStatus.LOC_ISSUED;
 		} else if (value.equalsIgnoreCase("LOC GENERATED")) {
 			return KycStatus.LOC_GENERATED;
+		} else if (value.equalsIgnoreCase("LOC ISSUED")) {
+			return KycStatus.LOC_ISSUED;
 		} else if (value.equalsIgnoreCase("UNDER REVIEW")) {
 			return KycStatus.UNDER_REVIEW;
 		} else if (value.equalsIgnoreCase("RE SUBMITTED")) {
