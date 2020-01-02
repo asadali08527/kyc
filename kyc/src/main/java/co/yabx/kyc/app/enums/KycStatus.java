@@ -24,9 +24,9 @@ public enum KycStatus {
 	@Override
 	public String toString() {
 		if (super.toString().equals("IN_PROGRESS")) {
-			return "In Progress";
+			return "IN PROGRESS";
 		} else if (super.toString().equals("LOC_ISSUED")) {
-			return "LO ISSUED";
+			return "LOC ISSUED";
 		} else if (super.toString().equals("LOC_GENERATED")) {
 			return "LOC GENERATED";
 		} else if (super.toString().equals("UNDER_REVIEW")) {

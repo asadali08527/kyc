@@ -63,7 +63,7 @@ public class RetailersDtoHelper implements Serializable {
 						: null;
 				if (accountStatuses != null)
 					retailersDTO.setKycStatus(
-							accountStatuses.getKycVerified() != null ? accountStatuses.getKycVerified().name() : null);
+							accountStatuses.getKycVerified() != null ? accountStatuses.getKycVerified().toString() : null);
 				else
 					retailersDTO.setKycStatus(KycStatus.NEW.name());
 				retailersDTO.setComments("n/a");
