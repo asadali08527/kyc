@@ -110,14 +110,14 @@ public class RetailerServiceImpl implements RetailerService {
 			int approved = 0;
 			int inProgress = 0;
 			for (RetailersDTO retailersDTO : retailersDTOs) {
-				KycStatus kycStatus = retailersDTO.getKycStatus();
-				if (KycStatus.IN_PROGRESS == kycStatus) {
+				String kycStatus = retailersDTO.getKycStatus();
+				if (KycStatus.IN_PROGRESS.name() == kycStatus) {
 					inProgress++;
-				} else if (KycStatus.REJECTED == kycStatus) {
+				} else if (KycStatus.REJECTED.name() == kycStatus) {
 					rejected++;
-				} else if (KycStatus.APPROVED == kycStatus) {
+				} else if (KycStatus.APPROVED.name() == kycStatus) {
 					approved++;
-				} else if (KycStatus.SUBMITTED == kycStatus) {
+				} else if (KycStatus.SUBMITTED.name() == kycStatus) {
 					submitted++;
 				}
 			}
