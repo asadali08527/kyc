@@ -1,7 +1,7 @@
 package co.yabx.kyc.app.enums;
 
 public enum KycStatus {
-	YES, NO, REJECTED, NEW, SUBMITTED, APPROVED, IN_PROGRESS, LOC_ISSUED, LOC_GENERATED, REVIEW_INITIATED, RE_SUBMITTED;
+	YES, NO, REJECTED, NEW, SUBMITTED, APPROVED, IN_PROGRESS, LOC_ISSUED, LOC_GENERATED, UNDER_REVIEW, RE_SUBMITTED;
 	public static KycStatus getAddressType(String value) {
 		if (value.equalsIgnoreCase("IN PROGRESS")) {
 			return KycStatus.IN_PROGRESS;
@@ -9,8 +9,8 @@ public enum KycStatus {
 			return KycStatus.LOC_ISSUED;
 		} else if (value.equalsIgnoreCase("LOC GENERATED")) {
 			return KycStatus.LOC_GENERATED;
-		} else if (value.equalsIgnoreCase("REVIEW INITIATED")) {
-			return KycStatus.REVIEW_INITIATED;
+		} else if (value.equalsIgnoreCase("UNDER REVIEW")) {
+			return KycStatus.UNDER_REVIEW;
 		} else if (value.equalsIgnoreCase("RE SUBMITTED")) {
 			return KycStatus.RE_SUBMITTED;
 		}
@@ -27,8 +27,8 @@ public enum KycStatus {
 			return "LO ISSUED";
 		} else if (super.toString().equals("LOC_GENERATED")) {
 			return "LOC GENERATED";
-		} else if (super.toString().equals("REVIEW_INITIATED")) {
-			return "REVIEW INITIATED";
+		} else if (super.toString().equals("UNDER_REVIEW")) {
+			return "UNDER REVIEW";
 		} else if (super.toString().equals("RE_SUBMITTED")) {
 			return "RE SUBMITTED";
 		}
