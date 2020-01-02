@@ -211,8 +211,10 @@ public class FieldsDtoHelper implements Serializable {
 			}
 			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields, fieldRemarksList);
 			List<SubFieldsDTO> subFieldsDTOs = getSubFileds(dynamicFields, null, filledVsUnfilled, fieldRemarksList);
-			if (subFieldsDTOs != null)
-				subFieldsDTOs.stream().sorted().collect(Collectors.toList());
+			/*
+			 * if (subFieldsDTOs != null)
+			 * subFieldsDTOs.stream().sorted().collect(Collectors.toList());
+			 */
 			fieldsDTO.setSubFields(subFieldsDTOs);
 			appDynamicFieldsDTOSet.add(fieldsDTO);
 			return true;
