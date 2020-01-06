@@ -42,7 +42,6 @@ import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.repositories.PagesRepository;
-import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.SectionService;
 import co.yabx.kyc.app.service.UserService;
 import co.yabx.kyc.app.util.SpringUtil;
@@ -73,6 +72,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRelationshipsRepository userRelationshipsRepository;
 
+	@Autowired
+	private PagesRepository pagesRepository;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Override
@@ -86,7 +88,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<PagesDTO> getUserDetails(User user, PageType type) {
 
-		List<Pages> appPages = SpringUtil.bean(PagesRepository.class).findByPageType(type);
+		List<Pages> appPages = pagesRepository.findByPageType(type);
 		if (appPages == null)
 			return null;
 

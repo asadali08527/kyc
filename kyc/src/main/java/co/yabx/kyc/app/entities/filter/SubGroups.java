@@ -20,7 +20,6 @@ import javax.persistence.Table;
 
 import co.yabx.kyc.app.entities.Fields;
 import co.yabx.kyc.app.entities.SectionGroupRelationship;
-import co.yabx.kyc.app.enums.BusinessType;
 import co.yabx.kyc.app.enums.FunctionalityType;
 
 /**
