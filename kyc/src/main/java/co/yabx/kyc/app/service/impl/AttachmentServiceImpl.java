@@ -125,7 +125,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 				attachments.setDocumentUrl(saveFileName);
 				attachmentList.add(attachments);
 				attachmentDetails.setAttachments(attachmentList);
-				attachmentDetails.setDocumentType(documentType);
+				attachmentDetails.setDocumentType(documentType != null ? documentType.toString() : null);
 				attachmentDetails.setAttachmentType(attachmentType);
 				attachmentDetails.setUser(user);
 				attachmentDetails = attachmentDetailsRepository.save(attachmentDetails);
@@ -161,7 +161,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 				attachmentsSet.clear();
 			} else {
 				attachmentDetails = new AttachmentDetails();
-				attachmentDetails.setDocumentType(DocumentType.PROFILE_PIC);
+				attachmentDetails.setDocumentType(DocumentType.PROFILE_PIC.toString());
 				attachmentsSet = new HashSet<Attachments>();
 			}
 			Attachments attachments = new Attachments();
