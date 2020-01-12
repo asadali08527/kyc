@@ -22,7 +22,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import co.yabx.kyc.app.enums.AttachmentType;
-import co.yabx.kyc.app.enums.DocumentType;
 
 /**
  * 

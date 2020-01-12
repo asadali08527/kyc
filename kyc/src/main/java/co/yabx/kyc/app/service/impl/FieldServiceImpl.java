@@ -14,7 +14,6 @@ import co.yabx.kyc.app.dto.FieldsDTO;
 import co.yabx.kyc.app.dto.GroupsDTO;
 import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.dto.SubFieldsDTO;
-import co.yabx.kyc.app.entities.filter.SubGroups;
 import co.yabx.kyc.app.enums.AddressProof;
 import co.yabx.kyc.app.enums.AddressType;
 import co.yabx.kyc.app.enums.BankAccountType;
@@ -53,7 +52,6 @@ import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
 import co.yabx.kyc.app.fullKyc.repository.AddressDetailsRepository;
 import co.yabx.kyc.app.fullKyc.repository.LiabilitiesDetailsRepository;
 import co.yabx.kyc.app.fullKyc.repository.LicenseDetailsRepository;
-import co.yabx.kyc.app.repositories.AuthInfoRepository;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.FieldService;
 
