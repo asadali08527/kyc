@@ -36,7 +36,7 @@ public class StorageServiceImpl implements StorageService {
 		String extension = FilenameUtils.getExtension(file.getOriginalFilename());
 		String newFileName = System.currentTimeMillis() + "." + extension;
 		File convFile = new File(fileName);
-		String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/root/kyc/") + retailerId + "/"
+		String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/var/lib/kyc/") + retailerId + "/"
 				+ newFileName;
 		convFile.createNewFile();
 		try (FileOutputStream fos = new FileOutputStream(convFile)) {
@@ -46,7 +46,7 @@ public class StorageServiceImpl implements StorageService {
 		image = ImageIO.read(convFile);
 		LOGGER.info("Image getting stored at location={} for retailer={}", path, retailerId);
 		File destination = new File(
-				appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/root/kyc/") + retailerId + "/");
+				appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/var/lib/kyc/") + retailerId + "/");
 		if (!destination.exists())
 			destination.mkdirs();
 		ImageIO.write(image, extension, new File(path));
@@ -55,7 +55,8 @@ public class StorageServiceImpl implements StorageService {
 
 	@Override
 	public byte[] getImage(String filename, Long retailerId) throws Exception {
-		String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/root/kyc/") + retailerId + "/" + filename;
+		String path = appConfigService.getProperty("DOCUMENT_STORAGE_BASE_PATH", "/var/lib/kyc/") + retailerId + "/"
+				+ filename;
 		File file = new File(path);
 		BufferedImage image = ImageIO.read(file);
 		String extension = FilenameUtils.getExtension(path);
