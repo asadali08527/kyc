@@ -2,7 +2,6 @@ package co.yabx.kyc.app.controllers;
 
 import java.util.List;
 
-import javax.jws.soap.SOAPBinding.Use;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -102,8 +101,7 @@ public class RetailerController {
 			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
 		if (authInfoService.isAuthorized(retailerRequestDTO != null ? retailerRequestDTO.getDsrMSISDN() : null,
 				httpServletRequest, httpServletResponse)) {
-			LOGGER.info("/retailer/profile request received with retailerRequestDTO={}",
-					retailerRequestDTO);
+			LOGGER.info("/retailer/profile request received with retailerRequestDTO={}", retailerRequestDTO);
 			ResponseDTO loginDTO = retailerService.submitRetailerProfile(retailerRequestDTO);
 			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 		}
