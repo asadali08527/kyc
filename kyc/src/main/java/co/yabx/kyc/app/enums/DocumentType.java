@@ -31,7 +31,7 @@ public enum DocumentType {
 	@Override
 	public String toString() {
 		if (super.toString().equals("TRADE_LICENSE")) {
-			return "Trade License";
+			return "TRADE LICENSE";
 		} else if (super.toString().equals("INCOME_TAX_RETURN")) {
 			return "Income Tax Return";
 		} else if (super.toString().equals("BIRTH_CERTIFICATE")) {
@@ -46,6 +46,10 @@ public enum DocumentType {
 			return "Driving License";
 		} else if (super.toString().equals("PROFILE_PIC")) {
 			return "PROFILE PIC";
+		} else if (super.toString().equals("NOMINEE_PHOTO")) {
+			return "NOMINEE PHOTO";
+		} else if (super.toString().equals("TIN_CERTIFICATE")) {
+			return "TIN CERTIFICATE";
 		} else {
 			return super.toString();
 		}
