@@ -91,9 +91,10 @@ public class AttachmentServiceImpl implements AttachmentService {
 		if (documentType != null) {
 			if (attachmentType != null) {
 				attachmentDetails = attachmentDetailsRepository.findByUserAndDocumentTypeAndAttachmentType(user,
-						documentType, attachmentType);
+						documentType.toString(), attachmentType);
 			} else
-				attachmentDetails = attachmentDetailsRepository.findByUserAndDocumentType(user, documentType);
+				attachmentDetails = attachmentDetailsRepository.findByUserAndDocumentType(user,
+						documentType.toString());
 			if (attachmentDetails == null) {
 				attachmentDetails = new AttachmentDetails();
 				isNew = true;
@@ -154,7 +155,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 	public AttachmentDetails persistDsrProfilePicInDb(User user, MultipartFile files, String saveFileName) {
 		if (user != null) {
 			AttachmentDetails attachmentDetails = attachmentDetailsRepository.findByUserAndDocumentType(user,
-					DocumentType.PROFILE_PIC);
+					DocumentType.PROFILE_PIC.toString());
 			Set<Attachments> attachmentsSet = null;
 			if (attachmentDetails != null) {
 				attachmentsSet = attachmentDetails.getAttachments();
@@ -178,7 +179,7 @@ public class AttachmentServiceImpl implements AttachmentService {
 	@Override
 	public String fetchDsrProfilePic(User user) {
 		AttachmentDetails attachmentDetails = attachmentDetailsRepository.findByUserAndDocumentType(user,
-				DocumentType.PROFILE_PIC);
+				DocumentType.PROFILE_PIC.toString());
 		if (attachmentDetails != null) {
 			Set<Attachments> attachments = attachmentDetails.getAttachments();
 			if (attachments != null && !attachments.isEmpty()) {
