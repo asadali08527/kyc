@@ -121,7 +121,7 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/retailers/profiles", method = RequestMethod.GET)
-	public List<PagesDTO> getRetailer(@RequestParam(value = "status", required = true) String status,
+	public ResponseEntity<?> getRetailer(@RequestParam(value = "status", required = true) String status,
 			@RequestParam(value = "secret_key", required = true) String secret_key) {
 		if (secret_key.equals(appConfigService.getProperty("RETAILER_PROFILE_API_PASSWORD", "magic@yabx"))) {
 			LOGGER.info("/retailers/profiles request received for status={}", status);
@@ -138,10 +138,10 @@ public class AdminController {
 						appPagesDTOList.addAll(userService.getUserDetails(user, PageType.RETAILERS));
 					}
 				}
-				return appPagesDTOList;
+				return new ResponseEntity<>(appPagesDTOList, HttpStatus.OK);
 			}
 		}
-		return null;
+		return new ResponseEntity<>("Invalid secret key", HttpStatus.UNAUTHORIZED);
 
 	}
 
