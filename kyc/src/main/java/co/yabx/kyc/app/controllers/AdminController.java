@@ -127,10 +127,13 @@ public class AdminController {
 			KycStatus kycStatus = KycStatus.valueOf(status);
 			if (kycStatus != null) {
 				List<AccountStatuses> accountStatuses = accountStatusesRepository.findByKycVerified(kycStatus);
+				LOGGER.info("Total received profile for status={} is ={}", status, accountStatuses.size());
 				List<PagesDTO> appPagesDTOList = new ArrayList<PagesDTO>();
 				for (AccountStatuses accountStatus : accountStatuses) {
 					User user = retailersRepository.findBymsisdn(accountStatus.getMsisdn());
-					appPagesDTOList.addAll(userService.getUserDetails(user, PageType.RETAILERS));
+					if (user != null) {
+						appPagesDTOList.addAll(userService.getUserDetails(user, PageType.RETAILERS));
+					}
 				}
 				return appPagesDTOList;
 			}
