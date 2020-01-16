@@ -32,6 +32,7 @@ import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
 import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
+import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
 import co.yabx.kyc.app.miniKyc.repository.AccountStatusesRepository;
 import co.yabx.kyc.app.service.AdminService;
@@ -59,7 +60,7 @@ public class AdminController {
 	private OtpService otpService;
 
 	@Autowired
-	private RetailersRepository retailersRepository;
+	private UserRepository userRepository;
 
 	@Autowired
 	private UserService userService;
@@ -130,7 +131,8 @@ public class AdminController {
 				LOGGER.info("Total received profile for status={} is ={}", status, accountStatuses.size());
 				List<PagesDTO> appPagesDTOList = new ArrayList<PagesDTO>();
 				for (AccountStatuses accountStatus : accountStatuses) {
-					User user = retailersRepository.findBymsisdn(accountStatus.getMsisdn());
+					User user = userRepository.findBymsisdnAndUserType(accountStatus.getMsisdn(),
+							UserType.RETAILERS.name());
 					if (user != null) {
 						appPagesDTOList.addAll(userService.getUserDetails(user, PageType.RETAILERS));
 					}
