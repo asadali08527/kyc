@@ -157,6 +157,7 @@ public class AdminServiceImpl implements AdminService {
 					dsrUser.setFirstName(dsrName);
 					dsrUser.setMsisdn(dsrMSISDN);
 					dsrUser = userRepository.save(dsrUser);
+					createOrUpdateRetailers(dsrUser, retailersList);
 				}
 
 			}
