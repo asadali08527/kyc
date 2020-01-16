@@ -134,6 +134,7 @@ public class AdminController {
 					User user = userRepository.findBymsisdnAndUserType(accountStatus.getMsisdn(),
 							UserType.RETAILERS.name());
 					if (user != null) {
+						LOGGER.info("Pages being prepared for user ={}", user.getId());
 						appPagesDTOList.addAll(userService.getUserDetails(user, PageType.RETAILERS));
 					}
 				}
