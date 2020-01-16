@@ -1042,14 +1042,14 @@ public class FieldServiceImpl implements FieldService {
 				user.setSpouseName(appDynamicFieldsDTO.getResponse());
 			} else if (appDynamicFieldsDTO.getFieldId().equals("numberOfDependents")) {
 				try {
-					Integer nod = appDynamicFieldsDTO.getResponse() != null
-							&& !appDynamicFieldsDTO.getResponse().isEmpty()
-									? Integer.valueOf(appDynamicFieldsDTO.getResponse())
-									: 0;
+					int nod = appDynamicFieldsDTO.getResponse() != null && !appDynamicFieldsDTO.getResponse().isEmpty()
+							? Integer.valueOf(appDynamicFieldsDTO.getResponse())
+							: 0;
 					user.setNumberOfDependents(nod);
 				} catch (Exception e) {
 					LOGGER.error("Exception while evaluating number of dependents ={}, error={}",
 							appDynamicFieldsDTO.getResponse(), e.getMessage());
+					user.setNumberOfDependents(0);
 				}
 			} else if (appDynamicFieldsDTO.getFieldId().equals("alternateMobileNumber")) {
 				user.setAlternateMobileNumber(appDynamicFieldsDTO.getResponse());

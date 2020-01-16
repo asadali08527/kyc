@@ -156,6 +156,7 @@ public class AdminServiceImpl implements AdminService {
 					dsrUser = new DSRUser();
 					dsrUser.setFirstName(dsrName);
 					dsrUser.setMsisdn(dsrMSISDN);
+					dsrUser.setNumberOfDependents(0);
 					dsrUser = userRepository.save(dsrUser);
 					createOrUpdateRetailers(dsrUser, retailersList);
 				}
@@ -176,6 +177,7 @@ public class AdminServiceImpl implements AdminService {
 					retailerUser = new Retailers();
 					retailerUser.setFirstName(retailersName);
 					retailerUser.setMsisdn(retailerMSISDN);
+					retailerUser.setNumberOfDependents(0);
 					retailerUser = userRepository.save(retailerUser);
 				}
 				UserRelationships userRelationships = userRelationshipsRepository

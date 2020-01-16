@@ -1,7 +1,12 @@
 package co.yabx.kyc.app.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +22,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import co.yabx.kyc.app.dto.DsrRetailerRegistrationDto;
+import co.yabx.kyc.app.dto.PagesDTO;
+import co.yabx.kyc.app.dto.ResponseDTO;
+import co.yabx.kyc.app.dto.dtoHelper.RetailersDtoHelper;
+import co.yabx.kyc.app.enums.KycStatus;
+import co.yabx.kyc.app.enums.PageType;
+import co.yabx.kyc.app.enums.UserType;
+import co.yabx.kyc.app.fullKyc.entity.Retailers;
+import co.yabx.kyc.app.fullKyc.entity.User;
+import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
+import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
+import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
+import co.yabx.kyc.app.miniKyc.repository.AccountStatusesRepository;
 import co.yabx.kyc.app.service.AdminService;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.OtpService;
+import co.yabx.kyc.app.service.UserService;
 
 /**
  * 
@@ -39,6 +57,15 @@ public class AdminController {
 
 	@Autowired
 	private OtpService otpService;
+
+	@Autowired
+	private RetailersRepository retailersRepository;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private AccountStatusesRepository accountStatusesRepository;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 
@@ -89,6 +116,26 @@ public class AdminController {
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		return new ResponseEntity<>("Invalid secret key", HttpStatus.UNAUTHORIZED);
+
+	}
+
+	@RequestMapping(value = "/retailers/profiles", method = RequestMethod.GET)
+	public List<PagesDTO> getRetailer(@RequestParam(value = "status", required = true) String status,
+			@RequestParam(value = "secret_key", required = true) String secret_key) {
+		if (secret_key.equals(appConfigService.getProperty("RETAILER_PROFILE_API_PASSWORD", "magic@yabx"))) {
+			LOGGER.info("/retailers/profiles request received for status={}", status);
+			KycStatus kycStatus = KycStatus.valueOf(status);
+			if (kycStatus != null) {
+				List<AccountStatuses> accountStatuses = accountStatusesRepository.findByKycVerified(kycStatus);
+				List<PagesDTO> appPagesDTOList = new ArrayList<PagesDTO>();
+				for (AccountStatuses accountStatus : accountStatuses) {
+					User user = retailersRepository.findBymsisdn(accountStatus.getMsisdn());
+					appPagesDTOList.addAll(userService.getUserDetails(user, PageType.RETAILERS));
+				}
+				return appPagesDTOList;
+			}
+		}
+		return null;
 
 	}
 

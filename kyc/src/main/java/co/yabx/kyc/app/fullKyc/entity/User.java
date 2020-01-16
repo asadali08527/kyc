@@ -113,7 +113,7 @@ public abstract class User implements Serializable {
 	private MaritalStatuses maritalStatus;
 
 	@Column(name = "dependents", length = 2, columnDefinition = "int(11) default 0 ")
-	private Integer numberOfDependents;
+	private int numberOfDependents;
 
 	@Column(name = "sister_concerned_or_allied")
 	private String sisterConcernedOrAllied;
@@ -381,11 +381,11 @@ public abstract class User implements Serializable {
 		this.maritalStatus = maritalStatus;
 	}
 
-	public Integer getNumberOfDependents() {
+	public int getNumberOfDependents() {
 		return numberOfDependents;
 	}
 
-	public void setNumberOfDependents(Integer numberOfDependents) {
+	public void setNumberOfDependents(int numberOfDependents) {
 		this.numberOfDependents = numberOfDependents;
 	}
 
