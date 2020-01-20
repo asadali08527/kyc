@@ -143,14 +143,22 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 			accountStatuses.setMsisdn(msisdn);
 			accountStatuses
 					.setUpdateReason(appConfigService.getProperty("NEW_ACCOUNT_CREATED_REASON", "NEW ACCOUNT CREATED"));
-		} else if (isKycAvailable) {
-			accountStatuses
-					.setUpdateReason(appConfigService.getProperty("NEW_KYC_ACCOUNT_STATUS_REASON", "KYC RECEIVED"));
+		} else {
+			if (KycStatus.RE_UPDATE.equals(accountStatuses.getKycVerified())) {
+				/**
+				 * if old kyc status was re-update it means retailers kyc is being re-submitted
+				 */
+				kycStatus = KycStatus.RE_SUBMITTED;
+			}
+		}
+		if (isKycAvailable) {
+			accountStatuses.setUpdateReason(
+					appConfigService.getProperty("NEW_KYC_ACCOUNT_STATUS_REASON", "KYC RECEIVED through " + createdBy));
 			accountStatuses.setKycAvailable(isKycAvailable);
 		}
-		if (accountStatus != null)
+		if (accountStatus != null) {
 			accountStatuses.setAccountStatus(accountStatus);
-		else
+		} else
 			accountStatuses.setAccountStatus(AccountStatus.NEW);
 		accountStatuses.setAmlCftStatus(AmlCftStatus.NO);
 		accountStatuses.setKycVerified(kycStatus);
@@ -299,6 +307,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	public AccountStatuses createAccountStatus(String msisdn, String createdBy, boolean isKycAvailable,
 			KycStatus kycStatus) {
 		AccountStatuses accountStatuses = accountStatusesRepository.findByMsisdn(msisdn);
+
 		return createAccount(accountStatuses, msisdn, createdBy, isKycAvailable, AccountStatus.NEW, kycStatus);
 	}
 
