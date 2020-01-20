@@ -11,6 +11,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -122,12 +124,17 @@ public class AdminController {
 
 	@RequestMapping(value = "/retailers/profiles", method = RequestMethod.GET)
 	public ResponseEntity<?> getRetailer(@RequestParam(value = "status", required = true) String status,
-			@RequestParam(value = "secret_key", required = true) String secret_key) {
+			@RequestParam(value = "secret_key", required = true) String secret_key,
+			@RequestParam(value = "page_no", required = false) Integer pageNo,
+			@RequestParam(value = "page_size", required = false) Integer pageSize) {
 		if (secret_key.equals(appConfigService.getProperty("RETAILER_PROFILE_API_PASSWORD", "magic@yabx"))) {
 			LOGGER.info("/retailers/profiles request received for status={}", status);
 			KycStatus kycStatus = KycStatus.valueOf(status);
 			if (kycStatus != null) {
-				List<AccountStatuses> accountStatuses = accountStatusesRepository.findByKycVerified(kycStatus);
+				Pageable pageable = PageRequest.of(pageNo != null ? pageNo : 0,
+						pageSize != null ? pageSize : appConfigService.getIntProperty("DEFAULT_PAGE_RECORD_SIZE", 5));
+				List<AccountStatuses> accountStatuses = accountStatusesRepository
+						.findByKycVerifiedAndUpdateAt(kycStatus, pageable);
 				LOGGER.info("Total received profile for status={} is ={}", status, accountStatuses.size());
 				List<PagesDTO> appPagesDTOList = new ArrayList<PagesDTO>();
 				for (AccountStatuses accountStatus : accountStatuses) {

@@ -2,6 +2,7 @@ package co.yabx.kyc.app.miniKyc.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,6 @@ public interface AccountStatusesRepository extends CrudRepository<AccountStatuse
 	@Query("select a from AccountStatuses a where a.msisdn=?1")
 	AccountStatuses findByMsisdn(String msisdn);
 
-	@Query("select a from AccountStatuses a where a.KycVerified=?1")
-	List<AccountStatuses> findByKycVerified(KycStatus KycStatus);
+	@Query("select a from AccountStatuses a where a.KycVerified=?1 order by a.updatedAt desc")
+	List<AccountStatuses> findByKycVerifiedAndUpdateAt(KycStatus KycStatus, Pageable pageable);
 }
