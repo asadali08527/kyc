@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import co.yabx.kyc.app.cache.RedisRepository;
 import co.yabx.kyc.app.dto.DsrRetailerRegistrationDto;
 import co.yabx.kyc.app.dto.UserDto;
 import co.yabx.kyc.app.entities.AuthInfo;
@@ -60,6 +61,12 @@ public class AdminServiceImpl implements AdminService {
 	@Autowired
 	private DSRService dsrService;
 
+	@Autowired
+	private AppConfigService appConfigService;
+
+	@Autowired
+	private RedisRepository redisRepository;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdminServiceImpl.class);
 
 	@Override
@@ -95,6 +102,10 @@ public class AdminServiceImpl implements AdminService {
 			if (yabxToken != null) {
 				AuthInfo authInfo = persistTokenAndKey(uuid, userName, dsrUser.getMsisdn());
 				if (authInfo != null) {
+					if (authInfo.getYabxToken() != null && redisRepository != null) {
+						if (appConfigService.getBooleanProperty("IS_CACHING_ENABLED", true))
+							redisRepository.update("YABX_ACCESS_TOKEN", uuid, authInfo);
+					}
 					dsrService.updateAuthInfo(dsrUser, authInfo);
 					jsonResponse.put("YABX_ACCESS_TOKEN", yabxToken);
 				}

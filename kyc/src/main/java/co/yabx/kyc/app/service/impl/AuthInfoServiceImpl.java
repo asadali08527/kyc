@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import co.yabx.kyc.app.cache.RedisRepository;
 import co.yabx.kyc.app.entities.AuthInfo;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.repositories.AuthInfoRepository;
@@ -35,6 +36,9 @@ public class AuthInfoServiceImpl implements AuthInfoService {
 	@Autowired
 	private AppConfigService appConfigService;
 
+	@Autowired
+	private RedisRepository redisRepository;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(AuthInfoServiceImpl.class);
 
 	@Override
@@ -46,13 +50,31 @@ public class AuthInfoServiceImpl implements AuthInfoService {
 		return StringUtils.EMPTY;
 	}
 
+	/*
+	 * @Override public Optional findByToken(String token) { String decryptedToken =
+	 * SecurityUtils.decript(token); AuthInfo authInfo =
+	 * authInfoRepository.findByYabxToken(decryptedToken); if (authInfo != null) {
+	 * // User user = userRepository.findByAuthInfo(authInfo); return
+	 * Optional.of(authInfo); } return Optional.empty();
+	 * 
+	 * }
+	 */
+
 	@Override
 	public Optional findByToken(String token) {
 		String decryptedToken = SecurityUtils.decript(token);
-		AuthInfo authInfo = authInfoRepository.findByYabxToken(decryptedToken);
+		AuthInfo authInfo = null;
+		if (appConfigService.getBooleanProperty("IS_CACHING_ENABLED", true) && redisRepository != null)
+			authInfo = redisRepository.findById("YABX_ACCESS_TOKEN", decryptedToken);
 		if (authInfo != null) {
 			// User user = userRepository.findByAuthInfo(authInfo);
 			return Optional.of(authInfo);
+		} else {
+			authInfo = authInfoRepository.findByYabxToken(decryptedToken);
+			if (authInfo != null) {
+				// User user = userRepository.findByAuthInfo(authInfo);
+				return Optional.of(authInfo);
+			}
 		}
 		return Optional.empty();
 
@@ -65,13 +87,13 @@ public class AuthInfoServiceImpl implements AuthInfoService {
 
 	}
 
-	@Override
-	public boolean isAuthorized(String dsrMSISDN, HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse) {
-		String token = httpServletRequest.getHeader("YABX_ACCESS_TOKEN");
-		AuthInfo authInfo = findByYabxToken(token);
-		return authInfo != null && authInfo.getMsisdn().equals(dsrMSISDN);
-	}
+	/*
+	 * @Override public boolean isAuthorized(String dsrMSISDN, HttpServletRequest
+	 * httpServletRequest, HttpServletResponse httpServletResponse) { String token =
+	 * httpServletRequest.getHeader("YABX_ACCESS_TOKEN"); AuthInfo authInfo =
+	 * findByYabxToken(token); return authInfo != null &&
+	 * authInfo.getMsisdn().equals(dsrMSISDN); }
+	 */
 
 	@Override
 	public AuthInfo persistYabxTokenAndSecretKey(AuthInfo authInfo, String uuid, String userName, String msisdn) {
@@ -87,6 +109,18 @@ public class AuthInfoServiceImpl implements AuthInfoService {
 			return authInfo;
 		}
 		return authInfo;
+	}
+
+	@Override
+	public boolean isAuthorized(String dsrMSISDN, HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse) {
+		String token = httpServletRequest.getHeader("YABX_ACCESS_TOKEN");
+		AuthInfo authInfo = null;
+		if (appConfigService.getBooleanProperty("IS_CACHING_ENABLED", true) && redisRepository != null)
+			authInfo = redisRepository.findById("YABX_ACCESS_TOKEN", token);
+		if (authInfo == null)
+			authInfo = findByYabxToken(token);
+		return authInfo != null && authInfo.getMsisdn().equals(dsrMSISDN);
 	}
 
 }

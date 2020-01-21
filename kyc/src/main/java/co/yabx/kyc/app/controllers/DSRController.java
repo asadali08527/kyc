@@ -95,7 +95,7 @@ public class DSRController {
 
 	}
 
-	@RequestMapping(value = "/dsr/verify/otp", method = RequestMethod.POST)
+	@RequestMapping(value = "/dsr/verify/mail/otp", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<?> verifyMail(@RequestBody VerifyOtpDTO verifyOtpDTO, HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse) {
