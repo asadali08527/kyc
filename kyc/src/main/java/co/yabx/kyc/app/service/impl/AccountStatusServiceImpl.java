@@ -24,6 +24,7 @@ import co.yabx.kyc.app.miniKyc.repository.AccountStatusesRepository;
 import co.yabx.kyc.app.miniKyc.repository.AccountStatusesTrackersRepository;
 import co.yabx.kyc.app.service.AccountStatusService;
 import co.yabx.kyc.app.service.AppConfigService;
+import co.yabx.kyc.app.service.RedisService;
 import co.yabx.kyc.app.util.EncoderDecoderUtil;
 
 /**
@@ -42,6 +43,9 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 
 	@Autowired
 	private AppConfigService appConfigService;
+
+	@Autowired
+	private RedisService redisService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AccountStatusServiceImpl.class);
 
@@ -307,8 +311,10 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	public AccountStatuses createAccountStatus(String msisdn, String createdBy, boolean isKycAvailable,
 			KycStatus kycStatus) {
 		AccountStatuses accountStatuses = accountStatusesRepository.findByMsisdn(msisdn);
-
-		return createAccount(accountStatuses, msisdn, createdBy, isKycAvailable, AccountStatus.NEW, kycStatus);
+		accountStatuses = createAccount(accountStatuses, msisdn, createdBy, isKycAvailable, AccountStatus.NEW,
+				kycStatus);
+		redisService.cacheProfileCount(msisdn, accountStatuses.getKycVerified());
+		return accountStatuses;
 	}
 
 }

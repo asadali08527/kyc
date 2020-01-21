@@ -23,6 +23,14 @@ public class RedisRepository {
 		hashOperations.put(key, hKey, value);
 	}
 
+	public void saveStatus(String key, String hKey, Integer value) {
+		hashOperations.put(key, hKey, value);
+	}
+
+	public Integer findCountByStatus(String key, String hKey) {
+		return (Integer) hashOperations.get(key, hKey);
+	}
+
 	public List findAll() {
 		return hashOperations.values("USER");
 	}

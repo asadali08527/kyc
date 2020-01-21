@@ -2,11 +2,11 @@ package co.yabx.kyc.app.controllers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,21 +25,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import co.yabx.kyc.app.dto.DsrRetailerRegistrationDto;
 import co.yabx.kyc.app.dto.PagesDTO;
-import co.yabx.kyc.app.dto.ResponseDTO;
-import co.yabx.kyc.app.dto.dtoHelper.RetailersDtoHelper;
+import co.yabx.kyc.app.dto.ProfileDTO;
 import co.yabx.kyc.app.enums.KycStatus;
 import co.yabx.kyc.app.enums.PageType;
 import co.yabx.kyc.app.enums.UserType;
-import co.yabx.kyc.app.fullKyc.entity.Retailers;
 import co.yabx.kyc.app.fullKyc.entity.User;
-import co.yabx.kyc.app.fullKyc.entity.UserRelationships;
-import co.yabx.kyc.app.fullKyc.repository.RetailersRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
 import co.yabx.kyc.app.miniKyc.repository.AccountStatusesRepository;
+import co.yabx.kyc.app.service.AccountStatusService;
 import co.yabx.kyc.app.service.AdminService;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.OtpService;
+import co.yabx.kyc.app.service.RedisService;
 import co.yabx.kyc.app.service.UserService;
 
 /**
@@ -69,6 +67,12 @@ public class AdminController {
 
 	@Autowired
 	private AccountStatusesRepository accountStatusesRepository;
+
+	@Autowired
+	private RedisService redisService;
+
+	@Autowired
+	private AccountStatusService accountStatusService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
 
@@ -135,6 +139,8 @@ public class AdminController {
 						pageSize != null ? pageSize : appConfigService.getIntProperty("DEFAULT_PAGE_RECORD_SIZE", 5));
 				List<AccountStatuses> accountStatuses = accountStatusesRepository
 						.findByKycVerifiedAndUpdateAt(kycStatus, pageable);
+				Integer profileCount = redisService.getProfileCount(kycStatus + "PROFILE_COUNT_FOR",
+						String.valueOf(kycStatus.ordinal()));
 				LOGGER.info("Total received profile for status={} is ={}", status, accountStatuses.size());
 				List<PagesDTO> appPagesDTOList = new ArrayList<PagesDTO>();
 				for (AccountStatuses accountStatus : accountStatuses) {
@@ -145,8 +151,38 @@ public class AdminController {
 						appPagesDTOList.addAll(userService.getUserDetails(user, PageType.RETAILERS));
 					}
 				}
-				return new ResponseEntity<>(appPagesDTOList, HttpStatus.OK);
+				ProfileDTO profileDTO = new ProfileDTO();
+				profileDTO.setPagesDTOs(appPagesDTOList);
+				profileDTO.setProfileCount(profileCount);
+				return new ResponseEntity<>(profileDTO, HttpStatus.OK);
 			}
+		}
+		return new ResponseEntity<>("Invalid secret key", HttpStatus.UNAUTHORIZED);
+	}
+
+	/**
+	 * 
+	 * @param msisdn
+	 * @param updateBy
+	 * @param secret_key
+	 * @param status
+	 * @param httpServletRequest
+	 * @param httpServletResponse
+	 * @return
+	 */
+	@RequestMapping(value = "/update/kyc/status", method = RequestMethod.POST)
+	public ResponseEntity<?> updateStatus(@RequestParam(value = "msisdn", required = true) String msisdn,
+			@RequestParam(value = "username", required = true) String updateBy,
+			@RequestParam(value = "secret_key", required = true) String secret_key,
+			@RequestParam(value = "status", required = true) String status, HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse) {
+		if (secret_key.equals(appConfigService.getProperty("REGISTER_DSR_RETAILER_API_PASSWORD", "magic@yabx"))) {
+			KycStatus kycStatus = KycStatus.valueOf(status);
+			if (kycStatus != null) {
+				return new ResponseEntity<>(accountStatusService.createAccountStatus(msisdn, updateBy, true, kycStatus),
+						HttpStatus.OK);
+			}
+			return new ResponseEntity<>("Invalid status", HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<>("Invalid secret key", HttpStatus.UNAUTHORIZED);
 

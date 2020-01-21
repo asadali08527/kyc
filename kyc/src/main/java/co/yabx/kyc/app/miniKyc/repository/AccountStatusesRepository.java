@@ -21,4 +21,7 @@ public interface AccountStatusesRepository extends CrudRepository<AccountStatuse
 
 	@Query("select a from AccountStatuses a where a.KycVerified=?1 order by a.updatedAt desc")
 	List<AccountStatuses> findByKycVerifiedAndUpdateAt(KycStatus KycStatus, Pageable pageable);
+
+	@Query("select count(a) from AccountStatuses a where a.KycVerified=?1")
+	Integer findByCountByKycStatus(KycStatus kycStatus);
 }

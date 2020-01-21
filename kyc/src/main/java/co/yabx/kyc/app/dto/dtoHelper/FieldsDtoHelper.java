@@ -518,9 +518,9 @@ public class FieldsDtoHelper implements Serializable {
 					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("facilityType")) {
 					List<String> options = new ArrayList<String>();
-					FacilityType[] accountTypes = FacilityType.values();
-					for (FacilityType statuses : accountTypes) {
-						options.add(statuses.getName());
+					FacilityType[] facilityTypes = FacilityType.values();
+					for (FacilityType facilityType : facilityTypes) {
+						options.add(facilityType.getName());
 					}
 					dynamicFields.setOptions(options);
 				} else if (dynamicFields.getFieldId().equals("businessType")) {
