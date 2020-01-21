@@ -53,8 +53,7 @@ public class BusinessDetails implements Serializable {
 	private FacilityDetails facilityDetails;
 
 	@Column(name = "facility_type", columnDefinition = "varchar(32) ")
-	@Enumerated(value = EnumType.STRING)
-	private FacilityType facilityType;
+	private String facilityType;
 
 	@Column(name = "fixed_asset_purchase")
 	private String fixedAssetPurchase;
@@ -179,11 +178,11 @@ public class BusinessDetails implements Serializable {
 		this.facilityDetails = facilityDetails;
 	}
 
-	public FacilityType getFacilityType() {
+	public String getFacilityType() {
 		return facilityType;
 	}
 
-	public void setFacilityType(FacilityType facilityType) {
+	public void setFacilityType(String facilityType) {
 		this.facilityType = facilityType;
 	}
 
