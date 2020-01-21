@@ -139,7 +139,7 @@ public class AdminController {
 						pageSize != null ? pageSize : appConfigService.getIntProperty("DEFAULT_PAGE_RECORD_SIZE", 5));
 				List<AccountStatuses> accountStatuses = accountStatusesRepository
 						.findByKycVerifiedAndUpdateAt(kycStatus, pageable);
-				Integer profileCount = redisService.getProfileCount(kycStatus + "PROFILE_COUNT_FOR",
+				Integer profileCount = redisService.getProfileCount(kycStatus + "_PROFILE_COUNT_FOR",
 						String.valueOf(kycStatus.ordinal()));
 				LOGGER.info("Total received profile for status={} is ={}", status, profileCount);
 				List<PagesDTO> appPagesDTOList = new ArrayList<PagesDTO>();
