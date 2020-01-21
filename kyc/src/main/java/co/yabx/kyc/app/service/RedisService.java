@@ -4,7 +4,7 @@ import co.yabx.kyc.app.enums.KycStatus;
 
 public interface RedisService {
 
-	void cacheProfileCount(String msisdn, KycStatus kycStatus);
+	Integer getProfileCount(String key, KycStatus kycStatus);
 
-	Integer getProfileCount(String string, String valueOf);
+	Integer cacheProfileCount(KycStatus kycStatus);
 }

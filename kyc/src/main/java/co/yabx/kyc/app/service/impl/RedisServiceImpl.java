@@ -34,16 +34,19 @@ public class RedisServiceImpl implements RedisService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RedisServiceImpl.class);
 
 	@Override
-	@Async
-	public void cacheProfileCount(String msisdn, KycStatus kycStatus) {
+	public Integer cacheProfileCount(KycStatus kycStatus) {
 		Integer count = accountStatusesRepository.findByCountByKycStatus(kycStatus);
 		redisRepository.saveStatus(kycStatus + "_PROFILE_COUNT_FOR", String.valueOf(kycStatus.ordinal()),
 				count == null ? 0 : count);
+		return count;
 	}
 
 	@Override
-	public Integer getProfileCount(String key, String hKey) {
-		return redisRepository.findCountByStatus(key, hKey);
+	public Integer getProfileCount(String key, KycStatus kycStatus) {
+		Integer profiles = redisRepository.findCountByStatus(key, String.valueOf(kycStatus.ordinal()));
+		if (profiles == null || profiles == 0)
+			return cacheProfileCount(kycStatus);
+		return profiles;
 	}
 
 }

@@ -313,7 +313,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 		AccountStatuses accountStatuses = accountStatusesRepository.findByMsisdn(msisdn);
 		accountStatuses = createAccount(accountStatuses, msisdn, createdBy, isKycAvailable, AccountStatus.NEW,
 				kycStatus);
-		redisService.cacheProfileCount(msisdn, accountStatuses.getKycVerified());
+		redisService.cacheProfileCount(accountStatuses.getKycVerified());
 		return accountStatuses;
 	}
 
