@@ -36,11 +36,7 @@ public class RedisServiceImpl implements RedisService {
 	@Override
 	@Async
 	public void cacheProfileCount(String msisdn, KycStatus kycStatus) {
-		Integer count = redisRepository.findCountByStatus(kycStatus + "PROFILE_COUNT_FOR",
-				String.valueOf(kycStatus.ordinal()));
-		if (count == null || count == 0) {
-			count = accountStatusesRepository.findByCountByKycStatus(kycStatus);
-		}
+		Integer count = accountStatusesRepository.findByCountByKycStatus(kycStatus);
 		redisRepository.saveStatus(kycStatus + "PROFILE_COUNT_FOR", String.valueOf(kycStatus.ordinal()),
 				count == null ? 1 : count + 1);
 	}

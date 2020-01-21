@@ -141,7 +141,7 @@ public class AdminController {
 						.findByKycVerifiedAndUpdateAt(kycStatus, pageable);
 				Integer profileCount = redisService.getProfileCount(kycStatus + "PROFILE_COUNT_FOR",
 						String.valueOf(kycStatus.ordinal()));
-				LOGGER.info("Total received profile for status={} is ={}", status, accountStatuses.size());
+				LOGGER.info("Total received profile for status={} is ={}", status, profileCount);
 				List<PagesDTO> appPagesDTOList = new ArrayList<PagesDTO>();
 				for (AccountStatuses accountStatus : accountStatuses) {
 					User user = userRepository.findBymsisdnAndUserType(accountStatus.getMsisdn(),
@@ -153,7 +153,7 @@ public class AdminController {
 				}
 				ProfileDTO profileDTO = new ProfileDTO();
 				profileDTO.setPagesDTOs(appPagesDTOList);
-				profileDTO.setProfileCount(profileCount);
+				profileDTO.setProfileCount(profileCount != null ? profileCount : 0);
 				return new ResponseEntity<>(profileDTO, HttpStatus.OK);
 			}
 		}
@@ -176,7 +176,8 @@ public class AdminController {
 			@RequestParam(value = "secret_key", required = true) String secret_key,
 			@RequestParam(value = "status", required = true) String status, HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse) {
-		if (secret_key.equals(appConfigService.getProperty("REGISTER_DSR_RETAILER_API_PASSWORD", "magic@yabx"))) {
+		if (secret_key.equals(appConfigService.getProperty("UPDATE_KYC_STATUS_API_PASSWORD", "magic@yabx"))) {
+			LOGGER.info("/update/kyc/status request received for status={}", status);
 			KycStatus kycStatus = KycStatus.valueOf(status);
 			if (kycStatus != null) {
 				return new ResponseEntity<>(accountStatusService.createAccountStatus(msisdn, updateBy, true, kycStatus),
