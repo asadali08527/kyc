@@ -159,7 +159,6 @@ public class FieldServiceImpl implements FieldService {
 				}
 				addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
 				if (addressDetails != null) {
-					businessAddressDetailsSet.clear();
 					businessAddressDetailsSet.add(addressDetails);
 				}
 			}

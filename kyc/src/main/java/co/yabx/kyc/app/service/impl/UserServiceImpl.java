@@ -213,7 +213,8 @@ public class UserServiceImpl implements UserService {
 				return persistUser(retailer, nominees, userAddressDetailsSet, userBankAccountDetailsSet,
 						liabilitiesDetailsSet, isNew, nomineeRelationship, nomineeAddressDetailsSet, isDsrUser,
 						businessDetailsSet, nomineeBankAccountDetailsSet, monthlyTransactionProfilesSet,
-						workEducationDetailsSet, introducerDetailsSet, attachmentDetailsSet, licenseDetailsSet);
+						workEducationDetailsSet, introducerDetailsSet, attachmentDetailsSet, licenseDetailsSet,
+						businessAddressDetailsSet, businessBankAccountDetailsSet);
 			}
 		}
 		return dsrUser;
@@ -228,7 +229,9 @@ public class UserServiceImpl implements UserService {
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet,
 			Set<MonthlyTransactionProfiles> monthlyTransactionProfilesSet,
 			Set<WorkEducationDetails> workEducationDetailsSet, Set<IntroducerDetails> introducerDetailsSet,
-			Set<AttachmentDetails> attachmentDetailsSet, Set<LicenseDetails> licenseDetailsSet) throws Exception {
+			Set<AttachmentDetails> attachmentDetailsSet, Set<LicenseDetails> licenseDetailsSet,
+			Set<AddressDetails> businessAddressDetailsSet, Set<BankAccountDetails> businessBankAccountDetailsSet)
+			throws Exception {
 		if (isDsrUser) {
 			user.setUserType(UserType.DISTRIBUTORS.name());
 			user.setUserStatus(UserStatus.ACTIVE);
@@ -251,10 +254,13 @@ public class UserServiceImpl implements UserService {
 			Set<BusinessDetails> businessDetails = user.getBusinessDetails();
 			businessDetails.clear();
 			businessDetailsSet.forEach(f -> f.setLicenseDetails(licenseDetailsSet));
+			businessDetailsSet.forEach(f -> f.setAddressDetails(businessAddressDetailsSet));
+			businessDetailsSet.forEach(f -> f.setBankAccountDetails(businessBankAccountDetailsSet));
 			businessDetails.addAll(businessDetailsSet);
 			user.setBusinessDetails(businessDetails);
-			LOGGER.info("Business details={} with license details={} is being saved", businessDetailsSet,
-					licenseDetailsSet);
+			LOGGER.info(
+					"Business details={} with license details={} , business address details={} and business bank account details are being saved",
+					businessDetailsSet, licenseDetailsSet, businessAddressDetailsSet, businessBankAccountDetailsSet);
 		}
 		if (neitherNullNorEmpty(liabilitiesDetails)) {
 			Set<LiabilitiesDetails> liabilitiesDetailsSet = user.getLiabilitiesDetails();
