@@ -260,9 +260,9 @@ public class AddressDetails implements Serializable {
 		return "AddressDetails [id=" + id + ", mobileNumber=" + mobileNumber + ", phoneNumber=" + phoneNumber
 				+ ", address=" + address + ", upazilaThana=" + upazilaThana + ", cityDsitrict=" + cityDsitrict
 				+ ", division=" + division + ", zipCode=" + zipCode + ", landmark=" + landmark + ", email=" + email
-				+ ", country=" + country + ", addressType=" + addressType + ", createdAt=" + createdAt + ", updatedAt="
-				+ updatedAt + ", user=" + user + ", businessDetails=" + businessDetails + ", customerInformations="
-				+ customerInformations + "]";
+				+ ", country=" + country + ", area=" + area + ", territory=" + territory + ", addressType="
+				+ addressType + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", user=" + user
+				+ ", businessDetails=" + businessDetails + ", customerInformations=" + customerInformations + "]";
 	}
 
 }

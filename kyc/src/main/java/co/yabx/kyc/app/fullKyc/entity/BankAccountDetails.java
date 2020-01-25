@@ -256,4 +256,15 @@ public class BankAccountDetails implements Serializable {
 		this.accountPurpose = accountPurpose;
 	}
 
+	@Override
+	public String toString() {
+		return "BankAccountDetails [id=" + id + ", msisdn=" + msisdn + ", accountTitle=" + accountTitle
+				+ ", typeOfConcern=" + typeOfConcern + ", bankName=" + bankName + ", accountNumber=" + accountNumber
+				+ ", branch=" + branch + ", accountPurpose=" + accountPurpose + ", currency=" + currency
+				+ ", modeOfOperation=" + modeOfOperation + ", bankAccountType=" + bankAccountType
+				+ ", bankAccountIdentifier=" + bankAccountIdentifier + ", user=" + user + ", businessDetails="
+				+ businessDetails + ", customerInformations=" + customerInformations + ", createdAt=" + createdAt
+				+ ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", updatedBy=" + updatedBy + "]";
+	}
+
 }
