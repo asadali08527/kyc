@@ -76,6 +76,9 @@ public class AuthInfo implements Serializable, UserDetails {
 	@Column(name = "updated_at")
 	private Date updatedAt;
 
+	@Column(unique = true)
+	private String email;
+
 	@PrePersist
 	public void prePersist() {
 		if (createdAt == null) {
@@ -215,6 +218,14 @@ public class AuthInfo implements Serializable, UserDetails {
 
 	public void setAccountNonLocked(boolean accountNonLocked) {
 		this.accountNonLocked = accountNonLocked;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }
