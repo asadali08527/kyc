@@ -10,13 +10,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import co.yabx.kyc.app.dto.UserDto;
 import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.fullKyc.entity.User;
+import co.yabx.kyc.app.service.AdminService;
+import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.AttachmentService;
 import co.yabx.kyc.app.service.StorageService;
 import co.yabx.kyc.app.service.UserService;
@@ -39,6 +44,12 @@ public class TestController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private AppConfigService appConfigService;
+
+	@Autowired
+	private AdminService adminService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 
@@ -63,4 +74,16 @@ public class TestController {
 
 	}
 
+	@RequestMapping(value = "/register/rm", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> registerRM(@RequestBody UserDto userDto) {
+		if (userDto != null && appConfigService.getProperty("CREATE_RM_API_PASSWORD", "magic@yabx")
+				.equals(userDto.getSecret_key())) {
+			LOGGER.info("/register/rm request recieved with body{}", userDto);
+			return new ResponseEntity<>(adminService.registerRM(userDto), HttpStatus.OK);
+
+		}
+		return new ResponseEntity<>("Invalid secret key", HttpStatus.UNAUTHORIZED);
+
+	}
 }

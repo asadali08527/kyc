@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,9 +27,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import co.yabx.kyc.app.dto.DsrRetailerRegistrationDto;
 import co.yabx.kyc.app.dto.PagesDTO;
 import co.yabx.kyc.app.dto.ProfileDTO;
+import co.yabx.kyc.app.dto.UserDto;
 import co.yabx.kyc.app.enums.KycStatus;
 import co.yabx.kyc.app.enums.PageType;
 import co.yabx.kyc.app.enums.UserType;
+import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
@@ -46,7 +49,7 @@ import co.yabx.kyc.app.service.UserService;
  *
  */
 @Controller
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/v1")
 public class AdminController {
 

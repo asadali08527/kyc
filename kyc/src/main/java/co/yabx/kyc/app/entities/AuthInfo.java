@@ -24,7 +24,8 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 @Entity
 @Table(name = "auth_infos", indexes = { @Index(name = "msisdn", columnList = "msisdn"),
-		@Index(name = "yabx_token", columnList = "yabx_token"), @Index(name = "user_name", columnList = "user_name") })
+		@Index(name = "email", columnList = "email"), @Index(name = "yabx_token", columnList = "yabx_token"),
+		@Index(name = "user_name", columnList = "user_name") })
 public class AuthInfo implements Serializable, UserDetails {
 
 	private static final long serialVersionUID = 1L;

@@ -25,4 +25,7 @@ public interface AuthInfoRepository extends JpaRepository<AuthInfo, Long> {
 
 	Optional<AuthInfo> findByUsername(String userName);
 
+	@Query(value = "SELECT u FROM AuthInfo u where u.msisdn=?1 OR u.username = ?2 OR u.email = ?3 ")
+	AuthInfo findByMsisdnOrUsernameOrEmail(String msisdn, String username, String email);
+
 }
