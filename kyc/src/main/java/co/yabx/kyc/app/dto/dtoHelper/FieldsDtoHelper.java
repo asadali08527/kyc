@@ -463,8 +463,7 @@ public class FieldsDtoHelper implements Serializable {
 	private static boolean prepareLicenseDetails(Fields dynamicFields, User retailers,
 			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter, Map<String, Integer> filledVsUnfilled,
 			SubGroups subGroups, List<FieldRemarks> fieldRemarksList) {
-		if (retailers == null || retailers.getBusinessDetails() == null || retailers.getBusinessDetails().isEmpty()) {
-		} else {
+		if (retailers != null && retailers.getBusinessDetails() != null && !retailers.getBusinessDetails().isEmpty()) {
 			Set<BusinessDetails> businessDetailsSet = retailers.getBusinessDetails();
 			Optional<BusinessDetails> optional = businessDetailsSet.stream().findFirst();
 			Set<LicenseDetails> licenseDetailsSet = optional.isPresent() ? optional.get().getLicenseDetails() : null;
