@@ -29,6 +29,8 @@ public class PagesDTO implements Serializable {
 	private String pageType;
 
 	private String icon;
+	
+	private String localeText;
 
 	private Integer filledFields;
 
@@ -181,6 +183,14 @@ public class PagesDTO implements Serializable {
 
 	public void setDisplayOrder(Integer displayOrder) {
 		this.displayOrder = displayOrder;
+	}
+
+	public String getLocaleText() {
+		return localeText;
+	}
+
+	public void setLocaleText(String localeText) {
+		this.localeText = localeText;
 	}
 
 }

@@ -20,6 +20,7 @@ import co.yabx.kyc.app.dto.SubFieldsDTO;
 import co.yabx.kyc.app.entities.Fields;
 import co.yabx.kyc.app.entities.SectionGroupRelationship;
 import co.yabx.kyc.app.entities.Sections;
+import co.yabx.kyc.app.entities.TextTemplates;
 import co.yabx.kyc.app.entities.filter.Filters;
 import co.yabx.kyc.app.entities.filter.Operations;
 import co.yabx.kyc.app.entities.filter.SubFields;
@@ -62,6 +63,7 @@ import co.yabx.kyc.app.fullKyc.entity.MonthlyTransactionProfiles;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.entity.WorkEducationDetails;
 import co.yabx.kyc.app.service.AppConfigService;
+import co.yabx.kyc.app.service.TextTemplateService;
 import co.yabx.kyc.app.util.SpringUtil;
 
 public class FieldsDtoHelper implements Serializable {
@@ -76,7 +78,7 @@ public class FieldsDtoHelper implements Serializable {
 			Set<AddressDetails> businessAddressDetailsSet, Set<BankAccountDetails> userBankAccountDetailsSet,
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet, Set<BankAccountDetails> businessBankAccountDetailsSet,
 			SubGroups subGroups, Filters filter, SectionGroupRelationship sectionGroupRelationship,
-			List<GroupsDTO> groupsDTOList, List<FieldRemarks> fieldRemarksList) {
+			List<GroupsDTO> groupsDTOList, List<FieldRemarks> fieldRemarksList, List<TextTemplates> textTemplatesList) {
 		Integer totalFields = 0;
 		List<FieldsDTO> appDynamicFieldsDTOSet = new ArrayList<FieldsDTO>();
 
@@ -86,69 +88,69 @@ public class FieldsDtoHelper implements Serializable {
 					&& (appPagesSections.getSectionId() == 1 || appPagesSections.getSectionId() == 3)) {
 				// User personal Info
 				isProcessed = prepareProfileInformation(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
-						filledVsUnfilled, fieldRemarksList);
+						filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 1 && appPagesSections.getSectionId() == 2) {
 				// nominee
 				if (dynamicFields.getFieldId().equals("msisdn")) {
 					dynamicFields.setEditable(true);
 				}
 				isProcessed = prepareProfileInformation(dynamicFields, nominee, appDynamicFieldsDTOSet, filter,
-						filledVsUnfilled, fieldRemarksList);
+						filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 2
 					&& (appPagesSections.getSectionId() == 1 || appPagesSections.getSectionId() == 3)) {
 				// user address details
 				isProcessed = prepareAddress(dynamicFields, userAddressDetailsSet, appDynamicFieldsDTOSet, subGroups,
-						filter, filledVsUnfilled, fieldRemarksList);
+						filter, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 2 && appPagesSections.getSectionId() == 2) {
 				// nominee address details
 				isProcessed = prepareAddress(dynamicFields, nomineeAddressDetailsSet, appDynamicFieldsDTOSet, subGroups,
-						filter, filledVsUnfilled, fieldRemarksList);
+						filter, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 2 && appPagesSections.getSectionId() == 5) {
 				// Business address details
 				isProcessed = prepareAddress(dynamicFields, businessAddressDetailsSet, appDynamicFieldsDTOSet,
-						subGroups, filter, filledVsUnfilled, fieldRemarksList);
+						subGroups, filter, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 3
 					&& (appPagesSections.getSectionId() == 1 || appPagesSections.getSectionId() == 3)) {
 				// user account details
 				isProcessed = prepareAccountInformations(dynamicFields, userBankAccountDetailsSet,
-						appDynamicFieldsDTOSet, filter, filledVsUnfilled, fieldRemarksList);
+						appDynamicFieldsDTOSet, filter, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 3 && appPagesSections.getSectionId() == 2) {
 				// nominee account details
 				isProcessed = prepareAccountInformations(dynamicFields, nomineeBankAccountDetailsSet,
-						appDynamicFieldsDTOSet, filter, filledVsUnfilled, fieldRemarksList);
+						appDynamicFieldsDTOSet, filter, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 3 && appPagesSections.getSectionId() == 5) {
 				// business account details
 				isProcessed = prepareAccountInformations(dynamicFields, businessBankAccountDetailsSet,
-						appDynamicFieldsDTOSet, filter, filledVsUnfilled, fieldRemarksList);
+						appDynamicFieldsDTOSet, filter, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 4) {
 				isProcessed = prepareLiabilitiesDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
-						subGroups, filledVsUnfilled, fieldRemarksList);
+						subGroups, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 5) {
 				isProcessed = prepareBusinessInformation(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
-						filledVsUnfilled, fieldRemarksList);
+						filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 6) {
 				isProcessed = prepareLicenseDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
-						filledVsUnfilled, subGroups, fieldRemarksList);
+						filledVsUnfilled, subGroups, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 7) {
 				isProcessed = prepareMonthlyTransactionProfile(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
-						filledVsUnfilled, fieldRemarksList);
+						filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 8
 					&& (appPagesSections.getSectionId() == 1 || appPagesSections.getSectionId() == 3)) {
 				// user or distributor work education
 				isProcessed = prepareWorkEducationDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
-						filledVsUnfilled, fieldRemarksList);
+						filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 8 && appPagesSections.getSectionId() == 2) {
 				// nominee work education
 				isProcessed = prepareWorkEducationDetails(dynamicFields, nominee, appDynamicFieldsDTOSet, filter,
-						filledVsUnfilled, fieldRemarksList);
+						filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 9) {
 				// Introducer Detaiils
 				isProcessed = prepareIntroducerDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
-						filledVsUnfilled, fieldRemarksList);
+						filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 10) {
 				// Attachment Detaiils
 				isProcessed = prepareAttachmentDetails(dynamicFields, retailers, appDynamicFieldsDTOSet, filter,
-						filledVsUnfilled, fieldRemarksList);
+						filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			}
 			if (isProcessed)
 				totalFields++;
@@ -189,7 +191,7 @@ public class FieldsDtoHelper implements Serializable {
 
 	private static boolean prepareAttachmentDetails(Fields dynamicFields, User retailers,
 			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter, Map<String, Integer> filledVsUnfilled,
-			List<FieldRemarks> fieldRemarksList) {
+			List<FieldRemarks> fieldRemarksList, List<TextTemplates> textTemplatesList) {
 
 		if (retailers == null || retailers.getAttachmentDetails() == null
 				|| retailers.getAttachmentDetails().isEmpty()) {
@@ -209,8 +211,9 @@ public class FieldsDtoHelper implements Serializable {
 				}
 				dynamicFields.setOptions(options);
 			}
-			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields, fieldRemarksList);
-			List<SubFieldsDTO> subFieldsDTOs = getSubFileds(dynamicFields, null, filledVsUnfilled, fieldRemarksList);
+			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList);
+			List<SubFieldsDTO> subFieldsDTOs = getSubFileds(dynamicFields, null, filledVsUnfilled, fieldRemarksList,
+					textTemplatesList);
 			/*
 			 * if (subFieldsDTOs != null)
 			 * subFieldsDTOs.stream().sorted().collect(Collectors.toList());
@@ -260,9 +263,9 @@ public class FieldsDtoHelper implements Serializable {
 						&& f.getDocumentType().equals(DocumentType.SIGNATURE.toString())).findFirst();
 				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled);
 			}
-			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields, fieldRemarksList);
+			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList);
 			List<SubFieldsDTO> subFieldsDTOs = getSubFileds(dynamicFields, attachmentDetails, filledVsUnfilled,
-					fieldRemarksList);
+					fieldRemarksList, textTemplatesList);
 			if (subFieldsDTOs != null)
 				subFieldsDTOs.stream().sorted(Comparator.comparing(SubFieldsDTO::getId)).collect(Collectors.toList());
 			fieldsDTO.setSubFields(subFieldsDTOs);
@@ -292,7 +295,7 @@ public class FieldsDtoHelper implements Serializable {
 
 	private static boolean prepareIntroducerDetails(Fields dynamicFields, User retailers,
 			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter, Map<String, Integer> filledVsUnfilled,
-			List<FieldRemarks> fieldRemarksList) {
+			List<FieldRemarks> fieldRemarksList, List<TextTemplates> textTemplatesList) {
 
 		if (retailers == null || retailers.getIntroducerDetails() == null
 				|| retailers.getIntroducerDetails().isEmpty()) {
@@ -320,7 +323,7 @@ public class FieldsDtoHelper implements Serializable {
 			}
 		}
 		increamentFilledFields(dynamicFields, filledVsUnfilled);
-		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList));
+		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList));
 		return true;
 	}
 
@@ -333,7 +336,7 @@ public class FieldsDtoHelper implements Serializable {
 
 	private static boolean prepareWorkEducationDetails(Fields dynamicFields, User retailers,
 			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter, Map<String, Integer> filledVsUnfilled,
-			List<FieldRemarks> fieldRemarksList) {
+			List<FieldRemarks> fieldRemarksList, List<TextTemplates> textTemplatesList) {
 		if (checkFilterCriteria(filter, dynamicFields.getFieldId())) {
 			if (retailers == null || retailers.getWorkEducationDetails() == null
 					|| retailers.getWorkEducationDetails().isEmpty()) {
@@ -403,7 +406,7 @@ public class FieldsDtoHelper implements Serializable {
 				}
 			}
 			increamentFilledFields(dynamicFields, filledVsUnfilled);
-			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList));
+			appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList));
 			return true;
 		}
 		return false;
@@ -412,7 +415,7 @@ public class FieldsDtoHelper implements Serializable {
 
 	private static boolean prepareMonthlyTransactionProfile(Fields dynamicFields, User retailers,
 			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter, Map<String, Integer> filledVsUnfilled,
-			List<FieldRemarks> fieldRemarksList) {
+			List<FieldRemarks> fieldRemarksList, List<TextTemplates> textTemplatesList) {
 		if (retailers == null || retailers.getMonthlyTransactionProfiles() == null
 				|| retailers.getMonthlyTransactionProfiles().isEmpty()) {
 		} else {
@@ -455,14 +458,14 @@ public class FieldsDtoHelper implements Serializable {
 			}
 		}
 		increamentFilledFields(dynamicFields, filledVsUnfilled);
-		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList));
+		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList));
 		return true;
 
 	}
 
 	private static boolean prepareLicenseDetails(Fields dynamicFields, User retailers,
 			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter, Map<String, Integer> filledVsUnfilled,
-			SubGroups subGroups, List<FieldRemarks> fieldRemarksList) {
+			SubGroups subGroups, List<FieldRemarks> fieldRemarksList, List<TextTemplates> textTemplatesList) {
 		if (retailers != null && retailers.getBusinessDetails() != null && !retailers.getBusinessDetails().isEmpty()) {
 			Set<BusinessDetails> businessDetailsSet = retailers.getBusinessDetails();
 			Optional<BusinessDetails> optional = businessDetailsSet.stream().findFirst();
@@ -485,7 +488,7 @@ public class FieldsDtoHelper implements Serializable {
 			}
 		}
 		increamentFilledFields(dynamicFields, filledVsUnfilled);
-		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList));
+		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList));
 		return true;
 
 	}
@@ -504,7 +507,7 @@ public class FieldsDtoHelper implements Serializable {
 
 	private static boolean prepareBusinessInformation(Fields dynamicFields, User retailers,
 			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter, Map<String, Integer> filledVsUnfilled,
-			List<FieldRemarks> fieldRemarksList) {
+			List<FieldRemarks> fieldRemarksList, List<TextTemplates> textTemplatesList) {
 		if (checkFilterCriteria(filter, dynamicFields.getFieldId())) {
 			if (retailers == null || retailers.getBusinessDetails() == null
 					|| retailers.getBusinessDetails().isEmpty()) {
@@ -538,7 +541,7 @@ public class FieldsDtoHelper implements Serializable {
 					dynamicFields.setOptions(options);
 				}
 				increamentFilledFields(dynamicFields, filledVsUnfilled);
-				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList));
+				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList));
 				return true;
 			} else {
 				Set<BusinessDetails> BusinessDetailsSet = retailers.getBusinessDetails();
@@ -716,7 +719,7 @@ public class FieldsDtoHelper implements Serializable {
 											: null);
 				}
 				increamentFilledFields(dynamicFields, filledVsUnfilled);
-				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList));
+				appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList));
 				return true;
 			}
 		}
@@ -726,7 +729,8 @@ public class FieldsDtoHelper implements Serializable {
 
 	private static boolean prepareLiabilitiesDetails(Fields dynamicFields, User retailers,
 			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter, SubGroups subGroups,
-			Map<String, Integer> filledVsUnfilled, List<FieldRemarks> fieldRemarksList) {
+			Map<String, Integer> filledVsUnfilled, List<FieldRemarks> fieldRemarksList,
+			List<TextTemplates> textTemplatesList) {
 		if (retailers == null || retailers.getLiabilitiesDetails() == null
 				|| retailers.getLiabilitiesDetails().isEmpty()) {
 		} else {
@@ -746,7 +750,7 @@ public class FieldsDtoHelper implements Serializable {
 			}
 		}
 		increamentFilledFields(dynamicFields, filledVsUnfilled);
-		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList));
+		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList));
 		return true;
 
 	}
@@ -776,7 +780,8 @@ public class FieldsDtoHelper implements Serializable {
 
 	private static boolean prepareAccountInformations(Fields dynamicFields,
 			Set<BankAccountDetails> bankAccountDetailsSet, List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter,
-			Map<String, Integer> filledVsUnfilled, List<FieldRemarks> fieldRemarksList) {
+			Map<String, Integer> filledVsUnfilled, List<FieldRemarks> fieldRemarksList,
+			List<TextTemplates> textTemplatesList) {
 		if (bankAccountDetailsSet == null || bankAccountDetailsSet.isEmpty()) {
 			if (dynamicFields.getFieldId().equals("bankAccountType")) {
 				List<String> options = new ArrayList<String>();
@@ -890,14 +895,15 @@ public class FieldsDtoHelper implements Serializable {
 			}
 		}
 		increamentFilledFields(dynamicFields, filledVsUnfilled);
-		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList));
+		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList));
 		return true;
 
 	}
 
 	private static boolean prepareAddress(Fields dynamicFields, Set<AddressDetails> addressDetailsSet,
 			List<FieldsDTO> appDynamicFieldsDTOSet, SubGroups subGroups, Filters filter,
-			Map<String, Integer> filledVsUnfilled, List<FieldRemarks> fieldRemarksList) {
+			Map<String, Integer> filledVsUnfilled, List<FieldRemarks> fieldRemarksList,
+			List<TextTemplates> textTemplatesList) {
 		if (addressDetailsSet == null || addressDetailsSet.isEmpty()) {
 			if (dynamicFields.getFieldId().equals("country")) {
 				List<String> options = new ArrayList<String>();
@@ -974,7 +980,7 @@ public class FieldsDtoHelper implements Serializable {
 			}
 		}
 		increamentFilledFields(dynamicFields, filledVsUnfilled);
-		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList));
+		appDynamicFieldsDTOSet.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList));
 		return true;
 
 	}
@@ -1009,7 +1015,7 @@ public class FieldsDtoHelper implements Serializable {
 
 	private static boolean prepareProfileInformation(Fields dynamicFields, User retailers,
 			List<FieldsDTO> appDynamicFieldsDTOSet, Filters filter, Map<String, Integer> filledVsUnfilled,
-			List<FieldRemarks> fieldRemarksList) {
+			List<FieldRemarks> fieldRemarksList, List<TextTemplates> textTemplatesList) {
 		if (checkFilterCriteria(filter, dynamicFields.getFieldId())) {
 			if (retailers != null) {
 				if (dynamicFields.getFieldId().equals("firstName")) {
@@ -1133,7 +1139,7 @@ public class FieldsDtoHelper implements Serializable {
 					dynamicFields.setOptions(options);
 				}
 			}
-			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields, fieldRemarksList);
+			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList);
 			addfunctionality(fieldsDTO, dynamicFields);
 			appDynamicFieldsDTOSet.add(fieldsDTO);
 			increamentFilledFields(dynamicFields, filledVsUnfilled);
@@ -1165,7 +1171,8 @@ public class FieldsDtoHelper implements Serializable {
 		}
 	}
 
-	private static FieldsDTO getAppDynamicFieldDTO(Fields dynamicFields, List<FieldRemarks> fieldRemarksList) {
+	private static FieldsDTO getAppDynamicFieldDTO(Fields dynamicFields, List<FieldRemarks> fieldRemarksList,
+			List<TextTemplates> textTemplatesList) {
 		FieldsDTO appDynamicFieldsDTO = new FieldsDTO();
 		appDynamicFieldsDTO.setRemark(getRemarks(dynamicFields, fieldRemarksList));
 		appDynamicFieldsDTO.setCamera(dynamicFields.isCamera());
@@ -1189,6 +1196,8 @@ public class FieldsDtoHelper implements Serializable {
 		appDynamicFieldsDTO.setEnableFutureDates(dynamicFields.getEnableFutureDates());
 		appDynamicFieldsDTO.setEnablePastDates(dynamicFields.getEnablePastDates());
 		appDynamicFieldsDTO.setInternationalRepresentation(dynamicFields.getInternationalRepresentation());
+		appDynamicFieldsDTO.setLocaleText(SpringUtil.bean(TextTemplateService.class).getTemplate(textTemplatesList,
+				appDynamicFieldsDTO.getFieldName()));
 		return appDynamicFieldsDTO;
 
 	}
@@ -1205,7 +1214,7 @@ public class FieldsDtoHelper implements Serializable {
 
 	private static List<SubFieldsDTO> getSubFileds(Fields dynamicFields,
 			Optional<AttachmentDetails> attachmentDetailsOptional, Map<String, Integer> filledVsUnfilled,
-			List<FieldRemarks> fieldRemarksList) {
+			List<FieldRemarks> fieldRemarksList, List<TextTemplates> textTemplatesList) {
 		Set<SubFields> subFieldsSet = dynamicFields.getSubFields();
 		if (subFieldsSet != null && !subFieldsSet.isEmpty()) {
 			List<SubFieldsDTO> subFieldsDTOs = new ArrayList<SubFieldsDTO>();
@@ -1213,7 +1222,7 @@ public class FieldsDtoHelper implements Serializable {
 				SubFieldsDTO subFieldsDTO = new SubFieldsDTO();
 				Fields subChildField = subFields.getChild();
 				String side = subChildField.getFieldName();
-				FieldsDTO fieldsDTO = getAppDynamicFieldDTO(subChildField, fieldRemarksList);
+				FieldsDTO fieldsDTO = getAppDynamicFieldDTO(subChildField, fieldRemarksList, textTemplatesList);
 				fieldsDTO.setRemark(getSideRemarks(dynamicFields, fieldRemarksList, side));
 				if (attachmentDetailsOptional != null && attachmentDetailsOptional.isPresent()) {
 					AttachmentDetails attachmentDetails = attachmentDetailsOptional.get();

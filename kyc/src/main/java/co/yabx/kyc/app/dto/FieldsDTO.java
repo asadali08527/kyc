@@ -63,6 +63,8 @@ public class FieldsDTO implements Serializable {
 
 	private String remark;
 
+	private String localeText;
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -263,6 +265,14 @@ public class FieldsDTO implements Serializable {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getLocaleText() {
+		return localeText;
+	}
+
+	public void setLocaleText(String localeText) {
+		this.localeText = localeText;
 	}
 
 }

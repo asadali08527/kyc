@@ -17,6 +17,7 @@ import co.yabx.kyc.app.dto.PagesDTO;
 import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.dto.dtoHelper.PagesDTOHeper;
 import co.yabx.kyc.app.entities.Pages;
+import co.yabx.kyc.app.entities.TextTemplates;
 import co.yabx.kyc.app.enums.PageType;
 import co.yabx.kyc.app.enums.Relationship;
 import co.yabx.kyc.app.enums.UserStatus;
@@ -43,8 +44,8 @@ import co.yabx.kyc.app.fullKyc.repository.UserRelationshipsRepository;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.repositories.PagesRepository;
 import co.yabx.kyc.app.service.SectionService;
+import co.yabx.kyc.app.service.TextTemplateService;
 import co.yabx.kyc.app.service.UserService;
-import co.yabx.kyc.app.util.SpringUtil;
 
 /**
  * 
@@ -75,6 +76,9 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private PagesRepository pagesRepository;
 
+	@Autowired
+	private TextTemplateService textTemplateService;
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
 	@Override
@@ -86,7 +90,7 @@ public class UserServiceImpl implements UserService {
 		 */}
 
 	@Override
-	public List<PagesDTO> getUserDetails(User user, PageType type) {
+	public List<PagesDTO> getUserDetails(User user, PageType type, String locale) {
 
 		List<Pages> appPages = pagesRepository.findByPageType(type);
 		if (appPages == null)
@@ -132,10 +136,12 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		List<FieldRemarks> fieldRemarksList = fieldRemarksRepository.findByUserId(user.getId());
+		List<TextTemplates> textTemplatesList = textTemplateService.getTextTemplatesByLocale(locale);
 		for (Pages pages : appPages) {
 			appPagesDTOList.add(PagesDTOHeper.prepareAppPagesDto(pages, user, nominee, userAddressDetailsSet,
 					nomineeAddressDetailsSet, businessAddressDetailsSet, userBankAccountDetailsSet,
-					nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, type.name(), fieldRemarksList));
+					nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, type.name(), fieldRemarksList,
+					textTemplatesList));
 
 		}
 

@@ -50,6 +50,9 @@ public class AppConfigSyncController {
 
 			resp.put("version", appConfigService.getProperty("SERVER_LATEST_VERSION", "1.3"));
 			resp.put("updatedTime", appConfigService.getLongProperty("UPDATED_TIME", System.currentTimeMillis()));
+			resp.put("locale", appConfigService.getProperty("BANGLADESH_LOCALE", "bn_BD"));
+			resp.put("popUpMessage",
+					appConfigService.getProperty("POP_UP_MESSGE_FOR_TEXT_TRANSLATION", "Convert text in Bangla?"));
 
 		} else {
 			if (syncType.contains("PROFILE_OPTIONS")) {
@@ -60,6 +63,11 @@ public class AppConfigSyncController {
 				resp.put("updatedTime", appConfigService.getLongProperty("UPDATED_TIME", System.currentTimeMillis()));
 			}
 			if (syncType.contains("TIPS")) {
+			}
+			if (syncType.contains("LOCALE")) {
+				resp.put("locale", appConfigService.getProperty("BANGLADESH_LOCALE", "bn_BD"));
+				resp.put("popUpMessage",
+						appConfigService.getProperty("POP_UP_MESSGE_FOR_TEXT_TRANSLATION", "Convert text in Bangla?"));
 			}
 		}
 		return new ResponseEntity<>(resp, HttpStatus.OK);

@@ -73,10 +73,11 @@ public class DSRController {
 
 	@RequestMapping(value = "/dsr/profile/{dsrMsisdn}", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity<?> fetchDSRProfile(@PathVariable String dsrMsisdn, HttpServletRequest httpServletRequest,
+	public ResponseEntity<?> fetchDSRProfile(@RequestParam(value = "locale", required = false) String locale,
+			@PathVariable String dsrMsisdn, HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse) {
 		if (authInfoService.isAuthorized(dsrMsisdn, httpServletRequest, httpServletResponse)) {
-			ResponseDTO loginDTO = dsrService.getDsrProfile(dsrMsisdn);
+			ResponseDTO loginDTO = dsrService.getDsrProfile(dsrMsisdn, locale);
 			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

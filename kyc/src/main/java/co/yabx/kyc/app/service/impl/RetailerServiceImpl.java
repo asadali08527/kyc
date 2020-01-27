@@ -130,14 +130,14 @@ public class RetailerServiceImpl implements RetailerService {
 	}
 
 	@Override
-	public ResponseDTO retailerDetails(String dsrMsisdn, Long retailerId) {
+	public ResponseDTO retailerDetails(String dsrMsisdn, Long retailerId, String locale) {
 		Optional<Retailers> user = retailersRepository.findById(retailerId);
 		if (user.isPresent()) {
 			UserRelationships dsrRetailersRelationships = userRelationshipsRepository.findByMsisdnAndRelative(dsrMsisdn,
 					user.get());
 			if (dsrRetailersRelationships != null) {
 				ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
-				responseDTO.setRetailerInfo(userService.getUserDetails(user.get(), PageType.RETAILERS));
+				responseDTO.setRetailerInfo(userService.getUserDetails(user.get(), PageType.RETAILERS, locale));
 				return responseDTO;
 			}
 		}
@@ -154,7 +154,7 @@ public class RetailerServiceImpl implements RetailerService {
 				.findByRelationship(Relationship.RETAILER);
 		List<PagesDTO> pagesDTOs = new ArrayList<PagesDTO>();
 		for (UserRelationships userRelationships : dsrRetailersRelationships) {
-			pagesDTOs.addAll(userService.getUserDetails(userRelationships.getRelative(), PageType.RETAILERS));
+			pagesDTOs.addAll(userService.getUserDetails(userRelationships.getRelative(), PageType.RETAILERS, null));
 		}
 		return pagesDTOs;
 	}
@@ -257,7 +257,7 @@ public class RetailerServiceImpl implements RetailerService {
 	}
 
 	@Override
-	public ResponseDTO submitRetailerProfile(RetailerRequestDTO retailerRequestDTO) throws Exception {
+	public ResponseDTO submitRetailerProfile(RetailerRequestDTO retailerRequestDTO, String locale) throws Exception {
 		if (retailerRequestDTO != null) {
 			String dsrMsisdn = retailerRequestDTO.getDsrMSISDN();
 			DSRUser dsrUser = userService.getDSRByMsisdn(dsrMsisdn);

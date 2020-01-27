@@ -12,7 +12,7 @@ public interface UserService {
 
 	void persistYabxTokenAndSecretKey(User user, String yabxToken, String aPI_SECRET_KEY);
 
-	List<PagesDTO> getUserDetails(User dsrUser, PageType pageType);
+	List<PagesDTO> getUserDetails(User dsrUser, PageType pageType, String locale);
 
 	DSRUser getDSRByMsisdn(String dsrMsisdn);
 

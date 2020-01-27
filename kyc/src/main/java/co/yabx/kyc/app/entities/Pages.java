@@ -56,6 +56,8 @@ public class Pages implements Serializable {
 	@Column(name = "enable", nullable = false, columnDefinition = "boolean default true")
 	private boolean enable;
 
+	private String locale;
+
 	@OneToMany(mappedBy = "pages", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 	private Set<Sections> sections;
 
@@ -140,6 +142,14 @@ public class Pages implements Serializable {
 
 	public void setSections(Set<Sections> sections) {
 		this.sections = sections;
+	}
+
+	public String getLocale() {
+		return locale;
+	}
+
+	public void setLocale(String locale) {
+		this.locale = locale;
 	}
 
 }

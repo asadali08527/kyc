@@ -133,7 +133,8 @@ public class AdminController {
 	public ResponseEntity<?> getRetailer(@RequestParam(value = "status", required = true) String status,
 			@RequestParam(value = "secret_key", required = true) String secret_key,
 			@RequestParam(value = "page_no", required = false) Integer pageNo,
-			@RequestParam(value = "page_size", required = false) Integer pageSize) {
+			@RequestParam(value = "page_size", required = false) Integer pageSize,
+			@RequestParam(value = "locale", required = false) String locale) {
 		if (secret_key.equals(appConfigService.getProperty("RETAILER_PROFILE_API_PASSWORD", "magic@yabx"))) {
 			LOGGER.info("/retailers/profiles request received for status={}", status);
 			KycStatus kycStatus = KycStatus.valueOf(status);
@@ -150,7 +151,7 @@ public class AdminController {
 							UserType.RETAILERS.name());
 					if (user != null) {
 						LOGGER.info("Pages being prepared for user ={}", user.getId());
-						appPagesDTOList.addAll(userService.getUserDetails(user, PageType.RETAILERS));
+						appPagesDTOList.addAll(userService.getUserDetails(user, PageType.RETAILERS, locale));
 					}
 				}
 				ProfileDTO profileDTO = new ProfileDTO();

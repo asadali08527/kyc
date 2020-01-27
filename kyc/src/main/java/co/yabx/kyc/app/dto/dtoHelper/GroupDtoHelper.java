@@ -18,6 +18,7 @@ import co.yabx.kyc.app.entities.Fields;
 import co.yabx.kyc.app.entities.Groups;
 import co.yabx.kyc.app.entities.SectionGroupRelationship;
 import co.yabx.kyc.app.entities.Sections;
+import co.yabx.kyc.app.entities.TextTemplates;
 import co.yabx.kyc.app.entities.filter.Filters;
 import co.yabx.kyc.app.entities.filter.SubGroups;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
@@ -25,6 +26,7 @@ import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.FieldRemarks;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.repositories.SectionGroupRelationshipRepository;
+import co.yabx.kyc.app.service.TextTemplateService;
 import co.yabx.kyc.app.util.SpringUtil;
 
 public class GroupDtoHelper implements Serializable {
@@ -32,7 +34,8 @@ public class GroupDtoHelper implements Serializable {
 			Sections appPagesSections, User nominee, Set<AddressDetails> userAddressDetailsSet,
 			Set<AddressDetails> nomineeAddressDetailsSet, Set<AddressDetails> businessAddressDetailsSet,
 			Set<BankAccountDetails> userBankAccountDetailsSet, Set<BankAccountDetails> nomineeBankAccountDetailsSet,
-			Set<BankAccountDetails> businessBankAccountDetailsSet, List<FieldRemarks> fieldRemarksList) {
+			Set<BankAccountDetails> businessBankAccountDetailsSet, List<FieldRemarks> fieldRemarksList,
+			List<TextTemplates> textTemplatesList) {
 		List<SectionGroupRelationship> sectionGroupRelationships = SpringUtil
 				.bean(SectionGroupRelationshipRepository.class).findBySectionId(appPagesSections.getSectionId());
 		List<GroupsDTO> groupsDTOList = new ArrayList<GroupsDTO>();
@@ -46,13 +49,15 @@ public class GroupDtoHelper implements Serializable {
 						prepareGroups(subGropus, retailers, appPagesSections, nominee, userAddressDetailsSet,
 								nomineeAddressDetailsSet, businessAddressDetailsSet, userBankAccountDetailsSet,
 								nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, appPagesSectionGroups,
-								groupsDTOList, filledVsUnfilled, filters, sectionGroupRelationship, fieldRemarksList);
+								groupsDTOList, filledVsUnfilled, filters, sectionGroupRelationship, fieldRemarksList,
+								textTemplatesList);
 					}
 				} else {
 					prepareGroups(null, retailers, appPagesSections, nominee, userAddressDetailsSet,
 							nomineeAddressDetailsSet, businessAddressDetailsSet, userBankAccountDetailsSet,
 							nomineeBankAccountDetailsSet, businessBankAccountDetailsSet, appPagesSectionGroups,
-							groupsDTOList, filledVsUnfilled, filters, sectionGroupRelationship, fieldRemarksList);
+							groupsDTOList, filledVsUnfilled, filters, sectionGroupRelationship, fieldRemarksList,
+							textTemplatesList);
 				}
 			}
 		}
@@ -65,7 +70,7 @@ public class GroupDtoHelper implements Serializable {
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet, Set<BankAccountDetails> businessBankAccountDetailsSet,
 			Groups appPagesSectionGroups, List<GroupsDTO> groupsDTOList, Map<String, Integer> filledVsUnfilled,
 			Set<Filters> filters, SectionGroupRelationship sectionGroupRelationship,
-			List<FieldRemarks> fieldRemarksList) {
+			List<FieldRemarks> fieldRemarksList, List<TextTemplates> textTemplatesList) {
 
 		if (appPagesSectionGroups != null) {
 			Map<String, Integer> groups = new HashMap<String, Integer>();
@@ -79,7 +84,7 @@ public class GroupDtoHelper implements Serializable {
 						appPagesSections, nominee, userAddressDetailsSet, nomineeAddressDetailsSet,
 						businessAddressDetailsSet, userBankAccountDetailsSet, nomineeBankAccountDetailsSet,
 						businessBankAccountDetailsSet, subGroups, filter, sectionGroupRelationship, groupsDTOList,
-						fieldRemarksList);
+						fieldRemarksList, textTemplatesList);
 				if (subGroups != null) {
 					addFunctionality(subGroups, groupsDTOList, fields, appPagesSectionGroupsDTO);
 				} else {
@@ -103,6 +108,8 @@ public class GroupDtoHelper implements Serializable {
 					appPagesSectionGroupsDTO.setDisplayOrder(subGroups.getDisplayOrder());
 				else
 					appPagesSectionGroupsDTO.setDisplayOrder(appPagesSectionGroups.getDisplayOrder());
+				appPagesSectionGroupsDTO.setLocaleText(SpringUtil.bean(TextTemplateService.class)
+						.getTemplate(textTemplatesList, appPagesSectionGroupsDTO.getGroupTitle()));
 				appPagesSectionGroupsDTO.setTotalFields(groups.get("totalFields"));
 				appPagesSectionGroupsDTO.setFilledFields(groups.get("filledFields"));
 				appPagesSectionGroupsDTO.setMandatoryFieldReceived(isMandatoryFieldReceived(fields));

@@ -84,11 +84,12 @@ public class RetailerController {
 	}
 
 	@RequestMapping(value = "/retailer/{dsrMsisdn}/{retailerId}", method = RequestMethod.GET)
-	public ResponseEntity<ResponseDTO> fetchRetailerDetails(@PathVariable String dsrMsisdn,
+	public ResponseEntity<ResponseDTO> fetchRetailerDetails(
+			@RequestParam(value = "locale", required = false) String locale, @PathVariable String dsrMsisdn,
 			@PathVariable Long retailerId, HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse) {
 		if (authInfoService.isAuthorized(dsrMsisdn, httpServletRequest, httpServletResponse)) {
-			ResponseDTO loginDTO = retailerService.retailerDetails(dsrMsisdn, retailerId);
+			ResponseDTO loginDTO = retailerService.retailerDetails(dsrMsisdn, retailerId, locale);
 			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -97,12 +98,13 @@ public class RetailerController {
 
 	@RequestMapping(value = "/retailer/profile", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<?> submitRetailerProfile(@RequestBody RetailerRequestDTO retailerRequestDTO,
-			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
+	public ResponseEntity<?> submitRetailerProfile(@RequestParam(value = "locale", required = false) String locale,
+			@RequestBody RetailerRequestDTO retailerRequestDTO, HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse) throws Exception {
 		if (authInfoService.isAuthorized(retailerRequestDTO != null ? retailerRequestDTO.getDsrMSISDN() : null,
 				httpServletRequest, httpServletResponse)) {
 			LOGGER.info("/retailer/profile request received with retailerRequestDTO={}", retailerRequestDTO);
-			ResponseDTO loginDTO = retailerService.submitRetailerProfile(retailerRequestDTO);
+			ResponseDTO loginDTO = retailerService.submitRetailerProfile(retailerRequestDTO, locale);
 			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

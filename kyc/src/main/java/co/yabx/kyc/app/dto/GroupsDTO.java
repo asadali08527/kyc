@@ -34,6 +34,8 @@ public class GroupsDTO implements Serializable, Comparable<GroupsDTO> {
 
 	private boolean mandatoryFieldReceived;
 
+	private String localeText;
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -141,6 +143,14 @@ public class GroupsDTO implements Serializable, Comparable<GroupsDTO> {
 	public int compareTo(GroupsDTO groupsDTO) {
 		return groupId.compareTo(groupsDTO.getGroupId());
 
+	}
+
+	public String getLocaleText() {
+		return localeText;
+	}
+
+	public void setLocaleText(String localeText) {
+		this.localeText = localeText;
 	}
 
 }

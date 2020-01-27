@@ -13,17 +13,21 @@ import java.util.stream.Collectors;
 import co.yabx.kyc.app.dto.GroupsDTO;
 import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.entities.Sections;
+import co.yabx.kyc.app.entities.TextTemplates;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.FieldRemarks;
 import co.yabx.kyc.app.fullKyc.entity.User;
+import co.yabx.kyc.app.service.TextTemplateService;
+import co.yabx.kyc.app.util.SpringUtil;
 
 public class SectionDtoHelper implements Serializable {
 	public static List<SectionsDTO> getSections(Set<Sections> appPagesSectionsSet, User retailers,
 			Map<String, Integer> filledVsUnfilled, User nominee, Set<AddressDetails> userAddressDetailsSet,
 			Set<AddressDetails> nomineeAddressDetailsSet, Set<AddressDetails> businessAddressDetailsSet,
 			Set<BankAccountDetails> userBankAccountDetailsSet, Set<BankAccountDetails> nomineeBankAccountDetailsSet,
-			Set<BankAccountDetails> businessBankAccountDetailsSet, List<FieldRemarks> fieldRemarksList) {
+			Set<BankAccountDetails> businessBankAccountDetailsSet, List<FieldRemarks> fieldRemarksList,
+			List<TextTemplates> textTemplatesList) {
 		List<SectionsDTO> appPagesSectionDTOSet = new ArrayList<SectionsDTO>();
 		for (Sections appPagesSections : appPagesSectionsSet) {
 			Map<String, Integer> section = new HashMap<String, Integer>();
@@ -34,7 +38,7 @@ public class SectionDtoHelper implements Serializable {
 			List<GroupsDTO> appPagesSectionGroupSet = GroupDtoHelper.getGroups(retailers, section, appPagesSections,
 					nominee, userAddressDetailsSet, nomineeAddressDetailsSet, businessAddressDetailsSet,
 					userBankAccountDetailsSet, nomineeBankAccountDetailsSet, businessBankAccountDetailsSet,
-					fieldRemarksList);
+					fieldRemarksList,textTemplatesList);
 			Collections.sort(appPagesSectionGroupSet);
 			appPagesSectionsDTO.setGroups(appPagesSectionGroupSet);
 			appPagesSectionsDTO.setGroups(appPagesSectionGroupSet);
@@ -42,6 +46,8 @@ public class SectionDtoHelper implements Serializable {
 			appPagesSectionsDTO.setSectionId(appPagesSections.getSectionId());
 			appPagesSectionsDTO.setSectionName(appPagesSections.getSectionName());
 			appPagesSectionsDTO.setSectionTitle(appPagesSections.getSectionTitle());
+			appPagesSectionsDTO.setLocaleText(SpringUtil.bean(TextTemplateService.class).getTemplate(textTemplatesList,
+					appPagesSections.getSectionTitle()));
 			appPagesSectionsDTO.setFilledFields(section.get("filledFields"));
 			appPagesSectionsDTO.setTotalFields(section.get("totalFields"));
 			appPagesSectionsDTO.setDisplayOrder(appPagesSections.getDisplayOrder());

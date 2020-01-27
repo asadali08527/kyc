@@ -223,12 +223,12 @@ public class DSRServiceImpl implements DSRService {
 	}
 
 	@Override
-	public ResponseDTO getDsrProfile(String msisdn) {
+	public ResponseDTO getDsrProfile(String msisdn, String locale) {
 		DSRUser dsrUser = dsrUserRepository.findByMsisdn(msisdn);
 		if (dsrUser != null) {
 			ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200",
 					dsrUser.getUserStatus());
-			responseDTO.setDsrInfo(userService.getUserDetails(dsrUser, PageType.DISTRIBUTORS));
+			responseDTO.setDsrInfo(userService.getUserDetails(dsrUser, PageType.DISTRIBUTORS, locale));
 			return responseDTO;
 		} else {
 			ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "No DSR Found", "404", null);

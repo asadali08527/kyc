@@ -18,12 +18,14 @@ import co.yabx.kyc.app.dto.PagesDTO;
 import co.yabx.kyc.app.dto.SectionsDTO;
 import co.yabx.kyc.app.entities.Pages;
 import co.yabx.kyc.app.entities.Sections;
+import co.yabx.kyc.app.entities.TextTemplates;
 import co.yabx.kyc.app.enums.UserType;
 import co.yabx.kyc.app.fullKyc.entity.AddressDetails;
 import co.yabx.kyc.app.fullKyc.entity.BankAccountDetails;
 import co.yabx.kyc.app.fullKyc.entity.FieldRemarks;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.service.AppConfigService;
+import co.yabx.kyc.app.service.TextTemplateService;
 import co.yabx.kyc.app.util.SpringUtil;
 
 public class PagesDTOHeper implements Serializable {
@@ -34,7 +36,7 @@ public class PagesDTOHeper implements Serializable {
 			Set<AddressDetails> userAddressDetailsSet, Set<AddressDetails> nomineeAddressDetailsSet,
 			Set<AddressDetails> businessAddressDetailsSet, Set<BankAccountDetails> userBankAccountDetailsSet,
 			Set<BankAccountDetails> nomineeBankAccountDetailsSet, Set<BankAccountDetails> businessBankAccountDetailsSet,
-			String type, List<FieldRemarks> fieldRemarksList) {
+			String type, List<FieldRemarks> fieldRemarksList, List<TextTemplates> textTemplatesList) {
 		PagesDTO appPagesDTO = new PagesDTO();
 		Map<String, Integer> filledVsUnfilled = new HashMap<String, Integer>();
 		filledVsUnfilled.put("filledFields", 0);
@@ -44,7 +46,7 @@ public class PagesDTOHeper implements Serializable {
 			List<SectionsDTO> appPagesSectionSet = SectionDtoHelper.getSections(appPagesSectionsSet, retailers,
 					filledVsUnfilled, nominee, userAddressDetailsSet, nomineeAddressDetailsSet,
 					businessAddressDetailsSet, userBankAccountDetailsSet, nomineeBankAccountDetailsSet,
-					businessBankAccountDetailsSet, fieldRemarksList);
+					businessBankAccountDetailsSet, fieldRemarksList, textTemplatesList);
 			appPagesDTO.setSections(appPagesSectionSet.stream().sorted(Comparator.comparing(SectionsDTO::getSectionId))
 					.collect(Collectors.toList()));
 			appPagesDTO.setEnable(pages.isEnable());
@@ -53,6 +55,8 @@ public class PagesDTOHeper implements Serializable {
 			appPagesDTO.setPageTitle(pages.getPageTitle());
 			appPagesDTO.setTotalFields(filledVsUnfilled.get("totalFields"));
 			appPagesDTO.setFilledFields(filledVsUnfilled.get("filledFields"));
+			appPagesDTO.setLocaleText(
+					SpringUtil.bean(TextTemplateService.class).getTemplate(textTemplatesList, pages.getPageTitle()));
 			appPagesDTO.setDisplayOrder(pages.getDisplayOrder());
 			if (UserType.RETAILERS.toString().equals(type))
 				appPagesDTO.setRetailerId(retailers != null ? retailers.getId() : null);

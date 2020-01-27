@@ -9,9 +9,9 @@ import co.yabx.kyc.app.fullKyc.dto.UserDTO;
 
 public interface RetailerService {
 
-	ResponseDTO retailerDetails(String dsrMsisdn, Long retailerId);
+	ResponseDTO retailerDetails(String dsrMsisdn, Long retailerId, String locale);
 
-	ResponseDTO submitRetailerProfile(RetailerRequestDTO retailerRequestDTO) throws Exception;
+	ResponseDTO submitRetailerProfile(RetailerRequestDTO retailerRequestDTO, String locale) throws Exception;
 
 	ResponseDTO submitRetailerNomineeProfile(UserDTO userDTO);
 

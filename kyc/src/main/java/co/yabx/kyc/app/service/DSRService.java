@@ -22,6 +22,6 @@ public interface DSRService {
 
 	ResponseDTO verifyMail(VerifyOtpDTO verifyOtpDTO);
 
-	ResponseDTO getDsrProfile(String msisdn);
+	ResponseDTO getDsrProfile(String msisdn, String locale);
 
 }

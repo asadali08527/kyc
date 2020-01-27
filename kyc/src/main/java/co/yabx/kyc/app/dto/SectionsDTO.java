@@ -31,8 +31,10 @@ public class SectionsDTO implements Serializable {
 	private Integer totalFields;
 
 	private Long nomineeId;
-	
+
 	private Integer displayOrder;
+
+	private String localeText;
 
 	public String getSectionType() {
 		return sectionType;
@@ -145,6 +147,14 @@ public class SectionsDTO implements Serializable {
 
 	public void setDisplayOrder(Integer displayOrder) {
 		this.displayOrder = displayOrder;
+	}
+
+	public String getLocaleText() {
+		return localeText;
+	}
+
+	public void setLocaleText(String localeText) {
+		this.localeText = localeText;
 	}
 
 }
