@@ -53,7 +53,7 @@ public class TextTemplateServiceImpl implements TextTemplateService {
 		if (textTemplatesList != null && !textTemplatesList.isEmpty()) {
 			Optional<TextTemplates> optional = textTemplatesList.stream()
 					.filter(f -> f != null && f.getTemplateName().equalsIgnoreCase(templateName)).findFirst();
-			return optional.isPresent() ? optional.get().getTemplate() : null;
+			return optional.isPresent() ? optional.get().getTemplate() : templateName;
 		}
 		return templateName;
 	}

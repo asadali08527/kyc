@@ -89,6 +89,7 @@ public class RetailerController {
 			@PathVariable Long retailerId, HttpServletRequest httpServletRequest,
 			HttpServletResponse httpServletResponse) {
 		if (authInfoService.isAuthorized(dsrMsisdn, httpServletRequest, httpServletResponse)) {
+			LOGGER.info("/retailer/{}/{} request received with locale={}", dsrMsisdn, retailerId, locale);
 			ResponseDTO loginDTO = retailerService.retailerDetails(dsrMsisdn, retailerId, locale);
 			return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 		}
