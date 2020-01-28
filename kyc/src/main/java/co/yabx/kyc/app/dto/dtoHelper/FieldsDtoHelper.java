@@ -1209,8 +1209,10 @@ public class FieldsDtoHelper implements Serializable {
 		appDynamicFieldsDTO.setEnableFutureDates(dynamicFields.getEnableFutureDates());
 		appDynamicFieldsDTO.setEnablePastDates(dynamicFields.getEnablePastDates());
 		appDynamicFieldsDTO.setInternationalRepresentation(dynamicFields.getInternationalRepresentation());
-		appDynamicFieldsDTO.setLocaleText(SpringUtil.bean(TextTemplateService.class).getTemplate(textTemplatesList,
-				appDynamicFieldsDTO.getFieldName()));
+		/*
+		 * appDynamicFieldsDTO.setLocaleText(SpringUtil.bean(TextTemplateService.class).
+		 * getTemplate(textTemplatesList, appDynamicFieldsDTO.getFieldName()));
+		 */
 		return appDynamicFieldsDTO;
 
 	}
