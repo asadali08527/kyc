@@ -65,8 +65,8 @@ public class TextTemplateServiceImpl implements TextTemplateService {
 		List<TextTemplates> unsaved = new ArrayList<TextTemplates>();
 
 		try {
-			FileInputStream file = new FileInputStream(new File(
-					appConfigService.getProperty("TEXT_TRANSLATION_FILE_LOCATION", "/var/lib/kyc/text_translation")));
+			FileInputStream file = new FileInputStream(new File(appConfigService.getProperty(
+					"TEXT_TRANSLATION_FILE_LOCATION", "/var/lib/kyc/text_translation/textTemplates.xlsx")));
 			// Create Workbook instance holding reference to .xlsx file
 			XSSFWorkbook workbook = new XSSFWorkbook(file);
 
@@ -114,6 +114,11 @@ public class TextTemplateServiceImpl implements TextTemplateService {
 		status.put("Saved List", saved);
 		status.put("Unsaved List", unsaved);
 		return status;
+	}
+
+	@Override
+	public List<TextTemplates> getTemplates() {
+		return textTemplatesRepository.findAll();
 	}
 
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.fullKyc.repository.UserRepository;
 import co.yabx.kyc.app.service.AppConfigService;
+import co.yabx.kyc.app.service.TextTemplateService;
 
 /**
  * 
@@ -34,6 +35,9 @@ public class AppConfigSyncController {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private TextTemplateService textTemplateService;
 
 	@RequestMapping(value = "/app/config/sync", method = RequestMethod.GET)
 	@ResponseBody
@@ -53,6 +57,7 @@ public class AppConfigSyncController {
 			resp.put("locale", appConfigService.getProperty("BANGLADESH_LOCALE", "bn_BD"));
 			resp.put("popUpMessage",
 					appConfigService.getProperty("POP_UP_MESSGE_FOR_TEXT_TRANSLATION", "Convert text in Bangla?"));
+			resp.put("textTemplates", textTemplateService.getTemplates());
 
 		} else {
 			if (syncType.contains("PROFILE_OPTIONS")) {
@@ -68,6 +73,9 @@ public class AppConfigSyncController {
 				resp.put("locale", appConfigService.getProperty("BANGLADESH_LOCALE", "bn_BD"));
 				resp.put("popUpMessage",
 						appConfigService.getProperty("POP_UP_MESSGE_FOR_TEXT_TRANSLATION", "Convert text in Bangla?"));
+			}
+			if (syncType.contains("TIPS")) {
+				resp.put("textTemplates", textTemplateService.getTemplates());
 			}
 		}
 		return new ResponseEntity<>(resp, HttpStatus.OK);

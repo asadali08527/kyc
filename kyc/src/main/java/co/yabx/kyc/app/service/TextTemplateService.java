@@ -17,4 +17,6 @@ public interface TextTemplateService {
 	String getTemplate(List<TextTemplates> textTemplatesList, String pageTitle);
 
 	Map<String, List<TextTemplates>> uploadText();
+
+	List<TextTemplates> getTemplates();
 }
