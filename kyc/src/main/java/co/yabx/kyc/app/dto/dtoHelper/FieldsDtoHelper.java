@@ -1178,11 +1178,26 @@ public class FieldsDtoHelper implements Serializable {
 		appDynamicFieldsDTO.setCamera(dynamicFields.isCamera());
 		appDynamicFieldsDTO.setDataType(dynamicFields.getDataType());
 		appDynamicFieldsDTO.setFieldId(dynamicFields.getFieldId());
-		appDynamicFieldsDTO.setFieldName(dynamicFields.getFieldName());
 		appDynamicFieldsDTO.setId(dynamicFields.getId());
 		appDynamicFieldsDTO.setMandatory(dynamicFields.isMandatory());
 		appDynamicFieldsDTO.setOptions(dynamicFields.getOptions());
-		appDynamicFieldsDTO.setPlaceHolderText(dynamicFields.getPlaceHolderText());
+		// locale based text
+		if (textTemplatesList != null && !textTemplatesList.isEmpty())
+			appDynamicFieldsDTO.setPlaceHolderText(SpringUtil.bean(TextTemplateService.class)
+					.getTemplate(textTemplatesList, dynamicFields.getPlaceHolderText()));
+		else
+			appDynamicFieldsDTO.setPlaceHolderText(dynamicFields.getPlaceHolderText());
+		if (textTemplatesList != null && !textTemplatesList.isEmpty())
+			appDynamicFieldsDTO.setHelp(SpringUtil.bean(TextTemplateService.class).getTemplate(textTemplatesList,
+					dynamicFields.getHelp() != null ? dynamicFields.getHelp().trim() : dynamicFields.getHelp()));
+		else
+			appDynamicFieldsDTO.setHelp(
+					dynamicFields.getHelp() != null ? dynamicFields.getHelp().trim() : dynamicFields.getHelp());
+		if (textTemplatesList != null && !textTemplatesList.isEmpty())
+			appDynamicFieldsDTO.setFieldName(SpringUtil.bean(TextTemplateService.class).getTemplate(textTemplatesList,
+					dynamicFields.getFieldName()));
+		else
+			appDynamicFieldsDTO.setFieldName(dynamicFields.getFieldName());
 		appDynamicFieldsDTO.setSavedData(dynamicFields.getSavedData());
 		appDynamicFieldsDTO.setEditable(dynamicFields.getSavedData() != null ? dynamicFields.isEditable() : true);
 		appDynamicFieldsDTO.setType(dynamicFields.getType());
@@ -1191,8 +1206,6 @@ public class FieldsDtoHelper implements Serializable {
 		appDynamicFieldsDTO
 				.setDefaultValue(dynamicFields.getDefaultValue() != null ? dynamicFields.getDefaultValue().trim()
 						: dynamicFields.getDefaultValue());
-		appDynamicFieldsDTO
-				.setHelp(dynamicFields.getHelp() != null ? dynamicFields.getHelp().trim() : dynamicFields.getHelp());
 		appDynamicFieldsDTO.setEnableFutureDates(dynamicFields.getEnableFutureDates());
 		appDynamicFieldsDTO.setEnablePastDates(dynamicFields.getEnablePastDates());
 		appDynamicFieldsDTO.setInternationalRepresentation(dynamicFields.getInternationalRepresentation());

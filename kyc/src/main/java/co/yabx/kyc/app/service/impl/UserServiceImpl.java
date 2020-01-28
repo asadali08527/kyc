@@ -136,7 +136,9 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 		List<FieldRemarks> fieldRemarksList = fieldRemarksRepository.findByUserId(user.getId());
-		List<TextTemplates> textTemplatesList = textTemplateService.getTextTemplatesByLocale(locale);
+		List<TextTemplates> textTemplatesList = null;
+		if (locale != null && !locale.isEmpty())
+			textTemplatesList = textTemplateService.getTextTemplatesByLocale(locale);
 		for (Pages pages : appPages) {
 			appPagesDTOList.add(PagesDTOHeper.prepareAppPagesDto(pages, user, nominee, userAddressDetailsSet,
 					nomineeAddressDetailsSet, businessAddressDetailsSet, userBankAccountDetailsSet,

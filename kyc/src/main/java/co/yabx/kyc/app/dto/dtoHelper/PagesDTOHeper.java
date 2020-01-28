@@ -52,11 +52,18 @@ public class PagesDTOHeper implements Serializable {
 			appPagesDTO.setEnable(pages.isEnable());
 			appPagesDTO.setPageId(pages.getPageId());
 			// appPagesDTO.setPageName(pages.getPageName());
-			appPagesDTO.setPageTitle(pages.getPageTitle());
+			if (textTemplatesList != null && !textTemplatesList.isEmpty())
+				appPagesDTO.setPageTitle(SpringUtil.bean(TextTemplateService.class).getTemplate(textTemplatesList,
+						pages.getPageTitle()));
+			else
+				appPagesDTO.setPageTitle(pages.getPageTitle());
 			appPagesDTO.setTotalFields(filledVsUnfilled.get("totalFields"));
 			appPagesDTO.setFilledFields(filledVsUnfilled.get("filledFields"));
-			appPagesDTO.setLocaleText(
-					SpringUtil.bean(TextTemplateService.class).getTemplate(textTemplatesList, pages.getPageTitle()));
+			/*
+			 * appPagesDTO.setLocaleText(
+			 * SpringUtil.bean(TextTemplateService.class).getTemplate(textTemplatesList,
+			 * pages.getPageTitle()));
+			 */
 			appPagesDTO.setDisplayOrder(pages.getDisplayOrder());
 			if (UserType.RETAILERS.toString().equals(type))
 				appPagesDTO.setRetailerId(retailers != null ? retailers.getId() : null);

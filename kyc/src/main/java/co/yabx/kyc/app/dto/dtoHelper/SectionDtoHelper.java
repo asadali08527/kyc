@@ -38,16 +38,22 @@ public class SectionDtoHelper implements Serializable {
 			List<GroupsDTO> appPagesSectionGroupSet = GroupDtoHelper.getGroups(retailers, section, appPagesSections,
 					nominee, userAddressDetailsSet, nomineeAddressDetailsSet, businessAddressDetailsSet,
 					userBankAccountDetailsSet, nomineeBankAccountDetailsSet, businessBankAccountDetailsSet,
-					fieldRemarksList,textTemplatesList);
+					fieldRemarksList, textTemplatesList);
 			Collections.sort(appPagesSectionGroupSet);
 			appPagesSectionsDTO.setGroups(appPagesSectionGroupSet);
 			appPagesSectionsDTO.setGroups(appPagesSectionGroupSet);
 			appPagesSectionsDTO.setEnable(appPagesSections.isEnable());
 			appPagesSectionsDTO.setSectionId(appPagesSections.getSectionId());
 			appPagesSectionsDTO.setSectionName(appPagesSections.getSectionName());
-			appPagesSectionsDTO.setSectionTitle(appPagesSections.getSectionTitle());
-			appPagesSectionsDTO.setLocaleText(SpringUtil.bean(TextTemplateService.class).getTemplate(textTemplatesList,
-					appPagesSections.getSectionTitle()));
+			if (textTemplatesList != null && !textTemplatesList.isEmpty())
+				appPagesSectionsDTO.setSectionTitle(SpringUtil.bean(TextTemplateService.class)
+						.getTemplate(textTemplatesList, appPagesSections.getSectionTitle()));
+			else
+				appPagesSectionsDTO.setSectionTitle(appPagesSections.getSectionTitle());
+			/*
+			 * appPagesSectionsDTO.setLocaleText(SpringUtil.bean(TextTemplateService.class).
+			 * getTemplate(textTemplatesList, appPagesSections.getSectionTitle()));
+			 */
 			appPagesSectionsDTO.setFilledFields(section.get("filledFields"));
 			appPagesSectionsDTO.setTotalFields(section.get("totalFields"));
 			appPagesSectionsDTO.setDisplayOrder(appPagesSections.getDisplayOrder());

@@ -12,6 +12,8 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import co.yabx.kyc.app.util.EncoderDecoderUtil;
+
 @Entity
 @Table(name = "text_templates", uniqueConstraints = { @UniqueConstraint(columnNames = { "templateName", "locale" }) })
 public class TextTemplates implements Serializable {
@@ -43,11 +45,11 @@ public class TextTemplates implements Serializable {
 	}
 
 	public String getTemplate() {
-		return template;
+		return EncoderDecoderUtil.base64Decode(template);
 	}
 
 	public void setTemplate(String template) {
-		this.template = template;
+		this.template = EncoderDecoderUtil.base64Encode(template);
 	}
 
 	public Date getUpdatedTime() {
