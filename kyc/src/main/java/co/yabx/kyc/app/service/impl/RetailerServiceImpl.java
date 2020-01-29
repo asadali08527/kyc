@@ -138,6 +138,12 @@ public class RetailerServiceImpl implements RetailerService {
 			if (dsrRetailersRelationships != null) {
 				ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
 				responseDTO.setRetailerInfo(userService.getUserDetails(user.get(), PageType.RETAILERS, locale));
+				responseDTO
+						.setOverallPageSubmit(appConfigService.getProperty("RETAILER_OVERALL_PAGE_SUBMIT", "Submit"));
+				responseDTO.setOverallPageTitle(
+						appConfigService.getProperty("RETAILER_OVERALL_PAGE_TITLE", "Customer ID: "));
+				responseDTO.setProgressTitle(
+						appConfigService.getProperty("RETAILER_PROFILE_PROGRESS_TITLE", "Profile Completion"));
 				return responseDTO;
 			}
 		}

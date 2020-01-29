@@ -2,6 +2,8 @@ package co.yabx.kyc.app.service.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -94,6 +96,7 @@ public class DSRServiceImpl implements DSRService {
 					responseDTO.setAuthInfo(adminService.prepareTokenAndKey(dsrUser, verifyOtpDTO.getDsrMSISDN()));
 					responseDTO.setName(dsrUser.getFirstName());
 					responseDTO.setEmail(dsrUser.getEmail());
+					responseDTO.setTabTitles(prepareTabTitles());
 					return responseDTO;
 				} else {
 					return DsrDtoHelper.getLoginDTO("", "Incorrect OTP or OTP Expired", "403", null);
@@ -105,6 +108,17 @@ public class DSRServiceImpl implements DSRService {
 		}
 		return DsrDtoHelper.getLoginDTO("", "Incorrect OTP or OTP Expired", "403", null);
 
+	}
+
+	private Map<String, String> prepareTabTitles() {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(appConfigService.getProperty("TAB_TITLE_KEY_1", "title1"),
+				appConfigService.getProperty("TAB_TITLE_VALUE_1", "List of retailers"));
+		map.put(appConfigService.getProperty("TAB_TITLE_KEY_2", "title2"),
+				appConfigService.getProperty("TAB_TITLE_VALUE_2", "Profile Info"));
+		map.put(appConfigService.getProperty("TAB_TITLE_KEY_3", "title3"),
+				appConfigService.getProperty("TAB_TITLE_VALUE_3", "Log-out"));
+		return map;
 	}
 
 	@Override
@@ -229,6 +243,9 @@ public class DSRServiceImpl implements DSRService {
 			ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200",
 					dsrUser.getUserStatus());
 			responseDTO.setDsrInfo(userService.getUserDetails(dsrUser, PageType.DISTRIBUTORS, locale));
+			responseDTO.setImageTitle(
+					appConfigService.getProperty("IMAGE_TITLE_FOR_DSR_PROFILE_PICTURE", "Profile Picture"));
+			responseDTO.setImageAction(appConfigService.getProperty("IMAGE_ACTION_FOR_DSR_PROFILE_PICTURE", "Update"));
 			return responseDTO;
 		} else {
 			ResponseDTO responseDTO = RetailersDtoHelper.getResponseDTO(null, "No DSR Found", "404", null);

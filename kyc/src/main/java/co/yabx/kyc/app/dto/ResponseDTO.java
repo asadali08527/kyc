@@ -17,6 +17,9 @@ public class ResponseDTO implements Serializable {
 	private List<PagesDTO> retailerInfo;
 	private List<PagesDTO> dsrInfo;
 	private Map<String, String> authInfo;
+	private Map<String, String> tabTitles;
+	private Map<String, String> subPageTitles;
+	private Map<String, String> subCardTitles;
 	private Integer totalCount;
 	private QuestionAnswerDTO questionAnswerDTO;
 	private List<QuestionAnswerDTO> questionAnswerDTOs;
@@ -25,6 +28,61 @@ public class ResponseDTO implements Serializable {
 	private String name;
 	private String email;
 	private Long userId;
+	private String overallPageTitle;
+	private String progressTitle;
+	private String overallPageSubmit;
+	private String pageTitle;
+	private String cardTitle;
+	private String imageTitle;
+	private String imageAction;
+
+	public Map<String, String> getSubPageTitles() {
+		return subPageTitles;
+	}
+
+	public String getImageTitle() {
+		return imageTitle;
+	}
+
+	public void setImageTitle(String imageTitle) {
+		this.imageTitle = imageTitle;
+	}
+
+	public String getImageAction() {
+		return imageAction;
+	}
+
+	public void setImageAction(String imageAction) {
+		this.imageAction = imageAction;
+	}
+
+	public void setSubPageTitles(Map<String, String> subPageTitles) {
+		this.subPageTitles = subPageTitles;
+	}
+
+	public Map<String, String> getSubCardTitles() {
+		return subCardTitles;
+	}
+
+	public void setSubCardTitles(Map<String, String> subCardTitles) {
+		this.subCardTitles = subCardTitles;
+	}
+
+	public String getPageTitle() {
+		return pageTitle;
+	}
+
+	public void setPageTitle(String pageTitle) {
+		this.pageTitle = pageTitle;
+	}
+
+	public String getCardTitle() {
+		return cardTitle;
+	}
+
+	public void setCardTitle(String cardTitle) {
+		this.cardTitle = cardTitle;
+	}
 
 	public List<QuestionAnswerDTO> getQuestionAnswerDTOs() {
 		return questionAnswerDTOs;
@@ -64,12 +122,6 @@ public class ResponseDTO implements Serializable {
 
 	public void setRetailers(List<RetailersDTO> retailers) {
 		this.retailers = retailers;
-	}
-
-	@Override
-	public String toString() {
-		return "ResponseDTO [message=" + message + ", statusCode=" + statusCode + ", dsrProfileStatus="
-				+ dsrProfileStatus + ", retailers=" + retailers + ", retailerInfo=" + retailerInfo + "]";
 	}
 
 	public Map<String, String> getAuthInfo() {
@@ -150,6 +202,38 @@ public class ResponseDTO implements Serializable {
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	public Map<String, String> getTabTitles() {
+		return tabTitles;
+	}
+
+	public void setTabTitles(Map<String, String> tabTitles) {
+		this.tabTitles = tabTitles;
+	}
+
+	public String getOverallPageTitle() {
+		return overallPageTitle;
+	}
+
+	public void setOverallPageTitle(String overallPageTitle) {
+		this.overallPageTitle = overallPageTitle;
+	}
+
+	public String getProgressTitle() {
+		return progressTitle;
+	}
+
+	public void setProgressTitle(String progressTitle) {
+		this.progressTitle = progressTitle;
+	}
+
+	public String getOverallPageSubmit() {
+		return overallPageSubmit;
+	}
+
+	public void setOverallPageSubmit(String overallPageSubmit) {
+		this.overallPageSubmit = overallPageSubmit;
 	}
 
 }

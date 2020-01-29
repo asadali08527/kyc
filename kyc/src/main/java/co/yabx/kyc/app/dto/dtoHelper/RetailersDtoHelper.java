@@ -2,7 +2,9 @@ package co.yabx.kyc.app.dto.dtoHelper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,6 +36,7 @@ import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.miniKyc.entity.AccountStatuses;
 import co.yabx.kyc.app.miniKyc.repository.AccountStatusesRepository;
 import co.yabx.kyc.app.repositories.PagesRepository;
+import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.util.SpringUtil;
 
 public class RetailersDtoHelper implements Serializable {
@@ -51,7 +54,7 @@ public class RetailersDtoHelper implements Serializable {
 	}
 
 	public static ResponseDTO getSummary(List<User> retailers2) {
-		ResponseDTO loginDTO = getResponseDTO(null, "SUCCESS", "200", null);
+		ResponseDTO responseDTO = getResponseDTO(null, "SUCCESS", "200", null);
 		List<RetailersDTO> retailersList = new ArrayList<RetailersDTO>();
 		if (retailers2 != null && !retailers2.isEmpty()) {
 			for (User retailers : retailers2) {
@@ -63,17 +66,49 @@ public class RetailersDtoHelper implements Serializable {
 						: null;
 				if (accountStatuses != null)
 					retailersDTO.setKycStatus(
-							accountStatuses.getKycVerified() != null ? accountStatuses.getKycVerified().toString() : null);
+							accountStatuses.getKycVerified() != null ? accountStatuses.getKycVerified().toString()
+									: null);
 				else
 					retailersDTO.setKycStatus(KycStatus.NEW.name());
 				retailersDTO.setComments("n/a");
+				retailersDTO.setSubmitButton(prepreSubmitButton(retailersDTO.getKycStatus()));
 				retailersList.add(retailersDTO);
 			}
-			loginDTO.setRetailers(retailersList);
-			loginDTO.setTotalCount(retailersList.size());
-			return loginDTO;
+			responseDTO.setPageTitle("List of retailers");
+			responseDTO.setSubPageTitles(prepareSubPagesTitle());
+			responseDTO.setCardTitle("Customer ID");
+			responseDTO.setSubCardTitles(prepareSubCardTitle());
+			responseDTO.setRetailers(retailersList);
+			responseDTO.setTotalCount(retailersList.size());
+			return responseDTO;
 		}
-		return loginDTO;
+		return responseDTO;
+	}
+
+	private static Map<String, String> prepareSubPagesTitle() {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("title1", "E-KYC");
+		map.put("title2", "DRAFT KYC");
+		return map;
+	}
+
+	private static Map<String, String> prepareSubCardTitle() {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("title1", "Name");
+		map.put("title2", "KYC Status");
+		return map;
+	}
+
+	private static String prepreSubmitButton(String kycStatus) {
+		if (kycStatus.equals("IN PROGRESS")) {
+			return "Continue";
+		} else if (kycStatus.equals("APPROVED")) {
+			return "View";
+		} else if (kycStatus.equals("NEW")) {
+			return "Start KYC";
+		} else
+			return "View";
+
 	}
 
 	public static ResponseDTO getCompletRetailerInfo(String dsrMsisdn, Long retailerId) {

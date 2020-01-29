@@ -13,6 +13,7 @@ public class RetailersDTO implements Serializable {
 	private String kycStatus;
 	private String comments;
 	private String dsrMsisdn;
+	private String submitButton;
 
 	public Long getRetailerId() {
 		return retailerId;
@@ -52,6 +53,14 @@ public class RetailersDTO implements Serializable {
 
 	public void setRetailerName(String retailerName) {
 		this.retailerName = retailerName;
+	}
+
+	public String getSubmitButton() {
+		return submitButton;
+	}
+
+	public void setSubmitButton(String submitButton) {
+		this.submitButton = submitButton;
 	}
 
 }
