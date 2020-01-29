@@ -217,16 +217,6 @@ public class FieldsDTO implements Serializable {
 		this.displayOrder = displayOrder;
 	}
 
-	@Override
-	public String toString() {
-		return "FieldsDTO [id=" + id + ", type=" + type + ", fieldId=" + fieldId + ", dataType=" + dataType
-				+ ", fieldName=" + fieldName + ", placeHolderText=" + placeHolderText + ", savedData=" + savedData
-				+ ", validation=" + validation + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", camera="
-				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", response=" + response
-				+ ", defaultValue=" + defaultValue + ", options=" + options + ", subFields=" + subFields
-				+ ", functionality=" + functionality + ", displayOrder=" + displayOrder + "]";
-	}
-
 	public String getHelp() {
 		return help;
 	}
@@ -273,6 +263,173 @@ public class FieldsDTO implements Serializable {
 
 	public void setLocaleText(String localeText) {
 		this.localeText = localeText;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (camera ? 1231 : 1237);
+		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
+		result = prime * result + ((dataType == null) ? 0 : dataType.hashCode());
+		result = prime * result + ((defaultValue == null) ? 0 : defaultValue.hashCode());
+		result = prime * result + ((displayOrder == null) ? 0 : displayOrder.hashCode());
+		result = prime * result + (editable ? 1231 : 1237);
+		result = prime * result + ((enableFutureDates == null) ? 0 : enableFutureDates.hashCode());
+		result = prime * result + ((enablePastDates == null) ? 0 : enablePastDates.hashCode());
+		result = prime * result + ((fieldId == null) ? 0 : fieldId.hashCode());
+		result = prime * result + ((fieldName == null) ? 0 : fieldName.hashCode());
+		result = prime * result + ((functionality == null) ? 0 : functionality.hashCode());
+		result = prime * result + ((help == null) ? 0 : help.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((internationalRepresentation == null) ? 0 : internationalRepresentation.hashCode());
+		result = prime * result + ((localeText == null) ? 0 : localeText.hashCode());
+		result = prime * result + (mandatory ? 1231 : 1237);
+		result = prime * result + ((options == null) ? 0 : options.hashCode());
+		result = prime * result + ((placeHolderText == null) ? 0 : placeHolderText.hashCode());
+		result = prime * result + ((remark == null) ? 0 : remark.hashCode());
+		result = prime * result + ((response == null) ? 0 : response.hashCode());
+		result = prime * result + ((savedData == null) ? 0 : savedData.hashCode());
+		result = prime * result + ((subFields == null) ? 0 : subFields.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
+		result = prime * result + ((validation == null) ? 0 : validation.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		FieldsDTO other = (FieldsDTO) obj;
+		if (camera != other.camera)
+			return false;
+		if (createdAt == null) {
+			if (other.createdAt != null)
+				return false;
+		} else if (!createdAt.equals(other.createdAt))
+			return false;
+		if (dataType != other.dataType)
+			return false;
+		if (defaultValue == null) {
+			if (other.defaultValue != null)
+				return false;
+		} else if (!defaultValue.equals(other.defaultValue))
+			return false;
+		if (displayOrder == null) {
+			if (other.displayOrder != null)
+				return false;
+		} else if (!displayOrder.equals(other.displayOrder))
+			return false;
+		if (editable != other.editable)
+			return false;
+		if (enableFutureDates == null) {
+			if (other.enableFutureDates != null)
+				return false;
+		} else if (!enableFutureDates.equals(other.enableFutureDates))
+			return false;
+		if (enablePastDates == null) {
+			if (other.enablePastDates != null)
+				return false;
+		} else if (!enablePastDates.equals(other.enablePastDates))
+			return false;
+		if (fieldId == null) {
+			if (other.fieldId != null)
+				return false;
+		} else if (!fieldId.equals(other.fieldId))
+			return false;
+		if (fieldName == null) {
+			if (other.fieldName != null)
+				return false;
+		} else if (!fieldName.equals(other.fieldName))
+			return false;
+		if (functionality == null) {
+			if (other.functionality != null)
+				return false;
+		} else if (!functionality.equals(other.functionality))
+			return false;
+		if (help == null) {
+			if (other.help != null)
+				return false;
+		} else if (!help.equals(other.help))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (internationalRepresentation == null) {
+			if (other.internationalRepresentation != null)
+				return false;
+		} else if (!internationalRepresentation.equals(other.internationalRepresentation))
+			return false;
+		if (localeText == null) {
+			if (other.localeText != null)
+				return false;
+		} else if (!localeText.equals(other.localeText))
+			return false;
+		if (mandatory != other.mandatory)
+			return false;
+		if (options == null) {
+			if (other.options != null)
+				return false;
+		} else if (!options.equals(other.options))
+			return false;
+		if (placeHolderText == null) {
+			if (other.placeHolderText != null)
+				return false;
+		} else if (!placeHolderText.equals(other.placeHolderText))
+			return false;
+		if (remark == null) {
+			if (other.remark != null)
+				return false;
+		} else if (!remark.equals(other.remark))
+			return false;
+		if (response == null) {
+			if (other.response != null)
+				return false;
+		} else if (!response.equals(other.response))
+			return false;
+		if (savedData == null) {
+			if (other.savedData != null)
+				return false;
+		} else if (!savedData.equals(other.savedData))
+			return false;
+		if (subFields == null) {
+			if (other.subFields != null)
+				return false;
+		} else if (!subFields.equals(other.subFields))
+			return false;
+		if (type != other.type)
+			return false;
+		if (updatedAt == null) {
+			if (other.updatedAt != null)
+				return false;
+		} else if (!updatedAt.equals(other.updatedAt))
+			return false;
+		if (validation == null) {
+			if (other.validation != null)
+				return false;
+		} else if (!validation.equals(other.validation))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "FieldsDTO [id=" + id + ", type=" + type + ", fieldId=" + fieldId + ", dataType=" + dataType
+				+ ", fieldName=" + fieldName + ", placeHolderText=" + placeHolderText + ", savedData=" + savedData
+				+ ", validation=" + validation + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", camera="
+				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", response=" + response
+				+ ", defaultValue=" + defaultValue + ", options=" + options + ", subFields=" + subFields
+				+ ", functionality=" + functionality + ", displayOrder=" + displayOrder + ", help=" + help
+				+ ", enableFutureDates=" + enableFutureDates + ", enablePastDates=" + enablePastDates
+				+ ", internationalRepresentation=" + internationalRepresentation + ", remark=" + remark
+				+ ", localeText=" + localeText + "]";
 	}
 
 }
