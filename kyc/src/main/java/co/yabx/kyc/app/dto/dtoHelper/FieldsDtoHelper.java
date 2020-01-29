@@ -117,7 +117,7 @@ public class FieldsDtoHelper implements Serializable {
 						appDynamicFieldsDTOSet, filter, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 3 && appPagesSections.getSectionId() == 2) {
 				// nominee account details
-				//LOGGER.info("Nominee Bank Account ={}", nomineeBankAccountDetailsSet);
+				// LOGGER.info("Nominee Bank Account ={}", nomineeBankAccountDetailsSet);
 				isProcessed = prepareAccountInformations(dynamicFields, nomineeBankAccountDetailsSet,
 						appDynamicFieldsDTOSet, filter, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 3 && appPagesSections.getSectionId() == 5) {
@@ -301,7 +301,7 @@ public class FieldsDtoHelper implements Serializable {
 			List<FieldRemarks> fieldRemarksList, List<TextTemplates> textTemplatesList) {
 		FieldsDTO fieldsDTO = new FieldsDTO();
 		if (retailers != null && retailers.getIntroducerDetails() != null
-				&& retailers.getIntroducerDetails().isEmpty()) {
+				&& !retailers.getIntroducerDetails().isEmpty()) {
 			Set<IntroducerDetails> introducerDetailsSet = retailers.getIntroducerDetails();
 			Optional<IntroducerDetails> introducerDetailsOptional = introducerDetailsSet.stream().findFirst();
 			if (dynamicFields.getFieldId().equals("name")) {
@@ -423,7 +423,7 @@ public class FieldsDtoHelper implements Serializable {
 			List<FieldRemarks> fieldRemarksList, List<TextTemplates> textTemplatesList) {
 		FieldsDTO fieldsDTO = new FieldsDTO();
 		if (retailers != null && retailers.getMonthlyTransactionProfiles() != null
-				&& retailers.getMonthlyTransactionProfiles().isEmpty()) {
+				&& !retailers.getMonthlyTransactionProfiles().isEmpty()) {
 			Set<MonthlyTransactionProfiles> monthlyTransactionProfiles = retailers.getMonthlyTransactionProfiles();
 			Optional<MonthlyTransactionProfiles> monthlyTransactionProfileOptional = monthlyTransactionProfiles.stream()
 					.findFirst();
