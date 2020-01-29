@@ -117,7 +117,7 @@ public class FieldsDtoHelper implements Serializable {
 						appDynamicFieldsDTOSet, filter, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 3 && appPagesSections.getSectionId() == 2) {
 				// nominee account details
-				LOGGER.info("Nominee Bank Account ={}", nomineeBankAccountDetailsSet);
+				//LOGGER.info("Nominee Bank Account ={}", nomineeBankAccountDetailsSet);
 				isProcessed = prepareAccountInformations(dynamicFields, nomineeBankAccountDetailsSet,
 						appDynamicFieldsDTOSet, filter, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 3 && appPagesSections.getSectionId() == 5) {
