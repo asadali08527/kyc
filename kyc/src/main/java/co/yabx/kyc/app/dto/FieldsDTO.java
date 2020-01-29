@@ -13,7 +13,7 @@ import co.yabx.kyc.app.enums.DataType;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FieldsDTO implements Serializable {
-	private static final long serialVersionUID = 1588962L;
+	private static final long serialVersionUID = 1588883279854358962L;
 
 	private Long id;
 

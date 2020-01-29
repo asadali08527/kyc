@@ -108,13 +108,6 @@ public class GroupsDTO implements Serializable, Comparable<GroupsDTO> {
 		this.filledFields = filledFields;
 	}
 
-	@Override
-	public String toString() {
-		return "AppPagesSectionGroupsDTO [groupId=" + groupId + ", groupName=" + groupName + ", groupTitle="
-				+ groupTitle + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable
-				+ ", fields=" + fields + "]";
-	}
-
 	public Integer getDisplayOrder() {
 		return displayOrder;
 	}
@@ -151,6 +144,103 @@ public class GroupsDTO implements Serializable, Comparable<GroupsDTO> {
 
 	public void setLocaleText(String localeText) {
 		this.localeText = localeText;
+	}
+
+	@Override
+	public String toString() {
+		return "GroupsDTO [groupId=" + groupId + ", groupName=" + groupName + ", groupTitle=" + groupTitle
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable + ", totalFields="
+				+ totalFields + ", filledFields=" + filledFields + ", fields=" + fields + ", displayOrder="
+				+ displayOrder + ", visible=" + visible + ", mandatoryFieldReceived=" + mandatoryFieldReceived
+				+ ", localeText=" + localeText + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
+		result = prime * result + ((displayOrder == null) ? 0 : displayOrder.hashCode());
+		result = prime * result + (enable ? 1231 : 1237);
+		result = prime * result + ((fields == null) ? 0 : fields.hashCode());
+		result = prime * result + ((filledFields == null) ? 0 : filledFields.hashCode());
+		result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
+		result = prime * result + ((groupName == null) ? 0 : groupName.hashCode());
+		result = prime * result + ((groupTitle == null) ? 0 : groupTitle.hashCode());
+		result = prime * result + ((localeText == null) ? 0 : localeText.hashCode());
+		result = prime * result + (mandatoryFieldReceived ? 1231 : 1237);
+		result = prime * result + ((totalFields == null) ? 0 : totalFields.hashCode());
+		result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
+		result = prime * result + (visible ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		GroupsDTO other = (GroupsDTO) obj;
+		if (createdAt == null) {
+			if (other.createdAt != null)
+				return false;
+		} else if (!createdAt.equals(other.createdAt))
+			return false;
+		if (displayOrder == null) {
+			if (other.displayOrder != null)
+				return false;
+		} else if (!displayOrder.equals(other.displayOrder))
+			return false;
+		if (enable != other.enable)
+			return false;
+		if (fields == null) {
+			if (other.fields != null)
+				return false;
+		} else if (!fields.equals(other.fields))
+			return false;
+		if (filledFields == null) {
+			if (other.filledFields != null)
+				return false;
+		} else if (!filledFields.equals(other.filledFields))
+			return false;
+		if (groupId == null) {
+			if (other.groupId != null)
+				return false;
+		} else if (!groupId.equals(other.groupId))
+			return false;
+		if (groupName == null) {
+			if (other.groupName != null)
+				return false;
+		} else if (!groupName.equals(other.groupName))
+			return false;
+		if (groupTitle == null) {
+			if (other.groupTitle != null)
+				return false;
+		} else if (!groupTitle.equals(other.groupTitle))
+			return false;
+		if (localeText == null) {
+			if (other.localeText != null)
+				return false;
+		} else if (!localeText.equals(other.localeText))
+			return false;
+		if (mandatoryFieldReceived != other.mandatoryFieldReceived)
+			return false;
+		if (totalFields == null) {
+			if (other.totalFields != null)
+				return false;
+		} else if (!totalFields.equals(other.totalFields))
+			return false;
+		if (updatedAt == null) {
+			if (other.updatedAt != null)
+				return false;
+		} else if (!updatedAt.equals(other.updatedAt))
+			return false;
+		if (visible != other.visible)
+			return false;
+		return true;
 	}
 
 }
