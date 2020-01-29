@@ -300,21 +300,30 @@ public class UserServiceImpl implements UserService {
 		}
 		user = userRepository.save(user);
 		if (nominees != null && nominees.getMsisdn() != null && !nominees.getMsisdn().isEmpty()) {
-			nominees.setUserType(UserType.NOMINEES.name());
-			if (nomineeAddressDetailsSet != null) {
-				Set<AddressDetails> userAddressDetails = nominees.getAddressDetails();
-				userAddressDetails.clear();
-				userAddressDetails.addAll(nomineeAddressDetailsSet);
-				nominees.setAddressDetails(userAddressDetails);
-				LOGGER.info("Nominees={} Address={} is being saved", nominees.getId(), nomineeAddressDetailsSet);
+			try {
+				nominees.setUserType(UserType.NOMINEES.name());
+				if (nomineeAddressDetailsSet != null) {
+					Set<AddressDetails> userAddressDetails = nominees.getAddressDetails();
+					userAddressDetails.clear();
+					userAddressDetails.addAll(nomineeAddressDetailsSet);
+					nominees.setAddressDetails(userAddressDetails);
+					LOGGER.info("Nominees={} address_details={} is being saved", nominees.getMsisdn(),
+							nomineeAddressDetailsSet);
+				}
+				if (nomineeBankAccountDetailsSet != null) {
+					Set<BankAccountDetails> userBankAccountDetails = nominees.getBankAccountDetails();
+					userBankAccountDetails.clear();
+					userBankAccountDetails.addAll(nomineeBankAccountDetailsSet);
+					nominees.setBankAccountDetails(userBankAccountDetails);
+					LOGGER.info("Nominees={} bank_account_details={} is being saved", nominees.getMsisdn(),
+							nomineeBankAccountDetailsSet);
+				}
+				nominees = userRepository.save(nominees);
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOGGER.error("Exception raised while saving nominee details for nominee={}, error={}",
+						nominees.getMsisdn(), e.getMessage());
 			}
-			if (nomineeBankAccountDetailsSet != null) {
-				Set<BankAccountDetails> userBankAccountDetails = nominees.getBankAccountDetails();
-				userBankAccountDetails.clear();
-				userBankAccountDetails.addAll(nomineeBankAccountDetailsSet);
-				nominees.setBankAccountDetails(userBankAccountDetails);
-			}
-			nominees = userRepository.save(nominees);
 			persistUserRelationship(user, nominees, UserType.NOMINEES, isNew, nomineeRelationship);
 		}
 		return user;

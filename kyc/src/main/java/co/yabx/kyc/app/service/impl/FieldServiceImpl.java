@@ -122,8 +122,8 @@ public class FieldServiceImpl implements FieldService {
 					addressDetails = addressDetailsRepository.findByUserAndAddressType(nominees, addressType);
 				if (addressDetails == null) {
 					addressDetails = new AddressDetails();
+					addressDetails.setAddressType(addressType);
 				}
-				addressDetails.setAddressType(addressType);
 				addressDetails = prepareAddress(appDynamicFieldsDTOList, addressDetails);
 				if (addressDetails != null) {
 					if (nomineeAddressDetailsSet == null) {
@@ -241,7 +241,7 @@ public class FieldServiceImpl implements FieldService {
 					licenseDetails = licenseDetailsRepository.findByBusinessDetailsAndLicenseType(businessDetails,
 							licenseType);
 				licenseDetails = prepareLicenseDetails(appDynamicFieldsDTOList, licenseDetails);
-				if(licenseDetails!=null) {
+				if (licenseDetails != null) {
 					licenseDetails.setLicenseType(licenseType);
 					licenseDetailsSet.add(licenseDetails);
 				}
