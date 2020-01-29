@@ -103,6 +103,7 @@ public class FieldsDtoHelper implements Serializable {
 						filter, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 2 && appPagesSections.getSectionId() == 2) {
 				// nominee address details
+				
 				isProcessed = prepareAddress(dynamicFields, nomineeAddressDetailsSet, appDynamicFieldsDTOSet, subGroups,
 						filter, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 2 && appPagesSections.getSectionId() == 5) {
@@ -161,7 +162,6 @@ public class FieldsDtoHelper implements Serializable {
 
 		filledVsUnfilled.put("totalFields", totalFields);
 		// appDynamicFieldsDTOSet.add(appDynamicFieldsDTOSet.stream().max(Comparator.comparing(FieldsDTO::getId)).get());
-		appDynamicFieldsDTOSet.addAll(appDynamicFieldsDTOSet);
 		return appDynamicFieldsDTOSet;
 	}
 
