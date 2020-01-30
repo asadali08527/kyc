@@ -203,7 +203,7 @@ public class RetailerController {
 					try {
 						AttachmentDetails attachmentDetails = attachmentService.persistInDb(user, files, filename);
 						if (attachmentDetails != null)
-							return new ResponseEntity<>(files, HttpStatus.OK);
+							return new ResponseEntity<>(HttpStatus.OK);
 						else {
 							return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
 						}

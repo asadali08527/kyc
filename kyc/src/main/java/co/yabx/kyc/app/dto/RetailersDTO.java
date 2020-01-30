@@ -1,10 +1,9 @@
 package co.yabx.kyc.app.dto;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import co.yabx.kyc.app.enums.KycStatus;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RetailersDTO implements Serializable {
@@ -14,6 +13,15 @@ public class RetailersDTO implements Serializable {
 	private String comments;
 	private String dsrMsisdn;
 	private String submitButton;
+	private Map<String, Long> lastUpdatedTime;
+
+	public Map<String, Long> getLastUpdatedTime() {
+		return lastUpdatedTime;
+	}
+
+	public void setLastUpdatedTime(Map<String, Long> lastUpdatedTime) {
+		this.lastUpdatedTime = lastUpdatedTime;
+	}
 
 	public Long getRetailerId() {
 		return retailerId;

@@ -2,6 +2,7 @@ package co.yabx.kyc.app.dto.dtoHelper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +72,7 @@ public class RetailersDtoHelper implements Serializable {
 				else
 					retailersDTO.setKycStatus(KycStatus.NEW.name());
 				retailersDTO.setComments("n/a");
+				retailersDTO.setLastUpdatedTime(prepareUpdatedAt(accountStatuses));
 				retailersDTO.setSubmitButton(prepreSubmitButton(retailersDTO.getKycStatus()));
 				retailersList.add(retailersDTO);
 			}
@@ -83,6 +85,15 @@ public class RetailersDtoHelper implements Serializable {
 			return responseDTO;
 		}
 		return responseDTO;
+	}
+
+	private static Map<String, Long> prepareUpdatedAt(AccountStatuses accountStatuses) {
+		Map<String, Long> map = new HashMap<String, Long>();
+		map.put("Updated At",
+				accountStatuses != null && accountStatuses.getUpdatedAt() != null
+						? accountStatuses.getUpdatedAt().getTime()
+						: new Date().getTime());
+		return map;
 	}
 
 	private static Map<String, String> prepareSubPagesTitle() {
