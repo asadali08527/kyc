@@ -248,22 +248,22 @@ public class FieldsDtoHelper implements Serializable {
 			} else if (dynamicFields.getFieldId().equals("tinCertificates")) {
 				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
 						&& f.getDocumentType().equals(DocumentType.TIN_CERTIFICATE.toString())).findFirst();
-				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled);
+				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled,appDynamicFieldsDTO);
 
 			} else if (dynamicFields.getFieldId().equals("tradeLicense")) {
 				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
 						&& f.getDocumentType().equals(DocumentType.TRADE_LICENSE.toString())).findFirst();
-				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled);
+				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled,appDynamicFieldsDTO);
 
 			} else if (dynamicFields.getFieldId().equals("nomineePhoto")) {
 				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
 						&& f.getDocumentType().equals(DocumentType.NOMINEE_PHOTO.toString())).findFirst();
-				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled);
+				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled,appDynamicFieldsDTO);
 
 			} else if (dynamicFields.getFieldId().equals("signature")) {
 				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
 						&& f.getDocumentType().equals(DocumentType.SIGNATURE.toString())).findFirst();
-				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled);
+				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled,appDynamicFieldsDTO);
 			}
 			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList,
 					appDynamicFieldsDTO);
@@ -279,13 +279,13 @@ public class FieldsDtoHelper implements Serializable {
 	}
 
 	private static void setSavedAttachment(Fields dynamicFields, Optional<AttachmentDetails> attachmentDetails,
-			Map<String, Integer> filledVsUnfilled) {
+			Map<String, Integer> filledVsUnfilled, FieldsDTO appDynamicFieldsDTO) {
 		if (attachmentDetails != null && attachmentDetails.isPresent()) {
 			Set<Attachments> attachments = attachmentDetails.get().getAttachments();
 			if (attachments != null && !attachments.isEmpty()) {
 				Optional<Attachments> attachmentOptional = attachments.stream().findFirst();
 				if (attachmentOptional.isPresent()) {
-					dynamicFields.setSavedData(
+					appDynamicFieldsDTO.setSavedData(
 							SpringUtil.bean(AppConfigService.class).getProperty("DOCUMENT_STORAGE_BASE_URL", "")
 									+ attachmentOptional.get().getDocumentUrl());
 					Integer count = filledVsUnfilled.get("filledFields");
