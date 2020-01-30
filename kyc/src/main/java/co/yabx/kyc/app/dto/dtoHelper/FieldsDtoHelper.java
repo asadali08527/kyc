@@ -103,7 +103,7 @@ public class FieldsDtoHelper implements Serializable {
 						filter, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 2 && appPagesSections.getSectionId() == 2) {
 				// nominee address details
-				LOGGER.info("Nominee Address ={}", nomineeAddressDetailsSet);
+				// LOGGER.info("Nominee Address ={}", nomineeAddressDetailsSet);
 				isProcessed = prepareAddress(dynamicFields, nomineeAddressDetailsSet, appDynamicFieldsDTOSet, subGroups,
 						filter, filledVsUnfilled, fieldRemarksList, textTemplatesList);
 			} else if (dynamicFields.getGroups().getGroupId() == 2 && appPagesSections.getSectionId() == 5) {
@@ -248,22 +248,22 @@ public class FieldsDtoHelper implements Serializable {
 			} else if (dynamicFields.getFieldId().equals("tinCertificates")) {
 				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
 						&& f.getDocumentType().equals(DocumentType.TIN_CERTIFICATE.toString())).findFirst();
-				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled,appDynamicFieldsDTO);
+				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled, appDynamicFieldsDTO);
 
 			} else if (dynamicFields.getFieldId().equals("tradeLicense")) {
 				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
 						&& f.getDocumentType().equals(DocumentType.TRADE_LICENSE.toString())).findFirst();
-				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled,appDynamicFieldsDTO);
+				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled, appDynamicFieldsDTO);
 
 			} else if (dynamicFields.getFieldId().equals("nomineePhoto")) {
 				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
 						&& f.getDocumentType().equals(DocumentType.NOMINEE_PHOTO.toString())).findFirst();
-				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled,appDynamicFieldsDTO);
+				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled, appDynamicFieldsDTO);
 
 			} else if (dynamicFields.getFieldId().equals("signature")) {
 				attachmentDetails = attachmentDetailsSet.stream().filter(f -> f != null && f.getDocumentType() != null
 						&& f.getDocumentType().equals(DocumentType.SIGNATURE.toString())).findFirst();
-				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled,appDynamicFieldsDTO);
+				setSavedAttachment(dynamicFields, attachmentDetails, filledVsUnfilled, appDynamicFieldsDTO);
 			}
 			FieldsDTO fieldsDTO = getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList,
 					appDynamicFieldsDTO);
