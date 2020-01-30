@@ -494,7 +494,8 @@ public class FieldsDtoHelper implements Serializable {
 						: null);
 			}
 		}
-		increamentFilledFields(fieldsDTO, filledVsUnfilled);
+		if (LicenseType.TRADE.equals(getLicenseType(subGroups)))
+			increamentFilledFields(fieldsDTO, filledVsUnfilled);
 		appDynamicFieldsDTOSet
 				.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList, fieldsDTO));
 		// other license should not increase the count of filled vs unfilled
