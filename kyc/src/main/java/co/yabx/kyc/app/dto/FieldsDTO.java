@@ -421,15 +421,7 @@ public class FieldsDTO implements Serializable {
 
 	@Override
 	public String toString() {
-		return "FieldsDTO [id=" + id + ", type=" + type + ", fieldId=" + fieldId + ", dataType=" + dataType
-				+ ", fieldName=" + fieldName + ", placeHolderText=" + placeHolderText + ", savedData=" + savedData
-				+ ", validation=" + validation + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", camera="
-				+ camera + ", editable=" + editable + ", mandatory=" + mandatory + ", response=" + response
-				+ ", defaultValue=" + defaultValue + ", options=" + options + ", subFields=" + subFields
-				+ ", functionality=" + functionality + ", displayOrder=" + displayOrder + ", help=" + help
-				+ ", enableFutureDates=" + enableFutureDates + ", enablePastDates=" + enablePastDates
-				+ ", internationalRepresentation=" + internationalRepresentation + ", remark=" + remark
-				+ ", localeText=" + localeText + "]";
+		return "FieldsDTO [id=" + id + ", response=" + response + "]";
 	}
 
 }
