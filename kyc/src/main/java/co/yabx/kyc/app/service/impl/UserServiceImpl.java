@@ -302,7 +302,7 @@ public class UserServiceImpl implements UserService {
 		if (nominees != null && nominees.getMsisdn() != null && !nominees.getMsisdn().isEmpty()) {
 			try {
 				nominees.setUserType(UserType.NOMINEES.name());
-				if (nomineeAddressDetailsSet != null) {
+				if (neitherNullNorEmpty(nomineeAddressDetailsSet)) {
 					Set<AddressDetails> userAddressDetails = nominees.getAddressDetails();
 					userAddressDetails.clear();
 					userAddressDetails.addAll(nomineeAddressDetailsSet);
@@ -310,7 +310,7 @@ public class UserServiceImpl implements UserService {
 					LOGGER.info("Nominees={} address_details={} is being saved", nominees.getMsisdn(),
 							nomineeAddressDetailsSet);
 				}
-				if (nomineeBankAccountDetailsSet != null) {
+				if (neitherNullNorEmpty(nomineeBankAccountDetailsSet)) {
 					Set<BankAccountDetails> userBankAccountDetails = nominees.getBankAccountDetails();
 					userBankAccountDetails.clear();
 					userBankAccountDetails.addAll(nomineeBankAccountDetailsSet);
