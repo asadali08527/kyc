@@ -11,11 +11,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProfileDTO implements Serializable {
+
 	private static final long serialVersionUID = 178783276L;
 
 	private List<PagesDTO> pagesDTOs;
 
 	private Integer profileCount;
+
+	private Long lastUpdatedTime;
+
+	private List<ProfileDTO> profileDTOList;
 
 	public List<PagesDTO> getPagesDTOs() {
 		return pagesDTOs;
@@ -31,6 +36,22 @@ public class ProfileDTO implements Serializable {
 
 	public void setProfileCount(Integer profileCount) {
 		this.profileCount = profileCount;
+	}
+
+	public Long getLastUpdatedTime() {
+		return lastUpdatedTime;
+	}
+
+	public void setLastUpdatedTime(Long lastUpdatedTime) {
+		this.lastUpdatedTime = lastUpdatedTime;
+	}
+
+	public List<ProfileDTO> getProfileDTOList() {
+		return profileDTOList;
+	}
+
+	public void setProfileDTOList(List<ProfileDTO> profileDTOList) {
+		this.profileDTOList = profileDTOList;
 	}
 
 }

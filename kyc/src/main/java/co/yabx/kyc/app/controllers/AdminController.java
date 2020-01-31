@@ -1,6 +1,7 @@
 package co.yabx.kyc.app.controllers;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,7 +131,7 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/retailers/profiles", method = RequestMethod.GET)
-	public ResponseEntity<?> getRetailer(@RequestParam(value = "status", required = true) String status,
+	public ResponseEntity<?> getRetailers(@RequestParam(value = "status", required = true) String status,
 			@RequestParam(value = "secret_key", required = true) String secret_key,
 			@RequestParam(value = "page_no", required = false) Integer pageNo,
 			@RequestParam(value = "page_size", required = false) Integer pageSize,
@@ -145,22 +146,55 @@ public class AdminController {
 						.findByKycVerifiedAndUpdateAt(kycStatus, pageable);
 				Integer profileCount = redisService.getProfileCount(kycStatus + "_PROFILE_COUNT_FOR", kycStatus);
 				LOGGER.info("Total received profile for status={} is ={}", status, profileCount);
-				List<PagesDTO> appPagesDTOList = new ArrayList<PagesDTO>();
+				List<ProfileDTO> ProfileDTOList = new ArrayList<ProfileDTO>();
+				ProfileDTO profileDtos = new ProfileDTO();
 				for (AccountStatuses accountStatus : accountStatuses) {
+					ProfileDTO profileDTO = new ProfileDTO();
 					User user = userRepository.findBymsisdnAndUserType(accountStatus.getMsisdn(),
 							UserType.RETAILERS.name());
 					if (user != null) {
 						LOGGER.info("Pages being prepared for user ={}", user.getId());
-						appPagesDTOList.addAll(userService.getUserDetails(user, PageType.RETAILERS, locale));
+						profileDTO.setPagesDTOs(userService.getUserDetails(user, PageType.RETAILERS, locale));
+						profileDTO.setLastUpdatedTime(
+								accountStatus.getUpdatedAt() != null ? accountStatus.getUpdatedAt().getTime()
+										: new Date().getTime());
+						ProfileDTOList.add(profileDTO);
 					}
 				}
-				ProfileDTO profileDTO = new ProfileDTO();
-				profileDTO.setPagesDTOs(appPagesDTOList);
-				profileDTO.setProfileCount(profileCount != null ? profileCount : 0);
-				return new ResponseEntity<>(profileDTO, HttpStatus.OK);
+				profileDtos.setProfileDTOList(ProfileDTOList);
+				profileDtos.setProfileCount(profileCount != null ? profileCount : 0);
+				return new ResponseEntity<>(profileDtos, HttpStatus.OK);
 			}
 		}
 		return new ResponseEntity<>("Invalid secret key", HttpStatus.UNAUTHORIZED);
+	}
+
+	@RequestMapping(value = "/retailers/profile", method = RequestMethod.GET)
+	public ResponseEntity<?> getRetailer(@RequestParam(value = "msisdn", required = true) String retailerMsisdn,
+			@RequestParam(value = "secret_key", required = true) String secret_key,
+			@RequestParam(value = "page_no", required = false) Integer pageNo,
+			@RequestParam(value = "page_size", required = false) Integer pageSize,
+			@RequestParam(value = "locale", required = false) String locale) {
+		if (secret_key.equals(appConfigService.getProperty("RETAILER_PROFILE_API_PASSWORD", "magic@yabx"))) {
+			LOGGER.info("/retailers/profiles request received for msisdn={}", retailerMsisdn);
+			if (retailerMsisdn != null && !retailerMsisdn.isEmpty()) {
+				AccountStatuses accountStatus = accountStatusesRepository.findByMsisdn(retailerMsisdn);
+				if (accountStatus != null) {
+					ProfileDTO profileDTO = new ProfileDTO();
+					User user = userRepository.findBymsisdnAndUserType(accountStatus.getMsisdn(),
+							UserType.RETAILERS.name());
+					if (user != null) {
+						LOGGER.info("Pages being prepared for user ={}", user.getId());
+						profileDTO.setPagesDTOs(userService.getUserDetails(user, PageType.RETAILERS, locale));
+						profileDTO.setLastUpdatedTime(
+								accountStatus.getUpdatedAt() != null ? accountStatus.getUpdatedAt().getTime()
+										: new Date().getTime());
+					}
+					return new ResponseEntity<>(profileDTO, HttpStatus.OK);
+				}
+			}
+		}
+		return new ResponseEntity<>("Invalid secret key or msisdn", HttpStatus.UNAUTHORIZED);
 	}
 
 	/**
