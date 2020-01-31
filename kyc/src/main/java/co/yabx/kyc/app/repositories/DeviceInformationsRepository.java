@@ -12,8 +12,8 @@ import co.yabx.kyc.app.entities.DeviceInformations;
  * @author Asad.ali
  *
  */
-@Repository("deviceTokenRepository")
-public interface DeviceTokenRepository extends JpaRepository<DeviceInformations, String> {
+@Repository("deviceInformationsRepository")
+public interface DeviceInformationsRepository extends JpaRepository<DeviceInformations, String> {
 
 	DeviceInformations findByDeviceId(String deviceId);
 

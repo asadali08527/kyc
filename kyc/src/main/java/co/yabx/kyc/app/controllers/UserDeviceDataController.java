@@ -62,18 +62,18 @@ public class UserDeviceDataController {
 		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
 			User user = userService.getDSRByMsisdn(msisdn);
 			if (user != null) {
-				DeviceInformations deviceToken = null;
+				DeviceInformations deviceInformations = null;
 				if (user.getDeviceInformation() == null) {
-					deviceToken = userDeviceService.saveDeviceTokenInMysql(token, deviceType, deviceId, instanceId,
-							voipToken, deviceModel, deviceBrand, deviceManufacturer);
-					user.setDeviceInformation(deviceToken);
+					deviceInformations = userDeviceService.saveDeviceTokenInMysql(token, deviceType, deviceId,
+							instanceId, voipToken, deviceModel, deviceBrand, deviceManufacturer);
+					user.setDeviceInformation(deviceInformations);
 					userRepository.save(user);
 				} else {
-					deviceToken = user.getDeviceInformation();
+					deviceInformations = user.getDeviceInformation();
 					DeviceInformations updateDeviceToken = userDeviceService.saveDeviceTokenInMysql(token, deviceType,
 							deviceId, instanceId, voipToken, deviceModel, deviceBrand, deviceManufacturer);
-					if (!updateDeviceToken.getDeviceToken().equalsIgnoreCase(deviceToken.getDeviceToken())) {
-						user.setDeviceInformation(deviceToken);
+					if (!updateDeviceToken.getDeviceToken().equalsIgnoreCase(deviceInformations.getDeviceToken())) {
+						user.setDeviceInformation(deviceInformations);
 						userRepository.save(user);
 					}
 

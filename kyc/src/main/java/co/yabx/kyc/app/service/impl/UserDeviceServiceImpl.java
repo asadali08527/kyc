@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import co.yabx.kyc.app.entities.DeviceInformations;
-import co.yabx.kyc.app.repositories.DeviceTokenRepository;
+import co.yabx.kyc.app.repositories.DeviceInformationsRepository;
 import co.yabx.kyc.app.service.UserDeviceService;
 
 /**
@@ -24,56 +24,56 @@ public class UserDeviceServiceImpl implements UserDeviceService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserDeviceServiceImpl.class);
 
 	@Autowired
-	private DeviceTokenRepository deviceTokenRepository;
+	private DeviceInformationsRepository deviceInformationsRepository;
 
 	@Override
 	@Transactional
 	public DeviceInformations saveDeviceTokenInMysql(String token, String deviceType, String deviceId,
 			String instanceId, String voipToken, String deviceModel, String deviceBrand, String deviceManufacturer) {
-		DeviceInformations deviceToken = deviceTokenRepository.findByDeviceId(deviceId);
-		if (deviceToken != null && deviceToken.getDeviceToken() != null && deviceToken.getDeviceToken().equals(token)
-				&& deviceToken.isActive()) {
+		DeviceInformations deviceInformations = deviceInformationsRepository.findByDeviceId(deviceId);
+		if (deviceInformations != null && deviceInformations.getDeviceToken() != null
+				&& deviceInformations.getDeviceToken().equals(token) && deviceInformations.isActive()) {
 			LOGGER.debug("deviceToken already updated {}", deviceId);
-			return deviceToken;
+			return deviceInformations;
 		}
 
-		if (deviceToken == null) {
+		if (deviceInformations == null) {
 			LOGGER.debug("request insert deviceToken {}", deviceId);
-			deviceToken = new DeviceInformations();
-			deviceToken.setDeviceId(deviceId);
+			deviceInformations = new DeviceInformations();
+			deviceInformations.setDeviceId(deviceId);
 		}
 
 		if (instanceId == null) {
 			instanceId = "UNKNOWN";
 		}
 
-		deviceToken.setVoipToken(voipToken);
-		deviceToken.setInstanceId(instanceId);
-		deviceToken.setActive(true);
-		deviceToken.setDeviceType(DeviceInformations.DeviceType.valueOf(deviceType));
-		deviceToken.setDeviceToken(token);
+		deviceInformations.setVoipToken(voipToken);
+		deviceInformations.setInstanceId(instanceId);
+		deviceInformations.setActive(true);
+		deviceInformations.setDeviceType(DeviceInformations.DeviceType.valueOf(deviceType));
+		deviceInformations.setDeviceToken(token);
 		if (deviceModel != null) {
-			deviceToken.setDeviceModel(deviceModel);
+			deviceInformations.setDeviceModel(deviceModel);
 		}
 		if (deviceBrand != null) {
-			deviceToken.setDeviceBrand(deviceBrand);
+			deviceInformations.setDeviceBrand(deviceBrand);
 		}
 		if (deviceManufacturer != null) {
-			deviceToken.setDeviceManufacturer(deviceManufacturer);
+			deviceInformations.setDeviceManufacturer(deviceManufacturer);
 		}
 
-		return deviceTokenRepository.saveAndFlush(deviceToken);
+		return deviceInformationsRepository.saveAndFlush(deviceInformations);
 	}
 
 	@Override
 	public String updateExpiredDeviceTokenInMysql(String token, String deviceType, long expiredDate) {
-		List<DeviceInformations> deviceTokenList = deviceTokenRepository.findByDeviceToken(token);
+		List<DeviceInformations> deviceTokenList = deviceInformationsRepository.findByDeviceToken(token);
 		String deviceId = "";
 		for (DeviceInformations deviceToken : deviceTokenList) {
 			if (deviceToken != null && deviceToken.getDeviceToken() != null && deviceToken.isActive()
 					&& deviceToken.getUpdatedAt().getTime() < expiredDate) {
 				deviceToken.setActive(false);
-				deviceTokenRepository.save(deviceToken);
+				deviceInformationsRepository.save(deviceToken);
 				return deviceToken.getDeviceId();
 			} else {
 				LOGGER.warn("can not set expired  deviceToken {}| expiredDate {}", token, expiredDate);

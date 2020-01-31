@@ -217,7 +217,7 @@ public class AdminController {
 			LOGGER.info("/update/kyc/status request received for status={}", status);
 			KycStatus kycStatus = KycStatus.valueOf(status);
 			if (kycStatus != null) {
-				return new ResponseEntity<>(accountStatusService.createAccountStatus(msisdn, updateBy, true, kycStatus),
+				return new ResponseEntity<>(accountStatusService.updateAccountStatus(msisdn, updateBy, true, kycStatus),
 						HttpStatus.OK);
 			}
 			return new ResponseEntity<>("Invalid status", HttpStatus.NO_CONTENT);

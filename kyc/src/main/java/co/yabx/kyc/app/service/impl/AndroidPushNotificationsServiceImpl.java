@@ -116,8 +116,4 @@ public class AndroidPushNotificationsServiceImpl implements AndroidPushNotificat
 		}
 	}
 
-	@Async
-	public void notifyAllQC() {
-
-	}
 }

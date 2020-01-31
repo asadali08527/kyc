@@ -29,7 +29,7 @@ public interface AccountStatusService {
 
 	public AccountStatuses createAccountStatus(String msisdn, String createdBy);
 
-	public AccountStatuses createAccountStatus(String msisdn, String createdBy, boolean isKycAvailable,
+	public AccountStatuses updateAccountStatus(String msisdn, String createdBy, boolean isKycAvailable,
 			KycStatus kycStatus);
 
 }

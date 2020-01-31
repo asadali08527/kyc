@@ -213,7 +213,7 @@ public class RetailerServiceImpl implements RetailerService {
 					if (userRelationships.get().getRelative() != null
 							&& userRelationships.get().getRelative().getMsisdn() != null
 							&& !userRelationships.get().getRelative().getMsisdn().isEmpty()) {
-						accountStatusService.createAccountStatus(userRelationships.get().getRelative().getMsisdn(),
+						accountStatusService.updateAccountStatus(userRelationships.get().getRelative().getMsisdn(),
 								dsrMsisdn, true, KycStatus.SUBMITTED);
 						return RetailersDtoHelper.getResponseDTO(null, "SUCCESS", "200", null);
 					} else {

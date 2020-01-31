@@ -308,7 +308,7 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	}
 
 	@Override
-	public AccountStatuses createAccountStatus(String msisdn, String createdBy, boolean isKycAvailable,
+	public AccountStatuses updateAccountStatus(String msisdn, String createdBy, boolean isKycAvailable,
 			KycStatus kycStatus) {
 		AccountStatuses accountStatuses = accountStatusesRepository.findByMsisdn(msisdn);
 		accountStatuses = createAccount(accountStatuses, msisdn, createdBy, isKycAvailable, AccountStatus.NEW,
