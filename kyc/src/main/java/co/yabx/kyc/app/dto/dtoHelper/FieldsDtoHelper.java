@@ -765,10 +765,18 @@ public class FieldsDtoHelper implements Serializable {
 						liabilitiesDetails != null ? decimalFormat.format(liabilitiesDetails.getLoanAmount()) : null);
 			}
 		}
-		increamentFilledFields(fieldsDTO, filledVsUnfilled);
+		/**
+		 * User can skip this section, but have entered at least one value then have to
+		 * fill all other values, else can skip whole libility section
+		 */
+		if (fieldsDTO.getSavedData() != null)
+			increamentFilledFields(fieldsDTO, filledVsUnfilled);
 		appDynamicFieldsDTOSet
 				.add(getAppDynamicFieldDTO(dynamicFields, fieldRemarksList, textTemplatesList, fieldsDTO));
-		return true;
+		if (fieldsDTO.getSavedData() != null)
+			return true;
+		else
+			return false;
 
 	}
 
