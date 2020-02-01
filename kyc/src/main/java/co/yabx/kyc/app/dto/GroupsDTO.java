@@ -34,7 +34,7 @@ public class GroupsDTO implements Serializable, Comparable<GroupsDTO> {
 
 	private boolean mandatoryFieldReceived;
 
-	private String localeText;
+	private String groupIdentifier;
 
 	public Date getCreatedAt() {
 		return createdAt;
@@ -138,21 +138,18 @@ public class GroupsDTO implements Serializable, Comparable<GroupsDTO> {
 
 	}
 
-	public String getLocaleText() {
-		return localeText;
+	public String getGroupIdentifier() {
+		return groupIdentifier;
 	}
 
-	public void setLocaleText(String localeText) {
-		this.localeText = localeText;
+	public void setGroupIdentifier(String groupIdentifier) {
+		this.groupIdentifier = groupIdentifier;
 	}
 
 	@Override
 	public String toString() {
 		return "GroupsDTO [groupId=" + groupId + ", groupName=" + groupName + ", groupTitle=" + groupTitle
-				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", enable=" + enable + ", totalFields="
-				+ totalFields + ", filledFields=" + filledFields + ", fields=" + fields + ", displayOrder="
-				+ displayOrder + ", visible=" + visible + ", mandatoryFieldReceived=" + mandatoryFieldReceived
-				+ ", localeText=" + localeText + "]";
+				+ ", groupIdentifier=" + groupIdentifier + "]";
 	}
 
 	@Override
@@ -165,9 +162,9 @@ public class GroupsDTO implements Serializable, Comparable<GroupsDTO> {
 		result = prime * result + ((fields == null) ? 0 : fields.hashCode());
 		result = prime * result + ((filledFields == null) ? 0 : filledFields.hashCode());
 		result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
+		result = prime * result + ((groupIdentifier == null) ? 0 : groupIdentifier.hashCode());
 		result = prime * result + ((groupName == null) ? 0 : groupName.hashCode());
 		result = prime * result + ((groupTitle == null) ? 0 : groupTitle.hashCode());
-		result = prime * result + ((localeText == null) ? 0 : localeText.hashCode());
 		result = prime * result + (mandatoryFieldReceived ? 1231 : 1237);
 		result = prime * result + ((totalFields == null) ? 0 : totalFields.hashCode());
 		result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
@@ -211,6 +208,11 @@ public class GroupsDTO implements Serializable, Comparable<GroupsDTO> {
 				return false;
 		} else if (!groupId.equals(other.groupId))
 			return false;
+		if (groupIdentifier == null) {
+			if (other.groupIdentifier != null)
+				return false;
+		} else if (!groupIdentifier.equals(other.groupIdentifier))
+			return false;
 		if (groupName == null) {
 			if (other.groupName != null)
 				return false;
@@ -220,11 +222,6 @@ public class GroupsDTO implements Serializable, Comparable<GroupsDTO> {
 			if (other.groupTitle != null)
 				return false;
 		} else if (!groupTitle.equals(other.groupTitle))
-			return false;
-		if (localeText == null) {
-			if (other.localeText != null)
-				return false;
-		} else if (!localeText.equals(other.localeText))
 			return false;
 		if (mandatoryFieldReceived != other.mandatoryFieldReceived)
 			return false;

@@ -104,12 +104,12 @@ public class GroupDtoHelper implements Serializable {
 					appPagesSectionGroupsDTO.setGroupId(appPagesSectionGroups.getGroupId());
 				}
 				appPagesSectionGroupsDTO.setGroupName(appPagesSectionGroups.getGroupName());
-				if (textTemplatesList != null && !textTemplatesList.isEmpty())
+				if (textTemplatesList != null && !textTemplatesList.isEmpty()) {
 					appPagesSectionGroupsDTO
 							.setGroupTitle(SpringUtil.bean(TextTemplateService.class).getTemplate(textTemplatesList,
 									subGroups != null && subGroups.getGroupType() != null ? subGroups.getGroupType()
 											: appPagesSectionGroups.getGroupTitle()));
-				else
+				} else
 					appPagesSectionGroupsDTO.setGroupTitle(
 							subGroups != null && subGroups.getGroupType() != null ? subGroups.getGroupType()
 									: appPagesSectionGroups.getGroupTitle());
@@ -117,11 +117,11 @@ public class GroupDtoHelper implements Serializable {
 					appPagesSectionGroupsDTO.setDisplayOrder(subGroups.getDisplayOrder());
 				else
 					appPagesSectionGroupsDTO.setDisplayOrder(appPagesSectionGroups.getDisplayOrder());
-				/*
-				 * appPagesSectionGroupsDTO.setLocaleText(SpringUtil.bean(TextTemplateService.
-				 * class) .getTemplate(textTemplatesList,
-				 * appPagesSectionGroupsDTO.getGroupTitle()));
-				 */
+
+				appPagesSectionGroupsDTO.setGroupIdentifier(
+						subGroups != null && subGroups.getGroupType() != null ? subGroups.getGroupType()
+								: appPagesSectionGroups.getGroupTitle());
+
 				appPagesSectionGroupsDTO.setTotalFields(groups.get("totalFields"));
 				appPagesSectionGroupsDTO.setFilledFields(groups.get("filledFields"));
 				appPagesSectionGroupsDTO.setMandatoryFieldReceived(isMandatoryFieldReceived(fields));

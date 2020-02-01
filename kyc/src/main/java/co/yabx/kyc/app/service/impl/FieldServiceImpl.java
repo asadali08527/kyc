@@ -94,7 +94,7 @@ public class FieldServiceImpl implements FieldService {
 				|| "addresses".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName()))
 				&& (appPagesSectionsDTO.getSectionId() == 1 || appPagesSectionsDTO.getSectionId() == 3)) {
 			// user address details
-			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupTitle());
+			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupIdentifier());
 			if (addressType != null) {
 				addressDetails = addressDetailsRepository.findByUserAndAddressType(retailerOrDsrUser, addressType);
 				if (addressDetails == null) {
@@ -116,7 +116,7 @@ public class FieldServiceImpl implements FieldService {
 
 		{
 			// nominee address details
-			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupTitle());
+			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupIdentifier());
 			if (addressType != null) {
 				if (nominees != null && nominees.getId() != null)
 					addressDetails = addressDetailsRepository.findByUserAndAddressType(nominees, addressType);
@@ -139,7 +139,7 @@ public class FieldServiceImpl implements FieldService {
 				|| "addresses".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName()))
 				&& appPagesSectionsDTO.getSectionId() == 5) {
 			// Business address details
-			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupTitle());
+			AddressType addressType = getAddressType(appPagesSectionGroupsDTO.getGroupIdentifier());
 			if (addressType != null) {
 				if (businessAddressDetailsSet == null) {
 					businessAddressDetailsSet = new HashSet<AddressDetails>();
@@ -198,7 +198,7 @@ public class FieldServiceImpl implements FieldService {
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
 				.getLongProperty("GROUP_ID_FOR_LIABILITIES_DETAILS", 4l)
 				|| "liabilitiesDetails".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName())) {
-			LiabilityType liabilityType = getLiabilitesType(appPagesSectionGroupsDTO.getGroupTitle());
+			LiabilityType liabilityType = getLiabilitesType(appPagesSectionGroupsDTO.getGroupIdentifier());
 			if (liabilityType != null) {
 				LiabilitiesDetails liabilitiesDetails = liabilitiesDetailsRepository
 						.findByUserAndLiabilityType(retailerOrDsrUser, liabilityType);
@@ -233,7 +233,7 @@ public class FieldServiceImpl implements FieldService {
 		} else if (appPagesSectionGroupsDTO.getGroupId() == appConfigService
 				.getLongProperty("GROUP_ID_FOR_BUSINESS_LICENSE_DETAILS", 6l)
 				|| "licenseDetails".equalsIgnoreCase(appPagesSectionGroupsDTO.getGroupName())) {
-			LicenseType licenseType = getLicenseType(appPagesSectionGroupsDTO.getGroupTitle());
+			LicenseType licenseType = getLicenseType(appPagesSectionGroupsDTO.getGroupIdentifier());
 			if (licenseType != null) {
 				LicenseDetails licenseDetails = null;
 				BusinessDetails businessDetails = getBusinessDetails(retailerOrDsrUser.getBusinessDetails());
