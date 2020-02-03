@@ -23,6 +23,7 @@ import co.yabx.kyc.app.miniKyc.entity.KycDetails;
 import co.yabx.kyc.app.miniKyc.repository.AccountStatusesRepository;
 import co.yabx.kyc.app.miniKyc.repository.AccountStatusesTrackersRepository;
 import co.yabx.kyc.app.service.AccountStatusService;
+import co.yabx.kyc.app.service.AndroidPushNotificationsService;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.RedisService;
 import co.yabx.kyc.app.util.EncoderDecoderUtil;
@@ -46,6 +47,9 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 
 	@Autowired
 	private RedisService redisService;
+
+	@Autowired
+	private AndroidPushNotificationsService androidPushNotificationsService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AccountStatusServiceImpl.class);
 
@@ -311,8 +315,24 @@ public class AccountStatusServiceImpl implements AccountStatusService {
 	public AccountStatuses updateAccountStatus(String msisdn, String createdBy, boolean isKycAvailable,
 			KycStatus kycStatus) {
 		AccountStatuses accountStatuses = accountStatusesRepository.findByMsisdn(msisdn);
+		KycStatus oldkycStatus = accountStatuses != null ? accountStatuses.getKycVerified() : KycStatus.NEW;
 		accountStatuses = createAccount(accountStatuses, msisdn, createdBy, isKycAvailable, AccountStatus.NEW,
 				kycStatus);
+		if (appConfigService.getBooleanProperty("IS_PUSH_NOTIFICATION_ON", false) && accountStatuses != null
+				&& !accountStatuses.getKycVerified().equals(oldkycStatus)) {
+			try {
+				androidPushNotificationsService.prepareAndSendNotification(accountStatuses.getMsisdn(),
+						"Status changed!",
+						"Retailer status has been changed from " + oldkycStatus + " to " + accountStatuses != null
+								? accountStatuses.getKycVerified()
+								: null,
+						"");
+			} catch (Exception e) {
+				e.printStackTrace();
+				LOGGER.error("Exception raised while sending notification for user={}, error={}", msisdn,
+						e.getMessage());
+			}
+		}
 		redisService.cacheProfileCount(accountStatuses.getKycVerified());
 		return accountStatuses;
 	}

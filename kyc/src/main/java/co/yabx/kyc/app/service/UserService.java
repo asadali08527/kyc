@@ -20,4 +20,8 @@ public interface UserService {
 
 	User persistOrUpdateUserInfo(PagesDTO appPagesDTO, User dsrUser, User retailer) throws Exception;
 
+	User getRetailerByMsisdn(String retailerMsisdn);
+
+	List<User> getDSRByRetailer(User retailer);
+
 }

@@ -1,6 +1,7 @@
 package co.yabx.kyc.app.service.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -62,12 +63,12 @@ public class AndroidPushNotificationsServiceImpl implements AndroidPushNotificat
 			body.put("to", deviceId);
 			body.put("priority", "high");
 
-			JSONObject notification = new JSONObject();
-			notification.put("title", title);
-			notification.put("body", message);
-
 			JSONObject data = new JSONObject();
-			data.put("key", dataToSend);
+			data.put("title", title);
+			data.put("body", message);
+
+			JSONObject notification = new JSONObject();
+			notification.put("key", dataToSend);
 
 			body.put("notification", notification);
 			body.put("data", data);
@@ -104,15 +105,33 @@ public class AndroidPushNotificationsServiceImpl implements AndroidPushNotificat
 
 	}
 
-	public void sendNotificationToUser(String msisdn, String title, String message, String data) {
+	public ResponseEntity<String> sendNotificationToUser(String msisdn, String title, String message, String data) {
 
 		User user = userService.getDSRByMsisdn(msisdn);
 		if (user != null) {
-			DeviceInformations deviceToken = user.getDeviceInformation();
-			if (deviceToken != null) {
-				ResponseEntity<String> result = this.sendNotificationToDevice(deviceToken.getDeviceId(), title, message,
-						data);
-			}
+			return sendNotification(user.getDeviceInformation(), title, message, data);
+		}
+		return null;
+	}
+
+	private ResponseEntity<String> sendNotification(DeviceInformations deviceInformation, String title, String message,
+			String data) {
+
+		String deviceToken = deviceInformation.getDeviceToken();
+		if (deviceToken != null) {
+			return this.sendNotificationToDevice(deviceToken, title, message, data);
+		}
+		return null;
+
+	}
+
+	@Async
+	@Override
+	public void prepareAndSendNotification(String retailerMsisdn, String title, String message, String data) {
+		User retailer = userService.getRetailerByMsisdn(retailerMsisdn);
+		List<User> dsrList = userService.getDSRByRetailer(retailer);
+		for (User user : dsrList) {
+			sendNotification(user.getDeviceInformation(), title, message, data);
 		}
 	}
 

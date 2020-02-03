@@ -347,4 +347,21 @@ public class UserServiceImpl implements UserService {
 		userRelationshipsRepository.save(userRelationships);
 	}
 
+	@Override
+	public User getRetailerByMsisdn(String retailerMsisdn) {
+		return userRepository.findBymsisdnAndUserType(retailerMsisdn, UserType.RETAILERS.name());
+	}
+
+	@Override
+	public List<User> getDSRByRetailer(User retailer) {
+		List<UserRelationships> userRelationshipsList = userRelationshipsRepository
+				.findByRelationshipAndRelative(Relationship.RETAILER, retailer);
+		List<User> users = new ArrayList<User>();
+		for (UserRelationships userRelationships : userRelationshipsList) {
+			users.add(userRepository.findBymsisdnAndUserType(userRelationships.getMsisdn(),
+					UserType.DISTRIBUTORS.name()));
+		}
+		return users;
+	}
+
 }

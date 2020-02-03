@@ -55,11 +55,12 @@ public class UserDeviceDataController {
 			@RequestParam(value = "deviceBrand", required = false) String deviceBrand,
 			@RequestParam(value = "deviceManufacturer", required = false) String deviceManufacturer,
 			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-		LOGGER.info(
-				"Device Data update request for msisdn={},deviceId {}, token {},  deviceType {}, source {}, utm_source {}, utm_medium {}, utm_term {}, utm_content {}, utm_campaign {}, instanceId={} ",
-				msisdn, deviceId, token, deviceType, source, utmSource, utmMedium, utmTerm, utmContent, utmCampaign,
-				instanceId);
+		
 		if (authInfoService.isAuthorized(msisdn, httpServletRequest, httpServletResponse)) {
+			LOGGER.info(
+					"Device Data update request for msisdn={},deviceId {}, token {},  deviceType {}, source {}, utm_source {}, utm_medium {}, utm_term {}, utm_content {}, utm_campaign {}, instanceId={},deviceModel={}, deviceManufacturer={}, deviceBrand={}   ",
+					msisdn, deviceId, token, deviceType, source, utmSource, utmMedium, utmTerm, utmContent, utmCampaign,
+					instanceId, deviceModel, deviceManufacturer, deviceBrand);
 			User user = userService.getDSRByMsisdn(msisdn);
 			if (user != null) {
 				DeviceInformations deviceInformations = null;

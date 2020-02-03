@@ -21,6 +21,7 @@ import co.yabx.kyc.app.dto.UserDto;
 import co.yabx.kyc.app.fullKyc.entity.AttachmentDetails;
 import co.yabx.kyc.app.fullKyc.entity.User;
 import co.yabx.kyc.app.service.AdminService;
+import co.yabx.kyc.app.service.AndroidPushNotificationsService;
 import co.yabx.kyc.app.service.AppConfigService;
 import co.yabx.kyc.app.service.AttachmentService;
 import co.yabx.kyc.app.service.StorageService;
@@ -50,6 +51,9 @@ public class TestController {
 
 	@Autowired
 	private AdminService adminService;
+
+	@Autowired
+	private AndroidPushNotificationsService androidPushNotificationsService;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 
@@ -81,6 +85,21 @@ public class TestController {
 				.equals(userDto.getSecret_key())) {
 			LOGGER.info("/register/rm request recieved with body{}", userDto);
 			return new ResponseEntity<>(adminService.registerRM(userDto), HttpStatus.OK);
+
+		}
+		return new ResponseEntity<>("Invalid secret key", HttpStatus.UNAUTHORIZED);
+
+	}
+
+	@RequestMapping(value = "/send/notification", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> notify(@RequestParam("msisdn") String msisdn,
+			@RequestParam("secret_key") String secret_key) {
+		if (msisdn != null
+				&& appConfigService.getProperty("NOTIFICATION_API_PASSWORD", "magic@yabx").equals(secret_key)) {
+			LOGGER.info("/send/notification request recieved for user", msisdn);
+			return new ResponseEntity<>(androidPushNotificationsService.sendNotificationToUser(msisdn,
+					"Status changed!", "Retailer status has been changed from NEW to APPROVED", ""), HttpStatus.OK);
 
 		}
 		return new ResponseEntity<>("Invalid secret key", HttpStatus.UNAUTHORIZED);

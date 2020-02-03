@@ -25,4 +25,6 @@ public interface UserRelationshipsRepository extends CrudRepository<UserRelation
 			User retailerUser);
 
 	List<UserRelationships> findByRelationship(Relationship retailer);
+
+	List<UserRelationships> findByRelationshipAndRelative(Relationship relationship, User retailer);
 }
